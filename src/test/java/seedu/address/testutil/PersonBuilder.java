@@ -98,6 +98,12 @@ public class PersonBuilder {
         return new Person(name, phone, email, address, remark, tags);
     }
 
+    /**
+     * Sets the {@code Remark} of the {@code Person}.
+     *
+     * @param s the string to be converted into a Remark object and set as the remark of the Person being built
+     * @return the PersonBuilder instance with the updated remark field
+     */
     public PersonBuilder withRemark(String s) {
         this.remark = new Remark(s);
         return this;
