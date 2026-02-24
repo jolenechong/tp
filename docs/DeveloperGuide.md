@@ -479,6 +479,13 @@ Documentation:
 Security:
 1. The system should store data locally on the user’s device and should not transmit data over the network.
 
+Scalability and Capacity:
+1. The system should handle at most 1,000 contacts and 5,000 items.
+
+Maintainability:
+1. The system shall separate Logic, Model, Storage and UI components to support future expansion.
+2. The contact management and inventory management components should be separated such that changes in one do not require changes in the other, except through well-defined interfaces
+
 Testability:
 1. At least 75% of the source code should be covered by tests.
 
