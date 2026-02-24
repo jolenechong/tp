@@ -274,29 +274,36 @@ _{Explain here how the data archiving feature will be implemented}_
 
 **Target user profile**:
 
-* has a need to manage a significant number of contacts
-* prefer desktop apps over other types
-* can type fast
-* prefers typing to mouse interactions
-* is reasonably comfortable using CLI apps
+Small business owners who:
+* Have many vendors' contacts and inventory to manage
+* Are tech-savvy and prefers CLI over GUI
 
-**Value proposition**: manage contacts faster than a typical mouse/GUI driven app
+**Value proposition**:
 
+VendorVault helps small business owners seamlessly manage vendor contacts and track inventory in one simple system.
+By flagging and sorting low-stock items, owners instantly know what needs restocking and who to contact, enabling timely action without relying on complex or costly inventory tools.
 
 ### User stories
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …​                                    | I want to …​                 | So that I can…​                                                        |
-|----------|--------------------------------------------|------------------------------|------------------------------------------------------------------------|
-| `* * *`  | new user                                   | see usage instructions       | refer to instructions when I forget how to use the App                 |
-| `* * *`  | user                                       | add a new person             |                                                                        |
-| `* * *`  | user                                       | delete a person              | remove entries that I no longer need                                   |
-| `* * *`  | user                                       | find a person by name        | locate details of persons without having to go through the entire list |
-| `* *`    | user                                       | hide private contact details | minimize chance of someone else seeing them by accident                |
-| `*`      | user with many persons in the address book | sort persons by name         | locate a person easily                                                 |
+| Priority | As a …​     | I want to …​               | So that I can…​                                                   |
+|----------|-------------|----------------------------|-------------------------------------------------------------------|
+| `* *`    | new user    | see usage guide            | recap and learn commands                                          |
+| `* * *`  | user        | add a new contact          |                                                                   |
+| `* * *`  | user        | delete a contact           | remove vendors I no longer work with                              |
+| `* *`    | user        | find a contact by name     | locate their details without having to go through the entire list |
+| `* *`    | user        | sort contacts by name      | browse them easily                                                |
+| `* *`    | user        | filter contact by category | view similar vendors                                              |
+| `* * *`  | user        | add an item                | keep track of the item                                            |
+| `* * *`  | user        | delete an item             |                                                                   |
+| `* * *`  | user        | view items                 |                                                                   |
+| `* *`    | user        | sort items by name         | browse them easily                                                |
+| `* *`    | user        | filter item by category    | view similar products                                             |
+| `* *`    | user        | view inventory statistics  | understand my stock levels                                        |
+| `* *`    | expert user | define shortcuts           | customise the App to my preference                                |
 
-*{More to be added}*
+See our full list on [GitHub](https://github.com/AY2526S2-CS2103T-W08-2/user-stories/issues)
 
 ### Use cases
 
