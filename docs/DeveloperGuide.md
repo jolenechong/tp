@@ -307,30 +307,42 @@ See our full list on [GitHub](https://github.com/AY2526S2-CS2103T-W08-2/user-sto
 
 ### Use cases
 
-(For all use cases below, the **System** is the `AddressBook` and the **Actor** is the `user`, unless specified otherwise)
+(For all use cases below, the **System** is the `VendorVault (VV)` and the **Actor** is the `User`, unless specified otherwise)
 
-**Use case: Delete a person**
+
+
+**Use Case: View Vendor Contact**
+
+Preconditions: Application is running, user is at main screen
 
 **MSS**
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete a specific person in the list
-4.  AddressBook deletes the person
-
-    Use case ends.
+1. User chooses to view vendor contact.
+2. VV shows the contact information for all vendors
 
 **Extensions**
 
-* 2a. The list is empty.
+* 2a. VV detects there is no contact found.
 
-  Use case ends.
+    * 2a1. VV will create a new contact file with preloaded information.
+    
+        Use case resumes from step 2.
 
-* 3a. The given index is invalid.
+**Use Case: View Stock**
 
-    * 3a1. AddressBook shows an error message.
+Preconditions: Application is running, user is at main screen
 
-      Use case resumes at step 2.
+**MSS**
+1. User chooses to view stock count.
+2. VV shows the stock count for all stocks.
+
+**Extensions**
+
+* 2a. VV detects there is no stocks found
+
+    * 2a1. VV will create a new file with preloaded stocks information.
+
+        Use case resumes from step 2.
 
 *{More to be added}*
 
