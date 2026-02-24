@@ -363,6 +363,27 @@ Preconditions: Application is running, user is at main screen
 
       Use case resumes from step 2.
 
+
+**Use case: UC3 - Delete Vendor Contact**
+
+**Preconditions: User has installed the app, app is running and has added a contact**
+
+**MSS**
+
+1. User chooses to delete a contact.
+2. VV requests for confirmation for deleting the contact.
+3. User confirms deletion.
+4. VV deletes contact and displays a list of current contacts.
+
+Use case ends.
+
+**Extensions**
+
+* 2a. User decides not to delete the contact, rejecting deletion.
+    * 2a1. VV displays a list of current vendor contacts.
+      Use case ends.
+
+
 **Use Case: UC4 - Add Stock Item**
 
 Preconditions: Application is running, user is at main screen.
@@ -412,6 +433,25 @@ Preconditions: Application is running, user is at main screen
 
       Use case resumes from step 2.
 
+
+**Use case: UC6 - Delete Stock**
+
+**Preconditions: User has installed the app, app is running and has added a stock**
+
+**MSS**
+
+1. User chooses to delete a stock.
+2. VV requests for confirmation for deleting the stock.
+3. User confirms deletion.
+4. VV deletes stock and displays list of current stock.
+
+Use case ends.
+
+**Extensions**
+
+* 2a. User decides not to delete the stock, rejecting deletion.
+    * 2a1. VV displays a list of current stock.
+      Use case ends.
 
 
 ### Non-Functional Requirements
