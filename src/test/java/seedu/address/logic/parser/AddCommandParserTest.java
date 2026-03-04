@@ -33,10 +33,10 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
-import static seedu.address.logic.parser.ParserConstants.FIELD_ADDRESS;
-import static seedu.address.logic.parser.ParserConstants.FIELD_EMAIL;
-import static seedu.address.logic.parser.ParserConstants.FIELD_NAME;
-import static seedu.address.logic.parser.ParserConstants.FIELD_PHONE;
+import static seedu.address.logic.parser.ParserUtil.FIELD_ADDRESS;
+import static seedu.address.logic.parser.ParserUtil.FIELD_EMAIL;
+import static seedu.address.logic.parser.ParserUtil.FIELD_NAME;
+import static seedu.address.logic.parser.ParserUtil.FIELD_PHONE;
 import static seedu.address.testutil.TypicalPersons.AMY;
 import static seedu.address.testutil.TypicalPersons.BOB;
 

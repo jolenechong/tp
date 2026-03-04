@@ -9,11 +9,11 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
-import static seedu.address.logic.parser.ParserConstants.COMMA_SEPARATOR;
-import static seedu.address.logic.parser.ParserConstants.FIELD_ADDRESS;
-import static seedu.address.logic.parser.ParserConstants.FIELD_EMAIL;
-import static seedu.address.logic.parser.ParserConstants.FIELD_NAME;
-import static seedu.address.logic.parser.ParserConstants.FIELD_PHONE;
+import static seedu.address.logic.parser.ParserUtil.COMMA_SEPARATOR;
+import static seedu.address.logic.parser.ParserUtil.FIELD_ADDRESS;
+import static seedu.address.logic.parser.ParserUtil.FIELD_EMAIL;
+import static seedu.address.logic.parser.ParserUtil.FIELD_NAME;
+import static seedu.address.logic.parser.ParserUtil.FIELD_PHONE;
 
 import java.util.Arrays;
 import java.util.List;
