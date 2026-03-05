@@ -20,6 +20,11 @@ import seedu.address.model.tag.Tag;
  */
 public class ParserUtil {
 
+    public static final String FIELD_NAME = "name";
+    public static final String FIELD_PHONE = "phone";
+    public static final String FIELD_EMAIL = "email";
+    public static final String FIELD_ADDRESS = "address";
+    public static final String COMMA_SEPARATOR = ", ";
     public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
 
     /**
