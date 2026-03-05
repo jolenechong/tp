@@ -10,8 +10,14 @@ import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_ADDRESS_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_EMAIL_DESC;
+import static seedu.address.logic.commands.CommandTestUtil.INVALID_EMAIL_DESC_WARN;
+import static seedu.address.logic.commands.CommandTestUtil.INVALID_EMAIL_WARN;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_NAME_DESC;
+import static seedu.address.logic.commands.CommandTestUtil.INVALID_NAME_DESC_WARN;
+import static seedu.address.logic.commands.CommandTestUtil.INVALID_NAME_WARN;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_PHONE_DESC;
+import static seedu.address.logic.commands.CommandTestUtil.INVALID_PHONE_DESC_WARN;
+import static seedu.address.logic.commands.CommandTestUtil.INVALID_PHONE_WARN;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_TAG_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_BOB;
@@ -204,5 +210,24 @@ public class AddCommandParserTest {
         assertParseFailure(parser, PREAMBLE_NON_EMPTY + NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
                 + ADDRESS_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
                 MESSAGE_NON_PREFIX_BEFORE_PREFIX + AddCommand.MESSAGE_USAGE);
+    }
+
+    @Test
+    public void parse_softValidationWarnings_success() {
+        Person expectedPerson = new PersonBuilder()
+                .withName(INVALID_NAME_WARN)
+                .withPhone(INVALID_PHONE_WARN)
+                .withEmail(INVALID_EMAIL_WARN)
+                .withAddress(VALID_ADDRESS_BOB)
+                .build();
+
+        AddCommand expectedCommand = new AddCommand(expectedPerson);
+
+        String input = INVALID_NAME_DESC_WARN
+                + INVALID_PHONE_DESC_WARN
+                + INVALID_EMAIL_DESC_WARN
+                + ADDRESS_DESC_BOB;
+
+        assertParseSuccess(parser, input, expectedCommand);
     }
 }

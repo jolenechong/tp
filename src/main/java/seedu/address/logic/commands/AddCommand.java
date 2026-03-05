@@ -6,6 +6,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
+import static seedu.address.logic.parser.ParserUtil.NEWLINE;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
@@ -39,6 +40,7 @@ public class AddCommand extends Command {
     public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book";
 
     private final Person toAdd;
+    private String warnings = "";
 
     /**
      * Creates an AddCommand to add the specified {@code Person}
@@ -46,6 +48,16 @@ public class AddCommand extends Command {
     public AddCommand(Person person) {
         requireNonNull(person);
         toAdd = person;
+    }
+
+    /**
+     * Creates an AddCommand to add the specified {@code Person}
+     * With warnings to show after success.
+     */
+    public AddCommand(Person person, String warnings) {
+        requireNonNull(person);
+        this.toAdd = person;
+        this.warnings = warnings;
     }
 
     @Override
@@ -60,7 +72,11 @@ public class AddCommand extends Command {
 
         model.commitVendorVault();
 
-        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(toAdd)));
+        if (!warnings.isEmpty()) {
+            warnings = NEWLINE + warnings;
+        }
+
+        return new CommandResult(String.format(MESSAGE_SUCCESS + warnings, Messages.format(toAdd)));
     }
 
     @Override

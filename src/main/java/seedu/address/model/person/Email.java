@@ -9,8 +9,10 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  */
 public class Email {
 
+    public static final String MESSAGE_CONSTRAINTS = "Email should not be blank.";
+    public static final String SOFT_VALIDATION_REGEX = ".*\\S.*";
     private static final String SPECIAL_CHARACTERS = "+_.-";
-    public static final String MESSAGE_CONSTRAINTS = "Emails should be of the format local-part@domain "
+    public static final String MESSAGE_WARN = "⚠ Warning: Emails should be of the format local-part@domain "
             + "and adhere to the following constraints:\n"
             + "1. The local-part should only contain alphanumeric characters and these special characters, excluding "
             + "the parentheses, (" + SPECIAL_CHARACTERS + "). The local-part may not start or end with any special "
@@ -48,6 +50,18 @@ public class Email {
      * Returns if a given string is a valid email.
      */
     public static boolean isValidEmail(String test) {
+        return test.matches(SOFT_VALIDATION_REGEX);
+    }
+
+    /**
+     * Returns true if a given string is a valid email.
+     * Stronger validation than {@link #isValidEmail(String)}.
+     * Used for warning users about potential issues with their input.
+     *
+     * @param test the string to test.
+     * @return true if the string is a valid email according to the stronger validation criteria.
+     */
+    public static boolean isValidEmailWarn(String test) {
         return test.matches(VALIDATION_REGEX);
     }
 

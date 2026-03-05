@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
@@ -25,6 +26,7 @@ public class ParserUtil {
     public static final String FIELD_EMAIL = "email";
     public static final String FIELD_ADDRESS = "address";
     public static final String COMMA_SEPARATOR = ", ";
+    public static final String NEWLINE = "\n";
     public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
 
     /**
@@ -40,19 +42,41 @@ public class ParserUtil {
         return Index.fromOneBased(Integer.parseInt(trimmedIndex));
     }
 
+    private static Optional<String> getNameWarning(String name) throws ParseException {
+        if (name.isBlank()) {
+            throw new ParseException(Name.MESSAGE_CONSTRAINTS);
+        }
+
+        if (!Name.isValidNameWarn(name)) {
+            return Optional.of(Name.MESSAGE_WARN);
+        }
+
+        return Optional.empty();
+    }
+
     /**
      * Parses a {@code String name} into a {@code Name}.
      * Leading and trailing whitespaces will be trimmed.
      *
      * @throws ParseException if the given {@code name} is invalid.
      */
-    public static Name parseName(String name) throws ParseException {
+    public static ParseResult<Name> parseName(String name) throws ParseException {
         requireNonNull(name);
         String trimmedName = name.trim();
-        if (!Name.isValidName(trimmedName)) {
-            throw new ParseException(Name.MESSAGE_CONSTRAINTS);
+        Optional<String> warnings = getNameWarning(trimmedName);
+        return new ParseResult<>(new Name(trimmedName), warnings);
+    }
+
+    private static Optional<String> getPhoneWarning(String phone) throws ParseException {
+        if (phone.isBlank() || phone.length() < 3) {
+            throw new ParseException(Phone.MESSAGE_CONSTRAINTS);
         }
-        return new Name(trimmedName);
+
+        if (!Phone.isValidPhoneWarn(phone)) {
+            return Optional.of(Phone.MESSAGE_WARN);
+        }
+
+        return Optional.empty();
     }
 
     /**
@@ -61,13 +85,11 @@ public class ParserUtil {
      *
      * @throws ParseException if the given {@code phone} is invalid.
      */
-    public static Phone parsePhone(String phone) throws ParseException {
+    public static ParseResult<Phone> parsePhone(String phone) throws ParseException {
         requireNonNull(phone);
         String trimmedPhone = phone.trim();
-        if (!Phone.isValidPhone(trimmedPhone)) {
-            throw new ParseException(Phone.MESSAGE_CONSTRAINTS);
-        }
-        return new Phone(trimmedPhone);
+        Optional<String> warnings = getPhoneWarning(trimmedPhone);
+        return new ParseResult<>(new Phone(trimmedPhone), warnings);
     }
 
     /**
@@ -85,19 +107,29 @@ public class ParserUtil {
         return new Address(trimmedAddress);
     }
 
+    private static Optional<String> getEmailWarning(String email) throws ParseException {
+        if (email.isBlank()) {
+            throw new ParseException(Email.MESSAGE_CONSTRAINTS);
+        }
+
+        if (!Email.isValidEmailWarn(email)) {
+            return Optional.of(Email.MESSAGE_WARN);
+        }
+
+        return Optional.empty();
+    }
+
     /**
      * Parses a {@code String email} into an {@code Email}.
      * Leading and trailing whitespaces will be trimmed.
      *
      * @throws ParseException if the given {@code email} is invalid.
      */
-    public static Email parseEmail(String email) throws ParseException {
+    public static ParseResult<Email> parseEmail(String email) throws ParseException {
         requireNonNull(email);
         String trimmedEmail = email.trim();
-        if (!Email.isValidEmail(trimmedEmail)) {
-            throw new ParseException(Email.MESSAGE_CONSTRAINTS);
-        }
-        return new Email(trimmedEmail);
+        Optional<String> warnings = getEmailWarning(trimmedEmail);
+        return new ParseResult<>(new Email(trimmedEmail), warnings);
     }
 
     /**

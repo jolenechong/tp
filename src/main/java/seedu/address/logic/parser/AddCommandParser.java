@@ -17,6 +17,7 @@ import static seedu.address.logic.parser.ParserUtil.FIELD_PHONE;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -58,15 +59,35 @@ public class AddCommandParser implements Parser<AddCommand> {
         }
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS);
-        Name name = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get());
-        Phone phone = ParserUtil.parsePhone(argMultimap.getValue(PREFIX_PHONE).get());
-        Email email = ParserUtil.parseEmail(argMultimap.getValue(PREFIX_EMAIL).get());
+
+        StringBuilder warnings = new StringBuilder();
+
+        ParseResult<Name> nameResult = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get());
+        ParseResult<Phone> phoneResult = ParserUtil.parsePhone(argMultimap.getValue(PREFIX_PHONE).get());
+        ParseResult<Email> email = ParserUtil.parseEmail(argMultimap.getValue(PREFIX_EMAIL).get());
         Address address = ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS).get());
         Set<Tag> tagList = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
 
-        Person person = new Person(name, phone, email, address, tagList);
+        Person person = new Person(
+                nameResult.getValue(), phoneResult.getValue(), email.getValue(), address, tagList);
+        appendWarning(warnings, nameResult.getWarning());
+        appendWarning(warnings, phoneResult.getWarning());
+        appendWarning(warnings, email.getWarning());
+
+        if (!warnings.isEmpty()) {
+            return new AddCommand(person, warnings.toString());
+        }
 
         return new AddCommand(person);
+    }
+
+    private static void appendWarning(StringBuilder warnings, Optional<String> warning) {
+        warning.ifPresent(w -> {
+            if (!warnings.isEmpty()) {
+                warnings.append("\n");
+            }
+            warnings.append(w);
+        });
     }
 
     /**
