@@ -94,17 +94,10 @@ public interface Model {
     void pushExecutedCommand(Command cmd);
 
     /**
-     * Pops the most recently executed command from the stack of executed commands and returns it for undo functionality.
+     * Pops the most recently executed command from the stack of executed commands and returns it.
      *
      * @return the most recently executed command, or null if there are no commands to undo
      */
     Command popExecutedCommand();
-
-    /**
-     * Returns true if there are commands that can be undone, false otherwise.
-     *
-     * @return true if there are commands that can be undone, false otherwise
-     */
-    boolean canUndo();
 
 }
