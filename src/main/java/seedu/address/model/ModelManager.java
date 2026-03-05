@@ -23,7 +23,8 @@ public class ModelManager implements Model {
     private final AddressBook addressBook;
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
-    private final CommandHistory history = new CommandHistory();
+    private final VersionedVendorVault versionedVendorVault;
+
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -36,13 +37,14 @@ public class ModelManager implements Model {
         this.addressBook = new AddressBook(addressBook);
         this.userPrefs = new UserPrefs(userPrefs);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
+        versionedVendorVault = new VersionedVendorVault(addressBook);
     }
 
     public ModelManager() {
         this(new AddressBook(), new UserPrefs());
     }
-
     //=========== UserPrefs ==================================================================================
+
 
     @Override
     public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
@@ -76,8 +78,8 @@ public class ModelManager implements Model {
         requireNonNull(addressBookFilePath);
         userPrefs.setAddressBookFilePath(addressBookFilePath);
     }
-
     //=========== AddressBook ================================================================================
+
 
     @Override
     public void setAddressBook(ReadOnlyAddressBook addressBook) {
@@ -112,8 +114,8 @@ public class ModelManager implements Model {
 
         addressBook.setPerson(target, editedPerson);
     }
-
     //=========== Filtered Person List Accessors =============================================================
+
 
     /**
      * Returns an unmodifiable view of the list of {@code Person} backed by the internal list of
@@ -130,14 +132,30 @@ public class ModelManager implements Model {
         filteredPersons.setPredicate(predicate);
     }
 
+    //=========== VendorVaultVersionControl  =================================================================================
     @Override
-    public void pushExecutedCommand(Command cmd) {
-        history.push(cmd);
+    public void commitVendorVault() {
+        versionedVendorVault.commit(addressBook);
     }
 
     @Override
-    public Command popExecutedCommand() {
-        return history.pop();
+    public void undoVendorVault() {
+        versionedVendorVault.undo(addressBook);
+    }
+
+    @Override
+    public void redoVendorVault() {
+        versionedVendorVault.redo(addressBook);
+    }
+
+    @Override
+    public boolean canUndoVendorVault() {
+        return versionedVendorVault.canUndo();
+    }
+
+    @Override
+    public boolean canRedoVendorVault() {
+        return versionedVendorVault.canRedo();
     }
 
     @Override

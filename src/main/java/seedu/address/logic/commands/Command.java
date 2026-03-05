@@ -17,22 +17,4 @@ public abstract class Command {
      */
     public abstract CommandResult execute(Model model) throws CommandException;
 
-    /**
-     * Undoes the command, reverting any changes made by the execute method.
-     *
-     * @param model {@code Model} which the command should operate on for undoing.
-     */
-    void undo(Model model) {
-        throw new UnsupportedOperationException("Not undoable");
-    }
-
-    /**
-     * Indicates whether this command supports undoing.
-     *
-     * @return true if the command is undoable, false otherwise.
-     */
-    boolean isUndoable() {
-        return false;
-    };
-
 }

@@ -13,11 +13,10 @@ public class UndoCommand extends Command {
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
-        Command lastCommand = model.popExecutedCommand();
-        if (lastCommand == null) {
+        if (!model.canUndoVendorVault()) {
             throw new CommandException(MESSAGE_FAILURE);
         }
-        lastCommand.undo(model);
+        model.undoVendorVault();
         return new CommandResult(MESSAGE_SUCCESS);
     }
 }

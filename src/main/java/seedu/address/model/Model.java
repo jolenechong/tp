@@ -5,7 +5,6 @@ import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
-import seedu.address.logic.commands.Command;
 import seedu.address.model.person.Person;
 
 /**
@@ -87,17 +86,35 @@ public interface Model {
     void updateFilteredPersonList(Predicate<Person> predicate);
 
     /**
-     * Pushes the given command to the stack of executed commands for undo functionality.
-     *
-     * @param cmd the command to be pushed onto the stack of executed commands
+     * Commits the current state of the address book to the vendor vault. This should be called after any operation
+     * that modifies the address book, such as adding, deleting, or editing a person.
      */
-    void pushExecutedCommand(Command cmd);
+    void commitVendorVault();
 
     /**
-     * Pops the most recently executed command from the stack of executed commands and returns it.
-     *
-     * @return the most recently executed command, or null if there are no commands to undo
+     * Undoes the last committed state in the vendor vault, reverting the address book to the previous state.
      */
-    Command popExecutedCommand();
+    void undoVendorVault();
+
+    /**
+     * Redoes the last undone state in the vendor vault, restoring the address book to the state before the undo.
+     * TODO: TO BE IMPLEMENTED AFTER UNDO FUNCTIONALITY IS IMPLEMENTED
+     */
+    void redoVendorVault();
+
+    /**
+     * Returns true if there are states in the vendor vault that can be undone.
+     *
+     * @return true if there are states in the vendor vault that can be undone, false otherwise.
+     */
+    boolean canUndoVendorVault();
+
+    /**
+     * Returns true if there are states in the vendor vault that can be redone.
+     * TODO: TO BE IMPLEMENTED AFTER UNDO FUNCTIONALITY IS IMPLEMENTED
+     *
+     * @return true if there are states in the vendor vault that can be redone, false otherwise.
+     */
+    boolean canRedoVendorVault();
 
 }

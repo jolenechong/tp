@@ -58,15 +58,9 @@ public class AddCommand extends Command {
 
         model.addPerson(toAdd);
 
-        model.pushExecutedCommand(this);
+        model.commitVendorVault();
 
         return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(toAdd)));
-    }
-
-    @Override
-    public void undo(Model model) {
-        requireNonNull(model);
-        model.deletePerson(toAdd);
     }
 
     @Override
