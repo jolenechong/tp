@@ -3,11 +3,11 @@
 }
 
 .warn{
-    -fx-text-fill: #E1BB5B !important; /* The error class should always override the default text-fill style */
+    -fx-text-fill: #E1BB5B !important; /* The warn class should always override the default text-fill style */
 }
 
 .success {
-    -fx-text-fill: #5BE18C !important; /* The error class should always override the default text-fill style */
+    -fx-text-fill: #5BE18C !important; /* The success class should always override the default text-fill style */
 }
 
 .list-cell:empty {
