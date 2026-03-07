@@ -148,7 +148,7 @@
 
 .result-display {
     -fx-background-color: transparent;
-    -fx-font-family: "Consolas";
+    -fx-font-family: "Consolas", "Menlo", "SF Mono", monospace;
     -fx-font-size: 10pt;
     -fx-text-fill: #E1E1E1;
 }
@@ -323,10 +323,16 @@
     -fx-border-color: transparent transparent #E1E1E1 transparent;
     -fx-border-insets: 0;
     -fx-border-width: 1;
-    -fx-font-family: "Consolas";
+    -fx-font-family: "Consolas", "Menlo", "SF Mono", monospace;
     -fx-font-size: 12pt;
     -fx-text-fill: #E1E1E1;
     -fx-padding: 5 5 5 20px;
+}
+
+#commandPromptSign {
+    -fx-fill: #E1E1E1;
+    -fx-font-family: "Consolas", "Menlo", "SF Mono", monospace;
+    -fx-font-size: 18px;
 }
 
 #filterField, #personListPanel, #personWebpage {
@@ -347,7 +353,7 @@
 #resultDisplay .viewport,
 #resultDisplay .content {
     -fx-background-color: transparent;
-    -fx-font-family: "Consolas";
+    -fx-font-family: "Consolas", "Menlo", "SF Mono", monospace;
     -fx-text-fill: #E1E1E1;
 }
 

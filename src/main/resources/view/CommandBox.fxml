@@ -16,7 +16,7 @@
                                promptText="Enter command here..."
                                HBox.hgrow="ALWAYS"/>
                     <Text text="\$"
-                          style="-fx-fill: #E1E1E1; -fx-font-family: 'Consolas'; -fx-font-size: 18px;"
+                          fx:id="commandPromptSign"
                           StackPane.alignment="CENTER_LEFT"
                           translateX="5"/>
                 </StackPane>
