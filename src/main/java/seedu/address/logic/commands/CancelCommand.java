@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 
 /**
@@ -12,9 +13,8 @@ import seedu.address.model.Model;
  */
 public class CancelCommand extends Command {
 
-    public static final String COMMAND_WORD = "y";
-
-    public static final String MESSAGE_SUCCESS = "failure";
+    // TODO check if INVALID_STATE is unreachable
+    public static final String INVALID_STATE = "This is an invalid state";
 
     private final Supplier<Optional<CommandResult>> onCancel;
 
@@ -23,9 +23,9 @@ public class CancelCommand extends Command {
     }
 
     @Override
-    public CommandResult execute(Model model) {
+    public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        return onCancel.get().orElse(new CommandResult(MESSAGE_SUCCESS));
+        return onCancel.get().orElseThrow(() -> new CommandException(INVALID_STATE));
     }
 
     @Override

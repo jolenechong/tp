@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 
 /**
@@ -14,7 +15,8 @@ public class ConfirmationCommand extends Command {
 
     public static final String COMMAND_WORD = "y";
 
-    public static final String MESSAGE_SUCCESS = "confirmation";
+    // TODO check if INVALID_STATE is unreachable
+    public static final String INVALID_STATE = "This is an invalid state";
 
     private final Supplier<Optional<CommandResult>> onConfirm;
 
@@ -23,9 +25,9 @@ public class ConfirmationCommand extends Command {
     }
 
     @Override
-    public CommandResult execute(Model model) {
+    public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        return onConfirm.get().orElse(new CommandResult(MESSAGE_SUCCESS));
+        return onConfirm.get().orElseThrow(() -> new CommandException(INVALID_STATE));
     }
 
     @Override
