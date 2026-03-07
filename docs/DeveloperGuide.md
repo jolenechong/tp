@@ -281,43 +281,44 @@ Small business owners who:
 **Value proposition**:
 
 VendorVault helps small business owners seamlessly manage vendor contacts and track inventory in one simple system.
-By flagging and sorting low-stock items, owners instantly know what needs restocking and who to contact, enabling timely action without relying on complex or costly inventory tools.
+By flagging and sorting low-quantity products, owners instantly know what needs restocking and who to contact, enabling timely action without relying on complex or costly inventory tools.
 
 ### User stories
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …​     | I want to …​               | So that I can…​                                                   |
-|----------|-------------|----------------------------|-------------------------------------------------------------------|
-| `* *`    | new user    | see usage guide            | recap and learn commands                                          |
-| `* * *`  | user        | add a new contact          |                                                                   |
-| `* * *`  | user        | delete a contact           | remove vendors I no longer work with                              |
-| `* *`    | user        | find a contact by name     | locate their details without having to go through the entire list |
-| `* *`    | user        | sort contacts by name      | browse them easily                                                |
-| `* *`    | user        | filter contact by category | view similar vendors                                              |
-| `* * *`  | user        | add an item                | keep track of the item                                            |
-| `* * *`  | user        | delete an item             |                                                                   |
-| `* * *`  | user        | view items                 |                                                                   |
-| `* *`    | user        | sort items by name         | browse them easily                                                |
-| `* *`    | user        | filter item by category    | view similar products                                             |
-| `* *`    | user        | view inventory statistics  | understand my stock levels                                        |
-| `* *`    | expert user | define shortcuts           | customise the App to my preference                                |
-
-See our full list on [GitHub](https://github.com/AY2526S2-CS2103T-W08-2/user-stories/issues)
+| Priority | As a …​     | I want to …​                | So that I can…​                                                   |
+|----------|-------------|-----------------------------|-------------------------------------------------------------------|
+| `* *`    | new user    | see usage guide             | recap and learn commands                                          |
+| `* * *`  | user        | add a new contact           | add new vendors I work with                                       |
+| `* * *`  | user        | delete a contact            | remove vendors I no longer work with                              |
+| `* * *`  | user        | view contacts               |                                                                   |
+| `* *`    | user        | find a contact by name      | locate their details without having to go through the entire list |
+| `* *`    | user        | sort contacts by name       | browse them easily                                                |
+| `* *`    | user        | filter contact by category  | view similar vendors                                              |
+| `* * *`  | user        | add a product               | add new products I sell                                           |
+| `* * *`  | user        | delete a product            | remove products I no longer sell                                  |
+| `* * *`  | user        | view products               |                                                                   |
+| `* *`    | user        | sort products by name       | browse them easily                                                |
+| `* *`    | user        | filter products by category | view similar products                                             |
+| `* *`    | user        | view inventory statistics   | understand my product quantity levels                             |
+| `* *`    | expert user | add alias for commands      | create alias for long commands according to my preferences        |
+| `* *`    | expert user | delete alias for commands   | remove alias for I no longer want to use                          |
+| `* *`    | expert user | view aliases for commands   | view all aliases that I have set                                  |
 
 ### Use cases
 
-(For all use cases below, the **VV** is the `VendorVault` application and the **Actor** is the `user`, unless specified otherwise)
+(For all use cases below, the **System** is the `VendorVault` application, referred to as `VV` and the **Actor** is the `User`, unless specified otherwise)
 
 **Use case: UC1 - Add a Vendor Contact**
 
-**Preconditions: User has installed the app**
+**Preconditions: Application is running, user is on the main screen.**
 
 **MSS**
 
-1. User enters the add command.
+1. User chooses to add a vendor contact.
 2. VV requests for details for the vendor contact.
-3. User enters the requested details.
+3. User provides the requested details.
 4. VV requests for confirmation.
 5. User confirms.
 6. VV adds contact and displays a list of vendor contacts.
@@ -326,17 +327,17 @@ Use case ends.
 
 **Extensions**
 
-* 3a. VV detects error in entered data (eg. missing compulsory fields, invalid data format)
+* 3a. VV detects error in provided data (eg. missing compulsory fields, invalid data format).
   * 3a1. VV requests for the correct data.
-  * 3a2. User enters new data.
+  * 3a2. User provides new data.
 
   Steps 3a1-3a2 are repeated until all fields are correct.
 
   Use case resumes from step 4.
 
 * 3b. VV detects duplicate vendor contact.
-  * 3b1. VV requests for correct data that’s not a duplicate.
-  * 3b2. User enters new data.
+  * 3b1. VV requests for correct data that is not a duplicate.
+  * 3b2. User provides new data.
 
   Steps 3b1-3b2 are repeated until all fields are correct.
 
@@ -348,9 +349,9 @@ Use case ends.
 
   Use case ends.
 
-**Use Case: UC2 - View Vendor Contact**
+**Use Case: UC2 - View Vendor Contacts**
 
-**Preconditions: Application is running, user is on the main screen**
+**Preconditions: Application is running, user is on the main screen.**
 
 **MSS**
 
@@ -368,7 +369,7 @@ Use case ends.
 
 **Use case: UC3 - Delete Vendor Contact**
 
-**Preconditions: User has installed the app, app is running and has added a contact**
+**Preconditions: Application is running, user is on the main screen and has added a contact.**
 
 **MSS**
 
@@ -381,23 +382,23 @@ Use case ends.
 
 **Extensions**
 
-* 2a. User decides not to delete the contact, rejecting deletion.
+* 2a. User decides not to delete the contact, rejecting the deletion.
   * 2a1. VV displays a list of current vendor contacts.
   
   Use case ends.
 
-**Use Case: UC4 - Add Stock Item**
+**Use Case: UC4 - Add Product**
 
 **Preconditions: Application is running, user is on the main screen.**
 
 **MSS**
 
-1. User enters the add command.
+1. User chooses to add a Product.
 2. VV validates that all compulsory fields are present.
-3. VV validates the format of the entered data.
+3. VV validates the format of the provided data.
 4. VV checks that the product does not already exist.
-5. VV creates the stock item.
-6. VV adds the stock item to the inventory.
+5. VV creates the product.
+6. VV adds the product to the inventory.
 7. VV saves the updated inventory to storage.
 8. VV displays a success message.
 
@@ -405,17 +406,17 @@ Use case ends.
 
 **Extensions**
 
-* 3a. VV detects error in entered data (e.g. missing compulsory fields, invalid data format).
+* 3a. VV detects error in provided data (e.g. missing compulsory fields, invalid data format).
   * 3a1. VV displays an appropriate error message indicating the invalid or missing field.
-  * 3a2. User re-enters the corrected data.
+  * 3a2. User re-provides the corrected data.
   
   Steps 3a1–3a2 are repeated until all fields are valid.
   
   Use case resumes from step 4.
 
 * 4a. VV detects duplicate product.
-  * 4a1. VV displays an error indicating that the ID must be unique.
-  * 4a2. User re-enters the corrected data.
+  * 4a1. VV displays an error.
+  * 4a2. User re-provides the corrected data.
   
   Steps 4a1–4a2 are repeated until a unique ID is provided.
   
@@ -426,40 +427,40 @@ Use case ends.
   
   Use case ends.
 
-**Use Case: UC 5 - View Stock**
+**Use Case: UC 5 - View Products**
 
-**Preconditions: Application is running, user is on the main screen**
+**Preconditions: Application is running, user is on the main screen.**
 
 **MSS**
-1. User chooses to view stock count.
-2. VV shows the stock count for all stocks.
+1. User chooses to view products and their quantity.
+2. VV shows the quantity for all products.
 
 Use case ends.
 
 **Extensions**
 
-* 2a. VV detects there are no stocks found.
-  * 2a1. VV will create a new file with preloaded stocks information.
+* 2a. VV detects there are no products found.
+  * 2a1. VV will create a new file with preloaded product information.
 
   Use case resumes from step 2.
 
-**Use case: UC6 - Delete Stock**
+**Use case: UC6 - Delete Product**
 
-**Preconditions: User has installed the app, app is running and has added a stock**
+**Preconditions: Application is running, user is on the main screen and has added a product.**
 
 **MSS**
 
-1. User chooses to delete a stock.
-2. VV requests for confirmation for deleting the stock.
+1. User chooses to delete a product.
+2. VV requests for confirmation for deleting the product.
 3. User confirms deletion.
-4. VV deletes stock and displays list of current stock.
+4. VV deletes product and displays list of current product.
 
 Use case ends.
 
 **Extensions**
 
-* 2a. User decides not to delete the stock, rejecting deletion.
-  * 2a1. VV displays a list of current stock.
+* 2a. User decides not to delete the product, rejecting deletion.
+  * 2a1. VV displays a list of current product.
   
   Use case ends.
 
@@ -471,30 +472,29 @@ Usability:
 
 Reliability:
 1. The system shall not lose existing data when an invalid command is entered.
-2. The system should respond to invalid commands with clear errors.
+2. The system should respond to invalid commands and inputs with clear errors and/or appropriate warnings.
 
 Portability:
 1. The system shall run on Windows, Mac and Linux as long as it has Java `17` or above installed.
 
 Performance:
-1. The system shall display the vendor list or stock list within 2 seconds when the total number of entries does not exceed expected usage limits (1,000 vendors and 5,000 stock items).
-2. The system should respond to any valid command within 2 seconds under normal usage (≤ 1,000 contacts and ≤ 5,000 stock items).
+1. The system shall respond to any valid command within 2 seconds when the total number of entries does not exceed expected usage limits (1,000 vendors contacts and 5,000 products).
 
 Persistence:
 1. The system must save app data locally as JSON and load it when launched.
 
 Documentation:
-1. The system should provide a developer guide for future contributors with code accompanied by Javadoc comments and a user guide for users.
+1. The system should provide a developer guide for future contributors, code accompanied by Javadoc comments and a user guide for users.
 
 Security:
-1. The system should store data locally on the user’s device and should not transmit data over the network.
+1. The system should store data locally on the user’s device and should not transmit data over any network.
 
 Scalability and Capacity:
-1. The system should handle at most 1,000 contacts and 5,000 items.
+1. The system should handle at least 1,000 vendor contacts and 5,000 products (performance beyond these limits is not guaranteed).
 
 Maintainability:
 1. The system shall separate Logic, Model, Storage and UI components to support future expansion.
-2. The contact management and inventory management components should be separated such that changes in one do not require changes in the other, except through well-defined interfaces
+2. The contact management and inventory management components should be separated such that changes in one do not require changes in the other, except through well-defined interfaces.
 
 Testability:
 1. At least 75% of the source code should be covered by tests.
@@ -506,9 +506,9 @@ Accessibility:
 ### Glossary
 
 * **Mainstream OS**: Windows, Linux, Unix, MacOS
-* **Vendor Contact**: A stored record containing a vendor’s name, phone number, email, address, and optional tags.
-* **Stock/Inventory Item**: A product entry tracked by the system, identified by a unique product ID, name, and quantity.
-* **Product ID**: A non-negative integer that uniquely identifies a stock item in the inventory.
+* **Contact/Vendor Contact**: A stored record containing a vendor’s name, phone number, email, address, and optional tags.
+* **Inventory Item/Product**: A product entry tracked by the system, identified by a unique product ID, name, and quantity.
+* **Product ID**: A non-negative integer that uniquely identifies a product in the inventory.
 * **Command**: A user input instruction entered into the CLI to perform an action (e.g. add, delete, list).
 * **Prefix**: A keyword used to identify parameters in a command (e.g. n/, p/, e/, q/).
 
