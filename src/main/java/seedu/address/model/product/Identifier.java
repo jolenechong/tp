@@ -10,8 +10,8 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class Identifier {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Identifiers should not be blank, should be at most 15 characters long, and may only contain letters, " +
-                    "numbers, hyphens (-), and slashes (/).";
+            "Identifiers should not be blank, should be at most 15 characters long, and may only contain letters, "
+                    + "numbers, hyphens (-), and slashes (/).";
     public static final int MAX_LENGTH = 15;
     public static final String MESSAGE_LENGTH_CONSTRAINTS =
             "Identifiers should be less than " + MAX_LENGTH + " characters.";
