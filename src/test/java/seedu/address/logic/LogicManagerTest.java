@@ -38,6 +38,8 @@ public class LogicManagerTest {
     private static final IOException DUMMY_IO_EXCEPTION = new IOException("dummy IO exception");
     private static final IOException DUMMY_AD_EXCEPTION = new AccessDeniedException("dummy access denied exception");
 
+    private static final String DELETE_COMMAND_EXCEPTION = MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + DATA_IS_EMPTY;
+
     @TempDir
     public Path temporaryFolder;
 
@@ -62,7 +64,7 @@ public class LogicManagerTest {
     @Test
     public void execute_commandExecutionError_throwsCommandException() {
         String deleteCommand = "delete 9";
-        assertCommandException(deleteCommand, MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + DATA_IS_EMPTY);
+        assertCommandException(deleteCommand, DELETE_COMMAND_EXCEPTION);
     }
 
     @Test
