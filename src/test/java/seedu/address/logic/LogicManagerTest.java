@@ -7,7 +7,7 @@ import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_AMY;
-import static seedu.address.logic.commands.DeleteCommand.DATA_IS_EMPTY;
+import static seedu.address.logic.commands.DeleteCommand.CONTACT_IS_EMPTY;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.AMY;
 
@@ -38,7 +38,7 @@ public class LogicManagerTest {
     private static final IOException DUMMY_IO_EXCEPTION = new IOException("dummy IO exception");
     private static final IOException DUMMY_AD_EXCEPTION = new AccessDeniedException("dummy access denied exception");
 
-    private static final String DELETE_COMMAND_EXCEPTION = MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + DATA_IS_EMPTY;
+    private static final String DELETE_COMMAND_EXCEPTION = MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + CONTACT_IS_EMPTY;
 
     @TempDir
     public Path temporaryFolder;

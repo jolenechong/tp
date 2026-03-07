@@ -23,9 +23,9 @@ public class DeleteCommand extends Command {
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1";
 
-    public static final String VALID_DELETE_RANGE = "\nThe valid delete range is from 1 to ";
+    public static final String VALID_CONTACT_DELETE_RANGE = "\nThe valid delete range is from 1 to ";
 
-    public static final String DATA_IS_EMPTY = "\nThere is no data to delete. Consider adding some data.";
+    public static final String CONTACT_IS_EMPTY = "\nThere is no contact to delete. Consider adding some contacts.";
 
     public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Person: %1$s";
 
@@ -44,10 +44,10 @@ public class DeleteCommand extends Command {
             String exceptionMessage;
             if (lastShownList.isEmpty()) {
                 exceptionMessage = Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX
-                        + DATA_IS_EMPTY;
+                        + CONTACT_IS_EMPTY;
             } else {
                 exceptionMessage = Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX
-                        + VALID_DELETE_RANGE + lastShownList.size();
+                        + VALID_CONTACT_DELETE_RANGE + lastShownList.size();
             }
             throw new CommandException(exceptionMessage);
         }
