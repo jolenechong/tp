@@ -491,7 +491,7 @@ Use case ends.
 
 * 2a. User decides not to delete the contact, rejecting the deletion.
   * 2a1. VV displays a list of current vendor contacts.
- 
+  
   Use case ends.
 
 **Use Case: UC4 - Add Product**
