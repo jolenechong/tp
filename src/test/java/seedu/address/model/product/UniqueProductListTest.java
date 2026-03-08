@@ -3,6 +3,8 @@ package seedu.address.model.product;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_PRODUCT_NAME_AIRPODS;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_QUANTITY_IPHONE;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalProducts.OIL;
 import static seedu.address.testutil.TypicalProducts.RICE;
@@ -40,7 +42,7 @@ public class UniqueProductListTest {
     @Test
     public void contains_productWithSameIdentityFieldsInList_returnsTrue() {
         uniqueProductList.add(RICE);
-        Product editedRice = new ProductBuilder(RICE).withName("White Rice 5kg").build();
+        Product editedRice = new ProductBuilder(RICE).withName(VALID_PRODUCT_NAME_AIRPODS).build();
         assertTrue(uniqueProductList.contains(editedRice));
     }
 
@@ -82,10 +84,10 @@ public class UniqueProductListTest {
     @Test
     public void setProduct_editedProductHasSameIdentity_success() {
         uniqueProductList.add(RICE);
-        Product editedAlice = new ProductBuilder(RICE).withName("White Rice 5kg").build();
-        uniqueProductList.setProduct(RICE, editedAlice);
+        Product editedRice = new ProductBuilder(RICE).withQuantity(VALID_QUANTITY_IPHONE).build();
+        uniqueProductList.setProduct(RICE, editedRice);
         UniqueProductList expectedUniqueProductList = new UniqueProductList();
-        expectedUniqueProductList.add(editedAlice);
+        expectedUniqueProductList.add(editedRice);
         assertEquals(expectedUniqueProductList, uniqueProductList);
     }
 
