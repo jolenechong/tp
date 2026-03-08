@@ -91,6 +91,15 @@ public class AddCommandTest {
     }
 
     @Test
+    public void getPendingConfirmation_returnsInactivePendingConfirmation() {
+        Person validPerson = new PersonBuilder().build();
+        AddCommand addCommand = new AddCommand(validPerson);
+
+        PendingConfirmation pendingConfirmation = addCommand.getPendingConfirmation();
+        assertFalse(pendingConfirmation.getNeedConfirmation());
+    }
+
+    @Test
     public void equals() {
         Person alice = new PersonBuilder().withName("Alice").build();
         Person bob = new PersonBuilder().withName("Bob").build();

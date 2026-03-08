@@ -68,4 +68,9 @@ public class RestoreCommand extends Command {
 
         return new CommandResult(String.format(MESSAGE_RESTORE_SUCCESS, vendorToRestore));
     }
+
+    @Override
+    public PendingConfirmation getPendingConfirmation() {
+        return new PendingConfirmation();
+    }
 }

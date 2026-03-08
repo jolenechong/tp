@@ -34,4 +34,11 @@ public class RestoreCommandTest {
 
         assertFalse(restoredVendor.isArchived());
     }
+
+    @Test
+    public void getPendingConfirmation_returnsInactivePendingConfirmation() {
+        RestoreCommand restoreCommand = new RestoreCommand(Index.fromOneBased(1));
+        PendingConfirmation pendingConfirmation = restoreCommand.getPendingConfirmation();
+        assertFalse(pendingConfirmation.getNeedConfirmation());
+    }
 }

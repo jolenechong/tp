@@ -35,6 +35,11 @@ public class FindCommand extends Command {
     }
 
     @Override
+    public PendingConfirmation getPendingConfirmation() {
+        return new PendingConfirmation();
+    }
+
+    @Override
     public boolean equals(Object other) {
         if (other == this) {
             return true;

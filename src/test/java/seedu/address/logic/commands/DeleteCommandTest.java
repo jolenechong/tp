@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
+import static seedu.address.logic.commands.DeleteCommand.CONFIRMATION_DELETE_PERSON_MESSAGE;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
@@ -14,9 +16,11 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.person.NameEqualsKeywordsPredicate;
 import seedu.address.model.person.Person;
 
 /**
@@ -32,17 +36,73 @@ public class DeleteCommandTest {
                 + DeleteCommand.VALID_CONTACT_DELETE_RANGE + model.getFilteredPersonList().size();
     }
     @Test
-    public void execute_validIndexUnfilteredList_success() {
+    public void execute_validIndexUnfilteredListDeleteOnly_success() {
         Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON);
+
+        ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
+        expectedModel.updateFilteredPersonList(predicate);
+
+        assertCommandSuccess(deleteCommand, model, CONFIRMATION_DELETE_PERSON_MESSAGE, expectedModel);
+    }
+
+    @Test
+    public void execute_validIndexUnfilteredListDeleteAndConfirm_success() {
+        Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON);
+
+        ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
+        expectedModel.updateFilteredPersonList(predicate);
+
+        PendingConfirmation pendingConfirmation;
+        try {
+            CommandResult result = deleteCommand.execute(model);
+            pendingConfirmation = deleteCommand.getPendingConfirmation();
+            CommandResult expectedCommandResult = new CommandResult(CONFIRMATION_DELETE_PERSON_MESSAGE);
+            assertEquals(expectedCommandResult, result);
+            assertEquals(expectedModel, model);
+        } catch (CommandException ce) {
+            throw new AssertionError("Execution of command should not fail.", ce);
+        }
+
+        ConfirmCommand confirmCommand = new ConfirmCommand(pendingConfirmation.getOnConfirm());
+
+        expectedModel.deletePerson(personToDelete);
+        expectedModel.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
 
         String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS,
                 Messages.format(personToDelete));
 
-        ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
-        expectedModel.deletePerson(personToDelete);
+        assertCommandSuccess(confirmCommand, model, expectedMessage, expectedModel);
+    }
 
-        assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
+    @Test
+    public void execute_validIndexUnfilteredListDeleteAndCancel_success() {
+        Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON);
+
+        ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
+        expectedModel.updateFilteredPersonList(predicate);
+
+        PendingConfirmation pendingConfirmation;
+        try {
+            CommandResult result = deleteCommand.execute(model);
+            pendingConfirmation = deleteCommand.getPendingConfirmation();
+            CommandResult expectedCommandResult = new CommandResult(CONFIRMATION_DELETE_PERSON_MESSAGE);
+            assertEquals(expectedCommandResult, result);
+            assertEquals(expectedModel, model);
+        } catch (CommandException ce) {
+            throw new AssertionError("Execution of command should not fail.", ce);
+        }
+
+        CancelCommand cancelCommand = new CancelCommand(pendingConfirmation.getOnCancel());
+
+        expectedModel.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+
+        assertCommandSuccess(cancelCommand, model, DeleteCommand.MESSAGE_DELETE_FAILURE, expectedModel);
     }
 
     @Test
@@ -60,14 +120,30 @@ public class DeleteCommandTest {
         Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON);
 
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
+        expectedModel.updateFilteredPersonList(predicate);
+
+        PendingConfirmation pendingConfirmation;
+        try {
+            CommandResult result = deleteCommand.execute(model);
+            pendingConfirmation = deleteCommand.getPendingConfirmation();
+            CommandResult expectedCommandResult = new CommandResult(CONFIRMATION_DELETE_PERSON_MESSAGE);
+            assertEquals(expectedCommandResult, result);
+            assertEquals(expectedModel, model);
+        } catch (CommandException ce) {
+            throw new AssertionError("Execution of command should not fail.", ce);
+        }
+
+        ConfirmCommand confirmCommand = new ConfirmCommand(pendingConfirmation.getOnConfirm());
+
+        expectedModel.deletePerson(personToDelete);
+        expectedModel.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+
         String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS,
                 Messages.format(personToDelete));
 
-        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
-        expectedModel.deletePerson(personToDelete);
-        showNoPerson(expectedModel);
-
-        assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
+        assertCommandSuccess(confirmCommand, model, expectedMessage, expectedModel);
     }
 
     @Test

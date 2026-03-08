@@ -147,6 +147,16 @@ public class EditCommandTest {
     }
 
     @Test
+    public void getPendingConfirmation_returnsInactivePendingConfirmation() {
+        Person editedPerson = new PersonBuilder().build();
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedPerson).build();
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+
+        PendingConfirmation pendingConfirmation = editCommand.getPendingConfirmation();
+        assertFalse(pendingConfirmation.getNeedConfirmation());
+    }
+
+    @Test
     public void equals() {
         final EditCommand standardCommand = new EditCommand(INDEX_FIRST_PERSON, DESC_AMY);
 

@@ -1,5 +1,6 @@
 package seedu.address.logic.commands;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
@@ -44,5 +45,12 @@ public class UndoCommandIntegrationTest {
                 UndoCommand.MESSAGE_SUCCESS,
                 expectedModel
         );
+    }
+
+    @Test
+    public void getPendingConfirmation_returnsInactivePendingConfirmation() {
+        UndoCommand undoCommand = new UndoCommand();
+        PendingConfirmation pendingConfirmation = undoCommand.getPendingConfirmation();
+        assertFalse(pendingConfirmation.getNeedConfirmation());
     }
 }

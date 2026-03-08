@@ -19,4 +19,9 @@ public class UndoCommand extends Command {
         model.undoVendorVault();
         return new CommandResult(MESSAGE_SUCCESS);
     }
+
+    @Override
+    public PendingConfirmation getPendingConfirmation() {
+        return new PendingConfirmation();
+    }
 }

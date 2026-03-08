@@ -65,4 +65,9 @@ public class ArchiveCommand extends Command {
 
         return new CommandResult(String.format(MESSAGE_ARCHIVE_SUCCESS, vendorToArchive));
     }
+
+    @Override
+    public PendingConfirmation getPendingConfirmation() {
+        return new PendingConfirmation();
+    }
 }

@@ -75,6 +75,14 @@ public class FindCommandTest {
     }
 
     @Test
+    public void getPendingConfirmation_returnsInactivePendingConfirmation() {
+        NameContainsKeywordsPredicate predicate = preparePredicate(" ");
+        FindCommand command = new FindCommand(predicate);
+        PendingConfirmation pendingConfirmation = command.getPendingConfirmation();
+        assertFalse(pendingConfirmation.getNeedConfirmation());
+    }
+
+    @Test
     public void toStringMethod() {
         NameContainsKeywordsPredicate predicate = new NameContainsKeywordsPredicate(Arrays.asList("keyword"));
         FindCommand findCommand = new FindCommand(predicate);

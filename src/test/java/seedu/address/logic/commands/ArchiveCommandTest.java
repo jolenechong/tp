@@ -1,5 +1,6 @@
 package seedu.address.logic.commands;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -31,5 +32,13 @@ public class ArchiveCommandTest {
         Person archivedVendor = model.getAddressBook().getPersonList().get(0);
 
         assertTrue(archivedVendor.isArchived());
+    }
+
+    @Test
+    public void getPendingConfirmation_returnsInactivePendingConfirmation() {
+        ArchiveCommand archiveCommand = new ArchiveCommand(Index.fromOneBased(1));
+
+        PendingConfirmation pendingConfirmation = archiveCommand.getPendingConfirmation();
+        assertFalse(pendingConfirmation.getNeedConfirmation());
     }
 }
