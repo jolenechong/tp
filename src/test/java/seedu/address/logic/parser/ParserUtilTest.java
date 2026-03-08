@@ -25,6 +25,7 @@ public class ParserUtilTest {
     private static final String INVALID_PHONE = " ";
     private static final String INVALID_ADDRESS = " ";
     private static final String INVALID_EMAIL = "example.com";
+    private static final String INVALID_BLANK_EMAIL = " ";
     private static final String INVALID_TAG = "#friend";
 
     private static final String INVALID_SHORT_PHONE = "12 ";
@@ -163,6 +164,11 @@ public class ParserUtilTest {
     @Test
     public void parseAddress_invalidLongAddress_throwsParseException() {
         assertThrows(ParseException.class, () -> ParserUtil.parseAddress(INVALID_LONG_ADDRESS));
+    }
+
+    @Test
+    public void parseEmail_blankEmail_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseEmail(INVALID_BLANK_EMAIL));
     }
 
     @Test
