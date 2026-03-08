@@ -107,7 +107,6 @@ public class AddCommand extends Command {
             if (warning.equals(MESSAGE_SIMILAR_NAME) && !hasSimilarName) {
                 appendWarning(warnings, String.format(MESSAGE_SIMILAR_NAME, existingPerson.getName()));
                 hasSimilarName = true;
-
             } else if (warning.equals(MESSAGE_SIMILAR_ADDRESS) && !hasSimilarAddress) {
                 appendWarning(warnings, String.format(
                         MESSAGE_SIMILAR_ADDRESS,

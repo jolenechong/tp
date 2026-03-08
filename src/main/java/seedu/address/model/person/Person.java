@@ -93,7 +93,6 @@ public class Person {
     private static Set<String> getNormalizedPhoneEntries(String phoneValue) {
         return Arrays.stream(phoneValue.split(ParserUtil.COMMA_SEPARATOR))
                 .map(String::trim)
-                .filter(entry -> !entry.isEmpty())
                 .map(Person::extractPhoneNumberPart)
                 .collect(Collectors.toSet());
     }
