@@ -15,7 +15,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
 
 /**
- * Represents the in-memory model of the address book data.
+ * Represents the in-memory model of the vendor vault data.
  */
 public class ModelManager implements Model {
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
@@ -26,7 +26,6 @@ public class ModelManager implements Model {
     private final FilteredList<Person> filteredPersons;
     private final FilteredList<Product> filteredProducts;
     private final VersionedVendorVault versionedVendorVault;
-
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -49,8 +48,8 @@ public class ModelManager implements Model {
     public ModelManager() {
         this(new AddressBook(), new UserPrefs());
     }
-    //=========== UserPrefs ==================================================================================
 
+    // =========== UserPrefs ==================================================================================
 
     @Override
     public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
@@ -84,8 +83,8 @@ public class ModelManager implements Model {
         requireNonNull(addressBookFilePath);
         userPrefs.setAddressBookFilePath(addressBookFilePath);
     }
-    //=========== AddressBook ================================================================================
 
+    // =========== AddressBook ================================================================================
 
     @Override
     public void setAddressBook(ReadOnlyAddressBook addressBook) {
@@ -168,7 +167,6 @@ public class ModelManager implements Model {
 
         updateFilteredPersonList(PREDICATE_SHOW_ACTIVE_PERSONS);
     }
-    //=========== Filtered Person List Accessors =============================================================
 
     @Override
     public boolean hasProduct(Product product) {
