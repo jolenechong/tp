@@ -3,6 +3,9 @@ package seedu.address.model.product;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_IDENTIFIER_AIRPODS;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_PRODUCT_NAME_IPAD;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_QUANTITY_IPHONE;
 import static seedu.address.testutil.TypicalProducts.OIL;
 import static seedu.address.testutil.TypicalProducts.RICE;
 
@@ -11,10 +14,6 @@ import org.junit.jupiter.api.Test;
 import seedu.address.testutil.ProductBuilder;
 
 public class ProductTest {
-
-    private static final String VALID_IDENTIFIER_OIL = "SKU-1000";
-    private static final String VALID_NAME_OIL = "Cooking Oil 1L";
-    private static final String VALID_QUANTITY_OIL = "20";
 
     @Test
     public void isSameProduct() {
@@ -25,19 +24,20 @@ public class ProductTest {
         assertFalse(RICE.isSameProduct(null));
 
         // same id, all other attributes different -> returns true
-        Product editedRice = new ProductBuilder(RICE).withName(VALID_NAME_OIL).withQuantity(VALID_QUANTITY_OIL).build();
+        Product editedRice = new ProductBuilder(RICE).withName(VALID_PRODUCT_NAME_IPAD)
+                .withQuantity(VALID_QUANTITY_IPHONE).build();
         assertTrue(RICE.isSameProduct(editedRice));
 
         // different id, all other attributes same -> returns false
-        editedRice = new ProductBuilder(RICE).withIdentifier(VALID_IDENTIFIER_OIL).build();
+        editedRice = new ProductBuilder(RICE).withIdentifier(VALID_IDENTIFIER_AIRPODS).build();
         assertFalse(RICE.isSameProduct(editedRice));
 
         // id differs in case, all other attributes same -> returns false
-        Product editedOil = new ProductBuilder(OIL).withIdentifier(VALID_IDENTIFIER_OIL.toLowerCase()).build();
+        Product editedOil = new ProductBuilder(OIL).withIdentifier(VALID_IDENTIFIER_AIRPODS.toLowerCase()).build();
         assertFalse(OIL.isSameProduct(editedOil));
 
         // id has trailing spaces, all other attributes same -> returns false
-        String identifierWithTrailingSpaces = VALID_IDENTIFIER_OIL + " ";
+        String identifierWithTrailingSpaces = VALID_IDENTIFIER_AIRPODS + " ";
         editedOil = new ProductBuilder(OIL).withIdentifier(identifierWithTrailingSpaces).build();
         assertFalse(OIL.isSameProduct(editedOil));
     }
@@ -61,15 +61,15 @@ public class ProductTest {
         assertFalse(RICE.equals(OIL));
 
         // different id -> returns false
-        Product editedRice = new ProductBuilder(RICE).withIdentifier(VALID_IDENTIFIER_OIL).build();
+        Product editedRice = new ProductBuilder(RICE).withIdentifier(VALID_IDENTIFIER_AIRPODS).build();
         assertFalse(RICE.equals(editedRice));
 
         // different name -> returns false
-        editedRice = new ProductBuilder(RICE).withName(VALID_NAME_OIL).build();
+        editedRice = new ProductBuilder(RICE).withName(VALID_PRODUCT_NAME_IPAD).build();
         assertFalse(RICE.equals(editedRice));
 
         // different quantity -> returns false
-        editedRice = new ProductBuilder(RICE).withQuantity(VALID_QUANTITY_OIL).build();
+        editedRice = new ProductBuilder(RICE).withQuantity(VALID_QUANTITY_IPHONE).build();
         assertFalse(RICE.equals(editedRice));
     }
 

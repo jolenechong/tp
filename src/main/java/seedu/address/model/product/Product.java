@@ -14,9 +14,9 @@ public class Product {
 
     // Identity fields
     private final Identifier identifier;
-    private final Name name;
 
     // Data fields
+    private final Name name;
     private final Quantity quantity;
 
     /**

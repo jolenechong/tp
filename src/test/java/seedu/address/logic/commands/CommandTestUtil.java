@@ -4,8 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_IDENTIFIER;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_QUANTITY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.testutil.Assert.assertThrows;
 
@@ -37,6 +39,16 @@ public class CommandTestUtil {
     public static final String VALID_TAG_HUSBAND = "husband";
     public static final String VALID_TAG_FRIEND = "friend";
 
+    public static final String VALID_IDENTIFIER_IPAD = "TAB-1001";
+    public static final String VALID_IDENTIFIER_IPHONE = "PHN-2024";
+    public static final String VALID_IDENTIFIER_AIRPODS = "AUD/3301";
+    public static final String VALID_PRODUCT_NAME_IPAD = "iPad Air 11";
+    public static final String VALID_PRODUCT_NAME_IPHONE = "iPhone 15 128GB";
+    public static final String VALID_PRODUCT_NAME_AIRPODS = "AirPods Pro 2";
+    public static final String VALID_QUANTITY_IPAD = "12";
+    public static final String VALID_QUANTITY_IPHONE = "30";
+    public static final String VALID_QUANTITY_AIRPODS = "45";
+
     public static final String NAME_DESC_AMY = " " + PREFIX_NAME + VALID_NAME_AMY;
     public static final String NAME_DESC_BOB = " " + PREFIX_NAME + VALID_NAME_BOB;
     public static final String PHONE_DESC_AMY = " " + PREFIX_PHONE + VALID_PHONE_AMY;
@@ -48,11 +60,25 @@ public class CommandTestUtil {
     public static final String TAG_DESC_FRIEND = " " + PREFIX_TAG + VALID_TAG_FRIEND;
     public static final String TAG_DESC_HUSBAND = " " + PREFIX_TAG + VALID_TAG_HUSBAND;
 
+    public static final String IDENTIFIER_DESC_IPAD = " " + PREFIX_IDENTIFIER + VALID_IDENTIFIER_IPAD;
+    public static final String IDENTIFIER_DESC_IPHONE = " " + PREFIX_IDENTIFIER + VALID_IDENTIFIER_IPHONE;
+    public static final String IDENTIFIER_DESC_AIRPODS = " " + PREFIX_IDENTIFIER + VALID_IDENTIFIER_AIRPODS;
+    public static final String PRODUCT_NAME_DESC_IPAD = " " + PREFIX_NAME + VALID_PRODUCT_NAME_IPAD;
+    public static final String PRODUCT_NAME_DESC_IPHONE = " " + PREFIX_NAME + VALID_PRODUCT_NAME_IPHONE;
+    public static final String PRODUCT_NAME_DESC_AIRPODS = " " + PREFIX_NAME + VALID_PRODUCT_NAME_AIRPODS;
+    public static final String QUANTITY_DESC_IPAD = " " + PREFIX_QUANTITY + VALID_QUANTITY_IPAD;
+    public static final String QUANTITY_DESC_IPHONE = " " + PREFIX_QUANTITY + VALID_QUANTITY_IPHONE;
+    public static final String QUANTITY_DESC_AIRPODS = " " + PREFIX_QUANTITY + VALID_QUANTITY_AIRPODS;
+
     public static final String INVALID_NAME_DESC = " " + PREFIX_NAME; // empty string not allowed in names
     public static final String INVALID_PHONE_DESC = " " + PREFIX_PHONE; // empty string not allowed in phones
     public static final String INVALID_EMAIL_DESC = " " + PREFIX_EMAIL + "bob!yahoo"; // missing '@' symbol
     public static final String INVALID_ADDRESS_DESC = " " + PREFIX_ADDRESS; // empty string not allowed for addresses
     public static final String INVALID_TAG_DESC = " " + PREFIX_TAG + "hubby*"; // '*' not allowed in tags
+
+    public static final String INVALID_IDENTIFIER_DESC = " id/"; // empty identifier not allowed
+    public static final String INVALID_PRODUCT_NAME_DESC = " " + PREFIX_NAME; // empty product name not allowed
+    public static final String INVALID_QUANTITY_DESC = " q/-1"; // negative quantity not allowed
 
     public static final String INVALID_NAME_WARN = "James-Doe";
     public static final String INVALID_PHONE_WARN = "1234 5678 (HP) 1111-3333 (Office)";
@@ -121,6 +147,7 @@ public class CommandTestUtil {
         assertEquals(expectedAddressBook, actualModel.getAddressBook());
         assertEquals(expectedFilteredList, actualModel.getFilteredPersonList());
     }
+
     /**
      * Updates {@code model}'s filtered list to show only the person at the given {@code targetIndex} in the
      * {@code model}'s address book.

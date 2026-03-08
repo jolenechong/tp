@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import seedu.address.model.Inventory;
 import seedu.address.model.product.Product;
 
 /**
@@ -30,18 +31,16 @@ public class TypicalProducts {
     private TypicalProducts() {
     } // prevents instantiation
 
-    /*
-     **
+    /**
      * Returns an {@code Inventory} with all the typical products.
-     *
-     * public static Inventory getTypicalInventory() {
-     * Inventory ab = new Inventory();
-     * for (Product product : getTypicalProducts()) {
-     * ab.addProduct(product);
-     * }
-     * return ab;
-     * }
      */
+    public static Inventory getTypicalInventory() {
+        Inventory inv = new Inventory();
+        for (Product product : getTypicalProducts()) {
+            inv.addProduct(product);
+        }
+        return inv;
+    }
 
     public static List<Product> getTypicalProducts() {
         return new ArrayList<>(Arrays.asList(RICE, OIL, EGGS, SUGAR, NOODLES, CUPS, WATER));
