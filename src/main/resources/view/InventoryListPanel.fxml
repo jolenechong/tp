@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+
+<VBox spacing="5"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1">
+
+    <HBox spacing="20"
+          style="-fx-padding: 10 20 10 20; -fx-border-color: #444; -fx-border-width: 0 0 1 0;">
+
+        <Label text="ID"
+               prefWidth="80"
+               style="-fx-text-fill: white;" />
+
+        <Label text="PRODUCT NAME"
+               prefWidth="200"
+               style="-fx-text-fill: white;" />
+
+        <Region HBox.hgrow="ALWAYS" />
+
+        <Label text="QUANTITY"
+               prefWidth="80"
+               alignment="CENTER_LEFT"
+               style="-fx-text-fill: white;" />
+
+    </HBox>
+
+    <ListView fx:id="inventoryListView"
+              VBox.vgrow="ALWAYS" />
+
+</VBox>
