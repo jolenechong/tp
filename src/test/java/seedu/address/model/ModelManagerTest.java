@@ -7,6 +7,8 @@ import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.BENSON;
+import static seedu.address.testutil.TypicalProducts.OIL;
+import static seedu.address.testutil.TypicalProducts.RICE;
 import static seedu.address.testutil.TypicalProducts.getTypicalInventory;
 
 import java.nio.file.Path;
@@ -107,6 +109,21 @@ public class ModelManagerTest {
         assertThrows(UnsupportedOperationException.class, () -> modelManager.getFilteredPersonList().remove(0));
     }
 
+    @Test
+    public void hasProduct_nullProduct_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> modelManager.hasProduct(null));
+    }
+
+    @Test
+    public void hasProduct_productNotInInventory_returnsFalse() {
+        assertFalse(modelManager.hasProduct(OIL));
+    }
+
+    @Test
+    public void hasProduct_productInInventory_returnsTrue() {
+        modelManager.addProduct(OIL);
+        assertTrue(modelManager.hasProduct(OIL));
+    }
     @Test
     public void equals() {
         AddressBook addressBook = new AddressBookBuilder().withPerson(ALICE).withPerson(BENSON).build();
