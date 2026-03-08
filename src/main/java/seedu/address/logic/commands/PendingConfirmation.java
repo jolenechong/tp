@@ -31,8 +31,9 @@ public class PendingConfirmation {
      * @param onConfirm the action to execute when the user confirms
      * @param onCancel the action to execute when the user cancels
      */
-    public PendingConfirmation(Supplier<Optional<CommandResult>> onConfirm,
-                               Supplier<Optional<CommandResult>> onCancel) {
+    public PendingConfirmation(
+            Supplier<Optional<CommandResult>> onConfirm,
+            Supplier<Optional<CommandResult>> onCancel) {
         this.onConfirm = onConfirm;
         this.onCancel = onCancel;
         this.needConfirmation = true;

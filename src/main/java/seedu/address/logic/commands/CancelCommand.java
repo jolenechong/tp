@@ -13,7 +13,6 @@ import seedu.address.model.Model;
  */
 public class CancelCommand extends Command {
 
-    // TODO check if INVALID_STATE is unreachable
     public static final String INVALID_STATE = "This is an invalid state";
 
     private final Supplier<Optional<CommandResult>> onCancel;

@@ -14,8 +14,6 @@ import seedu.address.model.Model;
 public class ConfirmationCommand extends Command {
 
     public static final String COMMAND_WORD = "y";
-
-    // TODO check if INVALID_STATE is unreachable
     public static final String INVALID_STATE = "This is an invalid state";
 
     private final Supplier<Optional<CommandResult>> onConfirm;
