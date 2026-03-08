@@ -20,6 +20,8 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
+import seedu.address.model.product.exceptions.DuplicateProductException;
+import seedu.address.model.product.exceptions.ProductNotFoundException;
 import seedu.address.testutil.AddressBookBuilder;
 
 public class ModelManagerTest {
@@ -90,6 +92,34 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void setVendorVault_nullVendorVault_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> modelManager.setVendorVault(null));
+    }
+
+    @Test
+    public void setVendorVault_validVendorVault_replacesAddressBookAndInventory() {
+        VendorVault vendorVault = new VendorVault();
+        vendorVault.setAddressBook(new AddressBookBuilder().withPerson(ALICE).withPerson(BENSON).build());
+        vendorVault.setInventory(getTypicalInventory());
+
+        modelManager.setVendorVault(vendorVault);
+
+        assertEquals(vendorVault.getPersonList(), modelManager.getAddressBook().getPersonList());
+        assertEquals(vendorVault.getProductList(), modelManager.getInventory().getProductList());
+    }
+
+    @Test
+    public void getVendorVault_returnsCombinedState() {
+        modelManager.addPerson(ALICE);
+        modelManager.addProduct(OIL);
+
+        ReadOnlyVendorVault vendorVault = modelManager.getVendorVault();
+
+        assertEquals(modelManager.getAddressBook().getPersonList(), vendorVault.getPersonList());
+        assertEquals(modelManager.getInventory().getProductList(), vendorVault.getProductList());
+    }
+
+    @Test
     public void hasPerson_nullPerson_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> modelManager.hasPerson(null));
     }
@@ -124,6 +154,53 @@ public class ModelManagerTest {
     public void hasProduct_productInInventory_returnsTrue() {
         modelManager.addProduct(OIL);
         assertTrue(modelManager.hasProduct(OIL));
+    }
+
+    @Test
+    public void deleteProduct_missingProduct_throwsProductNotFoundException() {
+        assertThrows(ProductNotFoundException.class, () -> modelManager.deleteProduct(OIL));
+    }
+
+    @Test
+    public void deleteProduct_existingProduct_removesProduct() {
+        modelManager.addProduct(OIL);
+
+        modelManager.deleteProduct(OIL);
+
+        assertFalse(modelManager.hasProduct(OIL));
+    }
+
+    @Test
+    public void setProduct_nullTargetProduct_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> modelManager.setProduct(null, OIL));
+    }
+
+    @Test
+    public void setProduct_nullEditedProduct_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> modelManager.setProduct(OIL, null));
+    }
+
+    @Test
+    public void setProduct_targetProductNotInInventory_throwsProductNotFoundException() {
+        assertThrows(ProductNotFoundException.class, () -> modelManager.setProduct(OIL, OIL));
+    }
+
+    @Test
+    public void setProduct_editedProductHasNonUniqueIdentity_throwsDuplicateProductException() {
+        modelManager.addProduct(OIL);
+        modelManager.addProduct(RICE);
+
+        assertThrows(DuplicateProductException.class, () -> modelManager.setProduct(RICE, OIL));
+    }
+
+    @Test
+    public void setProduct_validProduct_replacesProduct() {
+        modelManager.addProduct(OIL);
+
+        modelManager.setProduct(OIL, RICE);
+
+        assertFalse(modelManager.hasProduct(OIL));
+        assertTrue(modelManager.hasProduct(RICE));
     }
 
     @Test
@@ -187,7 +264,7 @@ public class ModelManagerTest {
         modelManagerWithFilteredProducts.addProduct(OIL);
         modelManagerWithFilteredProducts.addProduct(RICE);
         modelManagerWithFilteredProducts.updateFilteredProductList(
-            product -> product.getIdentifier().equals(OIL.getIdentifier()));
+                product -> product.getIdentifier().equals(OIL.getIdentifier()));
         ModelManager modelManagerWithAllProductsShown = new ModelManager(addressBook, userPrefs);
         modelManagerWithAllProductsShown.addProduct(OIL);
         modelManagerWithAllProductsShown.addProduct(RICE);
