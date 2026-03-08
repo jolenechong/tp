@@ -118,6 +118,10 @@ public class ParserUtil {
 
     private static Optional<String> getEmailWarning(String email) throws ParseException {
         if (email.isBlank()) {
+            throw new ParseException(Email.MESSAGE_BLANK);
+        }
+
+        if (!Email.isValidEmail(email)) {
             throw new ParseException(Email.MESSAGE_CONSTRAINTS);
         }
 
