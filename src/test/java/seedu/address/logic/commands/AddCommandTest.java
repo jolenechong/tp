@@ -35,7 +35,6 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
-
 import seedu.address.testutil.PersonBuilder;
 
 public class AddCommandTest {
