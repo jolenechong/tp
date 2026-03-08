@@ -13,7 +13,7 @@ import seedu.address.logic.commands.ArchiveCommand;
 import seedu.address.logic.commands.CancelCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.Command;
-import seedu.address.logic.commands.ConfirmationCommand;
+import seedu.address.logic.commands.ConfirmCommand;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.ExitCommand;
@@ -58,8 +58,8 @@ public class AddressBookParser {
         logger.fine("Command word: " + commandWord + "; Arguments: " + arguments);
 
         if (pendingConfirmation.getNeedConfirmation()) {
-            if (commandWord.equals(ConfirmationCommand.COMMAND_WORD)) {
-                return new ConfirmationCommand(pendingConfirmation.getOnConfirm());
+            if (commandWord.equals(ConfirmCommand.COMMAND_WORD)) {
+                return new ConfirmCommand(pendingConfirmation.getOnConfirm());
             } else {
                 return new CancelCommand(pendingConfirmation.getOnCancel());
             }

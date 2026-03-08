@@ -67,7 +67,7 @@ public class DeleteCommandTest {
             throw new AssertionError("Execution of command should not fail.", ce);
         }
 
-        ConfirmationCommand confirmationCommand = new ConfirmationCommand(pendingConfirmation.getOnConfirm());
+        ConfirmCommand confirmCommand = new ConfirmCommand(pendingConfirmation.getOnConfirm());
 
         expectedModel.deletePerson(personToDelete);
         expectedModel.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
@@ -75,7 +75,7 @@ public class DeleteCommandTest {
         String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS,
                 Messages.format(personToDelete));
 
-        assertCommandSuccess(confirmationCommand, model, expectedMessage, expectedModel);
+        assertCommandSuccess(confirmCommand, model, expectedMessage, expectedModel);
     }
 
     @Test
@@ -135,7 +135,7 @@ public class DeleteCommandTest {
             throw new AssertionError("Execution of command should not fail.", ce);
         }
 
-        ConfirmationCommand confirmationCommand = new ConfirmationCommand(pendingConfirmation.getOnConfirm());
+        ConfirmCommand confirmCommand = new ConfirmCommand(pendingConfirmation.getOnConfirm());
 
         expectedModel.deletePerson(personToDelete);
         expectedModel.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
@@ -143,7 +143,7 @@ public class DeleteCommandTest {
         String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS,
                 Messages.format(personToDelete));
 
-        assertCommandSuccess(confirmationCommand, model, expectedMessage, expectedModel);
+        assertCommandSuccess(confirmCommand, model, expectedMessage, expectedModel);
     }
 
     @Test

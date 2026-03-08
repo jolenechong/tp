@@ -11,14 +11,14 @@ import seedu.address.model.Model;
 /**
  * Confirms the previous question.
  */
-public class ConfirmationCommand extends Command {
+public class ConfirmCommand extends Command {
 
     public static final String COMMAND_WORD = "y";
     public static final String INVALID_STATE = "This is an invalid state";
 
     private final Supplier<Optional<CommandResult>> onConfirm;
 
-    public ConfirmationCommand(Supplier<Optional<CommandResult>> onConfirm) {
+    public ConfirmCommand(Supplier<Optional<CommandResult>> onConfirm) {
         this.onConfirm = onConfirm;
     }
 

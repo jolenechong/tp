@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.CancelCommand;
 import seedu.address.logic.commands.ClearCommand;
-import seedu.address.logic.commands.ConfirmationCommand;
+import seedu.address.logic.commands.ConfirmCommand;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
@@ -57,7 +57,7 @@ public class AddressBookParserTest {
 
     @Test
     public void parseCommand_confirmationCommand() throws Exception {
-        assertTrue(parser.parseCommand(ConfirmationCommand.COMMAND_WORD, confirmation) instanceof ConfirmationCommand);
+        assertTrue(parser.parseCommand(ConfirmCommand.COMMAND_WORD, confirmation) instanceof ConfirmCommand);
     }
 
     @Test
