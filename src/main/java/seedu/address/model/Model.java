@@ -58,6 +58,14 @@ public interface Model {
     ReadOnlyAddressBook getAddressBook();
 
     /**
+     * Replaces inventory data with the data in {@code inventory}.
+     */
+    void setInventory(ReadOnlyInventory inventory);
+
+    /** Returns the Inventory */
+    ReadOnlyInventory getInventory();
+
+    /**
      * Returns true if a person with the same identity as {@code person} exists in the address book.
      */
     boolean hasPerson(Person person);
