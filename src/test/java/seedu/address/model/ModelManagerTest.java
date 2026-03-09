@@ -4,9 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PRODUCTS;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.BENSON;
+import static seedu.address.testutil.TypicalProducts.OIL;
+import static seedu.address.testutil.TypicalProducts.RICE;
+import static seedu.address.testutil.TypicalProducts.getTypicalInventory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,6 +20,8 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
+import seedu.address.model.product.exceptions.DuplicateProductException;
+import seedu.address.model.product.exceptions.ProductNotFoundException;
 import seedu.address.testutil.AddressBookBuilder;
 
 public class ModelManagerTest {
@@ -27,6 +33,7 @@ public class ModelManagerTest {
         assertEquals(new UserPrefs(), modelManager.getUserPrefs());
         assertEquals(new GuiSettings(), modelManager.getGuiSettings());
         assertEquals(new AddressBook(), new AddressBook(modelManager.getAddressBook()));
+        assertEquals(new Inventory(), new Inventory(modelManager.getInventory()));
     }
 
     @Test
@@ -73,6 +80,46 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void setInventory_nullInventory_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> modelManager.setInventory(null));
+    }
+
+    @Test
+    public void setInventory_validInventory_replacesInventoryData() {
+        Inventory inventory = getTypicalInventory();
+        modelManager.setInventory(inventory);
+        assertEquals(inventory, new Inventory(modelManager.getInventory()));
+    }
+
+    @Test
+    public void setVendorVault_nullVendorVault_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> modelManager.setVendorVault(null));
+    }
+
+    @Test
+    public void setVendorVault_validVendorVault_replacesAddressBookAndInventory() {
+        VendorVault vendorVault = new VendorVault();
+        vendorVault.setAddressBook(new AddressBookBuilder().withPerson(ALICE).withPerson(BENSON).build());
+        vendorVault.setInventory(getTypicalInventory());
+
+        modelManager.setVendorVault(vendorVault);
+
+        assertEquals(vendorVault.getPersonList(), modelManager.getAddressBook().getPersonList());
+        assertEquals(vendorVault.getProductList(), modelManager.getInventory().getProductList());
+    }
+
+    @Test
+    public void getVendorVault_returnsCombinedState() {
+        modelManager.addPerson(ALICE);
+        modelManager.addProduct(OIL);
+
+        ReadOnlyVendorVault vendorVault = modelManager.getVendorVault();
+
+        assertEquals(modelManager.getAddressBook().getPersonList(), vendorVault.getPersonList());
+        assertEquals(modelManager.getInventory().getProductList(), vendorVault.getProductList());
+    }
+
+    @Test
     public void hasPerson_nullPerson_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> modelManager.hasPerson(null));
     }
@@ -91,6 +138,84 @@ public class ModelManagerTest {
     @Test
     public void getFilteredPersonList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, () -> modelManager.getFilteredPersonList().remove(0));
+    }
+
+    @Test
+    public void hasProduct_nullProduct_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> modelManager.hasProduct(null));
+    }
+
+    @Test
+    public void hasProduct_productNotInInventory_returnsFalse() {
+        assertFalse(modelManager.hasProduct(OIL));
+    }
+
+    @Test
+    public void hasProduct_productInInventory_returnsTrue() {
+        modelManager.addProduct(OIL);
+        assertTrue(modelManager.hasProduct(OIL));
+    }
+
+    @Test
+    public void deleteProduct_missingProduct_throwsProductNotFoundException() {
+        assertThrows(ProductNotFoundException.class, () -> modelManager.deleteProduct(OIL));
+    }
+
+    @Test
+    public void deleteProduct_existingProduct_removesProduct() {
+        modelManager.addProduct(OIL);
+
+        modelManager.deleteProduct(OIL);
+
+        assertFalse(modelManager.hasProduct(OIL));
+    }
+
+    @Test
+    public void setProduct_nullTargetProduct_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> modelManager.setProduct(null, OIL));
+    }
+
+    @Test
+    public void setProduct_nullEditedProduct_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> modelManager.setProduct(OIL, null));
+    }
+
+    @Test
+    public void setProduct_targetProductNotInInventory_throwsProductNotFoundException() {
+        assertThrows(ProductNotFoundException.class, () -> modelManager.setProduct(OIL, OIL));
+    }
+
+    @Test
+    public void setProduct_editedProductHasNonUniqueIdentity_throwsDuplicateProductException() {
+        modelManager.addProduct(OIL);
+        modelManager.addProduct(RICE);
+
+        assertThrows(DuplicateProductException.class, () -> modelManager.setProduct(RICE, OIL));
+    }
+
+    @Test
+    public void setProduct_validProduct_replacesProduct() {
+        modelManager.addProduct(OIL);
+
+        modelManager.setProduct(OIL, RICE);
+
+        assertFalse(modelManager.hasProduct(OIL));
+        assertTrue(modelManager.hasProduct(RICE));
+    }
+
+    @Test
+    public void updateFilteredProductList_filtersProductList() {
+        modelManager.addProduct(OIL);
+        modelManager.addProduct(RICE);
+        modelManager.updateFilteredProductList(product -> product.getIdentifier().equals(OIL.getIdentifier()));
+
+        assertEquals(1, modelManager.getFilteredProductList().size());
+        assertEquals(OIL, modelManager.getFilteredProductList().get(0));
+    }
+
+    @Test
+    public void getFilteredProductList_modifyList_throwsUnsupportedOperationException() {
+        assertThrows(UnsupportedOperationException.class, () -> modelManager.getFilteredProductList().remove(0));
     }
 
     @Test
@@ -128,5 +253,22 @@ public class ModelManagerTest {
         UserPrefs differentUserPrefs = new UserPrefs();
         differentUserPrefs.setAddressBookFilePath(Paths.get("differentFilePath"));
         assertFalse(modelManager.equals(new ModelManager(addressBook, differentUserPrefs)));
+
+        // different inventory -> returns false
+        ModelManager modelManagerWithProduct = new ModelManager(addressBook, userPrefs);
+        modelManagerWithProduct.addProduct(OIL);
+        assertFalse(modelManager.equals(modelManagerWithProduct));
+
+        // different filteredProductList -> returns false
+        ModelManager modelManagerWithFilteredProducts = new ModelManager(addressBook, userPrefs);
+        modelManagerWithFilteredProducts.addProduct(OIL);
+        modelManagerWithFilteredProducts.addProduct(RICE);
+        modelManagerWithFilteredProducts.updateFilteredProductList(
+                product -> product.getIdentifier().equals(OIL.getIdentifier()));
+        ModelManager modelManagerWithAllProductsShown = new ModelManager(addressBook, userPrefs);
+        modelManagerWithAllProductsShown.addProduct(OIL);
+        modelManagerWithAllProductsShown.addProduct(RICE);
+        modelManagerWithAllProductsShown.updateFilteredProductList(PREDICATE_SHOW_ALL_PRODUCTS);
+        assertFalse(modelManagerWithFilteredProducts.equals(modelManagerWithAllProductsShown));
     }
 }

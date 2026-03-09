@@ -28,10 +28,13 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.ReadOnlyInventory;
 import seedu.address.model.ReadOnlyUserPrefs;
+import seedu.address.model.ReadOnlyVendorVault;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
+import seedu.address.model.product.Product;
 import seedu.address.testutil.PersonBuilder;
 
 public class AddCommandTest {
@@ -80,7 +83,6 @@ public class AddCommandTest {
         AddCommand addCommand = new AddCommand(validPersonWithWarnings, warnings);
 
         CommandResult result = addCommand.execute(modelStub);
-
 
         String expectedMessage = String.format(
                 AddCommand.MESSAGE_SUCCESS + NEWLINE + warnings,
@@ -367,6 +369,26 @@ public class AddCommandTest {
         }
 
         @Override
+        public void setInventory(ReadOnlyInventory inventory) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ReadOnlyInventory getInventory() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setVendorVault(ReadOnlyVendorVault vendorVault) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ReadOnlyVendorVault getVendorVault() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public boolean hasPerson(Person person) {
             throw new AssertionError("This method should not be called.");
         }
@@ -382,12 +404,42 @@ public class AddCommandTest {
         }
 
         @Override
+        public boolean hasProduct(Product product) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void deleteProduct(Product target) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void addProduct(Product product) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setProduct(Product target, Product editedProduct) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public ObservableList<Person> getFilteredPersonList() {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
         public void updateFilteredPersonList(Predicate<Person> predicate) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ObservableList<Product> getFilteredProductList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void updateFilteredProductList(Predicate<Product> predicate) {
             throw new AssertionError("This method should not be called.");
         }
 
