@@ -1,5 +1,6 @@
 package seedu.address.logic.parser;
 
+import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON_STRING;
 
@@ -20,6 +21,27 @@ public class DeleteCommandParserTest {
 
     @Test
     public void parse_validArgs_returnsDeleteCommand() {
-        assertParseSuccess(parser, "1", new DeleteCommand(INDEX_FIRST_PERSON_STRING));
+        assertParseSuccess(parser, "1", new DeleteCommand(INDEX_FIRST_PERSON_STRING, true));
+    }
+
+    @Test
+    public void parse_validArgsWithConfirmationFlag_returnsDeleteCommand() {
+        assertParseSuccess(parser, "-y 1", new DeleteCommand(INDEX_FIRST_PERSON_STRING, false));
+    }
+
+    @Test
+    public void parse_validArgsWithConfirmationFlagAfterIndex_returnsDeleteCommand() {
+        assertParseSuccess(parser, "1 -y", new DeleteCommand(INDEX_FIRST_PERSON_STRING, false));
+    }
+
+    @Test
+    public void parse_validArgsWithLeadingAndTrailingSpaces_returnsDeleteCommand() {
+        assertParseSuccess(parser, "    1    ", new DeleteCommand(INDEX_FIRST_PERSON_STRING, true));
+    }
+
+    @Test
+    public void parse_wronglyFormedFlagAttachedToIndex_throwsParseException() {
+        assertParseFailure(parser, "-y1", DeleteCommandParser.MESSAGE_WRONGLY_FORMED_FLAG);
+        assertParseFailure(parser, "-y12", DeleteCommandParser.MESSAGE_WRONGLY_FORMED_FLAG);
     }
 }
