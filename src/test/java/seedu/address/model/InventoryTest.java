@@ -88,13 +88,11 @@ public class InventoryTest {
 
     @Test
     public void setProduct_nullTargetProduct_throwsNullPointerException() {
-        inventory.addProduct(OIL);
         assertThrows(NullPointerException.class, () -> inventory.setProduct(null, OIL));
     }
 
     @Test
     public void setProduct_nullEditedProduct_throwsNullPointerException() {
-        inventory.addProduct(OIL);
         assertThrows(NullPointerException.class, () -> inventory.setProduct(OIL, null));
     }
 
