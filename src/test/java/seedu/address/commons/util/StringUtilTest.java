@@ -10,6 +10,30 @@ import org.junit.jupiter.api.Test;
 
 public class StringUtilTest {
 
+    //---------------- Tests for isValidInteger ------------------------------------------------
+
+    @Test
+    public void isValidInteger() {
+        // EP: empty strings
+        assertFalse(StringUtil.isValidInteger(""));
+        assertFalse(StringUtil.isValidInteger("  "));
+
+        // EP: not a number
+        assertFalse(StringUtil.isValidInteger("a"));
+        assertFalse(StringUtil.isValidInteger("aaa"));
+
+        // EP: zero
+        assertTrue(StringUtil.isValidInteger("0"));
+
+        // EP: numbers with white space
+        assertFalse(StringUtil.isValidInteger(" 10 ")); // Leading/trailing spaces
+        assertFalse(StringUtil.isValidInteger("1 0")); // Spaces in the middle
+
+        // EP: valid numbers, should return true
+        assertTrue(StringUtil.isNonZeroUnsignedInteger("1"));
+        assertTrue(StringUtil.isNonZeroUnsignedInteger("10"));
+    }
+
     //---------------- Tests for isNonZeroUnsignedInteger --------------------------------------
 
     @Test

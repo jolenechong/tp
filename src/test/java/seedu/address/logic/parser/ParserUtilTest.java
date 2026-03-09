@@ -52,9 +52,20 @@ public class ParserUtilTest {
 
     private static final String WHITESPACE = " \t\r\n";
 
+    private static final int INDEX_FIRST_PERSON_INT = 1;
+
     @Test
-    public void parseIndex_invalidInput_throwsParseException() {
-        assertThrows(ParseException.class, () -> ParserUtil.parseIndex("10 a"));
+    public void parseIndexToInteger_invalidInput_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseIndexToInteger("10 a"));
+    }
+
+    @Test
+    public void parseIndexToInteger_validInput_success() throws Exception {
+        // No whitespaces
+        assertEquals(INDEX_FIRST_PERSON_INT, ParserUtil.parseIndexToInteger("1"));
+
+        // Leading and trailing whitespaces
+        assertEquals(INDEX_FIRST_PERSON_INT, ParserUtil.parseIndexToInteger("  1  "));
     }
 
     @Test
