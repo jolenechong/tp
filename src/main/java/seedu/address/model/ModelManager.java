@@ -35,8 +35,9 @@ public class ModelManager implements Model {
 
         logger.fine("Initializing with address book: " + addressBook + " and user prefs " + userPrefs);
 
-        this.addressBook = new AddressBook(addressBook);
         this.inventory = new Inventory();
+
+        this.addressBook = new AddressBook(addressBook);
         this.userPrefs = new UserPrefs(userPrefs);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
         filteredPersons.setPredicate(Model.PREDICATE_SHOW_ACTIVE_PERSONS);
@@ -168,6 +169,14 @@ public class ModelManager implements Model {
         updateFilteredPersonList(PREDICATE_SHOW_ACTIVE_PERSONS);
     }
 
+    //=========== Product / Inventory Operations =============================================================
+    @Override
+    public void setProduct(Product target, Product editedProduct) {
+        requireAllNonNull(target, editedProduct);
+        inventory.setProduct(target, editedProduct);
+    }
+
+
     @Override
     public boolean hasProduct(Product product) {
         requireNonNull(product);
@@ -183,12 +192,6 @@ public class ModelManager implements Model {
     public void addProduct(Product product) {
         inventory.addProduct(product);
         updateFilteredProductList(PREDICATE_SHOW_ALL_PRODUCTS);
-    }
-
-    @Override
-    public void setProduct(Product target, Product editedProduct) {
-        requireAllNonNull(target, editedProduct);
-        inventory.setProduct(target, editedProduct);
     }
 
     // =========== Filtered Person List Accessors =============================================================
@@ -208,8 +211,11 @@ public class ModelManager implements Model {
         filteredPersons.setPredicate(predicate);
     }
 
-    // =========== Filtered Product List Accessors =============================================================
-
+    //=========== Filtered Product List Accessors ============================================================
+    /**
+     * Returns an unmodifiable view of the list of {@code Product} backed by the internal list of
+     * {@code inventory}
+     */
     @Override
     public ObservableList<Product> getFilteredProductList() {
         return filteredProducts;

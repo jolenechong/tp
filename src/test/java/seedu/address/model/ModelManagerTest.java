@@ -2,6 +2,7 @@ package seedu.address.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PRODUCTS;
@@ -22,6 +23,7 @@ import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.product.exceptions.DuplicateProductException;
 import seedu.address.model.product.exceptions.ProductNotFoundException;
+import seedu.address.model.util.SampleInventoryDataUtil;
 import seedu.address.testutil.AddressBookBuilder;
 
 public class ModelManagerTest {
@@ -219,6 +221,12 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void getInventory_notNull() {
+        ModelManager modelManager = new ModelManager(new AddressBook(), new UserPrefs());
+        assertNotNull(modelManager.getInventory());
+    }
+
+    @Test
     public void equals() {
         AddressBook addressBook = new AddressBookBuilder().withPerson(ALICE).withPerson(BENSON).build();
         AddressBook differentAddressBook = new AddressBook();
@@ -270,5 +278,15 @@ public class ModelManagerTest {
         modelManagerWithAllProductsShown.addProduct(RICE);
         modelManagerWithAllProductsShown.updateFilteredProductList(PREDICATE_SHOW_ALL_PRODUCTS);
         assertFalse(modelManagerWithFilteredProducts.equals(modelManagerWithAllProductsShown));
+    }
+
+    @Test
+    public void setInventory_success() {
+        ModelManager modelManager = new ModelManager(new AddressBook(), new UserPrefs());
+
+        Inventory inventory = SampleInventoryDataUtil.getSampleInventory();
+        modelManager.setInventory(inventory);
+
+        assertEquals(inventory, modelManager.getInventory());
     }
 }

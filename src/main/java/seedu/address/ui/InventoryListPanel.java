@@ -1,6 +1,5 @@
 package seedu.address.ui;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
@@ -9,8 +8,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import seedu.address.model.product.Product;
 
 /**
  * Displays the inventory list in the right panel.
@@ -33,44 +34,34 @@ public class InventoryListPanel extends UiPart<Region> {
             + "-fx-padding: 4 12 4 12;"
             + "-fx-text-fill: white;";
 
-    private static final int ID_WIDTH = 80;
-    private static final int NAME_WIDTH = 400;
+    private static final int ID_WIDTH = 50;
     private static final int QTY_COLUMN_WIDTH = 80;
+    private static final int NAME_COLUMN_MIN_WIDTH = 80;
 
     @FXML
-    private ListView<String> inventoryListView;
+    private ListView<Product> inventoryListView;
 
     /**
-     * Creates an InventoryListPanel with sample inventory data.
+     * Creates an InventoryListPanel using real product data.
      */
-    public InventoryListPanel() {
+    public InventoryListPanel(ObservableList<Product> productList) {
         super(FXML);
 
-        ObservableList<String> fakeInventory = FXCollections.observableArrayList(
-                "Product AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:001:25",
-                "Product B:002:5000",
-                "Product C:003:999999",
-                "Product D:004:3"
-        );
-
-        SortedList<String> sortedInventory =
-                new SortedList<>(fakeInventory, this::compareInventoryItems);
+        SortedList<Product> sortedInventory =
+                new SortedList<>(productList, this::compareInventoryItems);
 
         inventoryListView.setItems(sortedInventory);
         inventoryListView.setCellFactory(list -> createInventoryCell());
+        inventoryListView.setFocusTraversable(false);
     }
 
     /**
      * Comparator used to sort inventory items.
-     * Low-stock items appear first, then items are sorted by quantity.
+     * Low-stock items appear first, then sorted by quantity.
      */
-    private int compareInventoryItems(String a, String b) {
-
-        String[] pa = a.split(":");
-        String[] pb = b.split(":");
-
-        int qtyA = Integer.parseInt(pa[2]);
-        int qtyB = Integer.parseInt(pb[2]);
+    private int compareInventoryItems(Product a, Product b) {
+        int qtyA = Integer.parseInt(a.getQuantity().toString());
+        int qtyB = Integer.parseInt(b.getQuantity().toString());
 
         boolean lowA = qtyA <= LOW_STOCK_THRESHOLD;
         boolean lowB = qtyB <= LOW_STOCK_THRESHOLD;
@@ -87,13 +78,12 @@ public class InventoryListPanel extends UiPart<Region> {
     }
 
     /**
-     * Creates a custom cell for displaying inventory items.
+     * Creates a custom cell for displaying inventory rows.
      */
-    private ListCell<String> createInventoryCell() {
+    private ListCell<Product> createInventoryCell() {
         return new ListCell<>() {
-
             @Override
-            protected void updateItem(String item, boolean empty) {
+            protected void updateItem(Product item, boolean empty) {
                 super.updateItem(item, empty);
 
                 if (empty || item == null) {
@@ -102,37 +92,41 @@ public class InventoryListPanel extends UiPart<Region> {
                     return;
                 }
 
-                String[] parts = item.split(":");
-
-                String name = parts[0];
-                String id = parts[1];
-                int qty = Integer.parseInt(parts[2]);
+                String name = item.getName().toString();
+                String id = item.getIdentifier().toString();
+                int qty = Integer.parseInt(item.getQuantity().toString());
 
                 Label idLabel = new Label(id);
-                idLabel.setPrefWidth(ID_WIDTH);
+                idLabel.setMinWidth(ID_WIDTH);
+                idLabel.setMaxWidth(ID_WIDTH);
                 idLabel.setTextFill(Color.LIGHTGRAY);
 
                 Label nameLabel = new Label(name);
-                nameLabel.setPrefWidth(NAME_WIDTH);
                 nameLabel.setTextFill(Color.WHITE);
-                nameLabel.setEllipsisString("...");
-                nameLabel.setWrapText(false);
+                nameLabel.setWrapText(true);
+                nameLabel.setMinWidth(NAME_COLUMN_MIN_WIDTH);
+                nameLabel.setMaxWidth(600);
+                HBox.setHgrow(nameLabel, Priority.ALWAYS);
 
                 Label qtyLabel = new Label(String.valueOf(qty));
                 qtyLabel.setAlignment(Pos.CENTER);
                 qtyLabel.setMinWidth(40);
                 qtyLabel.setMaxWidth(80);
-
                 qtyLabel.setStyle(getStockStyle(qty));
 
                 HBox qtyCell = new HBox(qtyLabel);
                 qtyCell.setPrefWidth(QTY_COLUMN_WIDTH);
+                qtyCell.setMinWidth(QTY_COLUMN_WIDTH);
+                qtyCell.setMaxWidth(QTY_COLUMN_WIDTH);
                 qtyCell.setAlignment(Pos.CENTER_LEFT);
 
                 HBox row = new HBox(idLabel, nameLabel, qtyCell);
                 row.setSpacing(20);
                 row.setAlignment(Pos.CENTER_LEFT);
                 row.setStyle("-fx-padding: 10 20 10 20;");
+
+                row.prefWidthProperty().bind(getListView().widthProperty().subtract(18));
+                row.maxWidthProperty().bind(getListView().widthProperty().subtract(18));
 
                 setGraphic(row);
                 setText(null);

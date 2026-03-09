@@ -324,6 +324,11 @@ public class AddCommandTest {
      */
     private class ModelStub implements Model {
         @Override
+        public void setProduct(Product target, Product editedProduct) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
             throw new AssertionError("This method should not be called.");
         }
@@ -415,11 +420,6 @@ public class AddCommandTest {
 
         @Override
         public void addProduct(Product product) {
-            throw new AssertionError("This method should not be called.");
-        }
-
-        @Override
-        public void setProduct(Product target, Product editedProduct) {
             throw new AssertionError("This method should not be called.");
         }
 
