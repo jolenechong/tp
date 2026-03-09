@@ -42,14 +42,16 @@ public class DeleteCommand extends Command {
     private PendingConfirmation pendingConfirmation = new PendingConfirmation();
 
     private final String targetIndexString;
+    private final boolean needsConfirmation;
 
     /**
      * Creates a DeleteCommand to delete the person at the specified {@code targetIndexString}.
      *
      * @param targetIndexString the index string of the person to be deleted, which could have trailing spaces
      */
-    public DeleteCommand(String targetIndexString) {
+    public DeleteCommand(String targetIndexString, boolean needsConfirmation) {
         this.targetIndexString = targetIndexString.trim();
+        this.needsConfirmation = needsConfirmation;
     }
 
     @Override
@@ -70,6 +72,10 @@ public class DeleteCommand extends Command {
 
         Person personToDelete = lastShownList.get(targetIndex.getZeroBased());
 
+        if (!this.needsConfirmation) {
+            return this.deletePerson(model, personToDelete);
+        }
+
         this.pendingConfirmation = new PendingConfirmation(() ->
                 this.onConfirm(model, personToDelete), () -> this.onCancel(model));
 
@@ -89,18 +95,22 @@ public class DeleteCommand extends Command {
                 : Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + VALID_CONTACT_DELETE_RANGE + lastShownList.size();
     }
 
+    public CommandResult deletePerson(Model model, Person personToDelete) {
+        model.deletePerson(personToDelete);
+
+        model.commitVendorVault();
+        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        return new CommandResult(
+                String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete)));
+    }
+
     /**
      * Executes the deletion of specified person from model upon confirmation
      * Resets the displayed person list to show all the person after deletion
      *
      */
     public Optional<CommandResult> onConfirm(Model model, Person personToDelete) {
-        model.deletePerson(personToDelete);
-
-        model.commitVendorVault();
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        return Optional.of(new CommandResult(
-                String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete))));
+        return Optional.of(this.deletePerson(model, personToDelete));
     }
 
     /**
