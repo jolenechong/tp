@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import seedu.address.model.product.Product;
@@ -33,9 +34,9 @@ public class InventoryListPanel extends UiPart<Region> {
             + "-fx-padding: 4 12 4 12;"
             + "-fx-text-fill: white;";
 
-    private static final int ID_WIDTH = 80;
-    private static final int NAME_WIDTH = 400;
-    private static final int QTY_COLUMN_WIDTH = 80;
+    private static final int ID_WIDTH = 50;
+    private static final int QTY_COLUMN_WIDTH = 100;
+    private static final int NAME_COLUMN_MIN_WIDTH = 40;
 
     @FXML
     private ListView<Product> inventoryListView;
@@ -51,14 +52,14 @@ public class InventoryListPanel extends UiPart<Region> {
 
         inventoryListView.setItems(sortedInventory);
         inventoryListView.setCellFactory(list -> createInventoryCell());
+        inventoryListView.setFocusTraversable(false);
     }
 
     /**
      * Comparator used to sort inventory items.
-     * Low-stock items appear first, then items are sorted by quantity.
+     * Low-stock items appear first, then sorted by quantity.
      */
     private int compareInventoryItems(Product a, Product b) {
-
         int qtyA = Integer.parseInt(a.getQuantity().toString());
         int qtyB = Integer.parseInt(b.getQuantity().toString());
 
@@ -77,11 +78,10 @@ public class InventoryListPanel extends UiPart<Region> {
     }
 
     /**
-     * Creates a custom cell for displaying inventory items.
+     * Creates a custom cell for displaying inventory rows.
      */
     private ListCell<Product> createInventoryCell() {
         return new ListCell<>() {
-
             @Override
             protected void updateItem(Product item, boolean empty) {
                 super.updateItem(item, empty);
@@ -97,30 +97,41 @@ public class InventoryListPanel extends UiPart<Region> {
                 int qty = Integer.parseInt(item.getQuantity().toString());
 
                 Label idLabel = new Label(id);
-                idLabel.setPrefWidth(ID_WIDTH);
+                idLabel.setMinWidth(ID_WIDTH);
+                idLabel.setMaxWidth(ID_WIDTH);
                 idLabel.setTextFill(Color.LIGHTGRAY);
 
                 Label nameLabel = new Label(name);
-                nameLabel.setPrefWidth(NAME_WIDTH);
                 nameLabel.setTextFill(Color.WHITE);
-                nameLabel.setEllipsisString("...");
-                nameLabel.setWrapText(false);
+                nameLabel.setWrapText(true);
+                nameLabel.setMinWidth(NAME_COLUMN_MIN_WIDTH);
+                nameLabel.setMaxWidth(Double.MAX_VALUE);
+                HBox.setHgrow(nameLabel, Priority.ALWAYS);
 
                 Label qtyLabel = new Label(String.valueOf(qty));
                 qtyLabel.setAlignment(Pos.CENTER);
                 qtyLabel.setMinWidth(40);
                 qtyLabel.setMaxWidth(80);
-
                 qtyLabel.setStyle(getStockStyle(qty));
 
                 HBox qtyCell = new HBox(qtyLabel);
                 qtyCell.setPrefWidth(QTY_COLUMN_WIDTH);
+                qtyCell.setMinWidth(QTY_COLUMN_WIDTH);
+                qtyCell.setMaxWidth(QTY_COLUMN_WIDTH);
                 qtyCell.setAlignment(Pos.CENTER_LEFT);
 
                 HBox row = new HBox(idLabel, nameLabel, qtyCell);
                 row.setSpacing(20);
                 row.setAlignment(Pos.CENTER_LEFT);
                 row.setStyle("-fx-padding: 10 20 10 20;");
+
+                /*
+                 * Critical fix:
+                 * force the row to use the available cell width,
+                 * so it wraps instead of causing horizontal scrolling.
+                 */
+                row.prefWidthProperty().bind(getListView().widthProperty().subtract(18));
+                row.maxWidthProperty().bind(getListView().widthProperty().subtract(18));
 
                 setGraphic(row);
                 setText(null);

@@ -16,9 +16,9 @@ public class SampleInventoryDataUtil {
      */
     public static Product[] getSampleProducts() {
         return new Product[] {
-            new Product(new Identifier("P001"), new Name("Milk"), new Quantity("30")),
-            new Product(new Identifier("P002"), new Name("Apples"), new Quantity("8")),
-            new Product(new Identifier("P003"), new Name("Bread"), new Quantity("150000")),
+            new Product(new Identifier("P001"), new Name("MilkMilkMilkMilkMilkMilkMilkMilk"), new Quantity("30")),
+            new Product(new Identifier("P002"), new Name("ApplesApplesApplesApplesApplesApplesApplesApples"), new Quantity("8")),
+            new Product(new Identifier("P003"), new Name("BreadBreadBreadBreadBreadBreadBreadBreadBread"), new Quantity("150000")),
             new Product(new Identifier("P004"), new Name("Eggs"), new Quantity("5"))
         };
     }
