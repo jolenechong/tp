@@ -29,6 +29,20 @@ public class ParserUtil {
     public static final String SPACE_SEPARATOR = " ";
     public static final String NEWLINE = "\n";
     public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
+    public static final String MESSAGE_NOT_A_NUMBER = "Index is not a number.";
+
+    /**
+     * Parses a string index into an integer
+     *
+     */
+    public static int parseIndexToInteger(String index) throws ParseException {
+        String trimmedIndex = index.trim();
+        if (!StringUtil.isValidInteger(trimmedIndex)) {
+            throw new ParseException(MESSAGE_NOT_A_NUMBER);
+        }
+
+        return Integer.parseInt(trimmedIndex);
+    }
 
     /**
      * Parses {@code oneBasedIndex} into an {@code Index} and returns it. Leading and trailing whitespaces will be

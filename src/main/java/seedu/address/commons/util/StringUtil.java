@@ -65,4 +65,19 @@ public class StringUtil {
             return false;
         }
     }
+
+    /**
+     * Returns true if {@code s} can be parsed as an integer.
+     *
+     */
+    public static boolean isValidInteger(String s) {
+        requireNonNull(s);
+
+        try {
+            int value = Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }

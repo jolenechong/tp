@@ -10,6 +10,8 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.logic.parser.ParserUtil;
+import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.model.person.NameEqualsKeywordsPredicate;
 import seedu.address.model.person.Person;
@@ -39,10 +41,15 @@ public class DeleteCommand extends Command {
 
     private PendingConfirmation pendingConfirmation = new PendingConfirmation();
 
-    private final Index targetIndex;
+    private final String targetIndexString;
 
-    public DeleteCommand(Index targetIndex) {
-        this.targetIndex = targetIndex;
+    /**
+     * Creates a DeleteCommand to delete the person at the specified {@code targetIndexString}.
+     *
+     * @param targetIndexString the index string of the person to be deleted, which could have trailing spaces
+     */
+    public DeleteCommand(String targetIndexString) {
+        this.targetIndexString = targetIndexString.trim();
     }
 
     @Override
@@ -50,16 +57,15 @@ public class DeleteCommand extends Command {
         requireNonNull(model);
         List<Person> lastShownList = model.getFilteredPersonList();
 
+        Index targetIndex;
+        try {
+            targetIndex = ParserUtil.parseIndex(targetIndexString);
+        } catch (ParseException e) {
+            throw new CommandException(formatExceptionMessage(lastShownList));
+        }
+
         if (targetIndex.getZeroBased() >= lastShownList.size()) {
-            String exceptionMessage;
-            if (lastShownList.isEmpty()) {
-                exceptionMessage = Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX
-                        + CONTACT_IS_EMPTY;
-            } else {
-                exceptionMessage = Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX
-                        + VALID_CONTACT_DELETE_RANGE + lastShownList.size();
-            }
-            throw new CommandException(exceptionMessage);
+            throw new CommandException(formatExceptionMessage(lastShownList));
         }
 
         Person personToDelete = lastShownList.get(targetIndex.getZeroBased());
@@ -70,6 +76,17 @@ public class DeleteCommand extends Command {
         NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
         model.updateFilteredPersonList(predicate);
         return new CommandResult(CONFIRMATION_DELETE_PERSON_MESSAGE);
+    }
+
+    /**
+     * Formats an exception message for an invalid person index based on the current list state.
+     * If there is no contacts in the list, it will prompt user to add contacts first
+     *
+     */
+    public String formatExceptionMessage(List<Person> lastShownList) {
+        return lastShownList.isEmpty()
+                ? Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + CONTACT_IS_EMPTY
+                : Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + VALID_CONTACT_DELETE_RANGE + lastShownList.size();
     }
 
     /**
@@ -113,13 +130,13 @@ public class DeleteCommand extends Command {
         }
 
         DeleteCommand otherDeleteCommand = (DeleteCommand) other;
-        return targetIndex.equals(otherDeleteCommand.targetIndex);
+        return targetIndexString.equals(otherDeleteCommand.targetIndexString);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("targetIndex", targetIndex)
+                .add("targetIndex", targetIndexString)
                 .toString();
     }
 }
