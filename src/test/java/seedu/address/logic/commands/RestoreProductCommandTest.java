@@ -45,4 +45,21 @@ public class RestoreProductCommandTest {
 
         assertThrows(CommandException.class, () -> command.execute(model));
     }
+
+    @Test
+    public void execute_missingIdentifier_throwsCommandException() {
+        Model model = new ModelManager();
+
+        RestoreProductCommand command = new RestoreProductCommand("");
+
+        assertThrows(CommandException.class, () -> command.execute(model));
+    }
+
+    @Test
+    public void execute_productNotFound_throwsCommandException() {
+        Model model = new ModelManager();
+        RestoreProductCommand command = new RestoreProductCommand("unknown");
+
+        assertThrows(CommandException.class, () -> command.execute(model));
+    }
 }

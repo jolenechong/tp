@@ -149,6 +149,29 @@ public class InventoryTest {
     }
 
     @Test
+    public void archiveProduct_success() {
+        Inventory inventory = new Inventory();
+        Product product = new ProductBuilder().build();
+
+        inventory.addProduct(product);
+        inventory.archiveProduct(product);
+
+        assertTrue(inventory.getProductList().get(0).isArchived());
+    }
+
+    @Test
+    public void restoreProduct_success() {
+        Inventory inventory = new Inventory();
+        Product product = new ProductBuilder().build();
+        product = product.archive();
+
+        inventory.addProduct(product);
+        inventory.restoreProduct(product);
+
+        assertFalse(inventory.getProductList().get(0).isArchived());
+    }
+
+    @Test
     public void getProductList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, () -> inventory.getProductList().remove(0));
     }

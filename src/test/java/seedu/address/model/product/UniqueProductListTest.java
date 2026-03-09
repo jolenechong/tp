@@ -161,6 +161,28 @@ public class UniqueProductListTest {
     }
 
     @Test
+    public void archiveProduct_success() {
+        UniqueProductList list = new UniqueProductList();
+        Product product = new ProductBuilder().build();
+
+        list.add(product);
+        list.archiveProduct(product);
+
+        assertTrue(list.asUnmodifiableObservableList().get(0).isArchived());
+    }
+
+    @Test
+    public void restoreProduct_success() {
+        UniqueProductList list = new UniqueProductList();
+        Product product = new ProductBuilder().build();
+        product = product.archive();
+        list.add(product);
+        list.restoreProduct(product);
+
+        assertFalse(list.asUnmodifiableObservableList().get(0).isArchived());
+    }
+
+    @Test
     public void asUnmodifiableObservableList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, ()
                 -> uniqueProductList.asUnmodifiableObservableList().remove(0));

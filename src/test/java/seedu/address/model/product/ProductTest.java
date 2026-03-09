@@ -43,6 +43,14 @@ public class ProductTest {
     }
 
     @Test
+    public void hashCode_sameProduct_sameHash() {
+        Product product1 = new ProductBuilder(RICE).build();
+        Product product2 = new ProductBuilder(RICE).build();
+
+        assertEquals(product1.hashCode(), product2.hashCode());
+    }
+
+    @Test
     public void equals() {
         // same values -> returns true
         Product riceCopy = new ProductBuilder(RICE).build();
