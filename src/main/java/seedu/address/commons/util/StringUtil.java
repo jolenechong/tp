@@ -66,6 +66,10 @@ public class StringUtil {
         }
     }
 
+    /**
+     * Returns true if {@code s} can be parsed as an integer.
+     *
+     */
     public static boolean isValidInteger(String s) {
         requireNonNull(s);
 

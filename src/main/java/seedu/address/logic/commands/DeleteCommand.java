@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 import seedu.address.commons.core.index.Index;
-import seedu.address.commons.util.StringUtil;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -44,8 +43,13 @@ public class DeleteCommand extends Command {
 
     private final String targetIndexString;
 
+    /**
+     * Creates a DeleteCommand to delete the person at the specified {@code targetIndexString}.
+     *
+     * @param targetIndexString the index string of the person to be deleted, which could have trailing spaces
+     */
     public DeleteCommand(String targetIndexString) {
-        this.targetIndexString = targetIndexString;
+        this.targetIndexString = targetIndexString.trim();
     }
 
     @Override
@@ -74,6 +78,11 @@ public class DeleteCommand extends Command {
         return new CommandResult(CONFIRMATION_DELETE_PERSON_MESSAGE);
     }
 
+    /**
+     * Formats an exception message for an invalid person index based on the current list state.
+     * If there is no contacts in the list, it will prompt user to add contacts first
+     *
+     */
     public String formatExceptionMessage(List<Person> lastShownList) {
         return lastShownList.isEmpty()
                 ? Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + CONTACT_IS_EMPTY

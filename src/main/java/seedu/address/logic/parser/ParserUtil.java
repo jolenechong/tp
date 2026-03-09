@@ -31,9 +31,13 @@ public class ParserUtil {
     public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
     public static final String MESSAGE_NOT_A_NUMBER = "Index is not a number.";
 
+    /**
+     * Parses a string index into an integer
+     *
+     */
     public static int parseIndexToInteger(String index) throws ParseException {
         String trimmedIndex = index.trim();
-        if(!StringUtil.isValidInteger(trimmedIndex)) {
+        if (!StringUtil.isValidInteger(trimmedIndex)) {
             throw new ParseException(MESSAGE_NOT_A_NUMBER);
         }
 
