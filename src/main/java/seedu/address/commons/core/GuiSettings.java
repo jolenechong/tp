@@ -1,6 +1,9 @@
 package seedu.address.commons.core;
 
+import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -12,12 +15,26 @@ import seedu.address.commons.util.ToStringBuilder;
  */
 public class GuiSettings implements Serializable {
 
-    private static final double DEFAULT_HEIGHT = 600;
-    private static final double DEFAULT_WIDTH = 740;
+    public static final double MIN_HEIGHT = 650;
+    public static final double MIN_WIDTH = 900;
+
+    // default to the screen size of the user's device
+    private static final boolean DEFAULT_FULL_SCREEN = true;
+    private static final Dimension screenSize;
+    static {
+        if (GraphicsEnvironment.isHeadless()) {
+            screenSize = new Dimension((int) MIN_WIDTH, (int) MIN_HEIGHT);
+        } else {
+            screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        }
+    }
+    private static final double DEFAULT_HEIGHT = screenSize.getHeight();
+    private static final double DEFAULT_WIDTH = screenSize.getWidth();
 
     private final double windowWidth;
     private final double windowHeight;
     private final Point windowCoordinates;
+    private final boolean isFullScreen;
 
     /**
      * Constructs a {@code GuiSettings} with the default height, width and position.
@@ -26,6 +43,7 @@ public class GuiSettings implements Serializable {
         windowWidth = DEFAULT_WIDTH;
         windowHeight = DEFAULT_HEIGHT;
         windowCoordinates = null; // null represent no coordinates
+        isFullScreen = DEFAULT_FULL_SCREEN;
     }
 
     /**
@@ -35,6 +53,16 @@ public class GuiSettings implements Serializable {
         this.windowWidth = windowWidth;
         this.windowHeight = windowHeight;
         windowCoordinates = new Point(xPosition, yPosition);
+
+        if (windowWidth >= DEFAULT_WIDTH && windowHeight >= DEFAULT_HEIGHT) {
+            isFullScreen = true;
+        } else {
+            isFullScreen = false;
+        }
+    }
+
+    public boolean isFullScreen() {
+        return isFullScreen;
     }
 
     public double getWindowWidth() {
