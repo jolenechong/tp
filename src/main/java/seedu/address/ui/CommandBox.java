@@ -3,7 +3,10 @@ package seedu.address.ui;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
+import seedu.address.logic.commands.CommandHistory;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -17,18 +20,38 @@ public class CommandBox extends UiPart<Region> {
     private static final String FXML = "CommandBox.fxml";
 
     private final CommandExecutor commandExecutor;
+    private final CommandHistory commandHistory;
 
     @FXML
     private TextField commandTextField;
 
     /**
-     * Creates a {@code CommandBox} with the given {@code CommandExecutor}.
+     * Creates a {@code CommandBox} with the given {@code CommandExecutor} and {@code CommandHistory}.
      */
-    public CommandBox(CommandExecutor commandExecutor) {
+    public CommandBox(CommandExecutor commandExecutor, CommandHistory commandHistory) {
         super(FXML);
         this.commandExecutor = commandExecutor;
+        this.commandHistory = commandHistory;
+
         // calls #setStyleToDefault() whenever there is a change to the text of the command box.
         commandTextField.textProperty().addListener((unused1, unused2, unused3) -> setStyleToDefault());
+        commandTextField.addEventFilter(KeyEvent.KEY_PRESSED, this::handleHistoryNavigation);
+    }
+
+    @FXML
+    private void handleHistoryNavigation(KeyEvent event) {
+        if (event.getCode() == KeyCode.UP) {
+            replaceCommandText(commandHistory.getPrevious(commandTextField.getText()));
+            event.consume();
+        } else if (event.getCode() == KeyCode.DOWN) {
+            replaceCommandText(commandHistory.getNext(commandTextField.getText()));
+            event.consume();
+        }
+    }
+
+    private void replaceCommandText(String text) {
+        commandTextField.setText(text);
+        commandTextField.positionCaret(text.length());
     }
 
     /**

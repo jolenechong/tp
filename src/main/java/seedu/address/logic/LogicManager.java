@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.Command;
+import seedu.address.logic.commands.CommandHistory;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.PendingConfirmation;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -34,6 +35,7 @@ public class LogicManager implements Logic {
     private final Model model;
     private final Storage storage;
     private final AddressBookParser addressBookParser;
+    private final CommandHistory commandHistory;
     private PendingConfirmation pendingConfirmation;
 
     /**
@@ -43,17 +45,23 @@ public class LogicManager implements Logic {
         this.model = model;
         this.storage = storage;
         addressBookParser = new AddressBookParser();
+        commandHistory = new CommandHistory();
         pendingConfirmation = new PendingConfirmation();
     }
 
     @Override
     public CommandResult execute(String commandText) throws CommandException, ParseException {
         logger.info("----------------[USER COMMAND][" + commandText + "]");
+        boolean isPendingConfirmationResponse = pendingConfirmation.getNeedConfirmation();
 
         CommandResult commandResult;
         Command command = addressBookParser.parseCommand(commandText, pendingConfirmation);
         commandResult = command.execute(model);
         pendingConfirmation = command.getPendingConfirmation();
+
+        if (!isPendingConfirmationResponse) {
+            commandHistory.add(commandText);
+        }
 
         try {
             storage.saveAddressBook(model.getAddressBook());
@@ -64,6 +72,11 @@ public class LogicManager implements Logic {
         }
 
         return commandResult;
+    }
+
+    @Override
+    public CommandHistory getCommandHistory() {
+        return commandHistory;
     }
 
     @Override

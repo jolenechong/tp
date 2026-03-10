@@ -96,6 +96,20 @@ public class LogicManagerTest {
         assertNotNull(logic.getFilteredProductList());
     }
 
+    @Test
+    public void execute_pendingConfirmationResponse_notAddedToCommandHistory() throws Exception {
+        String addCommand = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY
+                + EMAIL_DESC_AMY + ADDRESS_DESC_AMY;
+        logic.execute(addCommand);
+
+        String deleteCommand = "delete 1";
+        logic.execute(deleteCommand);
+        logic.execute("y");
+
+        assertEquals(deleteCommand, logic.getCommandHistory().getPrevious(""));
+        assertEquals(addCommand, logic.getCommandHistory().getPrevious(""));
+    }
+
     /**
      * Executes the command and confirms that
      * - no exceptions are thrown <br>
