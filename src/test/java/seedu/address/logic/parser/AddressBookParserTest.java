@@ -82,13 +82,10 @@ public class AddressBookParserTest {
         assertTrue(parser.parseCommand("n", confirmation) instanceof CancelCommand);
     }
 
-<<<<<<< HEAD
-=======
     /**
      * The needsConfirmation boolean does not affect equality checks.
      *
      */
->>>>>>> master
     @Test
     public void parseCommand_delete() throws Exception {
         DeleteCommand command = (DeleteCommand) parser.parseCommand(
