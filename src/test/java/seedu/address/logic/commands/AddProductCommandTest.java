@@ -102,6 +102,14 @@ public class AddProductCommandTest {
         assertFalse(addProductA.equals(addProductB));
     }
 
+    @Test
+    public void toStringMethod() {
+        Product validProduct = new ProductBuilder().build();
+        AddProductCommand addProductCommand = new AddProductCommand(validProduct);
+        String expected = AddProductCommand.class.getCanonicalName() + "{toAdd=" + validProduct + "}";
+        assertEquals(expected, addProductCommand.toString());
+    }
+
     private class ModelStub implements Model {
         @Override
         public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
