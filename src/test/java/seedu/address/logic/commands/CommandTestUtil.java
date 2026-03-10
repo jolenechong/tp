@@ -45,7 +45,7 @@ public class CommandTestUtil {
     public static final String VALID_PRODUCT_NAME_IPAD = "iPad Air 11";
     public static final String VALID_PRODUCT_NAME_IPHONE = "iPhone 15 128GB";
     public static final String VALID_PRODUCT_NAME_AIRPODS = "AirPods Pro 2";
-    public static final String VALID_QUANTITY_IPAD = "12";
+    public static final String VALID_QUANTITY_IPAD = "0";
     public static final String VALID_QUANTITY_IPHONE = "30";
     public static final String VALID_QUANTITY_AIRPODS = "45";
 
@@ -76,9 +76,9 @@ public class CommandTestUtil {
     public static final String INVALID_ADDRESS_DESC = " " + PREFIX_ADDRESS; // empty string not allowed for addresses
     public static final String INVALID_TAG_DESC = " " + PREFIX_TAG + "hubby*"; // '*' not allowed in tags
 
-    public static final String INVALID_IDENTIFIER_DESC = " id/"; // empty identifier not allowed
+    public static final String INVALID_IDENTIFIER_DESC = " " + PREFIX_IDENTIFIER; // empty identifier not allowed
     public static final String INVALID_PRODUCT_NAME_DESC = " " + PREFIX_NAME; // empty product name not allowed
-    public static final String INVALID_QUANTITY_DESC = " q/-1"; // negative quantity not allowed
+    public static final String INVALID_QUANTITY_DESC = " " + PREFIX_QUANTITY; // empty quantity not allowed
 
     public static final String INVALID_NAME_WARN = "James-Doe";
     public static final String INVALID_PHONE_WARN = "1234 5678 (HP) 1111-3333 (Office)";
@@ -89,6 +89,11 @@ public class CommandTestUtil {
     public static final String INVALID_NAME_DESC_WARN = " " + PREFIX_NAME + INVALID_NAME_WARN; // with warning
     public static final String INVALID_PHONE_DESC_WARN = " " + PREFIX_PHONE + INVALID_PHONE_WARN; // with warning
     public static final String INVALID_EMAIL_DESC_WARN = " " + PREFIX_EMAIL + INVALID_EMAIL_WARN; // missing '@' symbol
+
+    public static final String INVALID_IDENTIFIER_WARN = "A B";
+    public static final String INVALID_PRODUCT_NAME_WARN = "apple juice 5% sugar";
+    public static final String INVALID_IDENTIFIER_DESC_WARN = " " + PREFIX_IDENTIFIER + INVALID_IDENTIFIER_WARN;
+    public static final String INVALID_PRODUCT_NAME_DESC_WARN = " " + PREFIX_NAME + INVALID_PRODUCT_NAME_WARN;
 
     public static final String PREAMBLE_WHITESPACE = "\t  \r  \n";
     public static final String PREAMBLE_NON_EMPTY = "NonEmptyPreamble";
