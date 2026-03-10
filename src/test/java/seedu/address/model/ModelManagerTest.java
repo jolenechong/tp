@@ -21,9 +21,11 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
+import seedu.address.model.product.Product;
 import seedu.address.model.product.exceptions.DuplicateProductException;
 import seedu.address.model.product.exceptions.ProductNotFoundException;
 import seedu.address.testutil.AddressBookBuilder;
+import seedu.address.testutil.ProductBuilder;
 
 public class ModelManagerTest {
 
@@ -223,6 +225,17 @@ public class ModelManagerTest {
     public void getInventory_notNull() {
         ModelManager modelManager = new ModelManager(new AddressBook(), new UserPrefs());
         assertNotNull(modelManager.getInventory());
+    }
+
+    @Test
+    public void archiveProduct_updatesFilteredList() {
+        ModelManager model = new ModelManager(new AddressBook(), new UserPrefs());
+        Product product = new ProductBuilder().build();
+
+        model.addProduct(product);
+        model.archiveProduct(product);
+
+        assertTrue(model.getInventory().getProductList().get(0).isArchived());
     }
 
     @Test

@@ -11,6 +11,7 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Person;
+import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.TypicalPersons;
 
 /**
@@ -50,5 +51,20 @@ public class RestoreCommandTest {
         RestoreCommand command = new RestoreCommand("nonexistent@example.com");
 
         assertThrows(CommandException.class, () -> command.execute(model));
+    }
+
+    @Test
+    public void execute_restoreArchivedPerson_success() throws Exception {
+        Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+
+        Person archived = new PersonBuilder().withEmail("test@email.com").build();
+        model.addPerson(archived);
+        model.archivePerson(archived);
+
+        RestoreCommand command = new RestoreCommand("test@email.com");
+
+        command.execute(model);
+
+        assertFalse(model.getFilteredPersonList().get(0).isArchived());
     }
 }

@@ -1,17 +1,21 @@
 package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
+import seedu.address.model.UserPrefs;
 import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Name;
 import seedu.address.model.product.Product;
 import seedu.address.model.product.Quantity;
+import seedu.address.testutil.ProductBuilder;
 
 public class RestoreProductCommandTest {
 
@@ -61,5 +65,20 @@ public class RestoreProductCommandTest {
         RestoreProductCommand command = new RestoreProductCommand("unknown");
 
         assertThrows(CommandException.class, () -> command.execute(model));
+    }
+
+    @Test
+    public void restoreProduct_updatesFilteredList() {
+        ModelManager model = new ModelManager(new AddressBook(), new UserPrefs());
+        Product product = new ProductBuilder().build();
+
+        model.addProduct(product);
+        model.archiveProduct(product);
+
+        Product archivedProduct = model.getInventory().getProductList().get(0);
+
+        model.restoreProduct(archivedProduct);
+
+        assertFalse(model.getFilteredProductList().get(0).isArchived());
     }
 }
