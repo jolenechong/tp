@@ -8,10 +8,10 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  * Guarantees: immutable; is valid as declared in {@link #isValidIdentifier(String)}
  */
 public class Identifier {
-    public static final String MESSAGE_CONSTRAINTS = "Identifiers should not be blank.";
+    public static final String MESSAGE_CONSTRAINTS = "Identifier should not be blank.";
     public static final int MAX_LENGTH = 256;
     public static final String MESSAGE_LENGTH_CONSTRAINTS =
-            "Identifiers should be less than " + MAX_LENGTH + " characters.";
+            "Identifier should be less than " + MAX_LENGTH + " characters.";
     public static final String MESSAGE_WARN =
             "⚠ Warning: Identifier contains unusual symbols, is this intentional?";
 

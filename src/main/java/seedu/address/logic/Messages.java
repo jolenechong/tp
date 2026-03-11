@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import seedu.address.logic.parser.Prefix;
 import seedu.address.model.person.Person;
+import seedu.address.model.product.Product;
 
 /**
  * Container for user visible messages.
@@ -53,4 +54,17 @@ public class Messages {
         return builder.toString();
     }
 
+    /**
+     * Formats the {@code product} for display to the user.
+     */
+    public static String formatProduct(Product product) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("Identifier: ")
+                .append(product.getIdentifier())
+                .append("; Name: ")
+                .append(product.getName())
+                .append("; Quantity: ")
+                .append(product.getQuantity());
+        return builder.toString();
+    }
 }

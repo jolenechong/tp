@@ -1,5 +1,12 @@
 package seedu.address.testutil;
 
+import static seedu.address.logic.commands.CommandTestUtil.VALID_IDENTIFIER_AIRPODS;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_IDENTIFIER_IPAD;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_PRODUCT_NAME_AIRPODS;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_PRODUCT_NAME_IPAD;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_QUANTITY_AIRPODS;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_QUANTITY_IPAD;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +34,12 @@ public class TypicalProducts {
             .withName("Paper Cups 50 Pack").withQuantity("15").build();
     public static final Product WATER = new ProductBuilder().withIdentifier("SKU-1007")
             .withName("Bottled Water 500ml").withQuantity("120").build();
+
+    // Manually added - Product's details found in {@code CommandTestUtil}
+    public static final Product IPAD = new ProductBuilder().withIdentifier(VALID_IDENTIFIER_IPAD)
+            .withName(VALID_PRODUCT_NAME_IPAD).withQuantity(VALID_QUANTITY_IPAD).build();
+    public static final Product AIRPODS = new ProductBuilder().withIdentifier(VALID_IDENTIFIER_AIRPODS)
+            .withName(VALID_PRODUCT_NAME_AIRPODS).withQuantity(VALID_QUANTITY_AIRPODS).build();
 
     private TypicalProducts() {
     } // prevents instantiation

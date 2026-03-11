@@ -11,7 +11,7 @@ import seedu.address.model.product.Quantity;
 public class ProductBuilder {
 
     public static final String DEFAULT_IDENTIFIER = "A1";
-    public static final String DEFAULT_NAME = "iPad";
+    public static final String DEFAULT_NAME = "iPad 11 Pro";
     public static final String DEFAULT_QUANTITY = "0";
 
     private Name name;

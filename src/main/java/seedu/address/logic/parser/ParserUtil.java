@@ -14,6 +14,8 @@ import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
+import seedu.address.model.product.Identifier;
+import seedu.address.model.product.Quantity;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -25,6 +27,8 @@ public class ParserUtil {
     public static final String FIELD_PHONE = "phone";
     public static final String FIELD_EMAIL = "email";
     public static final String FIELD_ADDRESS = "address";
+    public static final String FIELD_IDENTIFIER = "identifier";
+    public static final String FIELD_PRODUCT_NAME = "product name";
     public static final String COMMA_SEPARATOR = ", ";
     public static final String SPACE_SEPARATOR = " ";
     public static final String NEWLINE = "\n";
@@ -47,6 +51,7 @@ public class ParserUtil {
     /**
      * Parses {@code oneBasedIndex} into an {@code Index} and returns it. Leading and trailing whitespaces will be
      * trimmed.
+     *
      * @throws ParseException if the specified index is invalid (not non-zero unsigned integer).
      */
     public static Index parseIndex(String oneBasedIndex) throws ParseException {
@@ -185,5 +190,80 @@ public class ParserUtil {
             tagSet.add(parseTag(tagName));
         }
         return tagSet;
+    }
+
+    private static Optional<String> getIdentifierWarning(String identifier) throws ParseException {
+        if (identifier.isBlank()) {
+            throw new ParseException(Identifier.MESSAGE_CONSTRAINTS);
+        }
+
+        if (identifier.length() > Identifier.MAX_LENGTH) {
+            throw new ParseException(Identifier.MESSAGE_LENGTH_CONSTRAINTS);
+        }
+
+        if (!Identifier.isValidIdentifierWarn(identifier)) {
+            return Optional.of(Identifier.MESSAGE_WARN);
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * Parses a product {@code String identifier} into {@code Identifier}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code identifier} is invalid.
+     */
+    public static ParseResult<Identifier> parseIdentifier(String identifier) throws ParseException {
+        requireNonNull(identifier);
+        String trimmedIdentifier = identifier.trim();
+        Optional<String> warning = getIdentifierWarning(trimmedIdentifier);
+        return new ParseResult<>(new Identifier(trimmedIdentifier), warning);
+    }
+
+    private static Optional<String> getProductNameWarning(String name) throws ParseException {
+        if (name.isBlank()) {
+            throw new ParseException(seedu.address.model.product.Name.MESSAGE_CONSTRAINTS);
+        }
+
+        if (name.length() > seedu.address.model.product.Name.MAX_LENGTH) {
+            throw new ParseException(seedu.address.model.product.Name.MESSAGE_LENGTH_CONSTRAINTS);
+        }
+
+        if (!seedu.address.model.product.Name.isValidNameWarn(name)) {
+            return Optional.of(seedu.address.model.product.Name.MESSAGE_WARN);
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * Parses a product {@code String name} into a {@code seedu.address.model.product.Name}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code name} is invalid.
+     */
+    public static ParseResult<seedu.address.model.product.Name> parseProductName(String name) throws ParseException {
+        requireNonNull(name);
+        String trimmedName = name.trim();
+        Optional<String> warning = getProductNameWarning(trimmedName);
+        return new ParseResult<>(new seedu.address.model.product.Name(trimmedName), warning);
+    }
+
+    /**
+     * Parses a product {@code String quantity} into {@code Quantity}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code quantity} is invalid.
+     */
+    public static ParseResult<Quantity> parseQuantity(String quantity) throws ParseException {
+        requireNonNull(quantity);
+        String trimmedQuantity = quantity.trim();
+
+        if (!Quantity.isValidQuantity(trimmedQuantity)) {
+            throw new ParseException(Quantity.MESSAGE_CONSTRAINTS);
+        }
+
+        return new ParseResult<>(new Quantity(trimmedQuantity), Optional.empty());
     }
 }

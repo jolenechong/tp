@@ -18,6 +18,8 @@ import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
+import seedu.address.model.product.Identifier;
+import seedu.address.model.product.Quantity;
 import seedu.address.model.tag.Tag;
 
 public class ParserUtilTest {
@@ -49,6 +51,19 @@ public class ParserUtilTest {
     private static final String VALID_EMAIL = "rachel@example.com";
     private static final String VALID_TAG_1 = "friend";
     private static final String VALID_TAG_2 = "neighbour";
+
+    private static final String VALID_IDENTIFIER = "SKU-1001";
+    private static final String VALID_PRODUCT_NAME = "Brown Rice 5kg";
+    private static final String VALID_QUANTITY = "24";
+    private static final String VALID_IDENTIFIER_WARN = "SKU 1001";
+    private static final String VALID_PRODUCT_NAME_WARN = "apple juice 5% sugar";
+
+    private static final String INVALID_IDENTIFIER = " ";
+    private static final String INVALID_PRODUCT_NAME = " ";
+    private static final String INVALID_QUANTITY = "-1";
+
+    private static final String INVALID_LONG_IDENTIFIER = "a".repeat(257);
+    private static final String INVALID_LONG_PRODUCT_NAME = "a".repeat(257);
 
     private static final String WHITESPACE = " \t\r\n";
 
@@ -263,5 +278,101 @@ public class ParserUtilTest {
         Set<Tag> expectedTagSet = new HashSet<Tag>(Arrays.asList(new Tag(VALID_TAG_1), new Tag(VALID_TAG_2)));
 
         assertEquals(expectedTagSet, actualTagSet);
+    }
+
+    @Test
+    public void parseIdentifier_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseIdentifier((String) null));
+    }
+
+    @Test
+    public void parseIdentifier_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseIdentifier(INVALID_IDENTIFIER));
+    }
+
+    @Test
+    public void parseIdentifier_validValueWithoutWhitespace_returnsIdentifier() throws Exception {
+        Identifier expectedIdentifier = new Identifier(VALID_IDENTIFIER);
+        assertEquals(expectedIdentifier, ParserUtil.parseIdentifier(VALID_IDENTIFIER).getValue());
+    }
+
+    @Test
+    public void parseIdentifier_validValueWithWhitespace_returnsTrimmedIdentifier() throws Exception {
+        String identifierWithWhitespace = WHITESPACE + VALID_IDENTIFIER + WHITESPACE;
+        Identifier expectedIdentifier = new Identifier(VALID_IDENTIFIER);
+        assertEquals(expectedIdentifier, ParserUtil.parseIdentifier(identifierWithWhitespace).getValue());
+    }
+
+    @Test
+    public void parseIdentifier_warnValue_returnsWarning() throws Exception {
+        assertEquals(Identifier.MESSAGE_WARN,
+                ParserUtil.parseIdentifier(VALID_IDENTIFIER_WARN).getWarning().orElse(""));
+    }
+
+    @Test
+    public void parseIdentifier_invalidLongIdentifier_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseIdentifier(INVALID_LONG_IDENTIFIER));
+    }
+
+    @Test
+    public void parseProductName_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseProductName((String) null));
+    }
+
+    @Test
+    public void parseProductName_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseProductName(INVALID_PRODUCT_NAME));
+    }
+
+    @Test
+    public void parseProductName_validValueWithoutWhitespace_returnsName() throws Exception {
+        seedu.address.model.product.Name expectedName = new seedu.address.model.product.Name(VALID_PRODUCT_NAME);
+        assertEquals(expectedName, ParserUtil.parseProductName(VALID_PRODUCT_NAME).getValue());
+    }
+
+    @Test
+    public void parseProductName_validValueWithWhitespace_returnsTrimmedName() throws Exception {
+        String productNameWithWhitespace = WHITESPACE + VALID_PRODUCT_NAME + WHITESPACE;
+        seedu.address.model.product.Name expectedName = new seedu.address.model.product.Name(VALID_PRODUCT_NAME);
+        assertEquals(expectedName, ParserUtil.parseProductName(productNameWithWhitespace).getValue());
+    }
+
+    @Test
+    public void parseProductName_warnValue_returnsWarning() throws Exception {
+        assertEquals(seedu.address.model.product.Name.MESSAGE_WARN,
+                ParserUtil.parseProductName(VALID_PRODUCT_NAME_WARN).getWarning().orElse(""));
+    }
+
+    @Test
+    public void parseProductName_invalidLongProductName_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseProductName(INVALID_LONG_PRODUCT_NAME));
+    }
+
+    @Test
+    public void parseQuantity_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseQuantity((String) null));
+    }
+
+    @Test
+    public void parseQuantity_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseQuantity(INVALID_QUANTITY));
+    }
+
+    @Test
+    public void parseQuantity_validValueWithoutWhitespace_returnsQuantity() throws Exception {
+        Quantity expectedQuantity = new Quantity(VALID_QUANTITY);
+        assertEquals(expectedQuantity, ParserUtil.parseQuantity(VALID_QUANTITY).getValue());
+    }
+
+    @Test
+    public void parseQuantity_validValueWithWhitespace_returnsTrimmedQuantity() throws Exception {
+        String quantityWithWhitespace = WHITESPACE + VALID_QUANTITY + WHITESPACE;
+        Quantity expectedQuantity = new Quantity(VALID_QUANTITY);
+        assertEquals(expectedQuantity, ParserUtil.parseQuantity(quantityWithWhitespace).getValue());
+    }
+
+    @Test
+    public void parseQuantity_validValue_returnsNoWarnings() throws Exception {
+        assertTrue(ParserUtil.parseQuantity(VALID_QUANTITY).getWarning().isEmpty());
     }
 }
