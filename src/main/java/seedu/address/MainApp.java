@@ -76,7 +76,7 @@ public class MainApp extends Application {
     private Model initModelManager(Storage storage, ReadOnlyUserPrefs userPrefs) {
         logger.info("Using data file : " + storage.getAddressBookFilePath());
 
-        Optional<ReadOnlyAddressBook> addressBookOptional;
+        Optional<ReadOnlyAddressBook> addressBookOptional = Optional.empty();
         ReadOnlyAddressBook initialData;
         try {
             addressBookOptional = storage.readAddressBook();

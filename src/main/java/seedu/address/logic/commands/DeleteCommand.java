@@ -1,7 +1,7 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.address.model.Model.PREDICATE_SHOW_ACTIVE_PERSONS;
 
 import java.util.List;
 import java.util.Optional;
@@ -104,7 +104,7 @@ public class DeleteCommand extends Command {
         model.deletePerson(personToDelete);
 
         model.commitVendorVault();
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        model.updateFilteredPersonList(PREDICATE_SHOW_ACTIVE_PERSONS);
         return new CommandResult(
                 String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete)));
     }
@@ -123,7 +123,7 @@ public class DeleteCommand extends Command {
      *
      */
     public Optional<CommandResult> onCancel(Model model) {
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        model.updateFilteredPersonList(PREDICATE_SHOW_ACTIVE_PERSONS);
         return Optional.of(new CommandResult(
                 String.format(MESSAGE_DELETE_FAILURE)));
     }

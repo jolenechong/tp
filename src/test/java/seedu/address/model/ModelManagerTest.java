@@ -361,6 +361,20 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void updateFilteredProductList_showActiveProducts_filtersArchived() {
+        ModelManager model = new ModelManager(new VendorVault(), new UserPrefs());
+
+        Product product = new ProductBuilder().build();
+        model.addProduct(product);
+
+        model.archiveProduct(product);
+
+        model.updateFilteredProductList(Model.PREDICATE_SHOW_ACTIVE_PRODUCTS);
+
+        assertTrue(model.getFilteredProductList().isEmpty());
+    }
+
+    @Test
     public void setInventory_success() {
         ModelManager modelManager = new ModelManager(new VendorVault(), new UserPrefs());
 

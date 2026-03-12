@@ -24,6 +24,11 @@ public interface Model {
     Predicate<Product> PREDICATE_SHOW_ALL_PRODUCTS = unused -> true;
 
     /**
+     * {@code Predicate} that shows only active products (not archived).
+     */
+    Predicate<Product> PREDICATE_SHOW_ACTIVE_PRODUCTS = product -> !product.isArchived();
+
+    /**
      * Replaces user prefs data with the data in {@code userPrefs}.
      */
     void setUserPrefs(ReadOnlyUserPrefs userPrefs);
