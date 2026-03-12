@@ -127,7 +127,7 @@ Examples:
 
 <box type="tip" seamless>
 
-**Tip:** A contact can have any number of tags (including 0)
+**Tip:** A contact can have any number of tags or none at all.
 
 </box>
 
