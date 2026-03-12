@@ -11,18 +11,18 @@ import seedu.address.testutil.PersonBuilder;
 
 public class VersionedAddressBookTest {
 
-    private AddressBook addressBook;
+    private VendorVault vendorVault;
     private VersionedVendorVault versionedVendorVault;
 
     @BeforeEach
     public void setUp() {
-        addressBook = new AddressBook();
-        versionedVendorVault = new VersionedVendorVault(addressBook);
+        vendorVault = new VendorVault();
+        versionedVendorVault = new VersionedVendorVault(vendorVault);
     }
 
     @Test
     public void commit_addNewState_pointerMovesForward() {
-        AddressBook newState = new AddressBook();
+        VendorVault newState = new VendorVault();
         versionedVendorVault.commit(newState);
 
         assertTrue(versionedVendorVault.canUndo()); // should now be able to undo
@@ -31,13 +31,13 @@ public class VersionedAddressBookTest {
     @Test
     public void undo_afterCommit_restoresPreviousState() {
         // initial commit
-        AddressBook state1 = new AddressBook();
-        state1.addPerson(new PersonBuilder().build());
+        VendorVault state1 = new VendorVault();
+        state1.getAddressBook().addPerson(new PersonBuilder().build());
         versionedVendorVault.commit(state1);
 
         // commit second state
-        AddressBook state2 = new AddressBook();
-        state2.addPerson(new PersonBuilder().withName("John").build());
+        VendorVault state2 = new VendorVault();
+        state2.getAddressBook().addPerson(new PersonBuilder().withName("John").build());
         versionedVendorVault.commit(state2);
 
         // undo to previous state
@@ -51,14 +51,15 @@ public class VersionedAddressBookTest {
     @Test
     public void redo_afterUndo_restoresNextState() {
         // initial commit
-        AddressBook state1 = new AddressBook();
-        state1.addPerson(new PersonBuilder().build());
+        VendorVault state1 = new VendorVault();
+        state1.getAddressBook().addPerson(new PersonBuilder().build());
         versionedVendorVault.commit(state1);
 
         // commit second state
-        AddressBook state2 = new AddressBook();
-        state2.addPerson(new PersonBuilder().withName("John").build());
+        VendorVault state2 = new VendorVault();
+        state2.getAddressBook().addPerson(new PersonBuilder().withName("John").build());
         versionedVendorVault.commit(state2);
+        VendorVault expectedStateAfterRedo = new VendorVault(state2);
 
         // undo
         versionedVendorVault.undo(state2);
@@ -66,17 +67,16 @@ public class VersionedAddressBookTest {
         // redo
         versionedVendorVault.redo(state2);
 
-        // state2 should match state2 again
-        assertEquals(state2, state2); // just checking redo doesn't throw
+        assertEquals(expectedStateAfterRedo, state2);
     }
 
     @Test
     public void undo_atInitialState_throwsException() {
-        assertThrows(IllegalStateException.class, () -> versionedVendorVault.undo(addressBook));
+        assertThrows(IllegalStateException.class, () -> versionedVendorVault.undo(vendorVault));
     }
 
     @Test
     public void redo_atLatestState_throwsException() {
-        assertThrows(IllegalStateException.class, () -> versionedVendorVault.redo(addressBook));
+        assertThrows(IllegalStateException.class, () -> versionedVendorVault.redo(vendorVault));
     }
 }

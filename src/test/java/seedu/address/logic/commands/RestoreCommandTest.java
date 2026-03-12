@@ -3,6 +3,7 @@ package seedu.address.logic.commands;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalProducts.getTypicalInventory;
 
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +11,7 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.VendorVault;
 import seedu.address.model.person.Person;
 import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.TypicalPersons;
@@ -22,7 +24,8 @@ public class RestoreCommandTest {
     @Test
     public void execute_restoreVendor_success() throws CommandException {
 
-        Model model = new ModelManager(TypicalPersons.getTypicalAddressBook(), new UserPrefs());
+        Model model = new ModelManager(new VendorVault(
+                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
 
         Person vendor = model.getFilteredPersonList().get(0);
 
@@ -46,7 +49,8 @@ public class RestoreCommandTest {
 
     @Test
     public void execute_invalidIndex_throwsCommandException() {
-        Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        Model model = new ModelManager(
+                new VendorVault(getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
 
         RestoreCommand command = new RestoreCommand("nonexistent@example.com");
 
@@ -55,7 +59,8 @@ public class RestoreCommandTest {
 
     @Test
     public void execute_restoreArchivedPerson_success() throws Exception {
-        Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        Model model = new ModelManager(
+                new VendorVault(getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
 
         Person archived = new PersonBuilder().withEmail("test@email.com").build();
         model.addPerson(archived);
@@ -70,7 +75,8 @@ public class RestoreCommandTest {
 
     @Test
     public void execute_emailMatchesArchivedPerson_success() throws Exception {
-        Model model = new ModelManager(TypicalPersons.getTypicalAddressBook(), new UserPrefs());
+        Model model = new ModelManager(new VendorVault(
+                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
 
         Person person = model.getFilteredPersonList().get(0);
         model.archivePerson(person);
@@ -89,7 +95,8 @@ public class RestoreCommandTest {
 
     @Test
     public void execute_archivedPersonWithMatchingEmail_restoresPerson() throws Exception {
-        Model model = new ModelManager(TypicalPersons.getTypicalAddressBook(), new UserPrefs());
+        Model model = new ModelManager(new VendorVault(
+                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
 
         Person person = model.getFilteredPersonList().get(0);
 
@@ -105,7 +112,8 @@ public class RestoreCommandTest {
 
     @Test
     public void execute_personNotArchived_throwsCommandException() {
-        Model model = new ModelManager(TypicalPersons.getTypicalAddressBook(), new UserPrefs());
+        Model model = new ModelManager(new VendorVault(
+                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
 
         Person person = model.getFilteredPersonList().get(0);
 

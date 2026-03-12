@@ -32,6 +32,17 @@ public class VendorVault implements ReadOnlyVendorVault {
     }
 
     /**
+     * Creates a VendorVault using data in addressbook and inventory.
+     */
+    public VendorVault(ReadOnlyAddressBook ab, ReadOnlyInventory inv) {
+        requireNonNull(ab);
+        requireNonNull(inv);
+
+        this.addressBook = new AddressBook(ab);
+        this.inventory = new Inventory(inv);
+    }
+
+    /**
      * Resets the existing data of this {@code VendorVault} with {@code newData}.
      */
     public void resetData(ReadOnlyVendorVault newData) {

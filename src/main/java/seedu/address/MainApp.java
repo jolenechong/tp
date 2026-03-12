@@ -21,6 +21,7 @@ import seedu.address.model.ModelManager;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.VendorVault;
 import seedu.address.model.util.SampleDataUtil;
 import seedu.address.storage.AddressBookStorage;
 import seedu.address.storage.JsonAddressBookStorage;
@@ -90,8 +91,9 @@ public class MainApp extends Application {
             initialData = new AddressBook();
         }
 
-        ModelManager modelManager = new ModelManager(initialData, userPrefs);
-        modelManager.setInventory(SampleDataUtil.getSampleInventory());
+        VendorVault initialVault = new VendorVault(initialData, SampleDataUtil.getSampleInventory());
+
+        ModelManager modelManager = new ModelManager(initialVault, userPrefs);
 
         return modelManager;
     }
