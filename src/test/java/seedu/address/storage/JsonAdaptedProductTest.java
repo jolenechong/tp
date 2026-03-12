@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.product.Identifier;
+import seedu.address.model.product.Name;
 import seedu.address.model.product.Product;
 import seedu.address.model.product.Quantity;
 
@@ -68,7 +69,6 @@ public class JsonAdaptedProductTest {
 
     @Test
     public void toModelType_invalidIdentifier_throwsIllegalValueException() {
-        // Use a value that fails Identifier.isValidIdentifier()
         JsonAdaptedProduct adapted = new JsonAdaptedProduct(
                 INVALID_NAME, VALID_NAME, VALID_QUANTITY, NOT_ARCHIVED);
 
@@ -76,6 +76,29 @@ public class JsonAdaptedProductTest {
                 adapted::toModelType);
 
         assertEquals(Identifier.MESSAGE_CONSTRAINTS, ex.getMessage());
+    }
+
+    @Test
+    public void toModelType_nullName_throwsIllegalValueException() {
+        JsonAdaptedProduct adapted = new JsonAdaptedProduct(
+                VALID_IDENTIFIER, null, VALID_QUANTITY, NOT_ARCHIVED);
+
+        IllegalValueException ex = assertThrows(IllegalValueException.class,
+                adapted::toModelType);
+
+        assertEquals(ex.getMessage(), String.format(MISSING_FIELD_MESSAGE_FORMAT,
+                Name.class.getSimpleName()));
+    }
+
+    @Test
+    public void toModelType_invalidName_throwsIllegalValueException() {
+        JsonAdaptedProduct adapted = new JsonAdaptedProduct(
+                VALID_IDENTIFIER, INVALID_NAME, VALID_QUANTITY, NOT_ARCHIVED);
+
+        IllegalValueException ex = assertThrows(IllegalValueException.class,
+                adapted::toModelType);
+
+        assertEquals(Name.MESSAGE_CONSTRAINTS, ex.getMessage());
     }
 
     @Test
@@ -99,15 +122,5 @@ public class JsonAdaptedProductTest {
                 adapted::toModelType);
 
         assertEquals(Quantity.MESSAGE_CONSTRAINTS, ex.getMessage());
-    }
-
-    @Test
-    public void toModelType_allValidFields_returnsCorrectProduct() throws Exception {
-        JsonAdaptedProduct adapted = new JsonAdaptedProduct(RICE);
-        Product product = adapted.toModelType();
-
-        assertEquals(VALID_IDENTIFIER, product.getIdentifier().toString());
-        assertEquals(VALID_NAME, product.getName().fullName);
-        assertEquals(VALID_QUANTITY, product.getQuantity().toString());
     }
 }
