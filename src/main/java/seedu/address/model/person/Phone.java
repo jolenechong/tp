@@ -11,8 +11,7 @@ import java.util.regex.Pattern;
  */
 public class Phone {
 
-    public static final String MESSAGE_BLANK = "Phone numbers should not be blank.";
-    public static final String MESSAGE_CONSTRAINTS = "Phone numbers should not be empty and must be at least 3 digits.";
+    public static final String MESSAGE_CONSTRAINTS = "Phone number should not be empty and must be at least 3 digits.";
     public static final String MESSAGE_WARN =
             "⚠ Warning: Phone number contains unusual symbols, is this intentional?\n"
                     + "Phone number(s) should adhere to these constraints:\n"
