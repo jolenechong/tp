@@ -9,19 +9,19 @@ import seedu.address.model.util.SampleDataUtil;
 /**
  * Lists all products in the inventory to the user.
  *
- * Usage: listproducts
+ * Usage: listproduct
  *
  * Example:
- * {@code listproducts}
+ * {@code listproduct}
  */
 public class ListProductsCommand extends Command {
 
-    public static final String COMMAND_WORD = "listproducts";
+    public static final String COMMAND_WORD = "listproduct";
 
     public static final String MESSAGE_SUCCESS = "Listed all products";
 
     /**
-     * Executes the listproducts command.
+     * Executes the listproduct command.
      *
      * Updates the filtered product list in the model so that all products
      * in the inventory are displayed to the user.
@@ -32,7 +32,6 @@ public class ListProductsCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
-        //If the GUI currently displays no products, sample products will be automatically populated.
         if (model.getInventory().getProductList().isEmpty()) {
             for (Product product : SampleDataUtil.getSampleProducts()) {
                 model.addProduct(product);

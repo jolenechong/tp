@@ -109,6 +109,9 @@ public class AddressBookParser {
             case ListProductsCommand.COMMAND_WORD:
                 return new ListProductsCommand();
 
+            case "listproducts":
+                throw new ParseException("Unknown command: listproduct. Did you mean 'listproducts'?");
+
             case ArchiveProductCommand.COMMAND_WORD:
                 return new ArchiveProductCommandParser().parse(arguments);
 

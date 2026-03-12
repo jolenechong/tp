@@ -156,7 +156,7 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_listProducts() throws Exception {
         AddressBookParser parser = new AddressBookParser();
-        Command command = parser.parseCommand("listproducts", new PendingConfirmation());
+        Command command = parser.parseCommand("listproduct", new PendingConfirmation());
 
         assertTrue(command instanceof ListProductsCommand);
     }
@@ -173,5 +173,11 @@ public class AddressBookParserTest {
         Command command = parser.parseCommand("restoreproduct id/coffee", new PendingConfirmation());
 
         assertTrue(command instanceof RestoreProductCommand);
+    }
+
+    @Test
+    public void parse_listproduct_throwsSuggestion() {
+        assertParseFailure(parser, "listproduct",
+            "Unknown command: listproduct. Did you mean 'listproducts'?");
     }
 }
