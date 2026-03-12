@@ -264,6 +264,16 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public void redoVendorVault() {
+        versionedVendorVault.redo(vendorVault);
+    }
+
+    @Override
+    public boolean canRedoVendorVault() {
+        return versionedVendorVault.canRedo();
+    }
+
+    @Override
     public boolean equals(Object other) {
         if (other == this) {
             return true;

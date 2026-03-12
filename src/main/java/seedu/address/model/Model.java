@@ -178,4 +178,16 @@ public interface Model {
      */
     boolean canUndoVendorVault();
 
+    /**
+     * Redoes the last undone state in the vendor vault, restoring the address book to the state before the undo.
+     */
+    void redoVendorVault();
+
+    /**
+     * Returns true if there are states in the vendor vault that can be redone.
+     *
+     * @return true if there are states in the vendor vault that can be redone, false otherwise.
+     */
+    boolean canRedoVendorVault();
+
 }
