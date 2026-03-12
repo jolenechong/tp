@@ -24,10 +24,8 @@ public class ArchiveCommandTest {
     @Test
     public void execute_archiveVendor_success() throws CommandException {
 
-        VendorVault vv = new VendorVault();
-        vv.setAddressBook(getTypicalAddressBook());
-        vv.setInventory(getTypicalInventory());
-        Model model = new ModelManager(vv, new UserPrefs());
+        Model model = new ModelManager(
+                new VendorVault(getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
 
         Person vendorToArchive = model.getFilteredPersonList().get(0);
 

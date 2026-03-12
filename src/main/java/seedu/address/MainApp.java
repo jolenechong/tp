@@ -91,9 +91,7 @@ public class MainApp extends Application {
             initialData = new AddressBook();
         }
 
-        VendorVault initialVault = new VendorVault();
-        initialVault.setAddressBook(initialData);
-        initialVault.setInventory(SampleDataUtil.getSampleInventory());
+        VendorVault initialVault = new VendorVault(initialData, SampleDataUtil.getSampleInventory());
 
         ModelManager modelManager = new ModelManager(initialVault, userPrefs);
 
