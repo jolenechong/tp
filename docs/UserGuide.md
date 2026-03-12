@@ -122,16 +122,45 @@ add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​
 ```
 
 Examples:
-* `add n/TechLink Electronics p/61234567, 87654321 e/sales@techlink.com.sg a/10 Ubi Crescent, #05-12, Ubi Techpark, Singapore 408564`
-* `add n/CompanyName p/61234567 (Office), 87654321 (HP) e/contact@company.com a/123, Clementi Rd, 1234665 t/business`
+* `add n/Adafruit Industries p/64601234 e/support@adafruit.com a/151 Varick St, New York, NY 10013, USA`
+* `add n/Cytron Technologies Pte. Ltd. p/65480668 (Office), 91234567 (Sales) e/sg.sales@cytron.io a/78 St Patrick's Rd, #01-23, Seventy Saint Patrick's, Singapore 424180 t/electronics` 
 
 <box type="tip" seamless>
 
-**Tip:** Include multiple phone numbers by separating them with commas (eg. `p/61234567, 98765432`).
+**Tip:** A contact can have any number of tags or none at all.
 
-</box
+</box>
 
-VendorVault helps to prevent duplicate contacts. Contacts with the same email and phone number as an existing contact will be rejected. For details on what contacts are considered duplicates, refer to this [FAQ](#faq-duplicate-contacts).
+<panel header="How can I include multiple phone numbers?" type="seamless">
+
+To include multiple phone numbers for a contact, you can **separate them with commas** in the `p/` parameter.
+
+For example, the following command adds a contact with two phone numbers: `61234567` and `87654321`:
+
+```
+add n/CompanyName p/61234567, 87654321 e/contact@company.com a/123, Clementi Rd, 1234665 t/business
+```
+
+</panel>
+
+<panel header="What contacts are considered duplicates?" type="seamless" id="faq-duplicate-contacts">
+
+VendorVault helps prevent accidentally adding the same contact twice with duplicate detection.
+
+How it works:
+* The app checks the email and phone numbers when you add a new contact.
+* If you try to add a contact with the **same email and phone number as an existing contact**, VendorVault will **reject it**.
+* Phone numbers are compared ignoring specifications (like “(Office)” or “(HP)”) and are separated by commas.
+
+For Example, the following commands are considered duplicates of each other because they share the same phone number `61234567` and email `contact@company.com`:<br>
+```
+add n/CompanyName p/61234567, 98765432 e/contact@company.com a/123, Clementi Rd, 1234665 t/business
+add n/CompanyName p/61234567, 12345678 e/contact@company.com a/123, Clementi Rd, 1234665 t/business
+```
+
+</panel>
+
+<br>
 
 For more details on possible warnings and errors when adding a contact, refer to the [troubleshooting guide for add contact](#troubleshooting-add-contact) below.
 
@@ -139,9 +168,17 @@ For more details on possible warnings and errors when adding a contact, refer to
 
 #### Listing all contacts : `list`
 
-Shows a list of all contacts in the address book.
+Shows a list of all vendor contacts in the VendorVault.
 
-Format: `list`
+Format:
+```
+list
+```
+
+<box type="tip" seamless>
+
+**Tip:** Want to start with sample data? `list` will insert sample data if there are currently no contacts in VendorVault. 
+</box>
 
 <div style="height: 30px;"></div>
 
@@ -261,34 +298,43 @@ If your changes to the data file makes its format invalid, AddressBook will disc
 Furthermore, certain edits can cause the AddressBook to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </box>
 
+<div style="height: 30px;"></div>
+
 ### Archiving data files `[coming in v2.0]`
 
 _Details coming soon ..._
 
+<br>
+
 --------------------------------------------------------------------------------------------------------------------
+
+<br>
+
+## Command Summary
+
+| Action             | Command                                                           | Example                                                                                                    | What it does                             |
+|--------------------|-------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|------------------------------------------|
+| **Add Contact**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​ `          | `add n/TechSource Electronics p/61234567 e/sales@techsource.com a/15 Kallang Way, Singapore t/electronics` | Adds vendor contact                      |
+| **Edit Contact**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​` | `edit 2 n/TechSource Electronics p/61234567`                                                               | Edits specified fields of vendor contact |
+| **Delete Contact** | `delete INDEX`                                                    | `delete 3`                                                                                                 | Deletes contact at index specified       |
+| **List**           | `list`                                                            |                                                                                                            | Lists all contacts                       |
+| **Find Contact**   | `find KEYWORD [MORE_KEYWORDS]`                                    | `find TechSource`                                                                                          | Lists all contacts matching `KEYWORD`    |
+| **Clear Contacts** | `clear`                                                           |                                                                                                            | Clears all contacts                      |
+| **Add product**    | `addproduct id/IDENTIFIER n/NAME [q/QUANTITY]`                    | `addproduct id/SKU-1003 n/Tray of Eggs q/30 `                                                              | Adds product                             |
+| **Undo**           | `undo`                                                            |                                                                                                            | Undoes previous command                  |
+| **Help**           | `help`                                                            |                                                                                                            |                                          |
+
+<br>
+
+--------------------------------------------------------------------------------------------------------------------
+
+<br>
 
 ## FAQ
 
 <panel header="I accidentally entered a command that changed the data. Can I undo that?" type="seamless">
 
 Yes, you can undo the previous command that changed the data by using the `undo` command. For example, if you accidentally deleted a contact, simply enter `undo` and the contact will be restored.
-
-</panel>
-
-<panel header="What contacts are considered duplicates?" type="seamless" id="faq-duplicate-contacts">
-
-VendorVault helps prevent accidentally adding the same contact twice with duplicate detection.
-
-How it works:
-* The app checks the email and phone numbers when you add a new contact.
-* If you try to add a contact with the **same email and phone number as an existing contact**, VendorVault will **reject it**.
-* Phone numbers are compared ignoring specifications (like “(Office)” or “(HP)”) and are separated by commas.
-
-For Example, the following commands are considered duplicates of each other because they share the same phone number `61234567` and email `contact@company.com`:<br>
-```
-add n/CompanyName p/61234567, 98765432 e/contact@company.com a/123, Clementi Rd, 1234665 t/business
-add n/CompanyName p/61234567, 12345678 e/contact@company.com a/123, Clementi Rd, 1234665 t/business
-```
 
 </panel>
 
@@ -314,7 +360,11 @@ You can transfer your VendorVault data by transferring two files:
 
 </panel>
 
+<br>
+
 --------------------------------------------------------------------------------------------------------------------
+
+<br>
 
 ## Troubleshooting
 
@@ -363,19 +413,3 @@ Common `add` warnings:
 Tip: If multiple warnings apply, VendorVault shows all of them (one per line) together with the success message.
 
 </box>
-
---------------------------------------------------------------------------------------------------------------------
-
-## Command summary
-
-| Action             | Command                                                           | Example                                                                                                    | What it does                             |
-|--------------------|-------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|------------------------------------------|
-| **Add Contact**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​ `          | `add n/TechSource Electronics p/61234567 e/sales@techsource.com a/15 Kallang Way, Singapore t/electronics` | Adds vendor contact                      |
-| **Edit Contact**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​` | `edit 2 n/TechSource Electronics p/61234567`                                                               | Edits specified fields of vendor contact |
-| **Delete Contact** | `delete INDEX`                                                    | `delete 3`                                                                                                 | Deletes contact at index specified       |
-| **List**           | `list`                                                            |                                                                                                            | Lists all contacts                       |
-| **Find Contact**   | `find KEYWORD [MORE_KEYWORDS]`                                    | `find TechSource`                                                                                          | Lists all contacts matching `KEYWORD`    |
-| **Clear Contacts** | `clear`                                                           |                                                                                                            | Clears all contacts                      |
-| **Add product**    | `addproduct id/IDENTIFIER n/NAME [q/QUANTITY]`                    | `addproduct id/SKU-1003 n/Tray of Eggs q/30 `                                                              | Adds product                             |
-| **Undo**           | `undo`                                                            |                                                                                                            | Undoes previous command                  |
-| **Help**           | `help`                                                            |                                                                                                            |                                          |

@@ -17,6 +17,9 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Email;
+import seedu.address.model.person.Name;
+import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -46,13 +49,21 @@ public class EditCommandParser implements Parser<EditCommand> {
 
         EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
 
+        StringBuilder warnings = new StringBuilder();
+
         if (argMultimap.getValue(PREFIX_NAME).isPresent()) {
-            editPersonDescriptor.setName(ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get()).getValue());
+            ParseResult<Name> nameResult = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get());
+            appendWarning(warnings, nameResult.getWarning());
+            editPersonDescriptor.setName(nameResult.getValue());
         }
         if (argMultimap.getValue(PREFIX_PHONE).isPresent()) {
-            editPersonDescriptor.setPhone(ParserUtil.parsePhone(argMultimap.getValue(PREFIX_PHONE).get()).getValue());
+            ParseResult<Phone> phoneResult = ParserUtil.parsePhone(argMultimap.getValue(PREFIX_PHONE).get());
+            appendWarning(warnings, phoneResult.getWarning());
+            editPersonDescriptor.setPhone(phoneResult.getValue());
         }
         if (argMultimap.getValue(PREFIX_EMAIL).isPresent()) {
+            ParseResult<Email> emailResult = ParserUtil.parseEmail(argMultimap.getValue(PREFIX_EMAIL).get());
+            appendWarning(warnings, emailResult.getWarning());
             editPersonDescriptor.setEmail(ParserUtil.parseEmail(argMultimap.getValue(PREFIX_EMAIL).get()).getValue());
         }
         if (argMultimap.getValue(PREFIX_ADDRESS).isPresent()) {
@@ -64,7 +75,24 @@ public class EditCommandParser implements Parser<EditCommand> {
             throw new ParseException(EditCommand.MESSAGE_NOT_EDITED);
         }
 
+        if (!warnings.isEmpty()) {
+            return new EditCommand(index, editPersonDescriptor, warnings.toString());
+        }
+
         return new EditCommand(index, editPersonDescriptor);
+    }
+
+    /**
+     * Appends the warning to the warnings StringBuilder if the warning is present.
+     * Each warning will be separated by a new line.
+     */
+    private static void appendWarning(StringBuilder warnings, Optional<String> warning) {
+        warning.ifPresent(w -> {
+            if (!warnings.isEmpty()) {
+                warnings.append("\n");
+            }
+            warnings.append(w);
+        });
     }
 
     /**

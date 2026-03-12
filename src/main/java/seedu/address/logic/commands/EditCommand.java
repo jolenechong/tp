@@ -6,7 +6,10 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
+import static seedu.address.logic.parser.ParserUtil.NEWLINE;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_ADDRESS;
+import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_NAME;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -26,6 +29,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.warnings.DuplicatePersonWarning;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -35,8 +39,8 @@ public class EditCommand extends Command {
 
     public static final String COMMAND_WORD = "edit";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the person identified "
-            + "by the index number used in the displayed person list. "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the vendor contact identified "
+            + "by the index number used in the displayed vendor contacts list. "
             + "Existing values will be overwritten by the input values.\n"
             + "Parameters: INDEX (must be a positive integer) "
             + "[" + PREFIX_NAME + "NAME] "
@@ -48,12 +52,13 @@ public class EditCommand extends Command {
             + PREFIX_PHONE + "91234567 "
             + PREFIX_EMAIL + "johndoe@example.com";
 
-    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
+    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Contact: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book.";
+    public static final String MESSAGE_DUPLICATE_PERSON = "This contact already exists in the address book.";
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;
+    private String warnings = "";
 
     /**
      * @param index of the person in the filtered person list to edit
@@ -65,6 +70,22 @@ public class EditCommand extends Command {
 
         this.index = index;
         this.editPersonDescriptor = new EditPersonDescriptor(editPersonDescriptor);
+    }
+
+    /**
+     * Constructor for EditCommand with warnings to show after success.
+     *
+     * @param index of the person in the filtered person list to edit.
+     * @param editPersonDescriptor details to edit the person with.
+     * @param warnings warnings to show after success.
+     */
+    public EditCommand(Index index, EditPersonDescriptor editPersonDescriptor, String warnings) {
+        requireNonNull(index);
+        requireNonNull(editPersonDescriptor);
+
+        this.index = index;
+        this.editPersonDescriptor = new EditPersonDescriptor(editPersonDescriptor);
+        this.warnings = warnings;
     }
 
     @Override
@@ -79,13 +100,30 @@ public class EditCommand extends Command {
         Person personToEdit = lastShownList.get(index.getZeroBased());
         Person editedPerson = createEditedPerson(personToEdit, editPersonDescriptor);
 
-        if (!personToEdit.isSamePerson(editedPerson) && model.hasPerson(editedPerson)) {
-            throw new CommandException(MESSAGE_DUPLICATE_PERSON);
+        for (Person existingPerson : model.getFilteredPersonList()) {
+            if (existingPerson.equals(personToEdit)) {
+                continue;
+            }
+            if (editedPerson.isSamePerson(existingPerson)) {
+                throw new CommandException(MESSAGE_DUPLICATE_PERSON);
+            }
         }
+
+        StringBuilder allWarnings = new StringBuilder(warnings);
+        checkForSimilarContacts(editedPerson, personToEdit, model, allWarnings, editPersonDescriptor);
 
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
+        model.commitVendorVault();
+
+        String formattedWarnings = allWarnings.isEmpty() ? "" : NEWLINE + allWarnings;
+        String feedbackType = allWarnings.isEmpty()
+                ? CommandResult.FEEDBACK_TYPE_SUCCESS
+                : CommandResult.FEEDBACK_TYPE_WARN;
+
+        return new CommandResult(
+                String.format(MESSAGE_EDIT_PERSON_SUCCESS + formattedWarnings, Messages.format(editedPerson)),
+                feedbackType);
     }
 
     @Override
@@ -107,6 +145,61 @@ public class EditCommand extends Command {
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
 
         return new Person(updatedName, updatedPhone, updatedEmail, updatedAddress, updatedTags);
+    }
+
+    /**
+     * Checks for similar contacts in the model and appends warnings if found.
+     * Only checks for warnings on fields that were actually edited.
+     *
+     * @param editedPerson The person after editing
+     * @param personToEdit The original person being edited (to skip during comparison)
+     * @param model The model containing the list of persons
+     * @param warnings StringBuilder to append warnings to
+     * @param descriptor The descriptor containing which fields were edited
+     */
+    private void checkForSimilarContacts(Person editedPerson, Person personToEdit, Model model,
+                                         StringBuilder warnings, EditPersonDescriptor descriptor) {
+        boolean hasSimilarName = false;
+        boolean hasSimilarAddress = false;
+
+        boolean nameChanged = descriptor.getName().isPresent();
+        boolean addressChanged = descriptor.getAddress().isPresent();
+
+        for (Person existingPerson : model.getFilteredPersonList()) {
+            if (existingPerson.equals(personToEdit)) {
+                continue;
+            }
+
+            DuplicatePersonWarning duplicateWarning = editedPerson.isSamePersonWarn(existingPerson);
+
+            if (!duplicateWarning.getValue()) {
+                continue;
+            }
+
+            String warning = duplicateWarning.getWarning();
+            // Only warn about name/address if name/address respectively were changed
+            if (warning.equals(MESSAGE_SIMILAR_NAME) && !hasSimilarName && nameChanged) {
+                appendWarning(warnings, String.format(MESSAGE_SIMILAR_NAME, existingPerson.getName()));
+                hasSimilarName = true;
+            } else if (warning.equals(MESSAGE_SIMILAR_ADDRESS) && !hasSimilarAddress && addressChanged) {
+                appendWarning(warnings, String.format(
+                        MESSAGE_SIMILAR_ADDRESS,
+                        existingPerson.getName(),
+                        existingPerson.getAddress()));
+                hasSimilarAddress = true;
+            }
+
+            if (hasSimilarName && hasSimilarAddress) {
+                break;
+            }
+        }
+    }
+
+    private void appendWarning(StringBuilder warnings, String message) {
+        if (warnings.length() > 0) {
+            warnings.append(NEWLINE);
+        }
+        warnings.append(message);
     }
 
     @Override
