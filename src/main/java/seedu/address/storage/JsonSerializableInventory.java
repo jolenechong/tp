@@ -16,6 +16,9 @@ import seedu.address.model.product.Product;
 @JsonRootName(value = "inventory")
 class JsonSerializableInventory {
 
+    public static final String MESSAGE_DUPLICATE_PRODUCT = "Products list contains duplicate product id(s).";
+
+
     private final List<JsonAdaptedProduct> products = new ArrayList<>();
 
     @JsonCreator
@@ -31,6 +34,9 @@ class JsonSerializableInventory {
         Inventory inventory = new Inventory();
         for (JsonAdaptedProduct jsonAdaptedProduct : products) {
             Product product = jsonAdaptedProduct.toModelType();
+            if (inventory.hasProduct(product)) {
+                throw new IllegalValueException(MESSAGE_DUPLICATE_PRODUCT);
+            }
             inventory.addProduct(product);
         }
 

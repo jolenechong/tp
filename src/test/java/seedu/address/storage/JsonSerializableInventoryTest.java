@@ -20,6 +20,7 @@ public class JsonSerializableInventoryTest {
     private static final Path TEST_DATA_FOLDER = Paths.get("src", "test", "data", "JsonSerializableInventoryTest");
     private static final Path TYPICAL_PRODUCT_FILE = TEST_DATA_FOLDER.resolve("typicalProductInventory.json");
     private static final Path INVALID_PRODUCT_NAME_FILE = TEST_DATA_FOLDER.resolve("invalidNameInventory.json");
+    private static final Path DUPLICATE_IDENTIFIER_FILE = TEST_DATA_FOLDER.resolve("duplicateProductIDInventory.json");
 
     @Test
     public void toModelType_typicalInventoryFile_success() throws Exception {
@@ -36,5 +37,14 @@ public class JsonSerializableInventoryTest {
         JsonSerializableInventory dataFromFile = JsonUtil.readJsonFile(INVALID_PRODUCT_NAME_FILE,
                 JsonSerializableInventory.class).get();
         assertThrows(IllegalValueException.class, dataFromFile::toModelType);
+    }
+
+    @Test
+    public void toModelType_duplicateIdentifier_throwsIllegalValueException() throws Exception {
+        JsonSerializableInventory dataFromFile = JsonUtil.readJsonFile(DUPLICATE_IDENTIFIER_FILE,
+                JsonSerializableInventory.class).get();
+
+        assertThrows(IllegalValueException.class, JsonSerializableInventory.MESSAGE_DUPLICATE_PRODUCT,
+                dataFromFile::toModelType);
     }
 }
