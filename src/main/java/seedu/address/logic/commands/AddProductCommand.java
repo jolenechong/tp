@@ -57,6 +57,7 @@ public class AddProductCommand extends Command {
 
         StringBuilder allWarnings = new StringBuilder(warnings);
         model.addProduct(toAdd);
+        model.commitVendorVault();
 
         String formattedWarnings = allWarnings.isEmpty() ? "" : NEWLINE + allWarnings;
         String feedbackType = allWarnings.isEmpty()
