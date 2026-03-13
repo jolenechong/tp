@@ -269,7 +269,21 @@ Examples:
 
 Undoes the previous command that changed the data.
 
-Format: `undo`
+Format:
+```
+undo
+```
+
+<div style="height: 30px;"></div>
+
+### Redoing the previous undone command : `redo`
+
+Redoes the previous undone command that changed the data.
+
+Format: 
+```
+redo
+```
 
 <div style="height: 30px;"></div>
 

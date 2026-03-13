@@ -478,6 +478,16 @@ public class AddCommandTest {
             throw new AssertionError("This method should not be called.");
         }
 
+        @Override
+        public void redoVendorVault() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public boolean canRedoVendorVault() {
+            throw new AssertionError("This method should not be called.");
+        }
+
     }
 
     /**

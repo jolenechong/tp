@@ -264,6 +264,16 @@ public class AddProductCommandTest {
         public boolean canUndoVendorVault() {
             throw new AssertionError("This method should not be called.");
         }
+
+        @Override
+        public void redoVendorVault() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public boolean canRedoVendorVault() {
+            throw new AssertionError("This method should not be called.");
+        }
     }
 
     private class ModelStubAcceptingProductAdded extends ModelStub {
