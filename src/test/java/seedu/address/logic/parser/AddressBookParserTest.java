@@ -164,7 +164,7 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_listProducts() throws Exception {
         AddressBookParser parser = new AddressBookParser();
-        Command command = parser.parseCommand("listproducts", new PendingConfirmation());
+        Command command = parser.parseCommand("listproduct", new PendingConfirmation());
 
         assertTrue(command instanceof ListProductsCommand);
     }
@@ -181,5 +181,11 @@ public class AddressBookParserTest {
         Command command = parser.parseCommand("restoreproduct id/coffee", new PendingConfirmation());
 
         assertTrue(command instanceof RestoreProductCommand);
+    }
+
+    @Test
+    public void parseCommand_listproduct_throwsParseException() {
+        assertThrows(ParseException.class, ()
+            -> parser.parseCommand("listproducts", new PendingConfirmation()));
     }
 }

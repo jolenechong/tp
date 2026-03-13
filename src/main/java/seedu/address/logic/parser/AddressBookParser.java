@@ -113,6 +113,9 @@ public class AddressBookParser {
             case ListProductsCommand.COMMAND_WORD:
                 return new ListProductsCommand();
 
+            case ListProductsCommand.INVALID_COMMAND_WORD:
+                throw new ParseException(ListProductsCommand.INVALID_COMMAND_SUGGESTION);
+
             case ArchiveProductCommand.COMMAND_WORD:
                 return new ArchiveProductCommandParser().parse(arguments);
 
