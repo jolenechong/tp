@@ -3,12 +3,13 @@ package seedu.address.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import seedu.address.logic.commands.RedoCommand;
 import seedu.address.logic.commands.UndoCommand;
 
 /**
  * Represents the version history of whole of VendorVault.
  */
-public class VersionedVendorVault {
+public class VersionedVendorVault extends VendorVault {
 
     private final List<VendorVault> vendorVaultStateList;
     private int currentStatePointer;
@@ -51,8 +52,7 @@ public class VersionedVendorVault {
      */
     public void redo(VendorVault currentState) {
         if (!canRedo()) {
-            // TODO: Replace this when RedoCommand is implemented
-            throw new IllegalStateException(UndoCommand.MESSAGE_FAILURE);
+            throw new IllegalStateException(RedoCommand.MESSAGE_FAILURE);
         }
         currentStatePointer++;
         currentState.resetData(vendorVaultStateList.get(currentStatePointer));

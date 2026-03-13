@@ -158,46 +158,50 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
-### \[Proposed\] Undo/redo feature
+### Undo and Redo feature
 
-#### Proposed Implementation
+#### Implementation
 
-The proposed undo/redo mechanism is facilitated by `VersionedAddressBook`. It extends `AddressBook` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`. Additionally, it implements the following operations:
+The undo/redo mechanism is facilitated by `VersionedVendorVault`. It extends `VendorVault` with an undo/redo history, stored internally as an `vendorVaultStateList` and `currentStatePointer`. Additionally, it implements the following operations:
 
-* `VersionedAddressBook#commit()` — Saves the current address book state in its history.
-* `VersionedAddressBook#undo()` — Restores the previous address book state from its history.
-* `VersionedAddressBook#redo()` — Restores a previously undone address book state from its history.
+`VendorVault` is the main data structure that holds the current state of the address book and inventory data. If only the address book data is modified, the inventory data will still be saved in the `VendorVault` state. This allows us to have a single undo/redo mechanism for both address book and inventory data.
 
-These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and `Model#redoAddressBook()` respectively.
+* `VersionedVendorVault#commit()` — Saves the current VendorVault state in its history.
+* `VersionedVendorVault#undo()` — Restores the previous VendorVault state from its history.
+* `VersionedVendorVault#redo()` — Restores a previously undone VendorVault state from its history.
+* `VersionedVendorVault#canUndo()` and `VersionedVendorVault#canRedo()` — Checks if undo/redo operations are possible based on the current state of the history.
 
+These operations are exposed in the `Model` interface as `Model#commitVendorVault()`, `Model#undoVendorVault()`, `Model#redoVendorVault()`, `Model#canUndoVendorVault` and `Model#canRedoVendorVault` respectively.
+
+#### Usage Scenario
 Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
 
-Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial address book state, and the `currentStatePointer` pointing to that single address book state.
+Step 1. The user launches the application for the first time. The `VersionedVendorVault` will be initialized with the initial VendorVault (which includes the address book and inventory internally) state, and the `currentStatePointer` pointing to that single VendorVault state.
 
 <puml src="diagrams/UndoRedoState0.puml" alt="UndoRedoState0" />
 
-Step 2. The user executes `delete 5` command to delete the 5th person in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
+Step 2. The user executes `delete support@adafruit.com` command to delete the corresponding vendor contact in VendorVault. The `delete` command calls `Model#commitVendorVault()`, causing the modified state of the VendorVault after the `delete support@adafruit.com` command executes to be saved in the `vendorVaultStateList`, and the `currentStatePointer` is shifted to the newly inserted VendorVault state.
 
 <puml src="diagrams/UndoRedoState1.puml" alt="UndoRedoState1" />
 
-Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
+Step 3. The user executes `add n/Adafruit …​` to add a new vendor contact. The `add` command also calls `Model#commitVendorVault()`, causing another modified VendorVault state to be saved into the `vendorVaultStateList`.
 
 <puml src="diagrams/UndoRedoState2.puml" alt="UndoRedoState2" />
 
 <box type="info" seamless>
 
-**Note:** If a command fails its execution, it will not call `Model#commitAddressBook()`, so the address book state will not be saved into the `addressBookStateList`.
+**Note:** If a command fails its execution, it will not call `Model#commitVendorVault()`, so the VendorVault state will not be saved into the `vendorVaultStateList`.
 
 </box>
 
-Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
+Step 4. The user now decides that adding the contact was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoVendorVault()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous VendorVault state, and restores the VendorVault to that state.
 
 <puml src="diagrams/UndoRedoState3.puml" alt="UndoRedoState3" />
 
 
 <box type="info" seamless>
 
-**Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no previous AddressBook states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather
+**Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no previous AddressBook states to restore. The `undo` command uses `Model#canundoVendorVault()` to check if this is the case. If so, it will return an error to the user rather
 than attempting to perform the undo.
 
 </box>
@@ -216,19 +220,19 @@ Similarly, how an undo operation goes through the `Model` component is shown bel
 
 <puml src="diagrams/UndoSequenceDiagram-Model.puml" alt="UndoSequenceDiagram-Model" />
 
-The `redo` command does the opposite — it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the address book to that state.
+The `redo` command does the opposite — it calls `Model#redoVendorVault()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the VendorVault to that state.
 
 <box type="info" seamless>
 
-**Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest address book state, then there are no undone AddressBook states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
+**Note:** If the `currentStatePointer` is at index `vendorVaultStateList.size() - 1`, pointing to the latest VendorVault state, then there are no undone VendorVault states to restore. The `redo` command uses `Model#canRedoVendorVault()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
 
 </box>
 
-Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
+Step 5. The user then decides to execute the command `list`. Commands that do not modify the VendorVault, such as `list`, will usually not call `Model#commitVendorVault()`, `Model#undoVendorVault()` or `Model#redoVendorVault()`. Thus, the `vendorVaultStateList` remains unchanged.
 
 <puml src="diagrams/UndoRedoState4.puml" alt="UndoRedoState4" />
 
-Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
+Step 6. The user executes `clear`, which calls `Model#commitVendorVault()`. Since the `currentStatePointer` is not pointing at the end of the `vendorVaultStateList`, all VendorVault states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/Adafruit …​` command. This is the behavior that most modern desktop applications follow.
 
 <puml src="diagrams/UndoRedoState5.puml" alt="UndoRedoState5" />
 
@@ -240,18 +244,61 @@ The following activity diagram summarizes what happens when a user executes a ne
 
 **Aspect: How undo & redo executes:**
 
-* **Alternative 1 (current choice):** Saves the entire address book.
-  * Pros: Easy to implement.
+* **Alternative 1 (current choice):** Saves the entire VendorVault.
+  * Pros: Easy to implement and support for future commands.
   * Cons: May have performance issues in terms of memory usage.
 
 * **Alternative 2:** Individual command knows how to undo/redo by
   itself.
   * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
-  * Cons: We must ensure that the implementation of each individual command are correct.
+  * Cons: We must ensure that the implementation of each individual command and future commands are correct.
 
-_{more aspects and alternatives to be added}_
+Given that VendorVault’s data size is expected to remain relatively small (e.g. around 1,000 contacts and 5,000 products) and undoable actions are typically performed in small batches during regular use by small business owners, so the memory overhead of storing snapshots is acceptable.
 
-### Data archiving
+**Aspect: Granularity of undo/redo scope:**
+
+* **Alternative 1 (current choice):** Single unified VendorVault snapshot per commit.
+    * Pros: One consistent state per commit makes it simple to reason about as one undo always undoes exactly one user action regardless of whether it touched contacts, products, or both. 
+    * Cons: Even if only contacts are modified, the full inventory snapshot is stored too, wasting memory.
+
+* **Alternative 2:** Separate versioned histories for AddressBook and Inventory.
+    * Pros: More fine-grained memory usage.  
+    * Cons: Significantly increases complexity. A single user action that touches both (e.g. clear) would need to commit to both histories atomically, and undo would need to roll back both in sync, increasing the risk of histories becoming desynchronised.
+
+Since VendorVault’s data size is expected to be small and the number of undoable actions per session is unlikely to be large, the additional memory usage from storing full snapshots of both internally is acceptable, to get more consistent undo behaviour.
+
+**Aspect: Where the commit is triggered:**
+
+* **Alternative 1 (current choice):** Each command calls Model#commitVendorVault() itself.
+    * Pros: Gives each command full control, so commands that should not create a snapshot (e.g. list, find) simply don't call commit.
+    * Cons: Future command implementors must remember to call commit.
+
+* **Alternative 2:** LogicManager automatically commits after every successful command execution.
+    * Pros: Centralises the responsibility in one place. 
+    * Cons: Read-only commands (e.g. list, find) would create unnecessary snapshots unless they are explicitly excluded, requiring a marker interface or flag on the Command class.
+
+Given that only certain commands should create undoable states, we chose Alternative 1 as it gives each command explicit control over when a snapshot is created. This avoids unnecessary snapshots for read-only commands and keeps the undo history meaningful.
+
+<div style="height: 10px;"></div>
+
+---
+
+<div style="height: 10px;"></div>
+
+### Command History Feature
+To be added.
+
+#### Implementation
+#### Usage Scenario
+#### Design Considerations
+
+<div style="height: 10px;"></div>
+
+---
+
+<div style="height: 10px;"></div>
+
+### Data Archiving Feature
 #### Implementation
 {currently for vendor only}
 
@@ -276,8 +323,6 @@ Model#restorePerson(Person person)
 
 These operations update the `Person` object.
 
----
-
 #### Command Flow
 
 The following sequence occurs when executing `archive 1`:
@@ -294,8 +339,6 @@ The following sequence occurs when executing `archive 1`:
 
 The `restore vendor INDEX` command follows a similar flow but sets `archived = false`.
 
----
-
 #### Filtering Behaviour
 
 Archived vendors are hidden from the default UI display.
@@ -309,8 +352,6 @@ This ensures archived vendors remain stored but are not displayed in the main ve
 
 When a vendor is restored, the archived flag is set to `false`, causing the vendor to reappear in the UI.
 
----
-
 #### Error Handling
 
 Error handling is implemented for index.
@@ -322,8 +363,6 @@ If the index is outside the displayed list range, a `CommandException` is thrown
 **Model Layer**
 
 Protects internal state consistency. For example, attempting to archive an already archived vendor results in an `IllegalArgumentException`.
-
----
 
 #### Design Considerations
 
@@ -350,8 +389,6 @@ Cons:
 
 Option 1 was chosen as it integrates better with the existing data structure and keeps the implementation lightweight.
 
----
-
 #### Future Improvements
 
 Future extensions may allow vendors to be archived using other identifiers such as:
@@ -361,9 +398,37 @@ archive name Alice
 restore phone 91234567
 ```
 
+<div style="height: 10px;"></div>
 
-{product implementation to be added}
---------------------------------------------------------------------------------------------------------------------
+---
+
+<div style="height: 10px;"></div>
+
+### Command Alias Feature
+To be added.
+
+#### Implementation
+#### Usage Scenario
+#### Design Considerations
+
+<div style="height: 10px;"></div>
+
+---
+
+<div style="height: 10px;"></div>
+
+### Better Search Feature
+To be added.
+
+#### Implementation
+#### Usage Scenario
+#### Design Considerations
+
+<div style="height: 10px;"></div>
+
+---
+
+<div style="height: 10px;"></div>
 
 ## **Documentation, logging, testing, configuration, dev-ops**
 
@@ -373,7 +438,11 @@ restore phone 91234567
 * [Configuration guide](Configuration.md)
 * [DevOps guide](DevOps.md)
 
---------------------------------------------------------------------------------------------------------------------
+<div style="height: 10px;"></div>
+
+---
+
+<div style="height: 10px;"></div>
 
 ## **Appendix: Requirements**
 
@@ -618,7 +687,11 @@ Accessibility:
 * **Command**: A user input instruction entered into the CLI to perform an action (e.g. add, delete, list).
 * **Prefix**: A keyword used to identify parameters in a command (e.g. n/, p/, e/, q/).
 
---------------------------------------------------------------------------------------------------------------------
+<div style="height: 10px;"></div>
+
+---
+
+<div style="height: 10px;"></div>
 
 ## **Appendix: Instructions for manual testing**
 

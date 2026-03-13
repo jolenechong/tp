@@ -16,7 +16,7 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 <img src="images/jolenechong.png" width="200px">
 
 [[homepage](https://jolenechong.pages.dev/)]
-[[github](https://github.com/github.com/jolenechong/)]
+[[github](https://github.com/jolenechong/)]
 [[portfolio](team/jolenechong.md)]
 
 * Role: Team Lead, Integration
