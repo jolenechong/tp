@@ -5,6 +5,8 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 import java.util.Objects;
 
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.logic.parser.ParserUtil;
+import seedu.address.model.product.warnings.DuplicateProductWarning;
 
 /**
  * Represents a Product in the inventory.
@@ -61,6 +63,35 @@ public class Product {
 
     public Product restore() {
         return new Product(identifier, name, quantity, false);
+    }
+
+    /**
+     * Returns a {@code DuplicateProductWarning} if this product has a similar name to {@code otherProduct}.
+     */
+    public DuplicateProductWarning isSameProductWarn(Product otherProduct) {
+        return new DuplicateProductWarning(
+                hasSimilarName(otherProduct),
+                DuplicateProductWarning.MESSAGE_SIMILAR_NAME);
+    }
+
+    private boolean hasSimilarName(Product otherProduct) {
+        String thisName = this.name.fullName.toLowerCase().trim();
+        String otherName = otherProduct.getName().fullName.toLowerCase().trim();
+
+        if (thisName.equals(otherName)) {
+            return true;
+        }
+
+        String[] thisParts = thisName.split(ParserUtil.SPACE_SEPARATOR);
+        String[] otherParts = otherName.split(ParserUtil.SPACE_SEPARATOR);
+
+        java.util.Set<String> nameParts = new java.util.HashSet<>(java.util.Arrays.asList(thisParts));
+        for (String part : otherParts) {
+            if (nameParts.contains(part)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

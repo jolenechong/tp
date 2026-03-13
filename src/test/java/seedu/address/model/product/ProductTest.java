@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_IDENTIFIER_AIRPODS;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PRODUCT_NAME_IPAD;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_QUANTITY_IPHONE;
+import static seedu.address.testutil.TypicalProducts.NOODLES;
 import static seedu.address.testutil.TypicalProducts.OIL;
 import static seedu.address.testutil.TypicalProducts.RICE;
 
@@ -104,5 +105,40 @@ public class ProductTest {
                 Product.class.getCanonicalName() + "{identifier=" + RICE.getIdentifier() + ", name=" + RICE.getName()
                 + ", quantity=" + RICE.getQuantity() + "}";
         assertEquals(expected, RICE.toString());
+    }
+
+    @Test
+    public void isSameProductWarn_caseInsensitiveExactMatch_warningReturned() {
+        Product other = new ProductBuilder()
+                .withIdentifier("SKU-9998")
+                .withName("brown rice 5kg")
+                .build();
+
+        assertTrue(RICE.isSameProductWarn(other).getValue());
+    }
+
+    @Test
+    public void isSameProductWarn_sharedToken_warningReturned() {
+        Product other = new ProductBuilder()
+                .withIdentifier("SKU-9997")
+                .withName("Fried Noodles Beef")
+                .build();
+
+        assertTrue(NOODLES.isSameProductWarn(other).getValue());
+    }
+
+    @Test
+    public void isSameProductWarn_completelyDifferentNames_noWarning() {
+        assertFalse(RICE.isSameProductWarn(OIL).getValue());
+    }
+
+    @Test
+    public void isSameProductWarn_partialSubstringNotTokenMatch_noWarning() {
+        Product other = new ProductBuilder()
+                .withIdentifier("SKU-9994")
+                .withName("Ricecake Deluxe")
+                .build();
+
+        assertFalse(RICE.isSameProductWarn(other).getValue());
     }
 }

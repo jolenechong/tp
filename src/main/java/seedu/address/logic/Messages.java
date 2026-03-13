@@ -26,6 +26,10 @@ public class Messages {
     public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d contacts listed!";
     public static final String MESSAGE_DUPLICATE_FIELDS =
                 "Multiple values specified for the following single-valued field(s): ";
+    public static final String MESSAGE_DUPLICATE_PERSON = "This vendor contact already exists "
+            + "with the same email or phone number. ";
+    public static final String MESSAGE_DUPLICATE_PRODUCT = "This product already exists "
+            + "with the same product identifier. ";
 
     /**
      * Returns an error message indicating the duplicate prefixes.

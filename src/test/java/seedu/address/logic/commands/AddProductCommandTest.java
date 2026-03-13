@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.logic.Messages.MESSAGE_DUPLICATE_PRODUCT;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_IDENTIFIER_WARN;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_PRODUCT_NAME_WARN;
 import static seedu.address.logic.parser.ParserUtil.NEWLINE;
@@ -16,9 +17,11 @@ import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.logic.Messages;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyInventory;
@@ -29,6 +32,8 @@ import seedu.address.model.person.Person;
 import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Name;
 import seedu.address.model.product.Product;
+import seedu.address.model.product.Quantity;
+import seedu.address.model.product.warnings.DuplicateProductWarning;
 import seedu.address.testutil.ProductBuilder;
 
 public class AddProductCommandTest {
@@ -69,6 +74,199 @@ public class AddProductCommandTest {
                 Messages.formatProduct(validProductWithWarnings));
 
         assertEquals(expectedMessage, result.getFeedbackToUser());
+        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+    }
+
+    @Test
+    public void execute_duplicateProductIdentifier_throwsCommandException() {
+        Product existingProduct = new ProductBuilder()
+                .withIdentifier("SKU-2000")
+                .withName("Office Chair")
+                .build();
+        Product duplicateProduct = new ProductBuilder()
+                .withIdentifier("SKU-2000")
+                .withName("Gaming Chair")
+                .build();
+        ModelStubAcceptingProductAdded modelStub = new ModelStubAcceptingProductAdded();
+        modelStub.seedExistingProduct(existingProduct);
+
+        AddProductCommand addProductCommand = new AddProductCommand(duplicateProduct);
+
+        assertThrows(CommandException.class, MESSAGE_DUPLICATE_PRODUCT, () ->
+                addProductCommand.execute(modelStub));
+    }
+
+    @Test
+    public void execute_similarProductName_warnAndAddSuccessful() throws Exception {
+        Product existingProduct = new ProductBuilder()
+                .withIdentifier("SKU-3000")
+                .withName("Wireless Mouse")
+                .build();
+        Product productToAdd = new ProductBuilder()
+                .withIdentifier("SKU-3001")
+                .withName("Wireless Keyboard")
+                .build();
+        ModelStubAcceptingProductAdded modelStub = new ModelStubAcceptingProductAdded();
+        modelStub.seedExistingProduct(existingProduct);
+
+        CommandResult result = new AddProductCommand(productToAdd).execute(modelStub);
+
+        String expectedWarning = String.format(DuplicateProductWarning.MESSAGE_SIMILAR_NAME,
+                existingProduct.getIdentifier(), existingProduct.getName());
+        assertTrue(result.getFeedbackToUser().contains(expectedWarning));
+        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+        assertEquals(2, modelStub.productsAdded.size());
+        assertEquals(productToAdd, modelStub.productsAdded.get(1));
+    }
+
+    @Test
+    public void execute_noSimilarProducts_noSimilarNameWarning() throws Exception {
+        // All existing products have completely different names
+        Product existingProduct = new ProductBuilder()
+                .withIdentifier("SKU-4000")
+                .withName("Stapler")
+                .build();
+        Product productToAdd = new ProductBuilder()
+                .withIdentifier("SKU-4001")
+                .withName("Rubber Band")
+                .build();
+        ModelStubAcceptingProductAdded modelStub = new ModelStubAcceptingProductAdded();
+        modelStub.seedExistingProduct(existingProduct);
+
+        CommandResult result = new AddProductCommand(productToAdd).execute(modelStub);
+
+        assertFalse(result.getFeedbackToUser().contains(
+                DuplicateProductWarning.MESSAGE_SIMILAR_NAME.substring(0, 10)));
+        assertEquals(CommandResult.FEEDBACK_TYPE_SUCCESS, result.getFeedbackType());
+    }
+
+    @Test
+    public void execute_multipleNonSimilarProducts_loopCompletesWithoutWarning() throws Exception {
+        Product existingOne = new ProductBuilder()
+                .withIdentifier("SKU-4100")
+                .withName("Stapler")
+                .build();
+        Product existingTwo = new ProductBuilder()
+                .withIdentifier("SKU-4101")
+                .withName("Paper Clips")
+                .build();
+        Product productToAdd = new ProductBuilder()
+                .withIdentifier("SKU-4102")
+                .withName("Rubber Band")
+                .build();
+        ModelStubAcceptingProductAdded modelStub = new ModelStubAcceptingProductAdded();
+        modelStub.seedExistingProduct(existingOne);
+        modelStub.seedExistingProduct(existingTwo);
+
+        CommandResult result = new AddProductCommand(productToAdd).execute(modelStub);
+
+        assertFalse(result.getFeedbackToUser().contains("similar name"));
+        assertEquals(CommandResult.FEEDBACK_TYPE_SUCCESS, result.getFeedbackType());
+    }
+
+    @Test
+    public void execute_warningValueTrueButDifferentWarningType_noSimilarNameWarning() throws Exception {
+        // When there's multiple warnings
+        Product toAddWithDifferentWarningType = new ProductWithForcedWarning(
+                new Identifier("SKU-4200"),
+                new Name("Desk Lamp"),
+                new Quantity("5"),
+                new DuplicateProductWarning(true, "OTHER_WARNING_TYPE"));
+
+        ModelStubAcceptingProductAdded modelStub = new ModelStubAcceptingProductAdded();
+        modelStub.seedExistingProduct(new ProductBuilder()
+                .withIdentifier("SKU-4201")
+                .withName("Desk Mat")
+                .build());
+        modelStub.seedExistingProduct(new ProductBuilder()
+                .withIdentifier("SKU-4202")
+                .withName("Desk Organizer")
+                .build());
+
+        CommandResult result = new AddProductCommand(toAddWithDifferentWarningType).execute(modelStub);
+
+        assertFalse(result.getFeedbackToUser().contains("similar name"));
+        assertEquals(CommandResult.FEEDBACK_TYPE_SUCCESS, result.getFeedbackType());
+        assertEquals(3, modelStub.productsAdded.size());
+    }
+
+    @Test
+    public void execute_similarProductName_warningMatchesMessageSimilarName() throws Exception {
+        Product existingProduct = new ProductBuilder()
+                .withIdentifier("SKU-5000")
+                .withName("Mechanical Keyboard")
+                .build();
+        Product productToAdd = new ProductBuilder()
+                .withIdentifier("SKU-5001")
+                .withName("Mechanical Pencil")
+                .build();
+        ModelStubAcceptingProductAdded modelStub = new ModelStubAcceptingProductAdded();
+        modelStub.seedExistingProduct(existingProduct);
+
+        CommandResult result = new AddProductCommand(productToAdd).execute(modelStub);
+
+        String expectedWarning = String.format(DuplicateProductWarning.MESSAGE_SIMILAR_NAME,
+                existingProduct.getIdentifier(), existingProduct.getName());
+        assertTrue(result.getFeedbackToUser().contains(expectedWarning));
+        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+    }
+
+    @Test
+    public void execute_presetWarningAndSimilarName_warningsJoinedWithNewline() throws Exception {
+        Product existingProduct = new ProductBuilder()
+                .withIdentifier("SKU-6000")
+                .withName("Printer Ink")
+                .build();
+        Product productToAdd = new ProductBuilder()
+                .withIdentifier("SKU-6001")
+                .withName("Printer Paper")
+                .build();
+        String presetWarning = "⚠ Warning: Identifier contains unusual symbols, is this intentional?";
+        ModelStubAcceptingProductAdded modelStub = new ModelStubAcceptingProductAdded();
+        modelStub.seedExistingProduct(existingProduct);
+
+        CommandResult result = new AddProductCommand(productToAdd, presetWarning).execute(modelStub);
+
+        String expectedSimilarWarning = String.format(DuplicateProductWarning.MESSAGE_SIMILAR_NAME,
+                existingProduct.getIdentifier(), existingProduct.getName());
+        String feedback = result.getFeedbackToUser();
+        assertTrue(feedback.contains(presetWarning));
+        assertTrue(feedback.contains(expectedSimilarWarning));
+        // The two warnings must be separated by a newline
+        assertTrue(feedback.contains(presetWarning + "\n" + expectedSimilarWarning));
+        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+    }
+
+    @Test
+    public void execute_multipleSimilarProducts_onlyFirstWarningAppended() throws Exception {
+        // When multiple existing products share a name token, only one warning should appear.
+        Product similar1 = new ProductBuilder()
+                .withIdentifier("SKU-7000")
+                .withName("Glass Cup")
+                .build();
+        Product similar2 = new ProductBuilder()
+                .withIdentifier("SKU-7001")
+                .withName("Glass Bottle")
+                .build();
+        Product productToAdd = new ProductBuilder()
+                .withIdentifier("SKU-7002")
+                .withName("Glass Jar")
+                .build();
+        ModelStubAcceptingProductAdded modelStub = new ModelStubAcceptingProductAdded();
+        modelStub.seedExistingProduct(similar1);
+        modelStub.seedExistingProduct(similar2);
+
+        CommandResult result = new AddProductCommand(productToAdd).execute(modelStub);
+
+        String warning1 = String.format(DuplicateProductWarning.MESSAGE_SIMILAR_NAME,
+                similar1.getIdentifier(), similar1.getName());
+        String warning2 = String.format(DuplicateProductWarning.MESSAGE_SIMILAR_NAME,
+                similar2.getIdentifier(), similar2.getName());
+        // Exactly one of the two possible warnings should appear, not both
+        assertTrue(result.getFeedbackToUser().contains(warning1)
+                || result.getFeedbackToUser().contains(warning2));
+        assertFalse(result.getFeedbackToUser().contains(warning1)
+                && result.getFeedbackToUser().contains(warning2));
         assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
     }
 
@@ -287,9 +485,41 @@ public class AddProductCommandTest {
         final ArrayList<Product> productsAdded = new ArrayList<>();
 
         @Override
+        public boolean hasProduct(Product product) {
+            requireNonNull(product);
+            return productsAdded.stream().anyMatch(product::isSameProduct);
+        }
+
+        @Override
+        public ObservableList<Product> getFilteredProductList() {
+            return FXCollections.observableArrayList(productsAdded);
+        }
+
+        @Override
         public void addProduct(Product product) {
             requireNonNull(product);
             productsAdded.add(product);
+        }
+
+        void seedExistingProduct(Product product) {
+            requireNonNull(product);
+            productsAdded.add(product);
+        }
+    }
+
+    /** Product test double that forces a specific warning result. */
+    private static class ProductWithForcedWarning extends Product {
+        private final DuplicateProductWarning forcedWarning;
+
+        ProductWithForcedWarning(Identifier identifier, Name name, Quantity quantity,
+                                 DuplicateProductWarning forcedWarning) {
+            super(identifier, name, quantity);
+            this.forcedWarning = forcedWarning;
+        }
+
+        @Override
+        public DuplicateProductWarning isSameProductWarn(Product otherProduct) {
+            return forcedWarning;
         }
     }
 }
