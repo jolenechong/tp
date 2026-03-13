@@ -26,9 +26,6 @@ public class DeleteCommand extends Command {
             + "Parameters: Email \n"
             + "Example: " + COMMAND_WORD + " irfam@example.com";
 
-    public static final String MESSAGE_EMAIL_NOT_FOUND =
-            "No contact with the specified email was found.";
-
     public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Person: %1$s";
 
     public static final String CONFIRMATION_DELETE_PERSON_MESSAGE =
@@ -127,7 +124,7 @@ public class DeleteCommand extends Command {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("targetEmail: ", targetEmail)
+                .add("targetEmail", targetEmail)
                 .toString();
     }
 }
