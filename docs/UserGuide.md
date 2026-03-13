@@ -138,24 +138,21 @@ To include multiple phone numbers for a contact, you can **separate them with co
 For example, the following command adds a contact with two phone numbers: `61234567` and `87654321`:
 
 ```
-add n/CompanyName p/61234567, 87654321 e/contact@company.com a/123, Clementi Rd, 1234665 t/business
+add n/DigiKey Singapore p/61234567, 87654321 e/sg.sales@digikey.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951
 ```
 
 </panel>
 
 <panel header="What contacts are considered duplicates?" type="seamless" id="faq-duplicate-contacts">
 
-VendorVault helps prevent accidentally adding the same contact twice with duplicate detection.
+A contact is considered a duplicate if:
+* It has the **same email and phone number as an existing contact** in VendorVault.
+* Phone numbers are compared while ignoring labels (such as “(Office)” or “(HP)”). Multiple phone numbers should be separated by commas.
 
-How it works:
-* The app checks the email and phone numbers when you add a new contact.
-* If you try to add a contact with the **same email and phone number as an existing contact**, VendorVault will **reject it**.
-* Phone numbers are compared ignoring specifications (like “(Office)” or “(HP)”) and are separated by commas.
-
-For Example, the following commands are considered duplicates of each other because they share the same phone number `61234567` and email `contact@company.com`:<br>
+For example, these contacts are considered duplicates because they share the same phone number `61234567` and email `contact@company.com`:<br>
 ```
-add n/CompanyName p/61234567, 98765432 e/contact@company.com a/123, Clementi Rd, 1234665 t/business
-add n/CompanyName p/61234567, 12345678 e/contact@company.com a/123, Clementi Rd, 1234665 t/business
+add n/DigiKey Singapore p/61234567, 98765432 e/contact@company.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951
+add n/DigiKey Singapore p/61234567, 12345678 e/contact@company.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951
 ```
 
 </panel>
@@ -262,6 +259,19 @@ Examples:
 * `addproduct id/SKU-1003 n/Tray of Eggs q/30`
 * `addproduct id/Pr1 n/HP LaserJet (M428fdw) q/5`
 * `addproduct id/DE/5 n/PlayStation`
+
+<panel header="What products are considered duplicates?" type="seamless" id="faq-duplicate-products">
+
+A product is considered a duplicate if:
+* It has the **same product identifier (id) as an existing product** in VendorVault.
+
+For example, the these products are considered duplicates because they share the same product identifier `SKU-1003`:<br>
+```
+addproduct id/SKU-1003 n/Arduino Uno R4 Development Board
+addproduct id/SKU-1003 n/Raspberry Pi 5 (8GB RAM)
+```
+
+</panel>
 
 <div style="height: 30px;"></div>
 

@@ -1,16 +1,19 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.Messages.MESSAGE_DUPLICATE_PRODUCT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_IDENTIFIER;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_QUANTITY;
 import static seedu.address.logic.parser.ParserUtil.NEWLINE;
+import static seedu.address.model.product.warnings.DuplicateProductWarning.MESSAGE_SIMILAR_NAME;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.product.Product;
+import seedu.address.model.product.warnings.DuplicateProductWarning;
 
 /**
  * Adds a product to the inventory.
@@ -55,7 +58,12 @@ public class AddProductCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
+        if (model.hasProduct(toAdd)) {
+            throw new CommandException(MESSAGE_DUPLICATE_PRODUCT);
+        }
+
         StringBuilder allWarnings = new StringBuilder(warnings);
+        checkForSimilarProducts(model, allWarnings);
         model.addProduct(toAdd);
         model.commitVendorVault();
 
@@ -66,6 +74,33 @@ public class AddProductCommand extends Command {
 
         return new CommandResult(String.format(MESSAGE_SUCCESS + formattedWarnings, Messages.formatProduct(toAdd)),
                 feedbackType);
+    }
+
+    /**
+     * Checks for similar products in the model and appends warnings if found.
+     */
+    private void checkForSimilarProducts(Model model, StringBuilder warnings) {
+        for (Product existingProduct : model.getFilteredProductList()) {
+            DuplicateProductWarning duplicateWarning = toAdd.isSameProductWarn(existingProduct);
+
+            if (!duplicateWarning.getValue()) {
+                continue;
+            }
+
+            String warning = duplicateWarning.getWarning();
+            if (warning.equals(MESSAGE_SIMILAR_NAME)) {
+                appendWarning(warnings, String.format(
+                        MESSAGE_SIMILAR_NAME, existingProduct.getIdentifier(), existingProduct.getName()));
+                break;
+            }
+        }
+    }
+
+    private void appendWarning(StringBuilder warnings, String message) {
+        if (!warnings.isEmpty()) {
+            warnings.append(NEWLINE);
+        }
+        warnings.append(message);
     }
 
     @Override

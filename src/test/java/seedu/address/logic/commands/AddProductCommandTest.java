@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.logic.Messages.MESSAGE_DUPLICATE_PRODUCT;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_IDENTIFIER_WARN;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_PRODUCT_NAME_WARN;
 import static seedu.address.logic.parser.ParserUtil.NEWLINE;
@@ -16,9 +17,11 @@ import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.logic.Messages;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyInventory;
@@ -29,6 +32,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Name;
 import seedu.address.model.product.Product;
+import seedu.address.model.product.warnings.DuplicateProductWarning;
 import seedu.address.testutil.ProductBuilder;
 
 public class AddProductCommandTest {
@@ -70,6 +74,48 @@ public class AddProductCommandTest {
 
         assertEquals(expectedMessage, result.getFeedbackToUser());
         assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+    }
+
+    @Test
+    public void execute_duplicateProductIdentifier_throwsCommandException() {
+        Product existingProduct = new ProductBuilder()
+                .withIdentifier("SKU-2000")
+                .withName("Office Chair")
+                .build();
+        Product duplicateProduct = new ProductBuilder()
+                .withIdentifier("SKU-2000")
+                .withName("Gaming Chair")
+                .build();
+        ModelStubAcceptingProductAdded modelStub = new ModelStubAcceptingProductAdded();
+        modelStub.seedExistingProduct(existingProduct);
+
+        AddProductCommand addProductCommand = new AddProductCommand(duplicateProduct);
+
+        assertThrows(CommandException.class, MESSAGE_DUPLICATE_PRODUCT, () ->
+                addProductCommand.execute(modelStub));
+    }
+
+    @Test
+    public void execute_similarProductName_warnAndAddSuccessful() throws Exception {
+        Product existingProduct = new ProductBuilder()
+                .withIdentifier("SKU-3000")
+                .withName("Wireless Mouse")
+                .build();
+        Product productToAdd = new ProductBuilder()
+                .withIdentifier("SKU-3001")
+                .withName("Wireless Keyboard")
+                .build();
+        ModelStubAcceptingProductAdded modelStub = new ModelStubAcceptingProductAdded();
+        modelStub.seedExistingProduct(existingProduct);
+
+        CommandResult result = new AddProductCommand(productToAdd).execute(modelStub);
+
+        String expectedWarning = String.format(DuplicateProductWarning.MESSAGE_SIMILAR_NAME,
+                existingProduct.getIdentifier(), existingProduct.getName());
+        assertTrue(result.getFeedbackToUser().contains(expectedWarning));
+        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+        assertEquals(2, modelStub.productsAdded.size());
+        assertEquals(productToAdd, modelStub.productsAdded.get(1));
     }
 
     @Test
@@ -287,7 +333,23 @@ public class AddProductCommandTest {
         final ArrayList<Product> productsAdded = new ArrayList<>();
 
         @Override
+        public boolean hasProduct(Product product) {
+            requireNonNull(product);
+            return productsAdded.stream().anyMatch(product::isSameProduct);
+        }
+
+        @Override
+        public ObservableList<Product> getFilteredProductList() {
+            return FXCollections.observableArrayList(productsAdded);
+        }
+
+        @Override
         public void addProduct(Product product) {
+            requireNonNull(product);
+            productsAdded.add(product);
+        }
+
+        void seedExistingProduct(Product product) {
             requireNonNull(product);
             productsAdded.add(product);
         }
