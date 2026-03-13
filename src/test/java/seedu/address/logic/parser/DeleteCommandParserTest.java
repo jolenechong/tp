@@ -1,12 +1,13 @@
 package seedu.address.logic.parser;
 
+import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON_STRING;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.DeleteCommand;
+import seedu.address.model.person.Email;
 
 /**
  * As we are only doing white-box testing, our test cases do not cover path variations
@@ -17,31 +18,28 @@ import seedu.address.logic.commands.DeleteCommand;
  */
 public class DeleteCommandParserTest {
 
+    private static final Email VALID_EMAIL = new Email(VALID_EMAIL_AMY);
+
     private DeleteCommandParser parser = new DeleteCommandParser();
 
     @Test
     public void parse_validArgs_returnsDeleteCommand() {
-        assertParseSuccess(parser, "1", new DeleteCommand(INDEX_FIRST_PERSON_STRING, true));
+        assertParseSuccess(parser, VALID_EMAIL_AMY, new DeleteCommand(VALID_EMAIL, true));
     }
 
     @Test
     public void parse_validArgsWithConfirmationFlag_returnsDeleteCommand() {
-        assertParseSuccess(parser, "-y 1", new DeleteCommand(INDEX_FIRST_PERSON_STRING, false));
+        assertParseSuccess(parser, "-y " + VALID_EMAIL_AMY, new DeleteCommand(VALID_EMAIL, false));
     }
 
     @Test
     public void parse_validArgsWithConfirmationFlagAfterIndex_returnsDeleteCommand() {
-        assertParseSuccess(parser, "1 -y", new DeleteCommand(INDEX_FIRST_PERSON_STRING, false));
-    }
-
-    @Test
-    public void parse_validArgsWithLeadingAndTrailingSpaces_returnsDeleteCommand() {
-        assertParseSuccess(parser, "    1    ", new DeleteCommand(INDEX_FIRST_PERSON_STRING, true));
+        assertParseSuccess(parser, VALID_EMAIL_AMY + " -y", new DeleteCommand(VALID_EMAIL, false));
     }
 
     @Test
     public void parse_wronglyFormedFlagAttachedToIndex_throwsParseException() {
-        assertParseFailure(parser, "-y1", DeleteCommandParser.MESSAGE_WRONGLY_FORMED_FLAG);
-        assertParseFailure(parser, "-y12", DeleteCommandParser.MESSAGE_WRONGLY_FORMED_FLAG);
+        assertParseFailure(parser, "-y" + VALID_EMAIL_AMY, DeleteCommandParser.MESSAGE_WRONGLY_FORMED_FLAG);
+        assertParseFailure(parser, "-y1" + VALID_EMAIL_AMY, DeleteCommandParser.MESSAGE_WRONGLY_FORMED_FLAG);
     }
 }

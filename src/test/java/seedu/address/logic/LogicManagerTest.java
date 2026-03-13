@@ -2,13 +2,13 @@ package seedu.address.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_EMAIL;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_AMY;
-import static seedu.address.logic.commands.DeleteCommand.CONTACT_IS_EMPTY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.AMY;
 
@@ -41,7 +41,7 @@ public class LogicManagerTest {
     private static final IOException DUMMY_IO_EXCEPTION = new IOException("dummy IO exception");
     private static final IOException DUMMY_AD_EXCEPTION = new AccessDeniedException("dummy access denied exception");
 
-    private static final String DELETE_COMMAND_EXCEPTION = MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + CONTACT_IS_EMPTY;
+    private static final String DELETE_COMMAND_EXCEPTION = MESSAGE_INVALID_PERSON_DISPLAYED_EMAIL;
 
     @TempDir
     public Path temporaryFolder;
@@ -67,7 +67,7 @@ public class LogicManagerTest {
 
     @Test
     public void execute_commandExecutionError_throwsCommandException() {
-        String deleteCommand = "delete 9";
+        String deleteCommand = "delete test@example.com";
         assertCommandException(deleteCommand, DELETE_COMMAND_EXCEPTION);
     }
 
@@ -117,7 +117,7 @@ public class LogicManagerTest {
                 + EMAIL_DESC_AMY + ADDRESS_DESC_AMY;
         logic.execute(addCommand);
 
-        String deleteCommand = "delete 1";
+        String deleteCommand = "delete " + VALID_EMAIL_AMY;
         logic.execute(deleteCommand);
         logic.execute("y");
 

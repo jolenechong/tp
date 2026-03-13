@@ -3,28 +3,26 @@ package seedu.address.logic.commands;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
 import static seedu.address.logic.commands.DeleteCommand.CONFIRMATION_DELETE_PERSON_MESSAGE;
 import static seedu.address.logic.commands.DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON_STRING;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON_STRING;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalProducts.getTypicalInventory;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.VendorVault;
+import seedu.address.model.person.Email;
 import seedu.address.model.person.NameEqualsKeywordsPredicate;
 import seedu.address.model.person.Person;
 
@@ -34,62 +32,17 @@ import seedu.address.model.person.Person;
  */
 public class DeleteCommandTest {
 
+    private static final Email NON_EXISTENT_EMAIL = new Email("missing.person@example.com");
+    private static final Email AMY_EMAIL = new Email(VALID_EMAIL_AMY);
+    private static final Email BOB_EMAIL = new Email(VALID_EMAIL_BOB);
+
     private Model model = new ModelManager(new VendorVault(
             getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
-
-    private String format_exception_message(Model model) {
-        return Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX
-                + DeleteCommand.VALID_CONTACT_DELETE_RANGE + model.getFilteredPersonList().size();
-    }
-
-    @Test
-    public void execute_emptyList_throwCommandException() {
-        model.updateFilteredPersonList(p -> false);
-
-        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON_STRING, true);
-        String expectedMessage = Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + DeleteCommand.CONTACT_IS_EMPTY;
-
-        assertCommandFailure(deleteCommand, model, expectedMessage);
-    }
-
-    @Test
-    public void execute_nonIntegerIndex_throwsCommandException() {
-        DeleteCommand deleteCommand = new DeleteCommand("abcijabhisbaib", true);
-
-        assertCommandFailure(deleteCommand, model, format_exception_message(model));
-    }
-
-    @Test
-    public void execute_zeroIndex_throwsCommandException() {
-        DeleteCommand deleteCommand = new DeleteCommand("0", true);
-
-        assertCommandFailure(deleteCommand, model, format_exception_message(model));
-    }
-
-    @Test
-    public void execute_negativeIndex_throwsCommandException() {
-        DeleteCommand deleteCommand = new DeleteCommand("-1", true);
-
-        assertCommandFailure(deleteCommand, model, format_exception_message(model));
-    }
-
-    @Test
-    public void execute_indexWithWhitespace_success() {
-        Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        DeleteCommand deleteCommand = new DeleteCommand("  " + INDEX_FIRST_PERSON_STRING + "  ",
-                true);
-
-        ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
-        NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
-        expectedModel.updateFilteredPersonList(predicate);
-
-        assertCommandSuccess(deleteCommand, model, CONFIRMATION_DELETE_PERSON_MESSAGE, expectedModel);
-    }
 
     @Test
     public void execute_validIndexUnfilteredListDeleteOnly_success() {
         Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON_STRING, true);
+        DeleteCommand deleteCommand = new DeleteCommand(personToDelete.getEmail(), true);
 
         ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
         NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
@@ -101,7 +54,7 @@ public class DeleteCommandTest {
     @Test
     public void execute_validIndexUnfilteredListDeleteAndConfirm_success() {
         Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON_STRING, true);
+        DeleteCommand deleteCommand = new DeleteCommand(personToDelete.getEmail(), true);
 
         ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
         NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
@@ -132,7 +85,7 @@ public class DeleteCommandTest {
     @Test
     public void execute_validIndexUnfilteredListDeleteAndCancel_success() {
         Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON_STRING, true);
+        DeleteCommand deleteCommand = new DeleteCommand(personToDelete.getEmail(), true);
 
         ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
         NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
@@ -157,19 +110,11 @@ public class DeleteCommandTest {
     }
 
     @Test
-    public void execute_invalidIndexUnfilteredList_throwsCommandException() {
-        Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
-        DeleteCommand deleteCommand = new DeleteCommand(outOfBoundIndex.toString(), true);
-
-        assertCommandFailure(deleteCommand, model, format_exception_message(model));
-    }
-
-    @Test
     public void execute_validIndexFilteredList_success() {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
         Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON_STRING, true);
+        DeleteCommand deleteCommand = new DeleteCommand(personToDelete.getEmail(), true);
 
         Model expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
         NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
@@ -198,22 +143,9 @@ public class DeleteCommandTest {
     }
 
     @Test
-    public void execute_invalidIndexFilteredList_throwsCommandException() {
-        showPersonAtIndex(model, INDEX_FIRST_PERSON);
-
-        Index outOfBoundIndex = INDEX_SECOND_PERSON;
-        // ensures that outOfBoundIndex is still in bounds of address book list
-        assertTrue(outOfBoundIndex.getZeroBased() < model.getAddressBook().getPersonList().size());
-
-        DeleteCommand deleteCommand = new DeleteCommand(outOfBoundIndex.toString(), true);
-
-        assertCommandFailure(deleteCommand, model, format_exception_message(model));
-    }
-
-    @Test
     public void execute_validIndexNoConfirmation_deletesPerson() {
         Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON_STRING, false);
+        DeleteCommand deleteCommand = new DeleteCommand(personToDelete.getEmail(), false);
 
         CommandResult result;
         try {
@@ -229,7 +161,7 @@ public class DeleteCommandTest {
     @Test
     public void execute_validIndexWithConfirmation_showsConfirmationMessage() {
         Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON_STRING, true);
+        DeleteCommand deleteCommand = new DeleteCommand(personToDelete.getEmail(), true);
 
         CommandResult result;
         try {
@@ -244,14 +176,14 @@ public class DeleteCommandTest {
 
     @Test
     public void equals() {
-        DeleteCommand deleteFirstCommand = new DeleteCommand(INDEX_FIRST_PERSON_STRING, true);
-        DeleteCommand deleteSecondCommand = new DeleteCommand(INDEX_SECOND_PERSON_STRING, true);
+        DeleteCommand deleteFirstCommand = new DeleteCommand(AMY_EMAIL, true);
+        DeleteCommand deleteSecondCommand = new DeleteCommand(BOB_EMAIL, true);
 
         // same object -> returns true
         assertTrue(deleteFirstCommand.equals(deleteFirstCommand));
 
         // same values -> returns true
-        DeleteCommand deleteFirstCommandCopy = new DeleteCommand(INDEX_FIRST_PERSON_STRING, true);
+        DeleteCommand deleteFirstCommandCopy = new DeleteCommand(AMY_EMAIL, true);
         assertTrue(deleteFirstCommand.equals(deleteFirstCommandCopy));
 
         // different types -> returns false
@@ -266,9 +198,8 @@ public class DeleteCommandTest {
 
     @Test
     public void toStringMethod() {
-        Index targetIndex = Index.fromOneBased(1);
-        DeleteCommand deleteCommand = new DeleteCommand(targetIndex.toString(), true);
-        String expected = DeleteCommand.class.getCanonicalName() + "{targetIndex=" + targetIndex + "}";
+        DeleteCommand deleteCommand = new DeleteCommand(AMY_EMAIL, true);
+        String expected = DeleteCommand.class.getCanonicalName() + "{targetEmail=" + VALID_EMAIL_AMY + "}";
         assertEquals(expected, deleteCommand.toString());
     }
 

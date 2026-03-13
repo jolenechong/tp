@@ -6,13 +6,11 @@ import static seedu.address.model.Model.PREDICATE_SHOW_ACTIVE_PERSONS;
 import java.util.List;
 import java.util.Optional;
 
-import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
-import seedu.address.logic.parser.ParserUtil;
-import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
+import seedu.address.model.person.Email;
 import seedu.address.model.person.NameEqualsKeywordsPredicate;
 import seedu.address.model.person.Person;
 
@@ -24,13 +22,9 @@ public class DeleteCommand extends Command {
     public static final String COMMAND_WORD = "delete";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Deletes the person identified by the index number used in the displayed person list.\n"
-            + "Parameters: INDEX (must be a positive integer)\n"
-            + "Example: " + COMMAND_WORD + " 1";
-
-    public static final String VALID_CONTACT_DELETE_RANGE = "\nThe valid delete range is from 1 to ";
-
-    public static final String CONTACT_IS_EMPTY = "\nThere is no contact to delete. Consider adding some contacts.";
+            + ": Deletes the person identified by email used in the displayed person list.\n"
+            + "Parameters: Email \n"
+            + "Example: " + COMMAND_WORD + " irfam@example.com";
 
     public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Person: %1$s";
 
@@ -41,16 +35,15 @@ public class DeleteCommand extends Command {
 
     private PendingConfirmation pendingConfirmation = new PendingConfirmation();
 
-    private final String targetIndexString;
+    private final Email targetEmail;
     private final boolean needsConfirmation;
 
     /**
      * Creates a DeleteCommand to delete the person at the specified {@code targetIndexString}.
      *
-     * @param targetIndexString the index string of the person to be deleted, which could have trailing spaces
      */
-    public DeleteCommand(String targetIndexString, boolean needsConfirmation) {
-        this.targetIndexString = targetIndexString.trim();
+    public DeleteCommand(Email targetEmail, boolean needsConfirmation) {
+        this.targetEmail = targetEmail;
         this.needsConfirmation = needsConfirmation;
     }
 
@@ -59,40 +52,20 @@ public class DeleteCommand extends Command {
         requireNonNull(model);
         List<Person> lastShownList = model.getFilteredPersonList();
 
-        Index targetIndex;
-        try {
-            targetIndex = ParserUtil.parseIndex(targetIndexString);
-        } catch (ParseException e) {
-            throw new CommandException(formatExceptionMessage(lastShownList));
-        }
-
-        if (targetIndex.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(formatExceptionMessage(lastShownList));
-        }
-
-        Person personToDelete = lastShownList.get(targetIndex.getZeroBased());
+        Person personToDelete = model.findByEmail(targetEmail)
+                .orElseThrow(() ->
+                        new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_EMAIL));
 
         if (!this.needsConfirmation) {
             return this.deletePerson(model, personToDelete);
         }
 
-        this.pendingConfirmation = new PendingConfirmation(() ->
+        pendingConfirmation = new PendingConfirmation(() ->
                 this.onConfirm(model, personToDelete), () -> this.onCancel(model));
 
         NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
         model.updateFilteredPersonList(predicate);
         return new CommandResult(CONFIRMATION_DELETE_PERSON_MESSAGE);
-    }
-
-    /**
-     * Formats an exception message for an invalid person index based on the current list state.
-     * If there is no contacts in the list, it will prompt user to add contacts first
-     *
-     */
-    public String formatExceptionMessage(List<Person> lastShownList) {
-        return lastShownList.isEmpty()
-                ? Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + CONTACT_IS_EMPTY
-                : Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + VALID_CONTACT_DELETE_RANGE + lastShownList.size();
     }
 
     /**
@@ -145,13 +118,13 @@ public class DeleteCommand extends Command {
         }
 
         DeleteCommand otherDeleteCommand = (DeleteCommand) other;
-        return targetIndexString.equals(otherDeleteCommand.targetIndexString);
+        return targetEmail.equals(otherDeleteCommand.targetEmail);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("targetIndex", targetIndexString)
+                .add("targetEmail", targetEmail)
                 .toString();
     }
 }

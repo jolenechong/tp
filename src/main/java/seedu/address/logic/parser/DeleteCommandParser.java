@@ -1,9 +1,11 @@
 package seedu.address.logic.parser;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Email;
 
 /**
  * Parses input arguments and creates a new DeleteCommand object
@@ -11,8 +13,8 @@ import seedu.address.logic.parser.exceptions.ParseException;
 public class DeleteCommandParser implements Parser<DeleteCommand> {
 
     public static final String MESSAGE_WRONGLY_FORMED_FLAG =
-            "Invalid format. The '-y' flag must be separate from the index.\n"
-                    + "Example: delete -y 1";
+            "Invalid format. The '-y' flag must be separate from the email.\n"
+                    + "Example: delete -y <email>";
 
     public static final String CONFIRMATION_INDICATOR = "-y";
 
@@ -28,11 +30,13 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
 
         String argsTrimmed = args.trim();
 
-        String[] tokens = argsTrimmed.split("\\s+");
 
-        return checkConfirmationIndicator(tokens)
-                ? new DeleteCommand(removeConfirmationIndicator(args), false)
-                : new DeleteCommand(args, true);
+        String[] tokens = argsTrimmed.split("\\s+");
+        boolean needsConfirmation = !checkConfirmationIndicator(tokens);
+        String emailBeforeParsed = removeConfirmationIndicator(tokens);
+        ParseResult<Email> email = ParserUtil.parseEmail(emailBeforeParsed);
+
+        return new DeleteCommand(email.getValue(), needsConfirmation);
     }
 
     private boolean checkConfirmationIndicator(String[] tokens) throws ParseException {
@@ -44,7 +48,9 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
         return Arrays.asList(tokens).contains(CONFIRMATION_INDICATOR);
     }
 
-    private String removeConfirmationIndicator(String args) {
-        return args.replaceFirst(CONFIRMATION_INDICATOR, "");
+    private String removeConfirmationIndicator(String[] tokens) {
+        return Arrays.stream(tokens)
+                .filter(t -> !t.equals(CONFIRMATION_INDICATOR))
+                .collect(Collectors.joining(" "));
     }
 }
