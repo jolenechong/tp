@@ -11,6 +11,7 @@ import static seedu.address.testutil.Assert.assertThrows;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyInventory;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.ReadOnlyVendorVault;
+import seedu.address.model.person.Email;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Name;
@@ -173,6 +175,11 @@ public class AddProductCommandTest {
 
         @Override
         public boolean hasPerson(Person person) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Optional<Person> findByEmail(Email email) {
             throw new AssertionError("This method should not be called.");
         }
 

@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
@@ -11,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.model.person.Email;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
 
@@ -131,6 +133,12 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public Optional<Person> findByEmail(Email email) {
+        requireNonNull(email);
+        return addressBook.findByEmail(email);
+    }
+
+    @Override
     public void deletePerson(Person target) {
         addressBook.removePerson(target);
     }
@@ -174,7 +182,6 @@ public class ModelManager implements Model {
         requireAllNonNull(target, editedProduct);
         inventory.setProduct(target, editedProduct);
     }
-
 
     @Override
     public boolean hasProduct(Product product) {

@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
-import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -37,10 +36,10 @@ public class EditCommandParser implements Parser<EditCommand> {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_TAG);
 
-        Index index;
+        Email email;
 
         try {
-            index = ParserUtil.parseIndex(argMultimap.getPreamble());
+            email = ParserUtil.parseEmail(argMultimap.getPreamble()).getValue();
         } catch (ParseException pe) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE), pe);
         }
@@ -64,7 +63,7 @@ public class EditCommandParser implements Parser<EditCommand> {
         if (argMultimap.getValue(PREFIX_EMAIL).isPresent()) {
             ParseResult<Email> emailResult = ParserUtil.parseEmail(argMultimap.getValue(PREFIX_EMAIL).get());
             appendWarning(warnings, emailResult.getWarning());
-            editPersonDescriptor.setEmail(ParserUtil.parseEmail(argMultimap.getValue(PREFIX_EMAIL).get()).getValue());
+            editPersonDescriptor.setEmail(emailResult.getValue());
         }
         if (argMultimap.getValue(PREFIX_ADDRESS).isPresent()) {
             editPersonDescriptor.setAddress(ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS).get()));
@@ -76,10 +75,10 @@ public class EditCommandParser implements Parser<EditCommand> {
         }
 
         if (!warnings.isEmpty()) {
-            return new EditCommand(index, editPersonDescriptor, warnings.toString());
+            return new EditCommand(email, editPersonDescriptor, warnings.toString());
         }
 
-        return new EditCommand(index, editPersonDescriptor);
+        return new EditCommand(email, editPersonDescriptor);
     }
 
     /**

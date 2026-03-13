@@ -13,7 +13,6 @@ import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_ADDRESS;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_NAME;
-import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
@@ -30,8 +29,8 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.VendorVault;
+import seedu.address.model.person.Email;
 import seedu.address.model.person.Person;
-import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 import seedu.address.testutil.PersonBuilder;
 
@@ -40,6 +39,8 @@ import seedu.address.testutil.PersonBuilder;
  */
 public class EditCommandTest {
 
+    private static final Email NON_EXISTENT_EMAIL = new Email("missing.person@example.com");
+
     private Model model = new ModelManager(new VendorVault(
             getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
 
@@ -47,7 +48,8 @@ public class EditCommandTest {
     public void execute_allFieldsSpecifiedUnfilteredList_success() {
         Person editedPerson = new PersonBuilder().build();
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedPerson).build();
-        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+        Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        EditCommand editCommand = new EditCommand(firstPerson.getEmail(), descriptor);
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
 
@@ -68,7 +70,7 @@ public class EditCommandTest {
 
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB)
                 .withPhone(VALID_PHONE_BOB).withTags(VALID_TAG_HUSBAND).build();
-        EditCommand editCommand = new EditCommand(indexLastPerson, descriptor);
+        EditCommand editCommand = new EditCommand(lastPerson.getEmail(), descriptor);
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
 
@@ -80,7 +82,8 @@ public class EditCommandTest {
 
     @Test
     public void execute_noFieldSpecifiedUnfilteredList_success() {
-        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, new EditPersonDescriptor());
+        Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        EditCommand editCommand = new EditCommand(firstPerson.getEmail(), new EditPersonDescriptor());
         Person editedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
@@ -96,7 +99,7 @@ public class EditCommandTest {
 
         Person personInFilteredList = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Person editedPerson = new PersonBuilder(personInFilteredList).withName(VALID_NAME_BOB).build();
-        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON,
+        EditCommand editCommand = new EditCommand(personInFilteredList.getEmail(),
                 new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB).build());
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
@@ -110,8 +113,9 @@ public class EditCommandTest {
     @Test
     public void execute_duplicatePersonUnfilteredList_failure() {
         Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Person secondPerson = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(firstPerson).build();
-        EditCommand editCommand = new EditCommand(INDEX_SECOND_PERSON, descriptor);
+        EditCommand editCommand = new EditCommand(secondPerson.getEmail(), descriptor);
 
         assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_PERSON);
     }
@@ -122,44 +126,39 @@ public class EditCommandTest {
 
         // edit person in filtered list into a duplicate in address book
         Person personInList = model.getAddressBook().getPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
-        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON,
+        Person personInFilteredList = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        EditCommand editCommand = new EditCommand(personInFilteredList.getEmail(),
                 new EditPersonDescriptorBuilder(personInList).build());
 
-        // assert exception is a DuplicatePersonException
-        assertThrows(DuplicatePersonException.class, () -> editCommand.execute(model));
+        assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_PERSON);
     }
 
     @Test
-    public void execute_invalidPersonIndexUnfilteredList_failure() {
-        Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
+    public void execute_invalidPersonEmailUnfilteredList_failure() {
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB).build();
-        EditCommand editCommand = new EditCommand(outOfBoundIndex, descriptor);
+        EditCommand editCommand = new EditCommand(NON_EXISTENT_EMAIL, descriptor);
 
-        assertCommandFailure(editCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertCommandFailure(editCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_EMAIL);
     }
 
     /**
-     * Edit filtered list where index is larger than size of filtered list,
-     * but smaller than size of address book
+     * Edit filtered list with a target email that does not exist in the model.
      */
     @Test
-    public void execute_invalidPersonIndexFilteredList_failure() {
+    public void execute_invalidPersonEmailFilteredList_failure() {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
-        Index outOfBoundIndex = INDEX_SECOND_PERSON;
-        // ensures that outOfBoundIndex is still in bounds of address book list
-        assertTrue(outOfBoundIndex.getZeroBased() < model.getAddressBook().getPersonList().size());
-
-        EditCommand editCommand = new EditCommand(outOfBoundIndex,
+        EditCommand editCommand = new EditCommand(NON_EXISTENT_EMAIL,
                 new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB).build());
 
-        assertCommandFailure(editCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertCommandFailure(editCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_EMAIL);
     }
 
     @Test
     public void getPendingConfirmation_returnsInactivePendingConfirmation() {
         Person editedPerson = new PersonBuilder().build();
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedPerson).build();
-        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+        Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        EditCommand editCommand = new EditCommand(firstPerson.getEmail(), descriptor);
 
         PendingConfirmation pendingConfirmation = editCommand.getPendingConfirmation();
         assertFalse(pendingConfirmation.getNeedConfirmation());
@@ -167,11 +166,13 @@ public class EditCommandTest {
 
     @Test
     public void equals() {
-        final EditCommand standardCommand = new EditCommand(INDEX_FIRST_PERSON, DESC_AMY);
+        Email firstEmail = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased()).getEmail();
+        Email secondEmail = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased()).getEmail();
+        final EditCommand standardCommand = new EditCommand(firstEmail, DESC_AMY);
 
         // same values -> returns true
         EditPersonDescriptor copyDescriptor = new EditPersonDescriptor(DESC_AMY);
-        EditCommand commandWithSameValues = new EditCommand(INDEX_FIRST_PERSON, copyDescriptor);
+        EditCommand commandWithSameValues = new EditCommand(firstEmail, copyDescriptor);
         assertTrue(standardCommand.equals(commandWithSameValues));
 
         // same object -> returns true
@@ -183,21 +184,22 @@ public class EditCommandTest {
         // different types -> returns false
         assertFalse(standardCommand.equals(new ClearCommand()));
 
-        // different index -> returns false
-        assertFalse(standardCommand.equals(new EditCommand(INDEX_SECOND_PERSON, DESC_AMY)));
+        // different email -> returns false
+        assertFalse(standardCommand.equals(new EditCommand(secondEmail, DESC_AMY)));
 
         // different descriptor -> returns false
-        assertFalse(standardCommand.equals(new EditCommand(INDEX_FIRST_PERSON, DESC_BOB)));
+        assertFalse(standardCommand.equals(new EditCommand(firstEmail, DESC_BOB)));
     }
 
     @Test
     public void execute_editPhoneToMatchAnotherPerson_failure() {
         Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Person secondPerson = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
 
         // edit second person's phone to match first person's phone
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
                 .withPhone(firstPerson.getPhone().value).build();
-        EditCommand editCommand = new EditCommand(INDEX_SECOND_PERSON, descriptor);
+        EditCommand editCommand = new EditCommand(secondPerson.getEmail(), descriptor);
 
         assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_PERSON);
     }
@@ -205,21 +207,22 @@ public class EditCommandTest {
     @Test
     public void execute_editEmailToMatchAnotherPerson_failure() {
         Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Person secondPerson = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
 
         // edit second person's email to match first person's email
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
                 .withEmail(firstPerson.getEmail().value).build();
-        EditCommand editCommand = new EditCommand(INDEX_SECOND_PERSON, descriptor);
+        EditCommand editCommand = new EditCommand(secondPerson.getEmail(), descriptor);
 
         assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_PERSON);
     }
 
     @Test
     public void toStringMethod() {
-        Index index = Index.fromOneBased(1);
+        Email email = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased()).getEmail();
         EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
-        EditCommand editCommand = new EditCommand(index, editPersonDescriptor);
-        String expected = EditCommand.class.getCanonicalName() + "{index=" + index + ", editPersonDescriptor="
+        EditCommand editCommand = new EditCommand(email, editPersonDescriptor);
+        String expected = EditCommand.class.getCanonicalName() + "{email=" + email + ", editPersonDescriptor="
                 + editPersonDescriptor + "}";
         assertEquals(expected, editCommand.toString());
     }
@@ -233,10 +236,11 @@ public class EditCommandTest {
         // warnings are appended — the only warning in the result is the preset one.
         String presetWarning = "Pre-existing warning message";
         Index indexFiona = Index.fromOneBased(6);
+        Person fiona = model.getFilteredPersonList().get(indexFiona.getZeroBased());
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
                 .withPhone("55555500")
                 .build();
-        EditCommand editCommand = new EditCommand(indexFiona, descriptor, presetWarning);
+        EditCommand editCommand = new EditCommand(fiona.getEmail(), descriptor, presetWarning);
 
         CommandResult result = editCommand.execute(model);
 
@@ -252,7 +256,8 @@ public class EditCommandTest {
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
                 .withName("Alice Kurz")
                 .build();
-        EditCommand editCommand = new EditCommand(INDEX_THIRD_PERSON, descriptor);
+        Person thirdPerson = model.getFilteredPersonList().get(INDEX_THIRD_PERSON.getZeroBased());
+        EditCommand editCommand = new EditCommand(thirdPerson.getEmail(), descriptor);
 
         CommandResult result = editCommand.execute(model);
 
@@ -269,7 +274,8 @@ public class EditCommandTest {
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
                 .withAddress("Jurong West")
                 .build();
-        EditCommand editCommand = new EditCommand(INDEX_THIRD_PERSON, descriptor);
+        Person thirdPerson = model.getFilteredPersonList().get(INDEX_THIRD_PERSON.getZeroBased());
+        EditCommand editCommand = new EditCommand(thirdPerson.getEmail(), descriptor);
 
         CommandResult result = editCommand.execute(model);
 
@@ -293,10 +299,11 @@ public class EditCommandTest {
         // Even though "Alice Brown" shares a name token with ALICE
         // there should be no name warning since the name field was not part of the edit descriptor.
         Index indexLast = Index.fromOneBased(model.getFilteredPersonList().size());
+        Person lastPerson = model.getFilteredPersonList().get(indexLast.getZeroBased());
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
                 .withPhone("66666666")
                 .build();
-        EditCommand editCommand = new EditCommand(indexLast, descriptor);
+        EditCommand editCommand = new EditCommand(lastPerson.getEmail(), descriptor);
 
         CommandResult result = editCommand.execute(model);
 
@@ -319,10 +326,11 @@ public class EditCommandTest {
         // Even though "Jurong West" is similar to ALICE's address, no address warning should
         // fire because the address field was not part of the edit descriptor.
         Index indexLast = Index.fromOneBased(model.getFilteredPersonList().size());
+        Person lastPerson = model.getFilteredPersonList().get(indexLast.getZeroBased());
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
                 .withPhone("66666667")
                 .build();
-        EditCommand editCommand = new EditCommand(indexLast, descriptor);
+        EditCommand editCommand = new EditCommand(lastPerson.getEmail(), descriptor);
 
         CommandResult result = editCommand.execute(model);
 
@@ -351,7 +359,8 @@ public class EditCommandTest {
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
                 .withName("John Kurz")
                 .build();
-        EditCommand editCommand = new EditCommand(INDEX_THIRD_PERSON, descriptor);
+        Person thirdPerson = model.getFilteredPersonList().get(INDEX_THIRD_PERSON.getZeroBased());
+        EditCommand editCommand = new EditCommand(thirdPerson.getEmail(), descriptor);
 
         CommandResult result = editCommand.execute(model);
         String feedback = result.getFeedbackToUser();
@@ -382,7 +391,8 @@ public class EditCommandTest {
                 .withName("John Kurz")
                 .withAddress("Jurong West")
                 .build();
-        EditCommand editCommand = new EditCommand(INDEX_THIRD_PERSON, descriptor);
+        Person thirdPerson = model.getFilteredPersonList().get(INDEX_THIRD_PERSON.getZeroBased());
+        EditCommand editCommand = new EditCommand(thirdPerson.getEmail(), descriptor);
 
         CommandResult result = editCommand.execute(model);
 
@@ -409,7 +419,8 @@ public class EditCommandTest {
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
                 .withAddress("Jurong West")
                 .build();
-        EditCommand editCommand = new EditCommand(INDEX_THIRD_PERSON, descriptor);
+        Person thirdPerson = model.getFilteredPersonList().get(INDEX_THIRD_PERSON.getZeroBased());
+        EditCommand editCommand = new EditCommand(thirdPerson.getEmail(), descriptor);
 
         CommandResult result = editCommand.execute(model);
         String feedback = result.getFeedbackToUser();
