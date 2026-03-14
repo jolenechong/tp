@@ -265,16 +265,16 @@ Format: `clear`
 
 Adds a product to the inventory.
 
-Format: `addproduct id/IDENTIFIER n/NAME [q/QUANTITY]`
+Format: `addproduct id/IDENTIFIER n/NAME [q/QUANTITY] [th/RESTOCK_THRESHOLD]`
 
 <box type="tip" seamless>
 
-**Tip:** If quantity is not specified, it will default to 0.
+**Tip:** If quantity is not specified, it will default to 0. If threshold is not specified, it will default 
+to 0.
 </box>
 
 Examples:
-* `addproduct id/SKU-1003 n/Tray of Eggs q/30`
-* `addproduct id/Pr1 n/HP LaserJet (M428fdw) q/5`
+* `addproduct id/Pr1 n/HP LaserJet (M428fdw) q/50 th/10`
 * `addproduct id/DE/5 n/PlayStation`
 
 <panel header="What products are considered duplicates?" type="seamless" id="faq-duplicate-products">
@@ -361,7 +361,7 @@ _Details coming soon ..._
 | **List**           | `list`                                                                 |                                                                                                            | Lists all contacts                       |
 | **Find Contact**   | `find KEYWORD [MORE_KEYWORDS]`                                         | `find TechSource`                                                                                          | Lists all contacts matching `KEYWORD`    |
 | **Clear Contacts** | `clear`                                                                |                                                                                                            | Clears all contacts                      |
-| **Add product**    | `addproduct id/IDENTIFIER n/NAME [q/QUANTITY]`                         | `addproduct id/SKU-1003 n/Tray of Eggs q/30 `                                                              | Adds product                             |
+| **Add product**    | `addproduct id/IDENTIFIER n/NAME [q/QUANTITY] [th/RESTOCK_THRESHOLD]`  | `addproduct id/Pr1 n/HP LaserJet (M428fdw) q/50 th/10 `                                                    | Adds product                             |
 | **Undo**           | `undo`                                                                 |                                                                                                            | Undoes previous command                  |
 | **Help**           | `help`                                                                 |                                                                                                            |                                          |
 
@@ -482,5 +482,40 @@ Many errors that occur in `add` also apply to `edit`, specifically, all except t
 <box type="tip" seamless>
 
 Tip: Unlike `add`, edit command warnings only appear for **fields you are actually editing**. For example, if you edit only the phone number and there's a similar name in the database, you won't see a name warning. This prevents unnecessary alerts for unchanged fields.
+
+</box>
+
+#### Troubleshooting `addproduct` contact
+
+Use this section when `addproduct` fails or returns a warning.
+
+<box type="warning" seamless>
+
+**Important:**
+* **Error** messages mean the product was **not added**.
+* **Warning** messages mean the product was **added**, but VendorVault is flagging a possible issue.
+
+</box>
+
+| Scenario                                            | Message shown                                                             | How to fix                                                    |
+|-----------------------------------------------------|---------------------------------------------------------------------------|---------------------------------------------------------------|
+| Missing one or more required prefixes (`id/`, `n/`) | `Missing required field(s): ...`                                          | Include all required prefixed fields in your command.         |
+| No prefixes at all                                  | `All required prefixes are missing, ...`                                  | Use the full prefixed format, e.g. `addproduct id/... n/...`. |
+| Text appears before the first prefix                | `No non-prefix characters before prefix(es) is allowed, ...`              | Remove any text before `id/`.                                 |
+| Same single-value field repeated (e.g. two `q/`)    | `Multiple values specified for the following single-valued field(s): ...` | Keep only one value for each of `id/`, `n/`, `q/`, `th/`.     |
+| Identifier is blank                                 | `Identifier should not be blank.`                                         | Provide a non-empty identifier after `id/`.                   |
+| Name is too long                                    | `Name should be at most 120 characters.`                                  | Shorten the name.                                             |
+| Product is a duplicate                              | `This product already exists with the same identifier.`                   | Change the identifier, or edit the existing product instead.  |
+
+Common `addproduct` warnings:
+
+| Warning trigger                     | Warning shown                                                                                                                                   | What it means                                                                                                                   |
+|-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| Identifier/Name has unusual symbols | `⚠ Warning: Identifier contains unusual symbols, is this intentional?`<br><br/>`⚠ Warning: Name contains unusual symbols, is this intentional?` | Identifier/Name is accepted, but looks unusual. You can verify if you entered it correctly.                                     |
+| Similar name to an existing product | `⚠ Warning: There's a product with a similar name (name: <similar-name>), is this intentional?`                                                 | Possible duplicate by similar name. You can check if the name in the warning message is the same as what you were about to add. |
+
+<box type="tip" seamless>
+
+Tip: If multiple warnings apply, VendorVault shows all of them (one per line) together with the success message.
 
 </box>
