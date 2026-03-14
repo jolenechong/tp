@@ -12,6 +12,7 @@ import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Name;
 import seedu.address.model.product.Product;
 import seedu.address.model.product.Quantity;
+import seedu.address.model.product.RestockThreshold;
 
 public class ArchiveProductCommandTest {
 
@@ -23,7 +24,8 @@ public class ArchiveProductCommandTest {
         Product product = new Product(
                 new Identifier("p1"),
                 new Name("Coffee"),
-                new Quantity("10")
+                new Quantity("10"),
+                new RestockThreshold("5")
         );
 
         model.addProduct(product);
