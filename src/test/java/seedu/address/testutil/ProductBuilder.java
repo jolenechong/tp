@@ -4,6 +4,7 @@ import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Name;
 import seedu.address.model.product.Product;
 import seedu.address.model.product.Quantity;
+import seedu.address.model.product.RestockThreshold;
 
 /**
  * A utility class to help with building Product objects.
@@ -13,10 +14,12 @@ public class ProductBuilder {
     public static final String DEFAULT_IDENTIFIER = "A1";
     public static final String DEFAULT_NAME = "iPad 11 Pro";
     public static final String DEFAULT_QUANTITY = "0";
+    public static final String DEFAULT_THRESHOLD = "10";
 
     private Name name;
     private Quantity quantity;
     private Identifier identifier;
+    private RestockThreshold threshold;
     private boolean isArchived;
 
     /**
@@ -26,6 +29,7 @@ public class ProductBuilder {
         identifier = new Identifier(DEFAULT_IDENTIFIER);
         name = new Name(DEFAULT_NAME);
         quantity = new Quantity(DEFAULT_QUANTITY);
+        threshold = new RestockThreshold(DEFAULT_THRESHOLD);
         isArchived = false;
     }
 
@@ -36,6 +40,7 @@ public class ProductBuilder {
         identifier = productToCopy.getIdentifier();
         name = productToCopy.getName();
         quantity = productToCopy.getQuantity();
+        threshold = productToCopy.getRestockThreshold();
         isArchived = productToCopy.isArchived();
     }
 
@@ -63,8 +68,16 @@ public class ProductBuilder {
         return this;
     }
 
+    /**
+     * Sets the {@code RestockThreshold} of the {@code Product} that we are building.
+     */
+    public ProductBuilder withThreshold(String threshold) {
+        this.threshold = new RestockThreshold(threshold);
+        return this;
+    }
+
     public Product build() {
-        return new Product(identifier, name, quantity, isArchived);
+        return new Product(identifier, name, quantity, threshold, isArchived);
     }
 
 }
