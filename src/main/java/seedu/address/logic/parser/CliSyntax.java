@@ -14,4 +14,5 @@ public class CliSyntax {
 
     public static final Prefix PREFIX_IDENTIFIER = new Prefix("id/");
     public static final Prefix PREFIX_QUANTITY = new Prefix("q/");
+    public static final Prefix PREFIX_THRESHOLD = new Prefix("th/");
 }
