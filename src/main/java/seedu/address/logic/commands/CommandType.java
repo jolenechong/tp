@@ -32,4 +32,18 @@ public enum CommandType {
     public String getCommandWord() {
         return this.commandWord;
     }
+
+    public static boolean isValidCommand(String command) {
+        if (command.isEmpty()) {
+            return false;
+        }
+
+        for (CommandType type: CommandType.values()) {
+            if (type.commandWord.equals(command)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

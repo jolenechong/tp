@@ -30,6 +30,8 @@ public class Messages {
             + "with the same email or phone number. ";
     public static final String MESSAGE_DUPLICATE_PRODUCT = "This product already exists "
             + "with the same product identifier. ";
+    public static final String MESSAGE_DUPLICATE_ALIAS = "This alias already exists "
+            + "with the same alias name. ";
 
     /**
      * Returns an error message indicating the duplicate prefixes.
