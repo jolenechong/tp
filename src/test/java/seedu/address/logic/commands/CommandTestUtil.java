@@ -9,6 +9,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_QUANTITY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_THRESHOLD;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
+import seedu.address.model.product.Product;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 
 /**
@@ -48,6 +50,9 @@ public class CommandTestUtil {
     public static final String VALID_QUANTITY_IPAD = "0";
     public static final String VALID_QUANTITY_IPHONE = "30";
     public static final String VALID_QUANTITY_AIRPODS = "45";
+    public static final String VALID_THRESHOLD_IPAD = "10";
+    public static final String VALID_THRESHOLD_IPHONE = "20";
+    public static final String VALID_THRESHOLD_AIRPODS = "45";
 
     public static final String NAME_DESC_AMY = " " + PREFIX_NAME + VALID_NAME_AMY;
     public static final String NAME_DESC_BOB = " " + PREFIX_NAME + VALID_NAME_BOB;
@@ -69,6 +74,9 @@ public class CommandTestUtil {
     public static final String QUANTITY_DESC_IPAD = " " + PREFIX_QUANTITY + VALID_QUANTITY_IPAD;
     public static final String QUANTITY_DESC_IPHONE = " " + PREFIX_QUANTITY + VALID_QUANTITY_IPHONE;
     public static final String QUANTITY_DESC_AIRPODS = " " + PREFIX_QUANTITY + VALID_QUANTITY_AIRPODS;
+    public static final String THRESHOLD_DESC_IPAD = " " + PREFIX_THRESHOLD + VALID_THRESHOLD_IPAD;
+    public static final String THRESHOLD_DESC_IPHONE = " " + PREFIX_THRESHOLD + VALID_THRESHOLD_IPHONE;
+    public static final String THRESHOLD_DESC_AIRPODS = " " + PREFIX_THRESHOLD + VALID_THRESHOLD_AIRPODS;
 
     public static final String INVALID_NAME_DESC = " " + PREFIX_NAME; // empty string not allowed in names
     public static final String INVALID_PHONE_DESC = " " + PREFIX_PHONE; // empty string not allowed in phones
@@ -79,6 +87,7 @@ public class CommandTestUtil {
     public static final String INVALID_IDENTIFIER_DESC = " " + PREFIX_IDENTIFIER; // empty identifier not allowed
     public static final String INVALID_PRODUCT_NAME_DESC = " " + PREFIX_NAME; // empty product name not allowed
     public static final String INVALID_QUANTITY_DESC = " " + PREFIX_QUANTITY; // empty quantity not allowed
+    public static final String INVALID_THRESHOLD_DESC = " " + PREFIX_THRESHOLD; // empty threshold not allowed
 
     public static final String INVALID_NAME_WARN = "James-Doe";
     public static final String INVALID_PHONE_WARN = "1234 5678 (HP) 1111-3333 (Office)";
@@ -147,10 +156,12 @@ public class CommandTestUtil {
         // only do so by copying its components.
         AddressBook expectedAddressBook = new AddressBook(actualModel.getAddressBook());
         List<Person> expectedFilteredList = new ArrayList<>(actualModel.getFilteredPersonList());
+        List<Product> expectedFilteredProductList = new ArrayList<>(actualModel.getFilteredProductList());
 
         assertThrows(CommandException.class, expectedMessage, () -> command.execute(actualModel));
         assertEquals(expectedAddressBook, actualModel.getAddressBook());
         assertEquals(expectedFilteredList, actualModel.getFilteredPersonList());
+        assertEquals(expectedFilteredProductList, actualModel.getFilteredProductList());
     }
 
     /**
