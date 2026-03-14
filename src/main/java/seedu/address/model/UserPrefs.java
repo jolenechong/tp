@@ -16,6 +16,7 @@ public class UserPrefs implements ReadOnlyUserPrefs {
     private GuiSettings guiSettings = new GuiSettings();
     private Path addressBookFilePath = Paths.get("data" , "addressbook.json");
     private Path productsFilePath = Paths.get("data", "inventory.json");
+    private Path aliasFilePath = Paths.get("data", "alias.json");
 
     /**
      * Creates a {@code UserPrefs} with default values.
@@ -38,6 +39,7 @@ public class UserPrefs implements ReadOnlyUserPrefs {
         setGuiSettings(newUserPrefs.getGuiSettings());
         setAddressBookFilePath(newUserPrefs.getAddressBookFilePath());
         setProductsFilePath(newUserPrefs.getProductsFilePath());
+        setAliasFilePath(newUserPrefs.getAliasFilePath());
     }
 
     public GuiSettings getGuiSettings() {
@@ -67,6 +69,15 @@ public class UserPrefs implements ReadOnlyUserPrefs {
         this.productsFilePath = productsFilePath;
     }
 
+    public Path getAliasFilePath() {
+        return aliasFilePath;
+    }
+
+    public void setAliasFilePath(Path aliasFilePath) {
+        requireNonNull(aliasFilePath);
+        this.aliasFilePath = aliasFilePath;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {
@@ -81,7 +92,8 @@ public class UserPrefs implements ReadOnlyUserPrefs {
         UserPrefs otherUserPrefs = (UserPrefs) other;
         return guiSettings.equals(otherUserPrefs.guiSettings)
                 && addressBookFilePath.equals(otherUserPrefs.addressBookFilePath)
-                && productsFilePath.equals(otherUserPrefs.productsFilePath);
+                && productsFilePath.equals(otherUserPrefs.productsFilePath)
+                && aliasFilePath.equals(otherUserPrefs.aliasFilePath);
     }
 
     @Override
@@ -95,6 +107,7 @@ public class UserPrefs implements ReadOnlyUserPrefs {
         sb.append("Gui Settings : " + guiSettings);
         sb.append("\nLocal data file location : " + addressBookFilePath);
         sb.append("\nProducts file location: " + productsFilePath);
+        sb.append("\nAlias file location: " + aliasFilePath);
         return sb.toString();
     }
 
