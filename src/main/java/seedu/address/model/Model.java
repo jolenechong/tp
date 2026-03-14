@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.alias.Alias;
 import seedu.address.model.alias.exceptions.DuplicateAliasException;
+import seedu.address.model.alias.exceptions.NoAliasFoundInAliasListException;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
@@ -156,6 +157,8 @@ public interface Model {
 
     // =========== Alias List Operations ======================================================================
     public void addAlias(Alias alias) throws DuplicateAliasException;
+
+    public Alias findAlias(String aliasStr) throws NoAliasFoundInAliasListException;
 
     /** Returns an unmodifiable view of the filtered product list. */
     ObservableList<Product> getFilteredProductList();

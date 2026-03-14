@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import seedu.address.model.alias.exceptions.DuplicateAliasException;
+import seedu.address.model.alias.exceptions.NoAliasFoundInAliasListException;
 
 /**
  * Manages a collection of command aliases. Maintains both an ArrayList to retrieve the Alias
@@ -65,5 +66,22 @@ public class AliasList {
 
         this.aliasHashSet.add(alias.getAlias());
         this.aliases.add(alias);
+    }
+
+    /**
+     * Searches for and returns the Alias object matching the provided alias name.
+     * Performs a linear search through the aliases list.
+     *
+     * @param aliasStr The alias name to search for.
+     * @return The Alias object with the matching name.
+     * @throws NoAliasFoundInAliasListException If no alias with the specified name is found.
+     */
+    public Alias findAlias(String aliasStr) throws NoAliasFoundInAliasListException {
+        for (Alias currAlias : this.aliases) {
+            if (currAlias.getAlias().equals(aliasStr)) {
+                return currAlias;
+            }
+        }
+        throw new NoAliasFoundInAliasListException();
     }
 }

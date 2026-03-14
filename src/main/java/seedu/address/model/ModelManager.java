@@ -15,6 +15,7 @@ import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.alias.Alias;
 import seedu.address.model.alias.AliasList;
 import seedu.address.model.alias.exceptions.DuplicateAliasException;
+import seedu.address.model.alias.exceptions.NoAliasFoundInAliasListException;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
@@ -210,6 +211,12 @@ public class ModelManager implements Model {
     public void addAlias(Alias alias) throws DuplicateAliasException {
         requireNonNull(alias);
         aliasList.addAlias(alias);
+    }
+
+    @Override
+    public Alias findAlias(String aliasStr) throws NoAliasFoundInAliasListException {
+        requireNonNull(aliasStr);
+        return aliasList.findAlias(aliasStr);
     }
 
     // =========== Filtered Person List Accessors =============================================================

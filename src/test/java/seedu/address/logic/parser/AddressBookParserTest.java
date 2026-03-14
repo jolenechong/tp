@@ -33,6 +33,7 @@ import seedu.address.logic.commands.RedoCommand;
 import seedu.address.logic.commands.RestoreProductCommand;
 import seedu.address.logic.commands.UndoCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.ModelManager;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
@@ -52,7 +53,7 @@ public class AddressBookParserTest {
     public void parseCommand_add() throws Exception {
         Person person = new PersonBuilder().build();
         AddCommand command = (AddCommand) parser.parseCommand(PersonUtil.getAddCommand(person),
-                new PendingConfirmation());
+                new PendingConfirmation(), new ModelManager());
         assertEquals(new AddCommand(person), command);
     }
 
@@ -60,25 +61,27 @@ public class AddressBookParserTest {
     public void parseCommand_addProduct() throws Exception {
         Product product = new ProductBuilder().build();
         AddProductCommand command = (AddProductCommand) parser.parseCommand(ProductUtil.getAddCommand(product),
-                new PendingConfirmation());
+                new PendingConfirmation(), new ModelManager());
         assertEquals(new AddProductCommand(product), command);
     }
 
     @Test
     public void parseCommand_clear() throws Exception {
-        assertTrue(parser.parseCommand(ClearCommand.COMMAND_WORD, new PendingConfirmation()) instanceof ClearCommand);
+        assertTrue(parser.parseCommand(ClearCommand.COMMAND_WORD, new PendingConfirmation(), new ModelManager())
+                instanceof ClearCommand);
         assertTrue(parser.parseCommand(ClearCommand.COMMAND_WORD + " 3",
-                new PendingConfirmation()) instanceof ClearCommand);
+                new PendingConfirmation(), new ModelManager()) instanceof ClearCommand);
     }
 
     @Test
     public void parseCommand_confirmationCommand() throws Exception {
-        assertTrue(parser.parseCommand(ConfirmCommand.COMMAND_WORD, confirmation) instanceof ConfirmCommand);
+        assertTrue(parser.parseCommand(ConfirmCommand.COMMAND_WORD, confirmation, new ModelManager())
+                instanceof ConfirmCommand);
     }
 
     @Test
     public void parseCommand_cancelCommand() throws Exception {
-        assertTrue(parser.parseCommand("n", confirmation) instanceof CancelCommand);
+        assertTrue(parser.parseCommand("n", confirmation, new ModelManager()) instanceof CancelCommand);
     }
 
     /**
@@ -89,7 +92,9 @@ public class AddressBookParserTest {
     public void parseCommand_delete() throws Exception {
         Person person = new PersonBuilder().build();
         DeleteCommand command = (DeleteCommand) parser.parseCommand(
-                DeleteCommand.COMMAND_WORD + " " + person.getEmail().toString(), new PendingConfirmation());
+                DeleteCommand.COMMAND_WORD + " " + person.getEmail().toString(),
+                new PendingConfirmation(),
+                new ModelManager());
         assertEquals(new DeleteCommand(person.getEmail(), true), command);
         assertEquals(new DeleteCommand(person.getEmail(), false), command);
     }
@@ -100,29 +105,36 @@ public class AddressBookParserTest {
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(person).build();
         EditCommand command = (EditCommand) parser.parseCommand(EditCommand.COMMAND_WORD + " "
                 + person.getEmail().value + " " + PersonUtil.getEditPersonDescriptorDetails(descriptor),
-                new PendingConfirmation());
+                new PendingConfirmation(),
+                new ModelManager());
         assertEquals(new EditCommand(person.getEmail(), descriptor), command);
     }
 
     @Test
     public void parseCommand_undo() throws Exception {
-        assertTrue(parser.parseCommand(UndoCommand.COMMAND_WORD, new PendingConfirmation()) instanceof UndoCommand);
-        assertTrue(parser.parseCommand(UndoCommand.COMMAND_WORD + " 3", new PendingConfirmation())
+        assertTrue(parser.parseCommand(UndoCommand.COMMAND_WORD, new PendingConfirmation(), new ModelManager())
                 instanceof UndoCommand);
+        assertTrue(parser.parseCommand(UndoCommand.COMMAND_WORD + " 3",
+                new PendingConfirmation(),
+                new ModelManager()) instanceof UndoCommand);
     }
 
     @Test
     public void parseCommand_redo() throws Exception {
-        assertTrue(parser.parseCommand(RedoCommand.COMMAND_WORD, new PendingConfirmation()) instanceof RedoCommand);
-        assertTrue(parser.parseCommand(RedoCommand.COMMAND_WORD + " 3", new PendingConfirmation())
+        assertTrue(parser.parseCommand(RedoCommand.COMMAND_WORD, new PendingConfirmation(), new ModelManager())
                 instanceof RedoCommand);
+        assertTrue(parser.parseCommand(RedoCommand.COMMAND_WORD + " 3",
+                new PendingConfirmation(),
+                new ModelManager()) instanceof RedoCommand);
     }
 
     @Test
     public void parseCommand_exit() throws Exception {
-        assertTrue(parser.parseCommand(ExitCommand.COMMAND_WORD, new PendingConfirmation()) instanceof ExitCommand);
-        assertTrue(parser.parseCommand(ExitCommand.COMMAND_WORD + " 3", new PendingConfirmation())
+        assertTrue(parser.parseCommand(ExitCommand.COMMAND_WORD, new PendingConfirmation(), new ModelManager())
                 instanceof ExitCommand);
+        assertTrue(parser.parseCommand(ExitCommand.COMMAND_WORD + " 3",
+                new PendingConfirmation(),
+                new ModelManager()) instanceof ExitCommand);
     }
 
     @Test
@@ -130,54 +142,63 @@ public class AddressBookParserTest {
         List<String> keywords = Arrays.asList("foo", "bar", "baz");
         FindCommand command = (FindCommand) parser.parseCommand(
                 FindCommand.COMMAND_WORD + " " + keywords.stream().collect(Collectors.joining(" ")),
-                new PendingConfirmation());
+                new PendingConfirmation(),
+                new ModelManager());
         assertEquals(new FindCommand(new NameContainsKeywordsPredicate(keywords)), command);
     }
 
     @Test
     public void parseCommand_help() throws Exception {
-        assertTrue(parser.parseCommand(HelpCommand.COMMAND_WORD, new PendingConfirmation()) instanceof HelpCommand);
-        assertTrue(parser.parseCommand(HelpCommand.COMMAND_WORD + " 3", new PendingConfirmation())
+        assertTrue(parser.parseCommand(HelpCommand.COMMAND_WORD, new PendingConfirmation(), new ModelManager())
                 instanceof HelpCommand);
+        assertTrue(parser.parseCommand(HelpCommand.COMMAND_WORD + " 3",
+                new PendingConfirmation(),
+                new ModelManager()) instanceof HelpCommand);
     }
 
     @Test
     public void parseCommand_list() throws Exception {
-        assertTrue(parser.parseCommand(ListCommand.COMMAND_WORD, new PendingConfirmation()) instanceof ListCommand);
-        assertTrue(parser.parseCommand(ListCommand.COMMAND_WORD + " 3", new PendingConfirmation())
+        assertTrue(parser.parseCommand(ListCommand.COMMAND_WORD, new PendingConfirmation(), new ModelManager())
                 instanceof ListCommand);
+        assertTrue(parser.parseCommand(ListCommand.COMMAND_WORD + " 3",
+                new PendingConfirmation(),
+                new ModelManager()) instanceof ListCommand);
     }
 
     @Test
     public void parseCommand_unrecognisedInput_throwsParseException() {
         assertThrows(ParseException.class, String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE), ()
-                -> parser.parseCommand("", new PendingConfirmation()));
+                -> parser.parseCommand("", new PendingConfirmation(), new ModelManager()));
     }
 
     @Test
     public void parseCommand_unknownCommand_throwsParseException() {
         assertThrows(ParseException.class, MESSAGE_UNKNOWN_COMMAND, () -> parser.parseCommand("unknownCommand",
-                new PendingConfirmation()));
+                new PendingConfirmation(), new ModelManager()));
     }
 
     @Test
     public void parseCommand_listProducts() throws Exception {
         AddressBookParser parser = new AddressBookParser();
-        Command command = parser.parseCommand("listproduct", new PendingConfirmation());
+        Command command = parser.parseCommand("listproduct", new PendingConfirmation(), new ModelManager());
 
         assertTrue(command instanceof ListProductsCommand);
     }
 
     @Test
     public void parseCommand_archiveProduct() throws Exception {
-        Command command = parser.parseCommand("archiveproduct id/coffee", new PendingConfirmation());
+        Command command = parser.parseCommand("archiveproduct id/coffee",
+                new PendingConfirmation(),
+                new ModelManager());
 
         assertTrue(command instanceof ArchiveProductCommand);
     }
 
     @Test
     public void parseCommand_restoreProduct() throws Exception {
-        Command command = parser.parseCommand("restoreproduct id/coffee", new PendingConfirmation());
+        Command command = parser.parseCommand("restoreproduct id/coffee",
+                new PendingConfirmation(),
+                new ModelManager());
 
         assertTrue(command instanceof RestoreProductCommand);
     }
@@ -185,6 +206,6 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_listproduct_throwsParseException() {
         assertThrows(ParseException.class, ()
-            -> parser.parseCommand("listproducts", new PendingConfirmation()));
+            -> parser.parseCommand("listproducts", new PendingConfirmation(), new ModelManager()));
     }
 }

@@ -55,7 +55,7 @@ public class LogicManager implements Logic {
         boolean isPendingConfirmationResponse = pendingConfirmation.getNeedConfirmation();
 
         CommandResult commandResult;
-        Command command = addressBookParser.parseCommand(commandText, pendingConfirmation);
+        Command command = addressBookParser.parseCommand(commandText, pendingConfirmation, model);
         commandResult = command.execute(model);
         pendingConfirmation = command.getPendingConfirmation();
 

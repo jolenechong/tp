@@ -29,6 +29,9 @@ import seedu.address.logic.commands.RestoreCommand;
 import seedu.address.logic.commands.RestoreProductCommand;
 import seedu.address.logic.commands.UndoCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.Model;
+import seedu.address.model.alias.Alias;
+import seedu.address.model.alias.exceptions.NoAliasFoundInAliasListException;
 
 /**
  * Parses user input.
@@ -48,13 +51,25 @@ public class AddressBookParser {
      * @return the command based on the user input
      * @throws ParseException if the user input does not conform the expected format
      */
-    public Command parseCommand(String userInput, PendingConfirmation pendingConfirmation) throws ParseException {
+    public Command parseCommand(
+            String userInput,
+            PendingConfirmation pendingConfirmation,
+            Model model) throws ParseException {
         final Matcher matcher = BASIC_COMMAND_FORMAT.matcher(userInput.trim());
         if (!matcher.matches()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE));
         }
 
-        final String commandWord = matcher.group("commandWord");
+        final String commandWordFromInput = matcher.group("commandWord");
+
+        String commandWord;
+        try {
+            Alias alias = model.findAlias(commandWordFromInput);
+            commandWord = alias.getOriginalCommand();
+        } catch (NoAliasFoundInAliasListException e) {
+            commandWord = commandWordFromInput;
+        }
+
         final String arguments = matcher.group("arguments");
 
         // Note to developers: Change the log level in config.json to enable lower level (i.e., FINE, FINER and lower)
