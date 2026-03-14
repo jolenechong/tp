@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import seedu.address.commons.exceptions.DataLoadingException;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.ReadOnlyAliases;
 import seedu.address.model.ReadOnlyInventory;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.UserPrefs;
@@ -13,7 +14,7 @@ import seedu.address.model.UserPrefs;
 /**
  * API of the Storage component
  */
-public interface Storage extends AddressBookStorage, UserPrefsStorage, InventoryStorage {
+public interface Storage extends AddressBookStorage, UserPrefsStorage, InventoryStorage, AliasStorage {
 
     @Override
     Optional<UserPrefs> readUserPrefs() throws DataLoadingException;
@@ -38,4 +39,13 @@ public interface Storage extends AddressBookStorage, UserPrefsStorage, Inventory
 
     @Override
     void saveInventory(ReadOnlyInventory inventory) throws IOException;
+
+    @Override
+    Path getAliasFilePath();
+
+    @Override
+    Optional<ReadOnlyAliases> readAliases() throws DataLoadingException;
+
+    @Override
+    void saveAliases(ReadOnlyAliases aliases) throws IOException;
 }
