@@ -20,6 +20,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Quantity;
+import seedu.address.model.product.RestockThreshold;
 import seedu.address.model.tag.Tag;
 
 public class ParserUtilTest {
@@ -55,12 +56,14 @@ public class ParserUtilTest {
     private static final String VALID_IDENTIFIER = "SKU-1001";
     private static final String VALID_PRODUCT_NAME = "Brown Rice 5kg";
     private static final String VALID_QUANTITY = "24";
+    private static final String VALID_THRESHOLD = "0";
     private static final String VALID_IDENTIFIER_WARN = "SKU 1001";
     private static final String VALID_PRODUCT_NAME_WARN = "apple juice 5% sugar";
 
     private static final String INVALID_IDENTIFIER = " ";
     private static final String INVALID_PRODUCT_NAME = " ";
     private static final String INVALID_QUANTITY = "-1";
+    private static final String INVALID_THRESHOLD = "-1";
 
     private static final String INVALID_LONG_IDENTIFIER = "a".repeat(Identifier.MAX_LENGTH + 1);
     private static final String INVALID_LONG_PRODUCT_NAME = "a".repeat(
@@ -375,5 +378,33 @@ public class ParserUtilTest {
     @Test
     public void parseQuantity_validValue_returnsNoWarnings() throws Exception {
         assertTrue(ParserUtil.parseQuantity(VALID_QUANTITY).getWarning().isEmpty());
+    }
+
+    @Test
+    public void parseThreshold_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseThreshold((String) null));
+    }
+
+    @Test
+    public void parseThreshold_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseThreshold(INVALID_THRESHOLD));
+    }
+
+    @Test
+    public void parseThreshold_validValueWithoutWhitespace_returnsQuantity() throws Exception {
+        RestockThreshold expectedThreshold = new RestockThreshold(VALID_THRESHOLD);
+        assertEquals(expectedThreshold, ParserUtil.parseThreshold(VALID_THRESHOLD).getValue());
+    }
+
+    @Test
+    public void parseThreshold_validValueWithWhitespace_returnsTrimmedThreshold() throws Exception {
+        String thresholdWithWhitespace = WHITESPACE + VALID_THRESHOLD + WHITESPACE;
+        RestockThreshold expectedThreshold = new RestockThreshold(VALID_THRESHOLD);
+        assertEquals(expectedThreshold, ParserUtil.parseThreshold(thresholdWithWhitespace).getValue());
+    }
+
+    @Test
+    public void parseThreshold_validValue_returnsNoWarnings() throws Exception {
+        assertTrue(ParserUtil.parseThreshold(VALID_THRESHOLD).getWarning().isEmpty());
     }
 }
