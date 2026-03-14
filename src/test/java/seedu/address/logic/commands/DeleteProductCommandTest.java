@@ -2,6 +2,7 @@ package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.DeleteProductCommand.CONFIRMATION_DELETE_PRODUCT_MESSAGE;
@@ -171,5 +172,16 @@ public class DeleteProductCommandTest {
         String str = command.toString();
 
         assertTrue(str.contains("P001"));
+    }
+
+    @Test
+    public void execute_invalidProductId_throwsCommandException() {
+        Model model = new ModelManager(
+                new VendorVault(getTypicalAddressBook(), getTypicalInventory()),
+                new UserPrefs());
+
+        DeleteProductCommand command = new DeleteProductCommand("INVALID_ID", false);
+
+        assertThrows(CommandException.class, () -> command.execute(model));
     }
 }
