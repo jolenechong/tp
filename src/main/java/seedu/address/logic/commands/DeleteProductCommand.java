@@ -13,10 +13,10 @@ import seedu.address.model.product.Product;
 /**
  * Deletes a product identified using its product ID.
  *
- * <p>This command follows the same confirmation workflow as {@code DeleteCommand}.
+ * This command follows the same confirmation workflow as {@code DeleteCommand}.
  * When executed, the command first displays the product to be deleted and asks the user
  * to confirm by typing {@code y}. If confirmed, the product is permanently removed from
- * the inventory.</p>
+ * the inventory.
  */
 public class DeleteProductCommand extends Command {
 
@@ -36,13 +36,10 @@ public class DeleteProductCommand extends Command {
 
     public static final String MESSAGE_INVALID_PRODUCT_ID = "No product found with the specified ID.";
 
-    /** Pending confirmation used to handle user confirmation input. */
     private PendingConfirmation pendingConfirmation = new PendingConfirmation();
 
-    /** The ID of the product targeted for deletion. */
     private final String targetProductId;
 
-    /** Indicates whether confirmation is required before deletion. */
     private final boolean needsConfirmation;
 
     /**
@@ -59,8 +56,8 @@ public class DeleteProductCommand extends Command {
     /**
      * Executes the delete product command.
      *
-     * <p>If confirmation is required, the command sets up a {@link PendingConfirmation}
-     * and displays the product to be deleted. Otherwise, the deletion is executed immediately.</p>
+     * If confirmation is required, the command sets up a {@link PendingConfirmation}
+     * and displays the product to be deleted. Otherwise, the deletion is executed immediately.
      *
      * @param model {@link Model} which the command should operate on
      * @return the result of command execution
@@ -136,9 +133,6 @@ public class DeleteProductCommand extends Command {
         return this.pendingConfirmation;
     }
 
-    /**
-     * Returns true if both commands target the same product ID.
-     */
     @Override
     public boolean equals(Object other) {
         return other == this
@@ -146,9 +140,6 @@ public class DeleteProductCommand extends Command {
                 && targetProductId.equals(((DeleteProductCommand) other).targetProductId));
     }
 
-    /**
-     * Returns the string representation of the command.
-     */
     @Override
     public String toString() {
         return new ToStringBuilder(this)
