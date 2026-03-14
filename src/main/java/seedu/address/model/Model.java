@@ -6,6 +6,8 @@ import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.model.alias.Alias;
+import seedu.address.model.alias.exceptions.DuplicateAliasException;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
@@ -151,6 +153,9 @@ public interface Model {
      * The product identity of {@code editedProduct} must not be the same as another existing product in the inventory.
      */
     void setProduct(Product target, Product editedProduct);
+
+    // =========== Alias List Operations ======================================================================
+    public void addAlias(Alias alias) throws DuplicateAliasException;
 
     /** Returns an unmodifiable view of the filtered product list. */
     ObservableList<Product> getFilteredProductList();

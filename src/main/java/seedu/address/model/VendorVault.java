@@ -7,8 +7,10 @@ import java.util.Optional;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.alias.AliasList;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
+
 
 /**
  * Wraps all VendorVault data as a single aggregate root.
@@ -17,11 +19,13 @@ public class VendorVault implements ReadOnlyVendorVault {
 
     private final AddressBook addressBook;
     private final Inventory inventory;
+    private final AliasList aliasList;
 
     /** Creates an empty VendorVault aggregate. */
     public VendorVault() {
         this.addressBook = new AddressBook();
         this.inventory = new Inventory();
+        this.aliasList = new AliasList();
     }
 
     /**
@@ -41,6 +45,7 @@ public class VendorVault implements ReadOnlyVendorVault {
 
         this.addressBook = new AddressBook(ab);
         this.inventory = new Inventory(inv);
+        this.aliasList = new AliasList();
     }
 
     /**
@@ -76,6 +81,11 @@ public class VendorVault implements ReadOnlyVendorVault {
     /** Returns the mutable Inventory backing this aggregate. */
     public Inventory getInventory() {
         return inventory;
+    }
+
+    /** Returns the mutable AliasList backing this aggregate. */
+    public AliasList getAliasList() {
+        return aliasList;
     }
 
     // =============================== AddressBook ===============================

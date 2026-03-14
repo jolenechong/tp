@@ -12,6 +12,9 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.model.alias.Alias;
+import seedu.address.model.alias.AliasList;
+import seedu.address.model.alias.exceptions.DuplicateAliasException;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
@@ -25,6 +28,7 @@ public class ModelManager implements Model {
     private final VendorVault vendorVault;
     private final AddressBook addressBook;
     private final Inventory inventory;
+    private final AliasList aliasList;
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
     private final FilteredList<Product> filteredProducts;
@@ -41,6 +45,7 @@ public class ModelManager implements Model {
         this.vendorVault = new VendorVault(vendorVault);
         this.addressBook = this.vendorVault.getAddressBook();
         this.inventory = this.vendorVault.getInventory();
+        this.aliasList = this.vendorVault.getAliasList();
 
         this.userPrefs = new UserPrefs(userPrefs);
 
@@ -198,6 +203,13 @@ public class ModelManager implements Model {
     public void addProduct(Product product) {
         inventory.addProduct(product);
         updateFilteredProductList(PREDICATE_SHOW_ALL_PRODUCTS);
+    }
+
+    // =========== Alias List Operations ======================================================================
+    @Override
+    public void addAlias(Alias alias) throws DuplicateAliasException {
+        requireNonNull(alias);
+        aliasList.addAlias(alias);
     }
 
     // =========== Filtered Person List Accessors =============================================================
