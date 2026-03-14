@@ -16,6 +16,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Quantity;
+import seedu.address.model.product.RestockThreshold;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -265,5 +266,22 @@ public class ParserUtil {
         }
 
         return new ParseResult<>(new Quantity(trimmedQuantity), Optional.empty());
+    }
+
+    /**
+     * Parses a product {@code String threshold} into {@code RestockThreshold}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code threshold} is invalid.
+     */
+    public static ParseResult<RestockThreshold> parseThreshold(String threshold) throws ParseException {
+        requireNonNull(threshold);
+        String trimmedThreshold = threshold.trim();
+
+        if (!RestockThreshold.isValidRestockThreshold(trimmedThreshold)) {
+            throw new ParseException(RestockThreshold.MESSAGE_CONSTRAINTS);
+        }
+
+        return new ParseResult<>(new RestockThreshold(trimmedThreshold), Optional.empty());
     }
 }
