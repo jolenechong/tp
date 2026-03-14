@@ -20,8 +20,6 @@ public class InventoryListPanel extends UiPart<Region> {
 
     private static final String FXML = "InventoryListPanel.fxml";
 
-    private static final int LOW_STOCK_THRESHOLD = 10;
-
     private static final String LOW_STOCK_STYLE =
             "-fx-background-color: #e55d5d;"
             + "-fx-background-radius: 12;"
@@ -60,11 +58,13 @@ public class InventoryListPanel extends UiPart<Region> {
      * Low-stock items appear first, then sorted by quantity.
      */
     private int compareInventoryItems(Product a, Product b) {
-        int qtyA = Integer.parseInt(a.getQuantity().toString());
-        int qtyB = Integer.parseInt(b.getQuantity().toString());
+        int qtyA = a.getQuantity().value;
+        int qtyB = b.getQuantity().value;
+        int thresholdA = a.getRestockThreshold().value;
+        int thresholdB = b.getRestockThreshold().value;
 
-        boolean lowA = qtyA <= LOW_STOCK_THRESHOLD;
-        boolean lowB = qtyB <= LOW_STOCK_THRESHOLD;
+        boolean lowA = qtyA <= thresholdA;
+        boolean lowB = qtyB <= thresholdB;
 
         if (lowA && !lowB) {
             return -1;
@@ -94,7 +94,8 @@ public class InventoryListPanel extends UiPart<Region> {
 
                 String name = item.getName().toString();
                 String id = item.getIdentifier().toString();
-                int qty = Integer.parseInt(item.getQuantity().toString());
+                int qty = item.getQuantity().value;
+                int threshold = item.getRestockThreshold().value;
 
                 Label idLabel = new Label(id);
                 idLabel.setMinWidth(ID_WIDTH);
@@ -112,7 +113,7 @@ public class InventoryListPanel extends UiPart<Region> {
                 qtyLabel.setAlignment(Pos.CENTER);
                 qtyLabel.setMinWidth(40);
                 qtyLabel.setMaxWidth(80);
-                qtyLabel.setStyle(getStockStyle(qty));
+                qtyLabel.setStyle(getStockStyle(qty, threshold));
 
                 HBox qtyCell = new HBox(qtyLabel);
                 qtyCell.setPrefWidth(QTY_COLUMN_WIDTH);
@@ -137,8 +138,8 @@ public class InventoryListPanel extends UiPart<Region> {
     /**
      * Returns the correct style depending on stock level.
      */
-    private String getStockStyle(int qty) {
-        if (qty <= LOW_STOCK_THRESHOLD) {
+    private String getStockStyle(int qty, int threshold) {
+        if (qty <= threshold) {
             return LOW_STOCK_STYLE;
         }
         return NORMAL_STOCK_STYLE;
