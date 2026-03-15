@@ -3,12 +3,15 @@ package seedu.address.logic.commands;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.logic.commands.CommandResult.FEEDBACK_TYPE_WARN;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
 import static seedu.address.logic.commands.DeleteCommand.CONFIRMATION_DELETE_PERSON_MESSAGE;
 import static seedu.address.logic.commands.DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS;
+import static seedu.address.logic.commands.DeleteCommand.MESSAGE_PRODUCTS_DELINKED;
+import static seedu.address.logic.parser.ParserUtil.NEWLINE;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
@@ -28,6 +31,7 @@ import seedu.address.model.person.NameEqualsKeywordsPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Product;
+import seedu.address.testutil.ProductBuilder;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for
@@ -175,6 +179,34 @@ public class DeleteCommandTest {
 
         assertEquals(CONFIRMATION_DELETE_PERSON_MESSAGE, result.getFeedbackToUser());
         assertTrue(model.hasPerson(personToDelete));
+    }
+
+    @Test
+    public void deletePerson_withLinkedProducts_clearsVendorEmailAndWarns() {
+        Person personToDelete = model.getFilteredPersonList().get(0);
+        Product linkedProductOne = new ProductBuilder()
+                .withIdentifier("SKU-010")
+                .withName("Linked Product One")
+                .withVendorEmail(personToDelete.getEmail().value)
+                .build();
+
+        model.addProduct(linkedProductOne);
+
+        DeleteCommand deleteCommand = new DeleteCommand(personToDelete.getEmail(), false);
+        CommandResult result;
+        try {
+            result = deleteCommand.execute(model);
+        } catch (CommandException ce) {
+            throw new AssertionError("Execution of command should not fail.", ce);
+        }
+
+        Product updatedLinkedOne = findProductByIdentifier(model, "SKU-010");
+        assertTrue(updatedLinkedOne.getVendorEmail().isEmpty());
+
+        String expectedSuccessMessage = String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete));
+        String expectedWarning = String.format(MESSAGE_PRODUCTS_DELINKED, 1, "SKU-010");
+        assertEquals(expectedSuccessMessage + NEWLINE + expectedWarning, result.getFeedbackToUser());
+        assertEquals(FEEDBACK_TYPE_WARN, result.getFeedbackType());
     }
 
     @Test
