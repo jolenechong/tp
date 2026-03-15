@@ -27,6 +27,7 @@ import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandType;
 import seedu.address.logic.commands.ConfirmCommand;
 import seedu.address.logic.commands.DeleteCommand;
+import seedu.address.logic.commands.DeleteProductCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.commands.ExitCommand;
@@ -237,6 +238,24 @@ public class AddressBookParserTest {
     public void parseCommand_listproduct_throwsParseException() {
         assertThrows(ParseException.class, ()
             -> parser.parseCommand("listproducts", new PendingConfirmation(), new ModelManager()));
+    }
+
+    @Test
+    public void parseCommand_deleteProduct() throws Exception {
+        assertTrue(parser.parseCommand(
+                DeleteProductCommand.COMMAND_WORD + " P001",
+                new PendingConfirmation(),
+                new ModelManager())
+                instanceof DeleteProductCommand);
+    }
+
+    @Test
+    public void parseCommand_deleteProduct_extraArgs() throws Exception {
+        assertTrue(parser.parseCommand(
+                "deleteproduct P001 extra",
+                new PendingConfirmation(),
+                new ModelManager())
+                instanceof DeleteProductCommand);
     }
 
     @Test
