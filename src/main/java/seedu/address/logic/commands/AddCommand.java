@@ -83,7 +83,7 @@ public class AddCommand extends Command {
 
         return new CommandResult(
                 String.format(MESSAGE_SUCCESS + formattedWarnings, Messages.format(toAdd)),
-                feedbackType);
+                false, false, feedbackType, true);
 
     }
 

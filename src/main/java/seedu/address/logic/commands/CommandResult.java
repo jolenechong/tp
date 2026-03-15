@@ -24,21 +24,33 @@ public class CommandResult {
     /** The application should exit. */
     private final boolean exit;
 
+    /** The person list should scroll to the bottom. */
+    private final boolean scrollPersonListToBottom;
+
     /**
      * Constructs a {@code CommandResult} with the specified fields.
      */
     public CommandResult(String feedbackToUser, boolean showHelp, boolean exit) {
-        this(feedbackToUser, showHelp, exit, FEEDBACK_TYPE_SUCCESS);
+        this(feedbackToUser, showHelp, exit, FEEDBACK_TYPE_SUCCESS, false);
     }
 
     /**
      * Constructs a {@code CommandResult} with the specified fields and feedback type.
      */
     public CommandResult(String feedbackToUser, boolean showHelp, boolean exit, String feedbackType) {
+        this(feedbackToUser, showHelp, exit, feedbackType, false);
+    }
+
+    /**
+     * Constructs a {@code CommandResult} with all fields specified.
+     */
+    public CommandResult(String feedbackToUser, boolean showHelp, boolean exit,
+                         String feedbackType, boolean scrollPersonListToBottom) {
         this.feedbackToUser = requireNonNull(feedbackToUser);
         this.showHelp = showHelp;
         this.exit = exit;
         this.feedbackType = requireNonNull(feedbackType);
+        this.scrollPersonListToBottom = scrollPersonListToBottom;
     }
 
     /**
@@ -46,14 +58,14 @@ public class CommandResult {
      * and other fields set to their default value.
      */
     public CommandResult(String feedbackToUser) {
-        this(feedbackToUser, false, false, FEEDBACK_TYPE_SUCCESS);
+        this(feedbackToUser, false, false, FEEDBACK_TYPE_SUCCESS, false);
     }
 
     /**
      * Constructs a {@code CommandResult} with feedback text and feedback type.
      */
     public CommandResult(String feedbackToUser, String feedbackType) {
-        this(feedbackToUser, false, false, feedbackType);
+        this(feedbackToUser, false, false, feedbackType, false);
     }
 
     public String getFeedbackToUser() {
@@ -72,6 +84,10 @@ public class CommandResult {
         return exit;
     }
 
+    public boolean isScrollPersonListToBottom() {
+        return scrollPersonListToBottom;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {
@@ -87,12 +103,13 @@ public class CommandResult {
         return feedbackToUser.equals(otherCommandResult.feedbackToUser)
                 && showHelp == otherCommandResult.showHelp
                 && exit == otherCommandResult.exit
-                && feedbackType.equals(otherCommandResult.feedbackType);
+                && feedbackType.equals(otherCommandResult.feedbackType)
+                && scrollPersonListToBottom == otherCommandResult.scrollPersonListToBottom;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(feedbackToUser, showHelp, exit, feedbackType);
+        return Objects.hash(feedbackToUser, showHelp, exit, feedbackType, scrollPersonListToBottom);
     }
 
     @Override
@@ -102,6 +119,7 @@ public class CommandResult {
                 .add("showHelp", showHelp)
                 .add("exit", exit)
                 .add("feedbackType", feedbackType)
+                .add("scrollPersonListToBottom", scrollPersonListToBottom)
                 .toString();
     }
 

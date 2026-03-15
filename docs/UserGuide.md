@@ -23,16 +23,20 @@ Spend less time searching through spreadsheets and switching between apps. Vendo
 
 Follow these steps to get VendorVault up and running:
 
-1. Install Java (one-time setup)
-   * VendorVault requires Java `17` or above to run. Full guide for installation [here](https://se-education.org/guides/tutorials/javaInstallation.html)
-   * If you are familiar with the installation process, you can download it directly [here](https://www.oracle.com/asean/java/technologies/downloads/).<br>
-   *  **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
-<br><br>
-1. Download the latest version of VendorVault [here](https://github.com/AY2526S2-CS2103T-W08-2/tp).
+1. Ensure Java 17 or above is installed.
+   * Full guide for installation [here](https://se-education.org/guides/tutorials/javaInstallation.html). If you are familiar with the process, you can download Java directly [here](https://www.oracle.com/asean/java/technologies/downloads/).<br>
+   
+   <box type="important" seamless>
+   
+     **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
+     
+   </box>
+
+2. Download the latest version of VendorVault [here](https://github.com/AY2526S2-CS2103T-W08-2/tp).
     * Specifically, choose to download the `.jar` file.
     * If necessary, move the file to a folder you want to use as the _home folder_ for VendorVault.
 <br><br>
-1. Open Command Prompt (Windows) or Terminal (Mac/Linux) and run the following commands
+3. Open Command Prompt (Windows) or Terminal (Mac/Linux) and run the following commands
     ```
    cd PATH_TO_FOLDER_CONTAINING_JAR_FILE
    java -jar vendorvault.jar
@@ -50,7 +54,8 @@ Follow these steps to get VendorVault up and running:
    VendorVault should start up and you should see a GUI similar to the below in a few seconds. Note how the app contains some sample data.<br>
    ![Ui](images/Ui.png)
 <br><br>
-1. Now, we're ready to use the app! At the top left of the app, you should see a command box with the text `Type a command here...`. This is where you can type in commands to interact with the app. You can also access the list of available commands by clicking on the `Help` menu at the top of the app or by pressing `F1` on your keyboard.
+4. Now, we're ready to use the app! At the top left of the app, you should see a command box with the text `Type a 
+command here...`. This is where you can type in commands to interact with the app. You can also access the list of available commands by clicking on the `Help` menu at the top of the app or by pressing `F1` on your keyboard.
 <br><br>
 Some example commands you can try:
 
@@ -58,13 +63,13 @@ Some example commands you can try:
 
    * `add n/TechSource Electronics p/61234567 e/sales@techsource.com a/15 Kallang Way, Singapore` : Adds a vendor contact named `TechSource Electronics` to VendorVault.
 
-   * `delete 3` : Deletes the 3rd contact shown in the current list.
+   * `delete sales@techsource.com` : Deletes `TechSource Electronics`.
 
    * `clear` : Deletes all contacts.
 
    * `exit` : Exits VendorVault.
 
-1. Refer to the [Features](#features) below for details of each command. Or [Command Summary](#command-summary) for a quick summary of all commands.
+5. Refer to the [Features](#features) below for details of each command. Or [Command Summary](#command-summary) for a quick summary of all commands.
 
 <br>
 
@@ -82,7 +87,7 @@ Some example commands you can try:
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
 
 * Items in square brackets are optional.<br>
-  e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
+  e.g. `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
 
 * Items with `…`​ after them can be used multiple times including zero times.<br>
   e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
@@ -221,7 +226,7 @@ Finds contacts whose names contain any of the given keywords.
 
 Format: `find KEYWORD [MORE_KEYWORDS]`
 
-* The search is case-insensitive. e.g `hans` will match `Hans`
+* The search is case-insensitive. e.g. `hans` will match `Hans`
 * The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
 * Only the name is searched.
 * Only full words will be matched e.g. `Han` will not match `Hans`
@@ -269,8 +274,10 @@ Format: `addproduct id/IDENTIFIER n/NAME [q/QUANTITY] [th/RESTOCK_THRESHOLD]`
 
 <box type="tip" seamless>
 
-**Tip:** If quantity is not specified, it will default to 0. If threshold is not specified, it will default 
-to 0.
+If quantity is not specified, it will default to 0. 
+<br>
+If threshold is not specified, it will default to 0.
+
 </box>
 
 Examples:
@@ -279,10 +286,7 @@ Examples:
 
 <panel header="What products are considered duplicates?" type="seamless" id="faq-duplicate-products">
 
-A product is considered a duplicate if:
-* It has the **same product identifier (id) as an existing product** in VendorVault.
-
-For example, the these products are considered duplicates because they share the same product identifier `SKU-1003`:<br>
+A product is considered a duplicate if it has the **same identifier (id) as an existing product** in VendorVault. For example, these products have the same identifier `SKU-1003`:
 ```
 addproduct id/SKU-1003 n/Arduino Uno R4 Development Board
 addproduct id/SKU-1003 n/Raspberry Pi 5 (8GB RAM)
@@ -389,15 +393,14 @@ If you edited the data file and it caused VendorVault to behave unexpectedly, yo
 
 <panel header="How do I transfer my data to another computer?" type="seamless">
 
-You can transfer your VendorVault data by transferring two files:
-* Install VendorVault on the new computer (follow the [Quick Start](#quick-start) guide).
-* Open the folder where VendorVault's `.jar` file is stored on your old computer.
-* Look for the data files created by VendorVault (this file contains all your vendors and inventory).
-    * Specifically, look for the `data` folder created by VendorVault, and the data file named `addressbook.json` and `inventory.json` inside that folder.
-* Copy this data file to a USB drive or cloud storage (e.g., Google Drive, Dropbox).
-* On the new computer, run the app and then open the newly created data folder.
-* Replace the empty data file there with the one you copied from your old computer.
-* Start VendorVault — your data should now appear exactly as before.
+Follow these steps:
+* Install VendorVault on the new computer (see [Quick Start](#quick-start)).
+* On the old computer, open the folder where VendorVault's `.jar` file is located.
+* Look for the `data` folder, which contain the files `addressbook.json` and `inventory.json`.
+* Copy the folder to an external or cloud storage.
+* When you launch VendorVault on the new computer, a new `data` folder is created. Replace it with the old 
+  computer's folder.
+* Relaunch VendorVault and you should see your data appear exactly as before.
 
 </panel>
 
@@ -409,19 +412,20 @@ You can transfer your VendorVault data by transferring two files:
 
 ## Troubleshooting
 
+<box type="important" seamless>
+
+**Error** messages mean the command **did not succeed**.
+<br>
+**Warning** messages mean the command **succeeded**, but VendorVault is flagging a possible issue.
+
+</box>
+
 ### Managing contacts
 
 #### Troubleshooting `add` contact
 
 Use this section when `add` fails or returns a warning.
 
-<box type="warning" seamless>
-
-**Important:**
-* **Error** messages mean the contact was **not added**.
-* **Warning** messages mean the contact was **added**, but VendorVault is flagging a possible issue.
-
-</box>
 
 | Scenario                                                                         | Message shown                                                             | How to fix                                                        |
 |----------------------------------------------------------------------------------|---------------------------------------------------------------------------|-------------------------------------------------------------------|
@@ -459,14 +463,6 @@ Tip: If multiple warnings apply, VendorVault shows all of them (one per line) to
 
 Use this section when `edit` fails or returns a warning.
 
-<box type="warning" seamless>
-
-**Important:**
-* **Error** messages mean the contact was **not edited**.
-* **Warning** messages mean the contact was **edited**, but VendorVault is flagging a possible issue.
-
-</box>
-
 | Scenario                                                              | Message shown                                    | How to fix                                                              |
 |-----------------------------------------------------------------------|--------------------------------------------------|-------------------------------------------------------------------------|
 | Missing/invalid target email (or extra non-prefixed text after email) | `Invalid command format! ...`                    | Follow the syntax `edit EMAIL [n/...] [p/...] [e/...] [a/...] [t/...]`. |
@@ -489,14 +485,6 @@ Tip: Unlike `add`, edit command warnings only appear for **fields you are actual
 
 Use this section when `addproduct` fails or returns a warning.
 
-<box type="warning" seamless>
-
-**Important:**
-* **Error** messages mean the product was **not added**.
-* **Warning** messages mean the product was **added**, but VendorVault is flagging a possible issue.
-
-</box>
-
 | Scenario                                            | Message shown                                                             | How to fix                                                    |
 |-----------------------------------------------------|---------------------------------------------------------------------------|---------------------------------------------------------------|
 | Missing one or more required prefixes (`id/`, `n/`) | `Missing required field(s): ...`                                          | Include all required prefixed fields in your command.         |
@@ -506,8 +494,6 @@ Use this section when `addproduct` fails or returns a warning.
 | Identifier is blank                                 | `Identifier should not be blank.`                                         | Provide a non-empty identifier after `id/`.                   |
 | Name is too long                                    | `Name should be at most 120 characters.`                                  | Shorten the name.                                             |
 | Product is a duplicate                              | `This product already exists with the same identifier.`                   | Change the identifier, or edit the existing product instead.  |
-
-Common `addproduct` warnings:
 
 | Warning trigger                     | Warning shown                                                                                                                                   | What it means                                                                                                                   |
 |-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
