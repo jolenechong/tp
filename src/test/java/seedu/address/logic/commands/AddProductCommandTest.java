@@ -101,23 +101,6 @@ public class AddProductCommandTest {
         assertThrows(CommandException.class, MESSAGE_DUPLICATE_PRODUCT, () ->
                 addProductCommand.execute(modelStub));
     }
-
-    @Test
-    public void execute_vendorEmailDoesNotExist_throwsCommandException() {
-        Product productWithMissingVendor = new ProductBuilder()
-            .withIdentifier("SKU-2005")
-            .withName("Monitor")
-            .withVendorEmail("missing@example.com")
-            .build();
-        ModelStubAcceptingProductAdded modelStub = new ModelStubAcceptingProductAdded();
-
-        AddProductCommand addProductCommand = new AddProductCommand(productWithMissingVendor);
-
-        assertThrows(CommandException.class,
-                String.format(AddProductCommand.MESSAGE_VENDOR_DOES_NOT_EXIST, "missing@example.com"), () ->
-                        addProductCommand.execute(modelStub));
-    }
-
     @Test
     public void execute_similarProductName_warnAndAddSuccessful() throws Exception {
         Product existingProduct = new ProductBuilder()
@@ -291,6 +274,22 @@ public class AddProductCommandTest {
         assertFalse(result.getFeedbackToUser().contains(warning1)
                 && result.getFeedbackToUser().contains(warning2));
         assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+    }
+
+    @Test
+    public void execute_vendorEmailDoesNotExist_throwsCommandException() {
+        Product productWithMissingVendor = new ProductBuilder()
+                .withIdentifier("SKU-2005")
+                .withName("Monitor")
+                .withVendorEmail("missing@example.com")
+                .build();
+        ModelStubAcceptingProductAdded modelStub = new ModelStubAcceptingProductAdded();
+
+        AddProductCommand addProductCommand = new AddProductCommand(productWithMissingVendor);
+
+        assertThrows(CommandException.class,
+                String.format(AddProductCommand.MESSAGE_VENDOR_DOES_NOT_EXIST, "missing@example.com"), () ->
+                        addProductCommand.execute(modelStub));
     }
 
     @Test
