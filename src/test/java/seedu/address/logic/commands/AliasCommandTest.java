@@ -72,14 +72,14 @@ public class AliasCommandTest {
     }
 
     @Test
-    public void execute_noArgCommand_emptyAliasList_returnsEmptyMessage() throws Exception {
+    public void execute_noArgCommandAndEmptyAliasList_returnsEmptyMessage() throws Exception {
         ModelStub modelStub = new ModelStubWithEmptyAliasList();
         CommandResult result = new AliasCommand().execute(modelStub);
         assertEquals(AliasCommand.MESSAGE_EMPTY_ALIAS_LIST, result.getFeedbackToUser());
     }
 
     @Test
-    public void execute_noArgCommand_nonEmptyAliasList_returnsFormattedList() throws Exception {
+    public void execute_noArgCommandAndNonEmptyAliasList_returnsFormattedList() throws Exception {
         ModelStub modelStub = new ModelStubWithAliasList();
         CommandResult result = new AliasCommand().execute(modelStub);
 
@@ -89,7 +89,7 @@ public class AliasCommandTest {
     }
 
     @Test
-    public void execute_noArgCommand_nullModel_throwsNullPointerException() {
+    public void execute_noArgCommandAndNullModel_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () ->
                 new AliasCommand().execute(null)
         );
