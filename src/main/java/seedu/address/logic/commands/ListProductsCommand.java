@@ -3,8 +3,6 @@ package seedu.address.logic.commands;
 import static java.util.Objects.requireNonNull;
 
 import seedu.address.model.Model;
-import seedu.address.model.product.Product;
-import seedu.address.model.util.SampleDataUtil;
 
 /**
  * Lists all products in the inventory to the user.
@@ -38,11 +36,6 @@ public class ListProductsCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
-        if (model.getInventory().getProductList().isEmpty()) {
-            for (Product product : SampleDataUtil.getSampleProducts()) {
-                model.addProduct(product);
-            }
-        }
 
         model.updateFilteredProductList(Model.PREDICATE_SHOW_ACTIVE_PRODUCTS);
         return new CommandResult(MESSAGE_SUCCESS);
