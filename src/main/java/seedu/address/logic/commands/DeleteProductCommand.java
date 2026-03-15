@@ -94,7 +94,7 @@ public class DeleteProductCommand extends Command {
      * @param productToDelete the product to delete
      * @return the result of the deletion command
      */
-    public CommandResult deleteProduct(Model model, Product productToDelete) {
+    private CommandResult deleteProduct(Model model, Product productToDelete) {
         model.deleteProduct(productToDelete);
         model.commitVendorVault();
         model.updateFilteredProductList(PREDICATE_SHOW_ACTIVE_PRODUCTS);
