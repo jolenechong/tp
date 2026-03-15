@@ -42,7 +42,7 @@ public class AddProductCommand extends Command {
             + PREFIX_EMAIL + "johnd@example.com";
 
     public static final String MESSAGE_SUCCESS = "New product added: %1$s";
-    public static final String MESSAGE_VENDOR_NOT_FOUND =
+    public static final String MESSAGE_INVALID_VENDOR =
             "Vendor email %1$s does not match any existing contact.";
 
     private final Product toAdd;
@@ -77,7 +77,7 @@ public class AddProductCommand extends Command {
         if (vendorEmail.isPresent()) {
             Email value = vendorEmail.get();
             if (model.findByEmail(value).isEmpty()) {
-                throw new CommandException(String.format(MESSAGE_VENDOR_NOT_FOUND, value));
+                throw new CommandException(String.format(MESSAGE_INVALID_VENDOR, value));
             }
         }
 
