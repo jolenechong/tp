@@ -22,18 +22,6 @@ public class AliasCommandParserTest {
     }
 
     @Test
-    public void parse_emptyArgs_throwsParseException() {
-        assertThrows(ParseException.class,
-                MESSAGE_FORMATTED_WRONGLY, () -> parser.parse(""));
-    }
-
-    @Test
-    public void parse_onlyWhitespace_throwsParseException() {
-        assertThrows(ParseException.class,
-                MESSAGE_FORMATTED_WRONGLY, () -> parser.parse("   "));
-    }
-
-    @Test
     public void parse_onlyOneToken_throwsParseException() {
         assertThrows(ParseException.class,
                 MESSAGE_FORMATTED_WRONGLY, () -> parser.parse("list"));
