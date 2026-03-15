@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
+import static seedu.address.testutil.TypicalAliases.getTypicalAliases;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalProducts.getTypicalInventory;
 
@@ -44,7 +45,7 @@ public class ClearCommandTest {
     @Test
     public void execute_withConfirmation_showsConfirmationMessage() {
         Model model = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
+                getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()), new UserPrefs());
 
         ClearCommand clearCommand = new ClearCommand(true);
         CommandResult result = clearCommand.execute(model);
@@ -68,7 +69,7 @@ public class ClearCommandTest {
     @Test
     public void onConfirm_clearsAddressBook() {
         Model model = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
+                getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()), new UserPrefs());
 
         ClearCommand clearCommand = new ClearCommand(true);
         clearCommand.execute(model);
@@ -83,7 +84,7 @@ public class ClearCommandTest {
     @Test
     public void onCancel_doesNotClearAddressBook() {
         Model model = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
+                getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()), new UserPrefs());
         int originalSize = model.getAddressBook().getPersonList().size();
 
         ClearCommand clearCommand = new ClearCommand(true);
