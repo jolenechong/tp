@@ -2,6 +2,7 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_DUPLICATE_PRODUCT;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_IDENTIFIER;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_QUANTITY;
@@ -9,10 +10,13 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_THRESHOLD;
 import static seedu.address.logic.parser.ParserUtil.NEWLINE;
 import static seedu.address.model.product.warnings.DuplicateProductWarning.MESSAGE_SIMILAR_NAME;
 
+import java.util.Optional;
+
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.person.Email;
 import seedu.address.model.product.Product;
 import seedu.address.model.product.warnings.DuplicateProductWarning;
 
@@ -27,14 +31,19 @@ public class AddProductCommand extends Command {
             + "Parameters: "
             + PREFIX_IDENTIFIER + "IDENTIFIER "
             + PREFIX_NAME + "NAME "
-            + "[" + PREFIX_QUANTITY + "QUANTITY]\n"
+            + "[" + PREFIX_QUANTITY + "QUANTITY] "
+            + "[" + PREFIX_THRESHOLD + "THRESHOLD] "
+            + "[" + PREFIX_EMAIL + "VENDOR_EMAIL]\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_IDENTIFIER + "A1 "
             + PREFIX_NAME + "iPad 11 Pro "
-            + PREFIX_QUANTITY + "20"
-            + PREFIX_THRESHOLD + "5";
+            + PREFIX_QUANTITY + "20 "
+            + PREFIX_THRESHOLD + "5 "
+            + PREFIX_EMAIL + "johnd@example.com";
 
     public static final String MESSAGE_SUCCESS = "New product added: %1$s";
+    public static final String MESSAGE_VENDOR_NOT_FOUND =
+            "Vendor email %1$s does not match any existing contact.";
 
     private final Product toAdd;
     private String warnings = "";
@@ -62,6 +71,14 @@ public class AddProductCommand extends Command {
 
         if (model.hasProduct(toAdd)) {
             throw new CommandException(MESSAGE_DUPLICATE_PRODUCT);
+        }
+
+        Optional<Email> vendorEmail = toAdd.getVendorEmail();
+        if (vendorEmail.isPresent()) {
+            Email value = vendorEmail.get();
+            if (model.findByEmail(value).isEmpty()) {
+                throw new CommandException(String.format(MESSAGE_VENDOR_NOT_FOUND, value));
+            }
         }
 
         StringBuilder allWarnings = new StringBuilder(warnings);
