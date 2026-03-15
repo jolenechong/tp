@@ -42,16 +42,13 @@ public class CommandTestUtil {
     public static final String VALID_TAG_FRIEND = "friend";
 
     public static final String VALID_IDENTIFIER_IPAD = "TAB-1001";
-    public static final String VALID_IDENTIFIER_IPHONE = "PHN-2024";
     public static final String VALID_IDENTIFIER_AIRPODS = "AUD/3301";
     public static final String VALID_PRODUCT_NAME_IPAD = "iPad Air 11";
-    public static final String VALID_PRODUCT_NAME_IPHONE = "iPhone 15 128GB";
     public static final String VALID_PRODUCT_NAME_AIRPODS = "AirPods Pro 2";
     public static final String VALID_QUANTITY_IPAD = "0";
     public static final String VALID_QUANTITY_IPHONE = "30";
     public static final String VALID_QUANTITY_AIRPODS = "45";
     public static final String VALID_THRESHOLD_IPAD = "10";
-    public static final String VALID_THRESHOLD_IPHONE = "20";
     public static final String VALID_THRESHOLD_AIRPODS = "45";
 
     public static final String NAME_DESC_AMY = " " + PREFIX_NAME + VALID_NAME_AMY;
@@ -66,16 +63,12 @@ public class CommandTestUtil {
     public static final String TAG_DESC_HUSBAND = " " + PREFIX_TAG + VALID_TAG_HUSBAND;
 
     public static final String IDENTIFIER_DESC_IPAD = " " + PREFIX_IDENTIFIER + VALID_IDENTIFIER_IPAD;
-    public static final String IDENTIFIER_DESC_IPHONE = " " + PREFIX_IDENTIFIER + VALID_IDENTIFIER_IPHONE;
     public static final String IDENTIFIER_DESC_AIRPODS = " " + PREFIX_IDENTIFIER + VALID_IDENTIFIER_AIRPODS;
     public static final String PRODUCT_NAME_DESC_IPAD = " " + PREFIX_NAME + VALID_PRODUCT_NAME_IPAD;
-    public static final String PRODUCT_NAME_DESC_IPHONE = " " + PREFIX_NAME + VALID_PRODUCT_NAME_IPHONE;
     public static final String PRODUCT_NAME_DESC_AIRPODS = " " + PREFIX_NAME + VALID_PRODUCT_NAME_AIRPODS;
     public static final String QUANTITY_DESC_IPAD = " " + PREFIX_QUANTITY + VALID_QUANTITY_IPAD;
-    public static final String QUANTITY_DESC_IPHONE = " " + PREFIX_QUANTITY + VALID_QUANTITY_IPHONE;
     public static final String QUANTITY_DESC_AIRPODS = " " + PREFIX_QUANTITY + VALID_QUANTITY_AIRPODS;
     public static final String THRESHOLD_DESC_IPAD = " " + PREFIX_THRESHOLD + VALID_THRESHOLD_IPAD;
-    public static final String THRESHOLD_DESC_IPHONE = " " + PREFIX_THRESHOLD + VALID_THRESHOLD_IPHONE;
     public static final String THRESHOLD_DESC_AIRPODS = " " + PREFIX_THRESHOLD + VALID_THRESHOLD_AIRPODS;
 
     public static final String INVALID_NAME_DESC = " " + PREFIX_NAME; // empty string not allowed in names
