@@ -210,6 +210,43 @@ public class DeleteCommandTest {
     }
 
     @Test
+    public void onConfirm_withLinkedProducts_clearsVendorEmailAndWarns() {
+        Person personToDelete = model.getFilteredPersonList().get(0);
+        Product linkedProduct = new ProductBuilder()
+                .withIdentifier("SKU-012")
+                .withName("Linked Product")
+                .withVendorEmail(personToDelete.getEmail().value)
+                .build();
+
+        model.addProduct(linkedProduct);
+
+        DeleteCommand deleteCommand = new DeleteCommand(personToDelete.getEmail(), true);
+        PendingConfirmation pendingConfirmation;
+        try {
+            deleteCommand.execute(model);
+            pendingConfirmation = deleteCommand.getPendingConfirmation();
+        } catch (CommandException ce) {
+            throw new AssertionError("Execution of command should not fail.", ce);
+        }
+
+        ConfirmCommand confirmCommand = new ConfirmCommand(pendingConfirmation.getOnConfirm());
+        CommandResult result;
+        try {
+            result = confirmCommand.execute(model);
+        } catch (CommandException ce) {
+            throw new AssertionError("Execution of command should not fail.", ce);
+        }
+
+        Product updatedLinked = findProductByIdentifier(model, "SKU-012");
+        assertTrue(updatedLinked.getVendorEmail().isEmpty());
+
+        String expectedSuccessMessage = String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete));
+        String expectedWarning = String.format(MESSAGE_PRODUCTS_DELINKED, 1, "SKU-012");
+        assertEquals(expectedSuccessMessage + NEWLINE + expectedWarning, result.getFeedbackToUser());
+        assertEquals(FEEDBACK_TYPE_WARN, result.getFeedbackType());
+    }
+
+    @Test
     public void collectLinkedProducts_noLinkedProducts_returnsEmptyList() {
         Person personToDelete = model.getFilteredPersonList().get(0);
         DeleteCommand deleteCommand = new DeleteCommand(personToDelete.getEmail(), false);
