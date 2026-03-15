@@ -20,6 +20,13 @@ public class TypicalAliases {
     public static final Alias FIND = new Alias("f", "find");
     public static final Alias REDO = new Alias("r", "redo");
 
+    // Manually added
+    public static final Alias RESTORE =
+            new Alias("rst", "restore");
+    public static final Alias UNDO =
+            new Alias("u", "undo");
+
+
     private TypicalAliases() {
     } //Prevents instantiation
 

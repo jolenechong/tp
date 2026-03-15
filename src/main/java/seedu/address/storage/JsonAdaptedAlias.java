@@ -1,5 +1,6 @@
 package seedu.address.storage;
 
+import static seedu.address.logic.Messages.MESSAGE_ALIAS_CANNOT_BE_EMPTY;
 import static seedu.address.logic.Messages.MESSAGE_ALIAS_CONTAINS_SPACE;
 import static seedu.address.logic.Messages.MESSAGE_ALIAS_IS_A_PREDEFINED_COMMAND;
 import static seedu.address.logic.Messages.MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS;
@@ -58,6 +59,10 @@ public class JsonAdaptedAlias {
 
         if (!CommandType.isValidCommand(originalCommand)) {
             throw new ParseException(MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS);
+        }
+
+        if (alias.isEmpty()) {
+            throw new ParseException(MESSAGE_ALIAS_CANNOT_BE_EMPTY);
         }
 
         if (alias.contains(" ")) {
