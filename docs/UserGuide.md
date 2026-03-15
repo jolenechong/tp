@@ -242,25 +242,39 @@ Examples:
 
 #### Deleting a contact : `delete`
 
-Deletes the specified contact from the address book.
+Removes a contact from the address book using their email address as the *unique identifier*
+You will be prompted to confirm the deletion before any changes are made.
 
-Format: `delete INDEX`
-
-* Deletes the contact at the specified `INDEX`.
-* The index refers to the index number shown in the displayed contact list.
-* The index **must be a positive integer** 1, 2, 3, …​
+Format: `delete EMAIL`
 
 Examples:
-* `list` followed by `delete 2` deletes the 2nd contact in the address book.
-* `find Betsy` followed by `delete 1` deletes the 1st contact in the results of the `find` command.
+* `delete sales@digikey.com` deletes the contact associated with the email `sales@digikey.com`.
+
+**Tip:** To skip the confimation prompt, use the `-y` flag: `delete -y EMAIL`
+
+<panel header="Why can't I delete using other fields?" type="seamless">
+
+Email addresses serve as the *unique identifier* for each contact, so the `delete` command only accepts email as input to ensure the correct contact is targeted.
+
+</panel>
+
+<br>
 
 <div style="height: 30px;"></div>
 
 #### Clearing all contacts: `clear`
 
-Clears all entries from the address book.
+Permanently removes all contacts from the address book.
 
 Format: `clear`
+
+<box type="important"> 
+
+*This action is irreversible*. Ensure you have backed up your data before proceeding, as `clear` will delete all stored contact information.
+
+For instructions on how to backup your data, check out [How do I backup my data](#faq-backup-data)
+
+</box>
 
 <div style="height: 30px;"></div>
 
@@ -361,7 +375,7 @@ _Details coming soon ..._
 |--------------------|------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|------------------------------------------|
 | **Add Contact**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​ `               | `add n/TechSource Electronics p/61234567 e/sales@techsource.com a/15 Kallang Way, Singapore t/electronics` | Adds vendor contact                      |
 | **Edit Contact**   | `edit EMAIL [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​` | `edit sales@techsource.com n/TechSource p/61234568`                                                        | Edits specified fields of vendor contact |
-| **Delete Contact** | `delete INDEX`                                                         | `delete 3`                                                                                                 | Deletes contact at index specified       |
+| **Delete Contact** | `delete EMAIL`                                                         | `delete sales@techsource.com`                                                                              | Deletes contact by email                 |
 | **List**           | `list`                                                                 |                                                                                                            | Lists all contacts                       |
 | **Find Contact**   | `find KEYWORD [MORE_KEYWORDS]`                                         | `find TechSource`                                                                                          | Lists all contacts matching `KEYWORD`    |
 | **Clear Contacts** | `clear`                                                                |                                                                                                            | Clears all contacts                      |
@@ -401,6 +415,17 @@ Follow these steps:
 * When you launch VendorVault on the new computer, a new `data` folder is created. Replace it with the old 
   computer's folder.
 * Relaunch VendorVault and you should see your data appear exactly as before.
+
+</panel>
+
+<panel header="How do I back up my data?" id="faq-backup-data">
+
+* Open the folder where VendorVault's `.jar` file is located.
+* Inside, locate the `data` folder, which contains `.json` files.
+  * `addressbook.json`: stores contact details
+  * `inventory.json`: stores product details
+  * `aliases.json`: stores alias details
+* Copy the `data` folder to a secure location of your choice
 
 </panel>
 
