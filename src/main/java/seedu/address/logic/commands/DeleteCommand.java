@@ -3,9 +3,11 @@ package seedu.address.logic.commands;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.model.Model.PREDICATE_SHOW_ACTIVE_PERSONS;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -13,6 +15,7 @@ import seedu.address.model.Model;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.NameEqualsKeywordsPredicate;
 import seedu.address.model.person.Person;
+import seedu.address.model.product.Product;
 
 /**
  * Deletes a person identified using it's displayed index from the address book.
@@ -80,6 +83,23 @@ public class DeleteCommand extends Command {
         model.updateFilteredPersonList(PREDICATE_SHOW_ACTIVE_PERSONS);
         return new CommandResult(
                 String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete)));
+    /**
+     * Returns products currently linked to the given person via vendor email.
+     */
+    List<Product> collectLinkedProducts(Model model, Person personToDelete) {
+        List<Product> linkedProducts = new ArrayList<>();
+        ObservableList<Product> productList = model.getInventory().getProductList();
+
+        for (Product product : productList) {
+            if (product.getVendorEmail().isPresent()) {
+                Email vendorEmail = product.getVendorEmail().get();
+                if (vendorEmail.equals(personToDelete.getEmail())) {
+                    linkedProducts.add(product);
+                }
+            }
+        }
+
+        return linkedProducts;
     }
 
     /**
