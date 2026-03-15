@@ -1,5 +1,6 @@
 package seedu.address.testutil;
 
+import seedu.address.model.person.Email;
 import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Name;
 import seedu.address.model.product.Product;
@@ -20,6 +21,7 @@ public class ProductBuilder {
     private Quantity quantity;
     private Identifier identifier;
     private RestockThreshold threshold;
+    private Email vendorEmail;
     private boolean isArchived;
 
     /**
@@ -30,6 +32,7 @@ public class ProductBuilder {
         name = new Name(DEFAULT_NAME);
         quantity = new Quantity(DEFAULT_QUANTITY);
         threshold = new RestockThreshold(DEFAULT_THRESHOLD);
+        vendorEmail = null;
         isArchived = false;
     }
 
@@ -41,6 +44,7 @@ public class ProductBuilder {
         name = productToCopy.getName();
         quantity = productToCopy.getQuantity();
         threshold = productToCopy.getRestockThreshold();
+        vendorEmail = productToCopy.getVendorEmail().orElse(null);
         isArchived = productToCopy.isArchived();
     }
 
@@ -76,8 +80,24 @@ public class ProductBuilder {
         return this;
     }
 
+    /**
+     * Sets the vendor {@code Email} of the {@code Product} that we are building.
+     */
+    public ProductBuilder withVendorEmail(String vendorEmail) {
+        this.vendorEmail = new Email(vendorEmail);
+        return this;
+    }
+
+    /**
+     * Clears vendor {@code Email} from the {@code Product} that we are building.
+     */
+    public ProductBuilder withoutVendorEmail() {
+        this.vendorEmail = null;
+        return this;
+    }
+
     public Product build() {
-        return new Product(identifier, name, quantity, threshold, isArchived);
+        return new Product(identifier, name, quantity, threshold, vendorEmail, isArchived);
     }
 
 }
