@@ -2,6 +2,7 @@ package seedu.address.model.alias;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import seedu.address.model.alias.exceptions.DuplicateAliasException;
 import seedu.address.model.alias.exceptions.NoAliasFoundInAliasListException;
@@ -29,8 +30,8 @@ public class AliasList {
      *
      * @param aliases The ArrayList of Alias objects to initialise the list with.
      */
-    public AliasList(ArrayList<Alias> aliases) {
-        this.aliases = aliases;
+    public AliasList(List<Alias> aliases) {
+        this.aliases = new ArrayList<>(aliases);
         this.aliasHashSet = populateHashSetUsingAliases();
     }
 
@@ -68,6 +69,10 @@ public class AliasList {
         this.aliases.add(alias);
     }
 
+    public List<Alias> toList() {
+        return this.aliases.stream().toList();
+    }
+
     /**
      * Searches for and returns the Alias object matching the provided alias name.
      * Performs a linear search through the aliases list.
@@ -83,5 +88,20 @@ public class AliasList {
             }
         }
         throw new NoAliasFoundInAliasListException();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+
+        if (!(other instanceof AliasList)) {
+            return false;
+        }
+
+        AliasList otherAliasList = (AliasList) other;
+        return aliases.equals(otherAliasList.aliases)
+                && aliasHashSet.equals(otherAliasList.aliasHashSet);
     }
 }

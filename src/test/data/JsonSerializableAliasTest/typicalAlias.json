@@ -1,0 +1,21 @@
+{
+  "aliasList" : [ {
+    "alias" : "ls",
+    "originalCommand" : "list"
+  }, {
+    "alias" : "a",
+    "originalCommand" : "add"
+  }, {
+    "alias" : "ed",
+    "originalCommand" : "edit"
+  }, {
+    "alias" : "ex",
+    "originalCommand" : "exit"
+  }, {
+    "alias" : "f",
+    "originalCommand" : "find"
+  }, {
+    "alias" : "r",
+    "originalCommand" : "redo"
+  }]
+}

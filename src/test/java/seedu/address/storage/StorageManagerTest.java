@@ -2,6 +2,7 @@ package seedu.address.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static seedu.address.testutil.TypicalAliases.getTypicalAliases;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalProducts.getTypicalInventory;
 
@@ -13,8 +14,10 @@ import org.junit.jupiter.api.io.TempDir;
 
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.AddressBook;
+import seedu.address.model.Aliases;
 import seedu.address.model.Inventory;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.ReadOnlyAliases;
 import seedu.address.model.ReadOnlyInventory;
 import seedu.address.model.UserPrefs;
 
@@ -23,6 +26,7 @@ public class StorageManagerTest {
     private static final String ADDRESS_BOOK_FILE_PATH = "ab";
     private static final String USER_PREF_FILE_PATH = "prefs";
     private static final String INVENTORY_FILE_PATH = "products";
+    private static final String ALIAS_FILE_PATH = "aliases";
 
     @TempDir
     public Path testFolder;
@@ -35,7 +39,9 @@ public class StorageManagerTest {
         JsonUserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(getTempFilePath(USER_PREF_FILE_PATH));
         JsonInventoryStorage inventoryStorage =
                 new JsonInventoryStorage(getTempFilePath(INVENTORY_FILE_PATH));
-        storageManager = new StorageManager(addressBookStorage, userPrefsStorage, inventoryStorage);
+        JsonAliasStorage aliasStorage = new JsonAliasStorage(getTempFilePath(ALIAS_FILE_PATH));
+
+        storageManager = new StorageManager(addressBookStorage, userPrefsStorage, inventoryStorage, aliasStorage);
     }
 
     private Path getTempFilePath(String fileName) {
@@ -88,4 +94,17 @@ public class StorageManagerTest {
         assertEquals(original, new Inventory(retrieved));
     }
 
+    @Test
+    public void getAliasFilePath() {
+        assertNotNull(storageManager.getAliasFilePath());
+        assertEquals(storageManager.getAliasFilePath(), getTempFilePath(ALIAS_FILE_PATH));
+    }
+
+    @Test
+    public void aliasReadSave() throws Exception {
+        Aliases original = getTypicalAliases();
+        storageManager.saveAliases(original);
+        ReadOnlyAliases retrieved = storageManager.readAliases().get();
+        assertEquals(original, new Aliases(retrieved));
+    }
 }

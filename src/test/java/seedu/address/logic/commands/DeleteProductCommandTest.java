@@ -8,6 +8,7 @@ import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.DeleteProductCommand.CONFIRMATION_DELETE_PRODUCT_MESSAGE;
 import static seedu.address.logic.commands.DeleteProductCommand.MESSAGE_DELETE_PRODUCT_SUCCESS;
 import static seedu.address.model.Model.PREDICATE_SHOW_ACTIVE_PRODUCTS;
+import static seedu.address.testutil.TypicalAliases.getTypicalAliases;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalProducts.getTypicalInventory;
 
@@ -23,7 +24,7 @@ import seedu.address.model.product.Product;
 public class DeleteProductCommandTest {
 
     private Model model = new ModelManager(
-            new VendorVault(getTypicalAddressBook(), getTypicalInventory()),
+            new VendorVault(getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()),
             new UserPrefs());
 
     @Test
@@ -177,7 +178,7 @@ public class DeleteProductCommandTest {
     @Test
     public void execute_invalidProductId_throwsCommandException() {
         Model model = new ModelManager(
-                new VendorVault(getTypicalAddressBook(), getTypicalInventory()),
+                new VendorVault(getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()),
                 new UserPrefs());
 
         DeleteProductCommand command = new DeleteProductCommand("INVALID_ID", false);

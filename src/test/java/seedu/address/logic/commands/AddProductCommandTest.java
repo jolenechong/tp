@@ -24,6 +24,7 @@ import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.ReadOnlyAliases;
 import seedu.address.model.ReadOnlyInventory;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.ReadOnlyVendorVault;
@@ -373,6 +374,16 @@ public class AddProductCommandTest {
 
         @Override
         public ReadOnlyVendorVault getVendorVault() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setAliases(ReadOnlyAliases aliases) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ReadOnlyAliases getAliases() {
             throw new AssertionError("This method should not be called.");
         }
 

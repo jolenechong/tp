@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.model.Aliases;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -23,7 +24,8 @@ public class UndoCommandIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        model = new ModelManager(new VendorVault(getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
+        model = new ModelManager(new VendorVault(getTypicalAddressBook(), getTypicalInventory(), new Aliases()),
+                new UserPrefs());
     }
 
     @Test
@@ -39,7 +41,8 @@ public class UndoCommandIntegrationTest {
         new AddCommand(person).execute(model);
 
         Model expectedModel =
-                new ModelManager(new VendorVault(getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
+                new ModelManager(new VendorVault(getTypicalAddressBook(), getTypicalInventory(), new Aliases()),
+                        new UserPrefs());
 
         assertCommandSuccess(
                 new UndoCommand(),

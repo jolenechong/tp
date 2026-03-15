@@ -1,0 +1,9 @@
+{
+  "aliasList" : [ {
+    "alias" : "a",
+    "originalCommand" : "list"
+  }, {
+    "alias" : "a",
+    "originalCommand" : "add"
+  }]
+}

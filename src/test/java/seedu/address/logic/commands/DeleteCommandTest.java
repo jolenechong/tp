@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.model.Aliases;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -37,7 +38,7 @@ public class DeleteCommandTest {
     private static final Email BOB_EMAIL = new Email(VALID_EMAIL_BOB);
 
     private Model model = new ModelManager(new VendorVault(
-            getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
+            getTypicalAddressBook(), getTypicalInventory(), new Aliases()), new UserPrefs());
 
     @Test
     public void execute_validIndexUnfilteredListDeleteOnly_success() {

@@ -87,6 +87,10 @@ public interface Model {
     /** Returns the full VendorVault aggregate. */
     ReadOnlyVendorVault getVendorVault();
 
+    void setAliases(ReadOnlyAliases aliases);
+
+    ReadOnlyAliases getAliases();
+
     // =========== Person ==================================================================================
     /**
      * Returns true if a person with the same identity as {@code person} exists in the address book.

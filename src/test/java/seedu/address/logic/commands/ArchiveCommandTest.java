@@ -9,6 +9,7 @@ import static seedu.address.testutil.TypicalProducts.getTypicalInventory;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.model.Aliases;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -25,7 +26,7 @@ public class ArchiveCommandTest {
     public void execute_archiveVendor_success() throws CommandException {
 
         Model model = new ModelManager(
-                new VendorVault(getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
+                new VendorVault(getTypicalAddressBook(), getTypicalInventory(), new Aliases()), new UserPrefs());
 
         Person vendorToArchive = model.getFilteredPersonList().get(0);
 
@@ -49,7 +50,7 @@ public class ArchiveCommandTest {
     @Test
     public void execute_vendorNotFound_throwsCommandException() {
         Model model = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
+                getTypicalAddressBook(), getTypicalInventory(), new Aliases()), new UserPrefs());
 
         ArchiveCommand command = new ArchiveCommand("notfound@email.com");
 

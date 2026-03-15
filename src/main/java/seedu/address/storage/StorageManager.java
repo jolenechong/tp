@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.exceptions.DataLoadingException;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.ReadOnlyAliases;
 import seedu.address.model.ReadOnlyInventory;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.UserPrefs;
@@ -21,16 +22,19 @@ public class StorageManager implements Storage {
     private AddressBookStorage addressBookStorage;
     private UserPrefsStorage userPrefsStorage;
     private InventoryStorage inventoryStorage;
+    private AliasStorage aliasStorage;
 
     /**
      * Creates a {@code StorageManager} with the given {@code AddressBookStorage} and {@code UserPrefStorage}.
      */
     public StorageManager(AddressBookStorage addressBookStorage,
                           UserPrefsStorage userPrefsStorage,
-                          InventoryStorage inventoryStorage) {
+                          InventoryStorage inventoryStorage,
+                          AliasStorage aliasStorage) {
         this.addressBookStorage = addressBookStorage;
         this.userPrefsStorage = userPrefsStorage;
         this.inventoryStorage = inventoryStorage;
+        this.aliasStorage = aliasStorage;
     }
 
     // ================ UserPrefs methods ==============================
@@ -106,6 +110,33 @@ public class StorageManager implements Storage {
     public void saveInventory(ReadOnlyInventory inventory, Path filePath) throws IOException {
         logger.fine("Attempting to write to Inventory data file: " + filePath);
         inventoryStorage.saveInventory(inventory, filePath);
-
     }
+
+    @Override
+    public Path getAliasFilePath() {
+        return aliasStorage.getAliasFilePath();
+    }
+
+    @Override
+    public Optional<ReadOnlyAliases> readAliases() throws DataLoadingException {
+        return readAliases(aliasStorage.getAliasFilePath());
+    }
+
+    @Override
+    public Optional<ReadOnlyAliases> readAliases(Path filePath) throws DataLoadingException {
+        logger.fine("Attempting to read Alias data from file: " + filePath);
+        return aliasStorage.readAliases(filePath);
+    }
+
+    @Override
+    public void saveAliases(ReadOnlyAliases aliases) throws IOException {
+        saveAliases(aliases, aliasStorage.getAliasFilePath());
+    }
+
+    @Override
+    public void saveAliases(ReadOnlyAliases aliases, Path filePath) throws IOException {
+        logger.fine("Attempting to write to Alias data file: " + filePath);
+        aliasStorage.saveAliases(aliases, filePath);
+    }
+
 }
