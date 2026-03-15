@@ -2,12 +2,13 @@ package seedu.address.model;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
-import seedu.address.model.alias.AliasList;
+import seedu.address.model.alias.Alias;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
 
@@ -19,13 +20,13 @@ public class VendorVault implements ReadOnlyVendorVault {
 
     private final AddressBook addressBook;
     private final Inventory inventory;
-    private final AliasList aliasList;
+    private final Aliases aliases;
 
     /** Creates an empty VendorVault aggregate. */
     public VendorVault() {
         this.addressBook = new AddressBook();
         this.inventory = new Inventory();
-        this.aliasList = new AliasList();
+        this.aliases = new Aliases();
     }
 
     /**
@@ -39,13 +40,13 @@ public class VendorVault implements ReadOnlyVendorVault {
     /**
      * Creates a VendorVault using data in addressbook and inventory.
      */
-    public VendorVault(ReadOnlyAddressBook ab, ReadOnlyInventory inv) {
+    public VendorVault(ReadOnlyAddressBook ab, ReadOnlyInventory inv, ReadOnlyAliases aliases) {
         requireNonNull(ab);
         requireNonNull(inv);
 
         this.addressBook = new AddressBook(ab);
         this.inventory = new Inventory(inv);
-        this.aliasList = new AliasList();
+        this.aliases = new Aliases(aliases);
     }
 
     /**
@@ -55,6 +56,7 @@ public class VendorVault implements ReadOnlyVendorVault {
         requireNonNull(newData);
         addressBook.resetData(newData);
         inventory.resetData(newData);
+        aliases.resetData(newData);
     }
 
     /**
@@ -84,8 +86,8 @@ public class VendorVault implements ReadOnlyVendorVault {
     }
 
     /** Returns the mutable AliasList backing this aggregate. */
-    public AliasList getAliasList() {
-        return aliasList;
+    public Aliases getAliases() {
+        return aliases;
     }
 
     // =============================== AddressBook ===============================
@@ -104,6 +106,14 @@ public class VendorVault implements ReadOnlyVendorVault {
     public Optional<Person> findSimilarAddressMatch(Person candidate, Person exclude) {
         return addressBook.findSimilarAddressMatch(candidate, exclude);
     }
+
+    // =============================== Aliases =================================
+
+    @Override
+    public List<Alias> getAliasList() {
+        return aliases.getAliasList();
+    }
+
 
     // =============================== Inventory ===============================
 

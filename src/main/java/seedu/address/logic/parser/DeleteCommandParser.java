@@ -13,7 +13,7 @@ import seedu.address.model.person.Email;
 public class DeleteCommandParser implements Parser<DeleteCommand> {
 
     public static final String MESSAGE_WRONGLY_FORMED_FLAG =
-            "Invalid format. The '-y' flag must be separate from the email.\n"
+            "Invalid format. The '-y' flag must be standalone.\n"
                     + "Example: delete -y <email>";
 
     public static final String CONFIRMATION_INDICATOR = "-y";

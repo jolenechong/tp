@@ -15,9 +15,36 @@ import static seedu.address.testutil.TypicalProducts.RICE;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.model.person.Email;
 import seedu.address.testutil.ProductBuilder;
 
 public class ProductTest {
+
+    @Test
+    public void constructor_withVendorEmail_notArchivedByDefault() {
+        Product product = new Product(
+                RICE.getIdentifier(),
+                RICE.getName(),
+                RICE.getQuantity(),
+                RICE.getRestockThreshold(),
+                new Email(VALID_EMAIL_AMY));
+
+        assertEquals(new Email(VALID_EMAIL_AMY), product.getVendorEmail().orElse(null));
+        assertFalse(product.isArchived());
+    }
+
+    @Test
+    public void constructor_withArchivedStatus_vendorEmailIsEmpty() {
+        Product product = new Product(
+                RICE.getIdentifier(),
+                RICE.getName(),
+                RICE.getQuantity(),
+                RICE.getRestockThreshold(),
+                true);
+
+        assertTrue(product.getVendorEmail().isEmpty());
+        assertTrue(product.isArchived());
+    }
 
     @Test
     public void isSameProduct() {

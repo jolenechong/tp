@@ -16,18 +16,22 @@ import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.Logic;
 import seedu.address.logic.LogicManager;
 import seedu.address.model.AddressBook;
+import seedu.address.model.Aliases;
 import seedu.address.model.Inventory;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.ReadOnlyAliases;
 import seedu.address.model.ReadOnlyInventory;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.VendorVault;
 import seedu.address.model.util.SampleDataUtil;
 import seedu.address.storage.AddressBookStorage;
+import seedu.address.storage.AliasStorage;
 import seedu.address.storage.InventoryStorage;
 import seedu.address.storage.JsonAddressBookStorage;
+import seedu.address.storage.JsonAliasStorage;
 import seedu.address.storage.JsonInventoryStorage;
 import seedu.address.storage.JsonUserPrefsStorage;
 import seedu.address.storage.Storage;
@@ -64,7 +68,8 @@ public class MainApp extends Application {
         UserPrefs userPrefs = initPrefs(userPrefsStorage);
         AddressBookStorage addressBookStorage = new JsonAddressBookStorage(userPrefs.getAddressBookFilePath());
         InventoryStorage inventoryStorage = new JsonInventoryStorage(userPrefs.getProductsFilePath());
-        storage = new StorageManager(addressBookStorage, userPrefsStorage, inventoryStorage);
+        AliasStorage aliasStorage = new JsonAliasStorage(userPrefs.getAliasFilePath());
+        storage = new StorageManager(addressBookStorage, userPrefsStorage, inventoryStorage, aliasStorage);
 
         model = initModelManager(storage, userPrefs);
 
@@ -111,7 +116,22 @@ public class MainApp extends Application {
             initialInventory = new Inventory();
         }
 
-        VendorVault initialVault = new VendorVault(initialData, initialInventory);
+        Optional<ReadOnlyAliases> aliasesOptional;
+        ReadOnlyAliases initialAliases;
+        try {
+            aliasesOptional = storage.readAliases();
+            if (!aliasesOptional.isPresent()) {
+                logger.info("Creating a new data file " + storage.getAliasFilePath()
+                        + " populated with an empty Alias file.");
+            }
+            initialAliases = aliasesOptional.orElseGet(Aliases::new);
+        } catch (DataLoadingException e) {
+            logger.warning("Data file at " + storage.getAliasFilePath() + " could not be loaded."
+                    + " Will be starting with an empty Alias file.");
+            initialAliases = new Aliases();
+        }
+
+        VendorVault initialVault = new VendorVault(initialData, initialInventory, initialAliases);
 
         ModelManager modelManager = new ModelManager(initialVault, userPrefs);
 

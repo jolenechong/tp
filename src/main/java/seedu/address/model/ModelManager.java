@@ -13,7 +13,6 @@ import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.alias.Alias;
-import seedu.address.model.alias.AliasList;
 import seedu.address.model.alias.exceptions.DuplicateAliasException;
 import seedu.address.model.alias.exceptions.NoAliasFoundInAliasListException;
 import seedu.address.model.person.Email;
@@ -29,7 +28,7 @@ public class ModelManager implements Model {
     private final VendorVault vendorVault;
     private final AddressBook addressBook;
     private final Inventory inventory;
-    private final AliasList aliasList;
+    private final Aliases aliases;
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
     private final FilteredList<Product> filteredProducts;
@@ -46,7 +45,7 @@ public class ModelManager implements Model {
         this.vendorVault = new VendorVault(vendorVault);
         this.addressBook = this.vendorVault.getAddressBook();
         this.inventory = this.vendorVault.getInventory();
-        this.aliasList = this.vendorVault.getAliasList();
+        this.aliases = this.vendorVault.getAliases();
 
         this.userPrefs = new UserPrefs(userPrefs);
 
@@ -133,6 +132,18 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public void setAliases(ReadOnlyAliases aliases) {
+        requireNonNull(aliases);
+        this.aliases.resetData(aliases);
+    }
+
+    @Override
+    public ReadOnlyAliases getAliases() {
+        return aliases;
+    }
+
+
+    @Override
     public boolean hasPerson(Person person) {
         requireNonNull(person);
         return addressBook.hasPerson(person);
@@ -210,13 +221,13 @@ public class ModelManager implements Model {
     @Override
     public void addAlias(Alias alias) throws DuplicateAliasException {
         requireNonNull(alias);
-        aliasList.addAlias(alias);
+        aliases.addAlias(alias);
     }
 
     @Override
     public Alias findAlias(String aliasStr) throws NoAliasFoundInAliasListException {
         requireNonNull(aliasStr);
-        return aliasList.findAlias(aliasStr);
+        return aliases.findAlias(aliasStr);
     }
 
     // =========== Filtered Person List Accessors =============================================================

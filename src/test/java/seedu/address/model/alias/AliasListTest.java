@@ -1,6 +1,8 @@
 package seedu.address.model.alias;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import java.util.ArrayList;
@@ -82,4 +84,35 @@ public class AliasListTest {
             emptyList.findAlias("anything");
         });
     }
+
+    @Test
+    public void equals() {
+        AliasList aliasList = new AliasList();
+        // same object -> returns true
+        assertTrue(aliasList.equals(aliasList));
+
+        // null -> returns false
+        assertFalse(aliasList.equals(null));
+
+        // different type -> returns false
+        assertFalse(aliasList.equals("some string"));
+
+        AliasList aliasList1 = new AliasList();
+        // different aliasList with no content -> returns true
+        assertTrue(aliasList.equals(aliasList1));
+
+        aliasList.addAlias(new Alias(aliasString, originalCommand));
+        aliasList1.addAlias(new Alias(aliasString, originalCommand));
+        // different aliasList with same content -> returns true
+        assertTrue(aliasList.equals(aliasList1));
+
+        AliasList aliasList2 = new AliasList();
+        // different aliasList with different content -> returns false
+        assertFalse(aliasList1.equals(aliasList2));
+
+        // different aliasList with different content -> returns false
+        aliasList2.addAlias(new Alias("different", "delete"));
+        assertFalse(aliasList1.equals(aliasList2));
+    }
+
 }

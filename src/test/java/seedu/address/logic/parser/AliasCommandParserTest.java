@@ -1,10 +1,10 @@
 package seedu.address.logic.parser;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static seedu.address.logic.parser.AliasCommandParser.MESSAGE_ALIAS_CONTAINS_SPACE;
-import static seedu.address.logic.parser.AliasCommandParser.MESSAGE_ALIAS_IS_A_PREDEFINED_COMMAND;
-import static seedu.address.logic.parser.AliasCommandParser.MESSAGE_FORMATTED_WRONGLY;
-import static seedu.address.logic.parser.AliasCommandParser.MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS;
+import static seedu.address.logic.Messages.MESSAGE_ALIAS_CONTAINS_SPACE;
+import static seedu.address.logic.Messages.MESSAGE_ALIAS_IS_A_PREDEFINED_COMMAND;
+import static seedu.address.logic.Messages.MESSAGE_FORMATTED_WRONGLY;
+import static seedu.address.logic.Messages.MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import org.junit.jupiter.api.Test;

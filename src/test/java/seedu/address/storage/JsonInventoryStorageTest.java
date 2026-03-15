@@ -83,7 +83,7 @@ public class JsonInventoryStorageTest {
     }
 
     @Test
-    public void saveAddressBook_nullAddressBook_throwsNullPointerException() {
+    public void saveInventory_nullInventory_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> saveInventory(null, "SomeFile.json"));
     }
 
@@ -97,7 +97,7 @@ public class JsonInventoryStorageTest {
     }
 
     @Test
-    public void saveAddressBook_nullFilePath_throwsNullPointerException() {
+    public void saveInventory_nullFilePath_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> saveInventory(new Inventory(), null));
     }
 }

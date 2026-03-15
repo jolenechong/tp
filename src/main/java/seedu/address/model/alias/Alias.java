@@ -28,5 +28,18 @@ public class Alias {
         return this.originalCommand;
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
 
+        if (!(other instanceof Alias)) {
+            return false;
+        }
+
+        Alias otherAlias = (Alias) other;
+        return alias.equals(otherAlias.alias)
+                && originalCommand.equals(otherAlias.originalCommand);
+    }
 }

@@ -10,6 +10,7 @@ import static seedu.address.testutil.TypicalProducts.getTypicalInventory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import seedu.address.model.Aliases;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -26,7 +27,7 @@ public class ListCommandTest {
     @BeforeEach
     public void setUp() {
         model = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs());
+                getTypicalAddressBook(), getTypicalInventory(), new Aliases()), new UserPrefs());
         expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
     }
 

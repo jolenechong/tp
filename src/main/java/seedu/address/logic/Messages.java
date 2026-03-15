@@ -32,6 +32,13 @@ public class Messages {
             + "with the same product identifier. ";
     public static final String MESSAGE_DUPLICATE_ALIAS = "This alias already exists "
             + "with the same alias name. ";
+    public static final String MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS = "The original command does not exists.\n"
+                    + "For the list of commands visit the User Guide.";
+    public static final String MESSAGE_ALIAS_CANNOT_BE_EMPTY = "The alias should not be empty";
+    public static final String MESSAGE_ALIAS_CONTAINS_SPACE = "The alias should not contain any spaces.";
+    public static final String MESSAGE_FORMATTED_WRONGLY = "Message is formatted wrongly.";
+    public static final String MESSAGE_ALIAS_IS_A_PREDEFINED_COMMAND =
+            "Alias is a predefined command, please choose another alias.";
 
     /**
      * Returns an error message indicating the duplicate prefixes.
