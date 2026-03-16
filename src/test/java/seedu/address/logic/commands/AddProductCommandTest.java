@@ -12,6 +12,7 @@ import static seedu.address.testutil.Assert.assertThrows;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -520,6 +521,11 @@ public class AddProductCommandTest {
 
         @Override
         public Alias findAlias(String aliasStr) throws NoAliasFoundInAliasListException {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public List<Alias> getAliasList() {
             throw new AssertionError("This method should not be called.");
         }
 

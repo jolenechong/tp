@@ -1,6 +1,7 @@
 package seedu.address.model;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -163,6 +164,12 @@ public interface Model {
     public void addAlias(Alias alias) throws DuplicateAliasException;
 
     public Alias findAlias(String aliasStr) throws NoAliasFoundInAliasListException;
+
+
+    /**
+     * Returns an unmodifiable view of the alias list.
+     */
+    List<Alias> getAliasList();
 
     /** Returns an unmodifiable view of the filtered product list. */
     ObservableList<Product> getFilteredProductList();

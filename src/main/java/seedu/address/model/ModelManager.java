@@ -23,7 +23,7 @@ import seedu.address.model.product.Product;
 /**
  * Represents the in-memory model of the vendor vault data.
  */
-public class ModelManager implements Model, ReadOnlyAliases {
+public class ModelManager implements Model {
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
 
     private final VendorVault vendorVault;
