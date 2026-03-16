@@ -378,15 +378,32 @@ Only contacts that have been archived can be restored. If you try to restore an 
 Removes a contact from the address book using their email address as the _unique identifier_
 You will be prompted to confirm the deletion before any changes are made.
 
-Format: `delete EMAIL`
+Format: 
+
+```
+delete EMAIL
+```
 
 Examples:
 
 * `delete support@adafruit.com` deletes the contact associated with the email `support@adafruit.com`.
 
-<panel header="Why can't I delete using other fields?" type="seamless">
 
-Email addresses serve as the _unique identifier_ for each contact, so the `delete` command only accepts email as input to ensure the correct contact is targeted.
+<box type="info" seamless>
+
+There is a confirmation prompt for `delete` command.
+
+</box>
+
+<panel header="Can I skip the confirmation prompt?" type="seamless">
+
+Yes, you can use the flag `-y` to skip the confirmation prompt.
+
+For example, the following command bypass the confirmation prompt and deletes a contact with the email: `sg.sales@digikey.com`
+
+```
+delete -y sg.sales@digikey.com
+```
 
 </panel>
 
