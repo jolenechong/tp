@@ -54,7 +54,10 @@ public class EditProductCommandTest {
         EditProductCommand command =
                 new EditProductCommand(firstProduct.getIdentifier().value, descriptor);
 
-        Model expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
+        Model expectedModel = new ModelManager(
+                model.getVendorVault(),
+                new UserPrefs(),
+                model.getAliases());
         expectedModel.setProduct(firstProduct, editedProduct);
         expectedModel.updateFilteredProductList(Model.PREDICATE_SHOW_ACTIVE_PRODUCTS);
         expectedModel.commitVendorVault();
@@ -81,7 +84,10 @@ public class EditProductCommandTest {
                 .withQuantity(VALID_QUANTITY_IPHONE)
                 .build();
 
-        Model expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
+        Model expectedModel = new ModelManager(
+                model.getVendorVault(),
+                new UserPrefs(),
+                model.getAliases());
         expectedModel.setProduct(firstProduct, editedProduct);
         expectedModel.updateFilteredProductList(Model.PREDICATE_SHOW_ACTIVE_PRODUCTS);
         expectedModel.commitVendorVault();
@@ -111,7 +117,10 @@ public class EditProductCommandTest {
                 .withoutVendorEmail()
                 .build();
 
-        Model expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
+        Model expectedModel = new ModelManager(
+                model.getVendorVault(),
+                new UserPrefs(),
+                model.getAliases());
         expectedModel.setProduct(productWithVendor, editedProduct);
         expectedModel.updateFilteredProductList(Model.PREDICATE_SHOW_ACTIVE_PRODUCTS);
         expectedModel.commitVendorVault();
