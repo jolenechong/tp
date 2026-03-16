@@ -3,6 +3,7 @@
   title: "User Guide"
   pageNav: 5
 ---
+<br>
 
 # VendorVault User Guide
 
@@ -11,8 +12,6 @@ VendorVault is a **desktop app for managing your vendors and inventory all in on
 Spend less time searching through spreadsheets and switching between apps. VendorVault keeps your business information organised so you can focus on what matters most: growing your business.
 
 <br>
-
-## Target Audience
 
 VendorVault is designed for:
 
@@ -36,7 +35,7 @@ Follow these steps to get VendorVault up and running:
 1. Ensure Java 17 or above is installed.
    * Full guide for installation [here](https://se-education.org/guides/tutorials/javaInstallation.html). If you are familiar with the process, you can download Java directly [here](https://www.oracle.com/asean/java/technologies/downloads/).<br>
    <box type="important" seamless>
-     **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
+     Mac users: Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
    </box>
 
 2. Download the latest version of VendorVault [here](https://github.com/AY2526S2-CS2103T-W08-2/tp).
@@ -50,14 +49,14 @@ Follow these steps to get VendorVault up and running:
 
 Open **Command Prompt** and run:
 
-```
+```bash
 cd PATH_TO_FOLDER_CONTAINING_JAR_FILE
 java -jar vendorvault.jar
 ```
 
 For example, if you placed the `.jar` file in `C:\Users\John\Downloads`:
 
-```
+```bash
 cd C:\Users\John\Downloads
 java -jar vendorvault.jar
 ```
@@ -67,31 +66,31 @@ java -jar vendorvault.jar
 
 Open **Terminal** and run:
 
-```
+```bash
 cd PATH_TO_FOLDER_CONTAINING_JAR_FILE
 java -jar vendorvault.jar
 ```
 
 For example, if you placed the `.jar` file in your Downloads folder:
 
-```
+```bash
 cd ~/Downloads
 java -jar vendorvault.jar
 ```
 
   </tab>
-  <tab header="Ubuntu / Linux">
+  <tab header="Linux">
 
 Open a **Terminal** and run:
 
-```
+```bash
 cd PATH_TO_FOLDER_CONTAINING_JAR_FILE
 java -jar vendorvault.jar
 ```
 
 For example, if you placed the `.jar` file in a `vendorvault` folder in your home directory:
 
-```
+```bash
 cd ~/vendorvault
 java -jar vendorvault.jar
 ```
@@ -113,15 +112,11 @@ command here...`. This is where you can type in commands to interact with the ap
 <br><br>
 Some example commands you can try:
 
-* `list` : Lists all contacts.
-
 * `add n/TechSource Electronics p/61234567 e/sales@techsource.com a/15 Kallang Way, Singapore` : Adds a vendor contact named `TechSource Electronics` to VendorVault.
 
 * `delete sales@techsource.com` : Deletes `TechSource Electronics`.
 
-* `clear` : Deletes all contacts.
-
-* `exit` : Exits VendorVault.
+* `help`: View available commands within the app.
 
 1. Refer to the [Features](#features) below for details of each command. Or [Command Summary](#command-summary) for a quick summary of all commands.
 
@@ -135,7 +130,9 @@ Some example commands you can try:
 
 ### Before you begin
 
-<box type="info">
+<box type="definition" seamless>
+<!-- <box type="important" seamless> -->
+
 
 VendorVault keeps your data in one of three states. Understanding this will help you choose the right command every time:
 
@@ -145,7 +142,7 @@ VendorVault keeps your data in one of three states. Understanding this will help
 | **Archived** | Hidden but recoverable, data is kept           | `archive` / `archiveproduct`                              |
 | **Deleted**  | Permanently gone, cannot be recovered          | `delete` / `deleteproduct` / `clear` / `clearproduct`     |
 
-When in doubt — **archive, don't delete.**
+When in doubt, **archive, don't delete.**
 
 </box>
 
@@ -154,6 +151,8 @@ When in doubt — **archive, don't delete.**
 <box type="info" seamless>
 
 **Notes about the command format:**<br>
+
+* To skip the confirmation prompt, use the `-y` flag: `deleteproduct -y PRODUCT_IDENTIFIER`
 
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
@@ -246,19 +245,13 @@ For more details on possible warnings and errors when adding a contact, refer to
 
 #### Listing all contacts : `list`
 
-Shows a list of all contacts in the VendorVault.
+Shows a list of all **active** contacts in the VendorVault.
 
 Format:
 
 ```
 list
 ```
-
-<box type="info" seamless>
-
-This command only shows active contacts. To view archived contacts, use [`restore`](#restoring-an-archived-contact-restore) without an argument.
-
-</box>
 
 <div style="height: 30px;"></div>
 
@@ -323,7 +316,7 @@ Examples:
 
 #### Archiving a contact : `archive`
 
-Moves a contact to the archive. Archived contacts are hidden from the main list but are **not permanently deleted** — they can be restored at any time.
+Moves a contact to the archive. Archived contacts are hidden from the main list but are **not permanently deleted**. They can be restored at any time.
 
 Format:
 
@@ -341,12 +334,6 @@ Examples:
 
 </box>
 
-<box type="warning" seamless>
-
-You will be prompted to confirm before the contact is archived. The app will show a warning as archived contacts are no longer visible in the main list.
-
-</box>
-
 <panel header="How do I view or recover archived contacts?" type="seamless">
 
 Use [`restore`](#restoring-an-archived-contact-restore) without any argument to view all archived contacts. Then use `restore EMAIL` to bring a specific contact back to the active list.
@@ -357,7 +344,7 @@ Use [`restore`](#restoring-an-archived-contact-restore) without any argument to 
 
 #### Restoring an archived contact : `restore`
 
-Moves a previously archived contact back to the active contact list.
+Moves a previously archived contact back to the active contact list. If `EMAIL` is omitted, VendorVault will display all archived contacts so you can find the one you want to restore.
 
 Format:
 
@@ -365,12 +352,10 @@ Format:
 restore EMAIL
 ```
 
-* If `EMAIL` is omitted, VendorVault will display all archived contacts so you can find the one you want to restore.
-
 Examples:
 
-* `restore` — shows all archived contacts in the panel.
-* `restore sg.sales@cytron.io` — restores the archived contact with email `sg.sales@cytron.io`.
+* `restore`: shows all archived contacts in the panel.
+* `restore sg.sales@cytron.io`: restores the archived contact with email `sg.sales@cytron.io`.
 
 <box type="info" seamless>
 
@@ -391,8 +376,6 @@ Examples:
 
 * `delete support@adafruit.com` deletes the contact associated with the email `support@adafruit.com`.
 
-**Tip:** To skip the confimation prompt, use the `-y` flag: `delete -y EMAIL`
-
 <panel header="Why can't I delete using other fields?" type="seamless">
 
 Email addresses serve as the _unique identifier_ for each contact, so the `delete` command only accepts email as input to ensure the correct contact is targeted.
@@ -409,9 +392,10 @@ Permanently removes all contacts from the address book.
 
 Format: `clear`
 
-<box type="important">
+<box type="important" seamless>
 
-_This action is irreversible_. Ensure you have backed up your data before proceeding, as `clear` will delete all stored contact information.
+_This action will remove all stored contact information_.
+You can use undo to restore the data only within the same app session. Ensure you have backed up your data before proceeding.
 
 For instructions on how to backup your data, check out [How do I backup my data](#faq-backup-data)
 
@@ -450,22 +434,17 @@ addproduct id/SKU-1003 n/Raspberry Pi 5 (8GB RAM)
 ```
 
 </panel>
+<div style="height: 30px;"></div>
 
 #### Listing all products : `listproduct`
 
-Shows a list of all **active** (non-archived) products in the inventory.
+Shows a list of all **active** products in the inventory.
 
 Format:
 
 ```
 listproduct
 ```
-
-<box type="info" seamless>
-
-This command only shows active products. To view archived products, use [`restoreproduct`](#restoring-an-archived-product-restoreproduct) without an argument.
-
-</box>
 
 <div style="height: 30px;"></div>
 
@@ -481,7 +460,7 @@ This command only shows active products. To view archived products, use [`restor
 
 #### Archiving a product : `archiveproduct`
 
-Moves a product to the archive. Archived products are hidden from the main inventory list but are **not permanently deleted** — they can be restored at any time using their identifier.
+Moves a product to the archive. Archived products are hidden from the main inventory list but are **not permanently deleted**. They can be restored at any time using their identifier.
 
 Format:
 
@@ -494,11 +473,6 @@ Examples:
 * `archiveproduct SKU-1003` archives the product with identifier `SKU-1003`.
 * `archiveproduct SKU-2048` archives the product with identifier `SKU-2048`.
 
-<box type="warning" seamless>
-
-After archiving, a reminder will be shown: use `restoreproduct IDENTIFIER` to bring the product back if needed.
-
-</box>
 
 <box type="tip" seamless>
 
@@ -528,8 +502,8 @@ restoreproduct IDENTIFIER
 
 Examples:
 
-* `restoreproduct` — shows all archived products in the panel.
-* `restoreproduct SKU-1003` — restores the archived product with identifier `SKU-1003`.
+* `restoreproduct`: shows all archived products in the panel.
+* `restoreproduct SKU-1003`: restores the archived product with identifier `SKU-1003`.
 
 <box type="info" seamless>
 
@@ -554,19 +528,11 @@ Examples:
 
 * `deleteproduct SKU-1003` deletes the product with identifier `SKU-1003`.
 
-**Tip:** To skip the confirmation prompt, use the `-y` flag: `deleteproduct -y PRODUCT_IDENTIFIER`
-
 <box type="important" seamless>
 
-This action is **irreversible**. If you may need the product again in the future, consider using [`archiveproduct`](#archiving-a-product-archiveproduct) instead.
+You can use undo to restore the data only **within the same app session**. If you may need the product again in the future, consider using [`archiveproduct`](#archiving-a-product-archiveproduct) instead.
 
 </box>
-
-<panel header="Why is a confirmation required?" type="seamless">
-
-Deleting a product is permanent and cannot be undone after the fact (unlike `undo` which only works for the immediately preceding command). The confirmation step prevents accidental deletions.
-
-</panel>
 
 <div style="height: 30px;"></div>
 
@@ -576,17 +542,11 @@ Permanently removes **all** products from the inventory.
 
 Format: `clearproduct`
 
-<box type="important">
+<box type="important" seamless>
 
-_This action is irreversible_. All products will be permanently deleted. Ensure you have backed up your data before proceeding.
+_This action will remove all stored product information_. You can use undo to restore the data only within the same app session. Ensure you have backed up your data before proceeding.
 
 For instructions on how to back up your data, check out [How do I backup my data](#faq-backup-data).
-
-</box>
-
-<box type="tip" seamless>
-
-**Tip:** You will be prompted to type `y` to confirm before any products are deleted. If you change your mind, simply do not confirm and the operation will be cancelled.
 
 </box>
 
@@ -660,6 +620,8 @@ Furthermore, certain edits can cause the AddressBook to behave in unexpected way
 | **Find Contact**   | `find KEYWORD [MORE_KEYWORDS]`                                         | `find TechSource`                                                                                          | Lists all contacts matching `KEYWORD`    |
 | **Clear Contacts** | `clear`                                                                |                                                                                                            | Clears all contacts                      |
 
+<div style="height: 30px;"></div>
+
 ### Product Commands
 
 | Action                  | Command                                                                 | Example                                                        | What it does                                                              |
@@ -690,16 +652,6 @@ Furthermore, certain edits can cause the AddressBook to behave in unexpected way
 <panel header="I accidentally entered a command that changed the data. Can I undo that?" type="seamless">
 
 Yes, you can undo the previous command that changed the data by using the `undo` command. For example, if you accidentally deleted a contact, simply enter `undo` and the contact will be restored.
-
-</panel>
-
-<panel header="What is the difference between archive and delete?" type="seamless">
-
-`archive` / `archiveproduct` hides a contact or product from the main list but keeps the data stored. You can restore it at any time using `restore` / `restoreproduct`.
-
-`delete` / `deleteproduct` **permanently removes** the data. This cannot be undone (except with `undo` immediately after).
-
-Use archive when you're unsure if you'll need the data again. Use delete when you are certain the contact or product is no longer needed.
 
 </panel>
 
@@ -754,6 +706,7 @@ Follow these steps:
 </box>
 
 ### Managing contacts
+<div style="height: 30px;"></div>
 
 #### Troubleshooting `add` contact
 
@@ -790,10 +743,17 @@ Common `add` warnings:
 Tip: If multiple warnings apply, VendorVault shows all of them (one per line) together with the success message.
 
 </box>
+<div style="height: 30px;"></div>
 
 #### Troubleshooting `edit` contact
 
 Use this section when `edit` fails or returns a warning.
+<box type="info" seamless>
+
+Many errors that occur in `add` also apply to `edit`, specifically, all except the first three errors listed in the add contact section above also apply. Similarly, all warnings from `add` apply to `edit` as well. For these shared errors, refer to the [Troubleshooting add contact](#troubleshooting-add-contact) guide, as they behave the same way in edit contact commands.
+
+</box>
+
 
 | Scenario                                                              | Message shown                                    | How to fix                                                              |
 |-----------------------------------------------------------------------|--------------------------------------------------|-------------------------------------------------------------------------|
@@ -801,17 +761,13 @@ Use this section when `edit` fails or returns a warning.
 | No fields specified to edit                                           | `At least one field to edit must be provided.`   | Include at least one of `n/`, `p/`, `e/`, `a/`, or `t/`.                |
 | Target email not found                                                | `No contact with the specified email was found.` | Check the contact exists and re-run with the correct existing email.    |
 
-<box type="info" seamless>
-
-Many errors that occur in `add` also apply to `edit`, specifically, all except the first three errors listed in the add contact section above also apply. Similarly, all warnings from `add` apply to `edit` as well. For these shared errors, refer to the [Troubleshooting add contact](#troubleshooting-add-contact) guide, as they behave the same way in edit contact commands.
-
-</box>
-
 <box type="tip" seamless>
 
 Tip: Unlike `add`, edit command warnings only appear for **fields you are actually editing**. For example, if you edit only the phone number and there's a similar name in the database, you won't see a name warning. This prevents unnecessary alerts for unchanged fields.
 
 </box>
+
+<div style="height: 30px;"></div>
 
 #### Troubleshooting `archive` contact
 
@@ -822,6 +778,8 @@ Use this section when `archive` fails.
 | No email provided                  | `Email must be provided.`                 | Provide the vendor's email: `archive EMAIL`.                                   |
 | Email does not match any contact   | `No vendor found with email: EMAIL`       | Check the email is correct and that the contact exists in the active list.     |
 
+<div style="height: 30px;"></div>
+
 #### Troubleshooting `restore` contact
 
 Use this section when `restore` fails.
@@ -829,6 +787,8 @@ Use this section when `restore` fails.
 | Scenario                                        | Message shown                                                         | How to fix                                                                         |
 |-------------------------------------------------|-----------------------------------------------------------------------|------------------------------------------------------------------------------------|
 | Email provided but no matching archived contact | `No archived vendor found with email: EMAIL` (archived list is shown) | Check the email is correct. The archived contacts panel will be shown to help you. |
+
+<div style="height: 30px;"></div>
 
 #### Troubleshooting `addproduct` contact
 
@@ -844,10 +804,14 @@ Use this section when `addproduct` fails or returns a warning.
 | Name is too long                                    | `Name should be at most 120 characters.`                                  | Shorten the name.                                             |
 | Product is a duplicate                              | `This product already exists with the same identifier.`                   | Change the identifier, or edit the existing product instead.  |
 
+Common `add` warnings:
+
 | Warning trigger                     | Warning shown                                                                                                                                   | What it means                                                                                                                   |
 |-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
 | Identifier/Name has unusual symbols | `⚠ Warning: Identifier contains unusual symbols, is this intentional?`<br><br/>`⚠ Warning: Name contains unusual symbols, is this intentional?` | Identifier/Name is accepted, but looks unusual. You can verify if you entered it correctly.                                     |
 | Similar name to an existing product | `⚠ Warning: There's a product with a similar name (name: <similar-name>), is this intentional?`                                                 | Possible duplicate by similar name. You can check if the name in the warning message is the same as what you were about to add. |
+
+<div style="height: 30px;"></div>
 
 #### Troubleshooting `archiveproduct`
 
@@ -858,6 +822,8 @@ Use this section when `archiveproduct` fails.
 | No identifier provided                | (usage message shown)                          | Provide the product identifier: `archiveproduct IDENTIFIER`.                    |
 | Identifier does not match any product | `No product found with identifier: IDENTIFIER` | Check the identifier is correct and that the product exists in the active list. |
 
+<div style="height: 30px;"></div>
+
 #### Troubleshooting `restoreproduct`
 
 Use this section when `restoreproduct` fails.
@@ -865,6 +831,8 @@ Use this section when `restoreproduct` fails.
 | Scenario                                             | Message shown                                                                 | How to fix                                                                                            |
 |------------------------------------------------------|-------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
 | Identifier provided but no matching archived product | `No archived product found with identifier: IDENTIFIER` (archived list shown) | Check the identifier is correct. The archived products panel will be shown to help you identify the right one. |
+
+<div style="height: 30px;"></div>
 
 #### Troubleshooting `deleteproduct`
 
@@ -874,6 +842,8 @@ Use this section when `deleteproduct` fails.
 |---------------------------------------|---------------------------------------------------|---------------------------------------------------------------------------|
 | No identifier provided                | `Invalid command format! ...`                     | Provide the product identifier: `deleteproduct IDENTIFIER`.               |
 | Identifier does not match any product | `No product found with the specified identifier.` | Ensure the product exists in the active list. Use `listproduct` to check. |
+
+<div style="height: 30px;"></div>
 
 #### Troubleshooting `clearproduct`
 
