@@ -34,8 +34,11 @@ Follow these steps to get VendorVault up and running:
 
 1. Ensure Java 17 or above is installed.
    * Full guide for installation [here](https://se-education.org/guides/tutorials/javaInstallation.html). If you are familiar with the process, you can download Java directly [here](https://www.oracle.com/asean/java/technologies/downloads/).<br>
+   
    <box type="important" seamless>
+   
      Mac users: Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
+
    </box>
 
 2. Download the latest version of VendorVault [here](https://github.com/AY2526S2-CS2103T-W08-2/tp).
@@ -418,10 +421,13 @@ For instructions on how to backup your data, check out [How do I backup my data]
 
 Adds a product to the inventory.
 
-Format: `addproduct id/IDENTIFIER n/NAME [q/QUANTITY] [th/RESTOCK_THRESHOLD]`
+Format: 
+```addproduct id/IDENTIFIER n/NAME [q/QUANTITY] [th/RESTOCK_THRESHOLD]```
 
 <box type="tip" seamless>
 
+**Tip:**
+<br>
 If quantity is not specified, it will default to 0.
 <br>
 If threshold is not specified, it will default to 0.
@@ -435,7 +441,7 @@ Examples:
 
 <panel header="What products are considered duplicates?" type="seamless" id="faq-duplicate-products">
 
-A product is considered a duplicate if it has the **same identifier (id) as an existing product** in VendorVault. For example, these products have the same identifier `SKU-1003`:
+A product is considered a duplicate if it has the **same identifier (id) as an existing product**. For example, these products have the same identifier `SKU-1003`:
 
 ```
 addproduct id/SKU-1003 n/Arduino Uno R4 Development Board
@@ -553,9 +559,7 @@ Format: `clearproduct`
 
 <box type="important" seamless>
 
-_This action will remove all stored product information_. You can use undo to restore the data only **within the same app session**. Ensure you have backed up your data before proceeding.
-
-For instructions on how to back up your data, check out [How do I backup my data](#faq-backup-data).
+_This action will remove all stored product information_. You can use undo to restore the data only within the same app session. Ensure you have [backed up your data](#faq-backup-data) before proceeding.
 
 </box>
 
@@ -678,8 +682,7 @@ Follow these steps:
 
 * Install VendorVault on the new computer (see [Quick Start](#quick-start)).
 * On the old computer, open the folder where VendorVault's `.jar` file is located.
-* Look for the `data` folder, which contain the files `addressbook.json` and `inventory.json`.
-* Copy the folder to an external or cloud storage.
+* Look for the `data` folder and copy it to an external/cloud storage.
 * When you launch VendorVault on the new computer, a new `data` folder is created. Replace it with the old
   computer's folder.
 * Relaunch VendorVault and you should see your data appear exactly as before.
@@ -709,7 +712,7 @@ Follow these steps:
 
 **Error** messages mean the command **did not succeed**.
 <br>
-**Warning** messages mean the command **succeeded**, but VendorVault is flagging a possible issue.
+**Warning** messages mean the command **succeeded**, but VendorVault is flagging a **possible issue**.
 
 </box>
 
@@ -812,7 +815,9 @@ Use this section when `addproduct` fails or returns a warning.
 | Name is too long                                    | `Name should be at most 120 characters.`                                  | Shorten the name.                                             |
 | Product is a duplicate                              | `This product already exists with the same identifier.`                   | Change the identifier, or edit the existing product instead.  |
 
-Common `add` warnings:
+<br>
+
+Common `addproduct` warnings:
 
 | Warning trigger                     | Warning shown                                                                                                                                   | What it means                                                                                                                   |
 |-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
