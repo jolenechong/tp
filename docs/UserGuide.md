@@ -407,9 +407,7 @@ Format: `clear`
 
 <box type="important" seamless>
 
-_This action will remove all stored contact information_. You can use `undo` to restore the data only **within the same app session**. Ensure you have backed up your data before proceeding.
-
-For instructions on how to backup your data, check out [How do I backup my data](#faq-backup-data)
+_This action will remove all stored contact information_. You can use `undo` to restore the data only **within the same app session**. Ensure you have [backed up your data](#faq-backup-data) before proceeding.
 
 </box>
 
@@ -559,7 +557,7 @@ Format: `clearproduct`
 
 <box type="important" seamless>
 
-_This action will remove all stored product information_. You can use undo to restore the data only within the same app session. Ensure you have [backed up your data](#faq-backup-data) before proceeding.
+_This action will remove all stored product information_. You can use undo to restore the data only **within the same app session**. Ensure you have [backed up your data](#faq-backup-data) before proceeding.
 
 </box>
 
