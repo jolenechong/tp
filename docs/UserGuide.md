@@ -405,12 +405,6 @@ Examples:
 
 * `delete support@adafruit.com` deletes the contact associated with the email `support@adafruit.com`.
 
-<box type="important" seamless>
-
-You can use undo to restore the data only **within the same app session**. If you may need the contact again in the future, consider using [`archive`](#archiving-a-contact-archive) instead.
-
-</box>
-
 <div style="height: 30px;"></div>
 
 #### Clearing all contacts: `clear`
@@ -418,12 +412,6 @@ You can use undo to restore the data only **within the same app session**. If yo
 Permanently removes all contacts from the address book.
 
 Format: `clear`
-
-<box type="important" seamless>
-
-_This action will remove all stored contact information_. You can use `undo` to restore the data only **within the same app session**. Ensure you have [backed up your data](#faq-backup-data) before proceeding.
-
-</box>
 
 <div style="height: 30px;"></div>
 
@@ -555,12 +543,6 @@ Examples:
 
 * `deleteproduct SKU-1003` deletes the product with identifier `SKU-1003`.
 
-<box type="important" seamless>
-
-You can use undo to restore the data only **within the same app session**. If you may need the product again in the future, consider using [`archiveproduct`](#archiving-a-product-archiveproduct) instead.
-
-</box>
-
 <div style="height: 30px;"></div>
 
 #### Clearing all products : `clearproduct`
@@ -568,12 +550,6 @@ You can use undo to restore the data only **within the same app session**. If yo
 Permanently removes **all** products from the inventory.
 
 Format: `clearproduct`
-
-<box type="important" seamless>
-
-_This action will remove all stored product information_. You can use undo to restore the data only **within the same app session**. Ensure you have [backed up your data](#faq-backup-data) before proceeding.
-
-</box>
 
 <div style="height: 30px;"></div>
 
