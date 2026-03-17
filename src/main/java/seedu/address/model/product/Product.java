@@ -97,6 +97,13 @@ public class Product {
     }
 
     /**
+     * Returns a copy of this product with no associated vendor email.
+     */
+    public Product clearVendorEmail() {
+        return new Product(identifier, name, quantity, threshold, null, isArchived);
+    }
+
+    /**
      * Returns a {@code DuplicateProductWarning} if this product has a similar name to {@code otherProduct}.
      */
     public DuplicateProductWarning isSameProductWarn(Product otherProduct) {
