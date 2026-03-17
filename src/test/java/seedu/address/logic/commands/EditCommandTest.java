@@ -14,6 +14,7 @@ import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_ADDRESS;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_NAME;
+import static seedu.address.testutil.TestUtil.getProductByIdentifier;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
@@ -35,9 +36,11 @@ import seedu.address.model.VendorVault;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.product.Product;
 import seedu.address.model.tag.Tag;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.ProductBuilder;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for EditCommand.
@@ -347,6 +350,128 @@ public class EditCommandTest {
         EditCommand editCommand = new EditCommand(secondPerson.getEmail(), descriptor);
 
         assertCommandFailure(editCommand, model, Messages.MESSAGE_DUPLICATE_PERSON);
+    }
+
+    @Test
+    public void execute_editEmailWithLinkedProducts_updatesActiveAndArchived() throws Exception {
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Email oldEmail = personToEdit.getEmail();
+        String newEmailValue = "updated.vendor@example.com";
+
+        Product linkedActive = new ProductBuilder()
+                .withIdentifier("SKU-700")
+                .withName("Linked Active")
+                .withVendorEmail(oldEmail.value)
+                .build();
+        Product linkedArchived = new ProductBuilder()
+                .withIdentifier("SKU-701")
+                .withName("Linked Archived")
+                .withVendorEmail(oldEmail.value)
+                .build()
+                .archive();
+        Product unlinked = new ProductBuilder()
+                .withIdentifier("SKU-702")
+                .withName("Unlinked")
+                .withVendorEmail("someone@example.com")
+                .build();
+
+        model.addProduct(linkedActive);
+        model.addProduct(linkedArchived);
+        model.addProduct(unlinked);
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withEmail(newEmailValue).build();
+        CommandResult result = new EditCommand(oldEmail, descriptor).execute(model);
+
+        Product updatedActive = getProductByIdentifier(model, "SKU-700");
+        Product updatedArchived = getProductByIdentifier(model, "SKU-701");
+        Product unchangedUnlinked = getProductByIdentifier(model, "SKU-702");
+
+        assertEquals(newEmailValue, updatedActive.getVendorEmail().orElseThrow().value);
+        assertEquals(newEmailValue, updatedArchived.getVendorEmail().orElseThrow().value);
+        assertTrue(updatedArchived.isArchived());
+        assertEquals("someone@example.com", unchangedUnlinked.getVendorEmail().orElseThrow().value);
+        assertEquals(CommandResult.FEEDBACK_TYPE_SUCCESS, result.getFeedbackType());
+    }
+
+    @Test
+    public void execute_editEmailWithLinkedProducts_undoRevertsPersonAndProducts() throws Exception {
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Email oldEmail = personToEdit.getEmail();
+        String newEmailValue = "atomic.undo@example.com";
+
+        Product linkedActive = new ProductBuilder()
+                .withIdentifier("SKU-710")
+                .withName("Linked Active Undo")
+                .withVendorEmail(oldEmail.value)
+                .build();
+        Product linkedArchived = new ProductBuilder()
+                .withIdentifier("SKU-711")
+                .withName("Linked Archived Undo")
+                .withVendorEmail(oldEmail.value)
+                .build()
+                .archive();
+        model.addProduct(linkedActive);
+        model.addProduct(linkedArchived);
+        model.commitVendorVault();
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withEmail(newEmailValue).build();
+        new EditCommand(oldEmail, descriptor).execute(model);
+
+        assertTrue(model.findByEmail(new Email(newEmailValue)).isPresent());
+
+        model.undoVendorVault();
+
+        assertTrue(model.findByEmail(oldEmail).isPresent());
+        assertFalse(model.findByEmail(new Email(newEmailValue)).isPresent());
+    }
+
+    @Test
+    public void execute_editEmailWithTagClearConfirmation_updatesLinkedProductsOnConfirm() throws Exception {
+        Person personWithTag = new PersonBuilder()
+                .withName("Cole")
+                .withPhone("90001001")
+                .withEmail("cole@example.com")
+                .withAddress("101 Cole Street")
+                .withTags("vip")
+                .build();
+        model.addPerson(personWithTag);
+
+        Product linkedProduct = new ProductBuilder()
+                .withIdentifier("SKU-703")
+                .withName("Linked Confirmation")
+                .withVendorEmail(personWithTag.getEmail().value)
+                .build();
+        model.addProduct(linkedProduct);
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
+                .withEmail("cole.updated@example.com")
+                .withTags()
+                .build();
+        EditCommand editCommand = new EditCommand(personWithTag.getEmail(), descriptor);
+
+        editCommand.execute(model);
+        PendingConfirmation pendingConfirmation = editCommand.getPendingConfirmation();
+        new ConfirmCommand(pendingConfirmation.getOnConfirm()).execute(model);
+
+        Product updatedLinked = getProductByIdentifier(model, "SKU-703");
+        assertEquals("cole.updated@example.com", updatedLinked.getVendorEmail().orElseThrow().value);
+    }
+
+    @Test
+    public void execute_editWithoutEmailChange_linkedProductsRemainUnchanged() throws Exception {
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Product linkedProduct = new ProductBuilder()
+                .withIdentifier("SKU-704")
+                .withName("Linked No Change")
+                .withVendorEmail(personToEdit.getEmail().value)
+                .build();
+        model.addProduct(linkedProduct);
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withPhone("90001002").build();
+        new EditCommand(personToEdit.getEmail(), descriptor).execute(model);
+
+        Product unchangedLinked = getProductByIdentifier(model, "SKU-704");
+        assertEquals(personToEdit.getEmail(), unchangedLinked.getVendorEmail().orElseThrow());
     }
 
     @Test
