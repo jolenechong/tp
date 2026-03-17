@@ -14,6 +14,7 @@ import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -30,6 +31,7 @@ import seedu.address.model.person.NameEqualsKeywordsPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.product.Product;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -174,6 +176,14 @@ public class EditCommand extends Command {
         } catch (DuplicatePersonException e) {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
+
+        Email oldEmail = personToEdit.getEmail();
+        Email newEmail = editedPerson.getEmail();
+        if (!oldEmail.equals(newEmail)) {
+            List<Product> linkedProducts = VendorProductLinkUtil.collectLinkedProducts(model, oldEmail);
+            VendorProductLinkUtil.updateVendorEmail(model, linkedProducts, newEmail);
+        }
+
         model.updateFilteredPersonList(PREDICATE_SHOW_ACTIVE_PERSONS);
         model.commitVendorVault();
 
