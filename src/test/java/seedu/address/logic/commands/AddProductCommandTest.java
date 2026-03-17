@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_DUPLICATE_PRODUCT;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_IDENTIFIER_WARN;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_PRODUCT_NAME_WARN;
-import static seedu.address.logic.parser.ParserUtil.SEPARATOR_NEW_LINE;
+import static seedu.address.logic.commands.CommandUtil.SEPARATOR_NEW_LINE;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import java.nio.file.Path;
