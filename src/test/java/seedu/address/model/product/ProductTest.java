@@ -47,6 +47,17 @@ public class ProductTest {
     }
 
     @Test
+    public void clearVendorEmail_withVendorEmail_clearsVendor() {
+        Product productWithVendor = new ProductBuilder(RICE)
+                .withVendorEmail(VALID_EMAIL_AMY)
+                .build()
+                .archive();
+
+        Product clearedProduct = productWithVendor.clearVendorEmail();
+        assertTrue(clearedProduct.getVendorEmail().isEmpty());
+    }
+
+    @Test
     public void isSameProduct() {
         // same object -> returns true
         assertTrue(RICE.isSameProduct(RICE));
