@@ -24,8 +24,8 @@ import seedu.address.model.product.Product;
 public class DeleteProductCommandTest {
 
     private Model model = new ModelManager(
-            new VendorVault(getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()),
-            new UserPrefs());
+            new VendorVault(getTypicalAddressBook(), getTypicalInventory()),
+            new UserPrefs(), getTypicalAliases());
 
     @Test
     public void execute_validProductUnfilteredListDeleteOnly_success() {
@@ -34,7 +34,7 @@ public class DeleteProductCommandTest {
         DeleteProductCommand command =
                 new DeleteProductCommand(productToDelete.getIdentifier().toString(), true);
 
-        ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
+        ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), getTypicalAliases());
 
         assertCommandSuccess(command, model,
                 CONFIRMATION_DELETE_PRODUCT_MESSAGE,
@@ -62,7 +62,7 @@ public class DeleteProductCommandTest {
         ConfirmCommand confirmCommand =
                 new ConfirmCommand(pending.getOnConfirm());
 
-        Model expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
+        Model expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), getTypicalAliases());
 
         expectedModel.deleteProduct(productToDelete);
         expectedModel.updateFilteredProductList(PREDICATE_SHOW_ACTIVE_PRODUCTS);
@@ -94,7 +94,7 @@ public class DeleteProductCommandTest {
         CancelCommand cancelCommand =
                 new CancelCommand(pending.getOnCancel());
 
-        Model expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
+        Model expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), getTypicalAliases());
 
         expectedModel.updateFilteredProductList(PREDICATE_SHOW_ACTIVE_PRODUCTS);
 
@@ -178,8 +178,8 @@ public class DeleteProductCommandTest {
     @Test
     public void execute_invalidProductId_throwsCommandException() {
         Model model = new ModelManager(
-                new VendorVault(getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()),
-                new UserPrefs());
+                new VendorVault(getTypicalAddressBook(), getTypicalInventory()),
+                new UserPrefs(), getTypicalAliases());
 
         DeleteProductCommand command = new DeleteProductCommand("INVALID_ID", false);
 

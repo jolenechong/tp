@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.model.Aliases;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -71,7 +72,7 @@ public class RestoreProductCommandTest {
 
     @Test
     public void restoreProduct_updatesFilteredList() {
-        ModelManager model = new ModelManager(new VendorVault(), new UserPrefs());
+        ModelManager model = new ModelManager(new VendorVault(), new UserPrefs(), new Aliases());
         Product product = new ProductBuilder().build();
 
         model.addProduct(product);

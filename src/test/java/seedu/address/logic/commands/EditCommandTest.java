@@ -2,6 +2,7 @@ package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.DESC_BOB;
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Aliases;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
@@ -32,6 +34,8 @@ import seedu.address.model.UserPrefs;
 import seedu.address.model.VendorVault;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.tag.Tag;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 import seedu.address.testutil.PersonBuilder;
 
@@ -43,18 +47,18 @@ public class EditCommandTest {
     private static final Email NON_EXISTENT_EMAIL = new Email("missing.person@example.com");
 
     private Model model = new ModelManager(new VendorVault(
-            getTypicalAddressBook(), getTypicalInventory(), new Aliases()), new UserPrefs());
+            getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases());
 
     @Test
     public void execute_allFieldsSpecifiedUnfilteredList_success() {
-        Person editedPerson = new PersonBuilder().build();
+        Person editedPerson = new PersonBuilder().withTags("vip").build();
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedPerson).build();
         Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         EditCommand editCommand = new EditCommand(firstPerson.getEmail(), descriptor);
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
 
-        Model expectedModel = new ModelManager(new VendorVault(model.getVendorVault()), new UserPrefs());
+        Model expectedModel = new ModelManager(new VendorVault(model.getVendorVault()), new UserPrefs(), new Aliases());
         expectedModel.setPerson(model.getFilteredPersonList().get(0), editedPerson);
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
@@ -75,7 +79,7 @@ public class EditCommandTest {
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
 
-        Model expectedModel = new ModelManager(new VendorVault(model.getVendorVault()), new UserPrefs());
+        Model expectedModel = new ModelManager(new VendorVault(model.getVendorVault()), new UserPrefs(), new Aliases());
         expectedModel.setPerson(lastPerson, editedPerson);
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
@@ -89,7 +93,7 @@ public class EditCommandTest {
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
 
-        Model expectedModel = new ModelManager(new VendorVault(model.getVendorVault()), new UserPrefs());
+        Model expectedModel = new ModelManager(new VendorVault(model.getVendorVault()), new UserPrefs(), new Aliases());
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
     }
@@ -105,7 +109,7 @@ public class EditCommandTest {
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
 
-        Model expectedModel = new ModelManager(new VendorVault(model.getVendorVault()), new UserPrefs());
+        Model expectedModel = new ModelManager(new VendorVault(model.getVendorVault()), new UserPrefs(), new Aliases());
         expectedModel.setPerson(model.getFilteredPersonList().get(0), editedPerson);
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
@@ -163,6 +167,133 @@ public class EditCommandTest {
 
         PendingConfirmation pendingConfirmation = editCommand.getPendingConfirmation();
         assertFalse(pendingConfirmation.getNeedConfirmation());
+    }
+
+    @Test
+    public void execute_clearTags_requiresConfirmation() throws Exception {
+        // check confirmation is shown
+        Person personWithTag = new PersonBuilder()
+                .withName("Tag Keeper")
+                .withPhone("90000011")
+                .withEmail("tag.keeper@example.com")
+                .withAddress("11 Tag Street")
+                .withTags("vip")
+                .build();
+        model.addPerson(personWithTag);
+        int expectedSizeAfterReset = model.getFilteredPersonList().size();
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withTags().build();
+        EditCommand editCommand = new EditCommand(personWithTag.getEmail(), descriptor);
+
+        CommandResult result = editCommand.execute(model);
+
+        assertEquals(EditCommand.CONFIRMATION_CLEAR_TAGS_MESSAGE, result.getFeedbackToUser());
+        assertTrue(editCommand.getPendingConfirmation().getNeedConfirmation());
+        assertEquals(1, model.getFilteredPersonList().size());
+        assertEquals(personWithTag.getEmail(), model.getFilteredPersonList().get(0).getEmail());
+        assertTrue(model.findByEmail(personWithTag.getEmail()).orElseThrow().getTags().contains(new Tag("vip")));
+
+        // sanity check: cancelling should restore the list
+        new CancelCommand(editCommand.getPendingConfirmation().getOnCancel()).execute(model);
+        assertEquals(expectedSizeAfterReset, model.getFilteredPersonList().size());
+    }
+
+    @Test
+    public void execute_clearTagsConfirm_tagsAreCleared() throws Exception {
+        // check confirmation is shown and confirming clears the tags
+        Person personWithTag = new PersonBuilder()
+                .withName("Tag Confirm")
+                .withPhone("90000012")
+                .withEmail("tag.confirm@example.com")
+                .withAddress("12 Tag Street")
+                .withTags("vip")
+                .build();
+        model.addPerson(personWithTag);
+        int expectedSizeAfterReset = model.getFilteredPersonList().size();
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withTags().build();
+        EditCommand editCommand = new EditCommand(personWithTag.getEmail(), descriptor);
+        editCommand.execute(model);
+        assertEquals(1, model.getFilteredPersonList().size());
+
+        PendingConfirmation pendingConfirmation = editCommand.getPendingConfirmation();
+        CommandResult confirmResult = new ConfirmCommand(pendingConfirmation.getOnConfirm()).execute(model);
+
+        assertTrue(confirmResult.getFeedbackToUser().startsWith("Edited Contact:"));
+        assertTrue(model.findByEmail(personWithTag.getEmail()).orElseThrow().getTags().isEmpty());
+        assertEquals(expectedSizeAfterReset, model.getFilteredPersonList().size());
+    }
+
+    @Test
+    public void execute_clearTagsCancel_tagsUnchanged() throws Exception {
+        // check cancelling confirmation leaves tags unchanged
+        Person personWithTag = new PersonBuilder()
+                .withName("Tag Cancel")
+                .withPhone("90000013")
+                .withEmail("tag.cancel@example.com")
+                .withAddress("13 Tag Street")
+                .withTags("vip")
+                .build();
+        model.addPerson(personWithTag);
+        int expectedSizeAfterReset = model.getFilteredPersonList().size();
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withTags().build();
+        EditCommand editCommand = new EditCommand(personWithTag.getEmail(), descriptor);
+        editCommand.execute(model);
+        assertEquals(1, model.getFilteredPersonList().size());
+
+        PendingConfirmation pendingConfirmation = editCommand.getPendingConfirmation();
+        CommandResult cancelResult = new CancelCommand(pendingConfirmation.getOnCancel()).execute(model);
+
+        assertEquals(EditCommand.MESSAGE_CLEAR_TAGS_CANCELLED, cancelResult.getFeedbackToUser());
+        assertTrue(model.findByEmail(personWithTag.getEmail()).orElseThrow().getTags().contains(new Tag("vip")));
+        assertEquals(expectedSizeAfterReset, model.getFilteredPersonList().size());
+    }
+
+    @Test
+    public void execute_clearTagsSkipConfirmation_tagsClearedImmediately() throws Exception {
+        // check skip confirmation
+        Person personWithTag = new PersonBuilder()
+                .withName("Tag Skip")
+                .withPhone("90000014")
+                .withEmail("tag.skip@example.com")
+                .withAddress("14 Tag Street")
+                .withTags("vip")
+                .build();
+        model.addPerson(personWithTag);
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withTags().build();
+        EditCommand editCommand = new EditCommand(personWithTag.getEmail(), descriptor, false);
+
+        CommandResult result = editCommand.execute(model);
+
+        assertTrue(result.getFeedbackToUser().startsWith("Edited Contact:"));
+        assertFalse(editCommand.getPendingConfirmation().getNeedConfirmation());
+        assertTrue(model.findByEmail(personWithTag.getEmail()).orElseThrow().getTags().isEmpty());
+    }
+
+    @Test
+    public void execute_confirmFailure_throwsAssertionError() throws Exception {
+        Model throwingModel = new ModelManager(new VendorVault(
+                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases()) {
+            @Override
+            public void setPerson(Person target, Person editedPerson) throws DuplicatePersonException {
+                throw new DuplicatePersonException();
+            }
+        };
+
+        Person targetPerson = throwingModel.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withTags().build();
+        EditCommand editCommand = new EditCommand(targetPerson.getEmail(), descriptor);
+
+        editCommand.execute(throwingModel);
+        PendingConfirmation pendingConfirmation = editCommand.getPendingConfirmation();
+
+        AssertionError assertionError = assertThrows(AssertionError.class, () ->
+                new ConfirmCommand(pendingConfirmation.getOnConfirm()).execute(throwingModel));
+        assertEquals(EditCommand.MESSAGE_FAILURE, assertionError.getMessage());
+        assertTrue(assertionError.getCause() instanceof CommandException);
+        assertEquals(Messages.MESSAGE_DUPLICATE_PERSON, assertionError.getCause().getMessage());
     }
 
     @Test

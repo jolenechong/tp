@@ -24,7 +24,7 @@ public class ClearCommandParserTest {
     @Test
     public void parse_noFlag_needsConfirmation() throws Exception {
         Model model = new ModelManager(
-                new VendorVault(getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()), new UserPrefs());
+                new VendorVault(getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), getTypicalAliases());
 
         ClearCommand command = parser.parse("");
         CommandResult result = command.execute(model);
@@ -36,7 +36,7 @@ public class ClearCommandParserTest {
     @Test
     public void parse_standaloneFlag_skipsConfirmation() throws Exception {
         Model model = new ModelManager(
-                new VendorVault(getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()), new UserPrefs());
+                new VendorVault(getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), getTypicalAliases());
 
         ClearCommand command = parser.parse("-y");
         CommandResult result = command.execute(model);

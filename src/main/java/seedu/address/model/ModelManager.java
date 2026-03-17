@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
@@ -37,7 +38,7 @@ public class ModelManager implements Model {
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
      */
-    public ModelManager(ReadOnlyVendorVault vendorVault, ReadOnlyUserPrefs userPrefs) {
+    public ModelManager(ReadOnlyVendorVault vendorVault, ReadOnlyUserPrefs userPrefs, ReadOnlyAliases readOnlyAliases) {
         requireAllNonNull(vendorVault, userPrefs);
 
         logger.fine("Initializing with VendorVault: " + vendorVault + " and user prefs " + userPrefs);
@@ -45,7 +46,7 @@ public class ModelManager implements Model {
         this.vendorVault = new VendorVault(vendorVault);
         this.addressBook = this.vendorVault.getAddressBook();
         this.inventory = this.vendorVault.getInventory();
-        this.aliases = this.vendorVault.getAliases();
+        this.aliases = new Aliases(readOnlyAliases);
 
         this.userPrefs = new UserPrefs(userPrefs);
 
@@ -57,7 +58,7 @@ public class ModelManager implements Model {
     }
 
     public ModelManager() {
-        this(new VendorVault(), new UserPrefs());
+        this(new VendorVault(), new UserPrefs(), new Aliases());
     }
 
     // =========== UserPrefs ==================================================================================
@@ -228,6 +229,11 @@ public class ModelManager implements Model {
     public Alias findAlias(String aliasStr) throws NoAliasFoundInAliasListException {
         requireNonNull(aliasStr);
         return aliases.findAlias(aliasStr);
+    }
+
+    @Override
+    public List<Alias> getAliasList() {
+        return aliases.getAliasList();
     }
 
     // =========== Filtered Person List Accessors =============================================================

@@ -22,8 +22,8 @@ public class ClearProductCommandTest {
     @Test
     public void execute_needsConfirmation_setsPendingConfirmation() throws Exception {
         Model model = new ModelManager(
-            new VendorVault(getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()),
-            new UserPrefs());
+            new VendorVault(getTypicalAddressBook(), getTypicalInventory()),
+            new UserPrefs(), getTypicalAliases());
 
         Product product = new ProductBuilder().build();
         model.addProduct(product);
@@ -38,8 +38,8 @@ public class ClearProductCommandTest {
     @Test
     public void execute_noConfirmation_clearsProducts() throws Exception {
         Model model = new ModelManager(
-            new VendorVault(getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()),
-            new UserPrefs());
+            new VendorVault(getTypicalAddressBook(), getTypicalInventory()),
+            new UserPrefs(), getTypicalAliases());
 
         ClearProductCommand command = new ClearProductCommand(false);
 
@@ -51,8 +51,8 @@ public class ClearProductCommandTest {
     @Test
     public void execute_withConfirmation_setsPendingConfirmation() throws Exception {
         Model model = new ModelManager(
-                new VendorVault(getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()),
-                new UserPrefs());
+                new VendorVault(getTypicalAddressBook(), getTypicalInventory()),
+                new UserPrefs(), getTypicalAliases());
 
         ClearProductCommand command = new ClearProductCommand(true);
 
@@ -65,8 +65,8 @@ public class ClearProductCommandTest {
     @Test
     public void execute_confirm_clearsProducts() throws Exception {
         Model model = new ModelManager(
-                new VendorVault(getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()),
-                new UserPrefs());
+                new VendorVault(getTypicalAddressBook(), getTypicalInventory()),
+                new UserPrefs(), getTypicalAliases());
 
         ClearProductCommand command = new ClearProductCommand(true);
 
@@ -84,8 +84,8 @@ public class ClearProductCommandTest {
     @Test
     public void execute_cancel_doesNotClearProducts() throws Exception {
         Model model = new ModelManager(
-                new VendorVault(getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()),
-                new UserPrefs());
+                new VendorVault(getTypicalAddressBook(), getTypicalInventory()),
+                new UserPrefs(), getTypicalAliases());
 
         ClearProductCommand command = new ClearProductCommand(true);
 

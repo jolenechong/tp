@@ -40,7 +40,7 @@ public class AddProductCommandParser implements Parser<AddProductCommand> {
     public static final String MESSAGE_THRESHOLD_DEFAULTED =
             "⚠ Warning: Restock threshold missing, defaulted to 10.";
     public static final String MESSAGE_VENDOR_EMAIL_MISSING =
-            "⚠ Warning: Vendor email missing, product will not be not associated with a vendor.";
+            "⚠ Warning: Vendor email missing, product will not be associated with a vendor.";
 
     private record RequiredField(Prefix prefix, String name) {
     }

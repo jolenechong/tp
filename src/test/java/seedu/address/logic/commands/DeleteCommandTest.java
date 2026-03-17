@@ -46,14 +46,14 @@ public class DeleteCommandTest {
     private static final Email BOB_EMAIL = new Email(VALID_EMAIL_BOB);
 
     private Model model = new ModelManager(new VendorVault(
-            getTypicalAddressBook(), getTypicalInventory(), new Aliases()), new UserPrefs());
+            getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases());
 
     @Test
     public void execute_validIndexUnfilteredListDeleteOnly_success() {
         Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(personToDelete.getEmail(), true);
 
-        ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
+        ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), new Aliases());
         NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
         expectedModel.updateFilteredPersonList(predicate);
 
@@ -65,7 +65,7 @@ public class DeleteCommandTest {
         Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(personToDelete.getEmail(), true);
 
-        ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
+        ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), new Aliases());
         NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
         expectedModel.updateFilteredPersonList(predicate);
 
@@ -96,7 +96,7 @@ public class DeleteCommandTest {
         Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(personToDelete.getEmail(), true);
 
-        ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
+        ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), new Aliases());
         NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
         expectedModel.updateFilteredPersonList(predicate);
 
@@ -125,7 +125,7 @@ public class DeleteCommandTest {
         Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(personToDelete.getEmail(), true);
 
-        Model expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
+        Model expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), new Aliases());
         NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
         expectedModel.updateFilteredPersonList(predicate);
 

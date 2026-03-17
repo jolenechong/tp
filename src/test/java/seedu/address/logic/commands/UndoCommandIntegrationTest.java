@@ -24,8 +24,8 @@ public class UndoCommandIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        model = new ModelManager(new VendorVault(getTypicalAddressBook(), getTypicalInventory(), new Aliases()),
-                new UserPrefs());
+        model = new ModelManager(new VendorVault(getTypicalAddressBook(), getTypicalInventory()),
+                new UserPrefs(), new Aliases());
     }
 
     @Test
@@ -41,8 +41,8 @@ public class UndoCommandIntegrationTest {
         new AddCommand(person).execute(model);
 
         Model expectedModel =
-                new ModelManager(new VendorVault(getTypicalAddressBook(), getTypicalInventory(), new Aliases()),
-                        new UserPrefs());
+                new ModelManager(new VendorVault(getTypicalAddressBook(), getTypicalInventory()),
+                        new UserPrefs(), new Aliases());
 
         assertCommandSuccess(
                 new UndoCommand(),

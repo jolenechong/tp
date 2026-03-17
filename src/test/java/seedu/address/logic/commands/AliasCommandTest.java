@@ -3,10 +3,12 @@ package seedu.address.logic.commands;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_DUPLICATE_ALIAS;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -69,6 +71,66 @@ public class AliasCommandTest {
         assertFalse(command.getPendingConfirmation().getNeedConfirmation());
     }
 
+    @Test
+    public void execute_noArgCommandAndEmptyAliasList_returnsEmptyMessage() throws Exception {
+        ModelStub modelStub = new ModelStubWithEmptyAliasList();
+        CommandResult result = new AliasCommand().execute(modelStub);
+        assertEquals(AliasCommand.MESSAGE_EMPTY_ALIAS_LIST, result.getFeedbackToUser());
+    }
+
+    @Test
+    public void execute_noArgCommandAndNonEmptyAliasList_returnsFormattedList() throws Exception {
+        ModelStub modelStub = new ModelStubWithAliasList();
+        CommandResult result = new AliasCommand().execute(modelStub);
+
+        String expected = AliasCommand.MESSAGE_DISPLAY_ALIAS_LIST
+                + "1)" + ListCommand.COMMAND_WORD + "->" + "ls" + "\n";
+        assertEquals(expected, result.getFeedbackToUser());
+    }
+
+    @Test
+    public void execute_noArgCommandAndNullModel_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () ->
+                new AliasCommand().execute(null)
+        );
+    }
+
+    @Test
+    public void hasAlias_noArgConstructor_returnsFalse() {
+        assertFalse(new AliasCommand().hasAlias());
+    }
+
+    @Test
+    public void hasAlias_aliasConstructor_returnsTrue() {
+        Alias validAlias = new Alias("ls", ListCommand.COMMAND_WORD);
+        assertTrue(new AliasCommand(validAlias).hasAlias());
+    }
+
+    private class ModelStubWithEmptyAliasList extends ModelStub {
+        @Override
+        public ReadOnlyAliases getAliases() {
+            return new ReadOnlyAliases() {
+                @Override
+                public List<Alias> getAliasList() {
+                    return List.of();
+                }
+            };
+        }
+    }
+
+    private class ModelStubWithAliasList extends ModelStub {
+        @Override
+        public ReadOnlyAliases getAliases() {
+            return new ReadOnlyAliases() {
+                @Override
+                public List<Alias> getAliasList() {
+                    return List.of(
+                            new Alias("ls", ListCommand.COMMAND_WORD)
+                    );
+                }
+            };
+        }
+    }
 
     private class ModelStubAcceptingAlias extends ModelStub {
         @Override
@@ -220,6 +282,11 @@ public class AliasCommandTest {
 
         @Override
         public Alias findAlias(String aliasStr) throws NoAliasFoundInAliasListException {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public List<Alias> getAliasList() {
             throw new AssertionError("This method should not be called.");
         }
 

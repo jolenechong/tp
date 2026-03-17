@@ -25,7 +25,7 @@ public class RedoCommandTest {
     @BeforeEach
     public void setUp() {
         model = new ModelManager(
-                new VendorVault(getTypicalAddressBook(), getTypicalInventory(), new Aliases()), new UserPrefs());
+                new VendorVault(getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases());
     }
 
     @Test
@@ -45,9 +45,8 @@ public class RedoCommandTest {
                 new ModelManager(
                         new VendorVault(
                                 getTypicalAddressBook(),
-                                getTypicalInventory(),
-                                new Aliases()),
-                                new UserPrefs());
+                                getTypicalInventory()),
+                                new UserPrefs(), new Aliases());
         new AddCommand(person).execute(expectedModel);
 
         assertCommandSuccess(

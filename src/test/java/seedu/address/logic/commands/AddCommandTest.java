@@ -17,6 +17,7 @@ import static seedu.address.testutil.TypicalPersons.ALICE;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -460,6 +461,11 @@ public class AddCommandTest {
 
         @Override
         public Alias findAlias(String aliasStr) throws NoAliasFoundInAliasListException {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public List<Alias> getAliasList() {
             throw new AssertionError("This method should not be called.");
         }
 

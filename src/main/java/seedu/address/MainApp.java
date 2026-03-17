@@ -131,9 +131,9 @@ public class MainApp extends Application {
             initialAliases = new Aliases();
         }
 
-        VendorVault initialVault = new VendorVault(initialData, initialInventory, initialAliases);
+        VendorVault initialVault = new VendorVault(initialData, initialInventory);
 
-        ModelManager modelManager = new ModelManager(initialVault, userPrefs);
+        ModelManager modelManager = new ModelManager(initialVault, userPrefs, initialAliases);
 
         return modelManager;
     }

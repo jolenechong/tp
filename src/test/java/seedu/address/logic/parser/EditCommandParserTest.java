@@ -1,5 +1,7 @@
 package seedu.address.logic.parser;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_BOB;
@@ -37,14 +39,22 @@ import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSucces
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.Messages;
+import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.address.model.Model;
+import seedu.address.model.ModelManager;
+import seedu.address.model.UserPrefs;
+import seedu.address.model.VendorVault;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
+import seedu.address.testutil.TypicalAliases;
+import seedu.address.testutil.TypicalPersons;
+import seedu.address.testutil.TypicalProducts;
 
 public class EditCommandParserTest {
 
@@ -230,5 +240,30 @@ public class EditCommandParserTest {
         EditCommand expectedCommand = new EditCommand(TARGET_EMAIL_OBJ, descriptor);
 
         assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_wronglyFormedFlagAttached_failure() {
+        assertParseFailure(parser, "-y" + TARGET_EMAIL + TAG_EMPTY, EditCommandParser.MESSAGE_WRONGLY_FORMED_FLAG);
+        assertParseFailure(parser,
+                TARGET_EMAIL + " -yabc" + TAG_EMPTY,
+                EditCommandParser.MESSAGE_WRONGLY_FORMED_FLAG);
+    }
+
+    @Test
+    public void parse_resetTagsWithSkipFlag_skipsConfirmationPrompt() throws Exception {
+        Model model = new ModelManager(
+                new VendorVault(
+                        TypicalPersons.getTypicalAddressBook(),
+                        TypicalProducts.getTypicalInventory()),
+                new UserPrefs(),
+                TypicalAliases.getTypicalAliases());
+        Email targetEmail = model.getFilteredPersonList().get(0).getEmail();
+
+        EditCommand command = parser.parse("-y " + targetEmail + TAG_EMPTY);
+        CommandResult result = command.execute(model);
+
+        assertNotEquals(EditCommand.CONFIRMATION_CLEAR_TAGS_MESSAGE, result.getFeedbackToUser());
+        assertTrue(model.findByEmail(targetEmail).orElseThrow().getTags().isEmpty());
     }
 }

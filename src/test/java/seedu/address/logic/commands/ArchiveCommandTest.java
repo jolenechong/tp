@@ -26,7 +26,7 @@ public class ArchiveCommandTest {
     public void execute_archiveVendor_success() throws CommandException {
 
         Model model = new ModelManager(
-                new VendorVault(getTypicalAddressBook(), getTypicalInventory(), new Aliases()), new UserPrefs());
+                new VendorVault(getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases());
 
         Person vendorToArchive = model.getFilteredPersonList().get(0);
 
@@ -50,7 +50,7 @@ public class ArchiveCommandTest {
     @Test
     public void execute_vendorNotFound_throwsCommandException() {
         Model model = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory(), new Aliases()), new UserPrefs());
+                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases());
 
         ArchiveCommand command = new ArchiveCommand("notfound@email.com");
 

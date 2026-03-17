@@ -27,14 +27,14 @@ public class AddCommandIntegrationTest {
     @BeforeEach
     public void setUp() {
         model = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory(), new Aliases()), new UserPrefs());
+                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs() , new Aliases());
     }
 
     @Test
     public void execute_newPerson_success() {
         Person validPerson = new PersonBuilder().build();
 
-        Model expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
+        Model expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), new Aliases());
         expectedModel.addPerson(validPerson);
 
         CommandResult expectedCommandResult = new CommandResult(

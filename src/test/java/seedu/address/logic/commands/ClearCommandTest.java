@@ -32,9 +32,9 @@ public class ClearCommandTest {
     @Test
     public void execute_nonEmptyAddressBook_success() {
         Model model = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory(), new Aliases()), new UserPrefs());
+                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases());
         Model expectedModel = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory(), new Aliases()), new UserPrefs());
+                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases());
         expectedModel.setAddressBook(new AddressBook());
 
         assertCommandSuccess(new ClearCommand(false), model, ClearCommand.MESSAGE_SUCCESS, expectedModel);
@@ -45,7 +45,7 @@ public class ClearCommandTest {
     @Test
     public void execute_withConfirmation_showsConfirmationMessage() {
         Model model = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()), new UserPrefs());
+                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), getTypicalAliases());
 
         ClearCommand clearCommand = new ClearCommand(true);
         CommandResult result = clearCommand.execute(model);
@@ -69,7 +69,7 @@ public class ClearCommandTest {
     @Test
     public void onConfirm_clearsAddressBook() {
         Model model = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()), new UserPrefs());
+                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), getTypicalAliases());
 
         ClearCommand clearCommand = new ClearCommand(true);
         clearCommand.execute(model);
@@ -84,7 +84,7 @@ public class ClearCommandTest {
     @Test
     public void onCancel_doesNotClearAddressBook() {
         Model model = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory(), getTypicalAliases()), new UserPrefs());
+                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), getTypicalAliases());
         int originalSize = model.getAddressBook().getPersonList().size();
 
         ClearCommand clearCommand = new ClearCommand(true);

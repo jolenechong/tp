@@ -27,8 +27,8 @@ public class ListCommandTest {
     @BeforeEach
     public void setUp() {
         model = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory(), new Aliases()), new UserPrefs());
-        expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs());
+                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases());
+        expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), new Aliases());
     }
 
     @Test

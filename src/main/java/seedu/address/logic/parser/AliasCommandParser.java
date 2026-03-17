@@ -23,6 +23,10 @@ public class AliasCommandParser implements Parser<AliasCommand> {
     public AliasCommand parse(String args) throws ParseException {
         String argsTrimmed = args.trim();
 
+        if (argsTrimmed.isEmpty()) {
+            return new AliasCommand();
+        }
+
         String[] tokens = argsTrimmed.split(" ", 2);
         System.out.println(args);
         System.out.println(tokens.length);

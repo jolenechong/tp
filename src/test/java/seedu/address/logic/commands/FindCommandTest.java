@@ -28,9 +28,9 @@ import seedu.address.model.person.NameContainsKeywordsPredicate;
  */
 public class FindCommandTest {
     private Model model = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory(), new Aliases()), new UserPrefs());
+                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases());
     private Model expectedModel = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory(), new Aliases()), new UserPrefs());
+                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases());
 
     @Test
     public void equals() {

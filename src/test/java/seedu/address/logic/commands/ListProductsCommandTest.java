@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.model.Aliases;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -17,7 +18,7 @@ public class ListProductsCommandTest {
 
     @Test
     public void execute_listProducts_success() {
-        Model model = new ModelManager(new VendorVault(), new UserPrefs());
+        Model model = new ModelManager(new VendorVault(), new UserPrefs(), new Aliases());
         ListProductsCommand command = new ListProductsCommand();
 
         CommandResult result = command.execute(model);
@@ -41,7 +42,7 @@ public class ListProductsCommandTest {
 
     @Test
     public void execute_existingProducts_doesNotPopulateSamples() {
-        Model model = new ModelManager(new VendorVault(), new UserPrefs());
+        Model model = new ModelManager(new VendorVault(), new UserPrefs(), new Aliases());
 
         Product product = new ProductBuilder().build();
         model.addProduct(product);
