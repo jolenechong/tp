@@ -3,9 +3,12 @@ package seedu.address.logic.commands;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.model.Model.PREDICATE_SHOW_ACTIVE_PERSONS;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -13,6 +16,8 @@ import seedu.address.model.Model;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.NameEqualsKeywordsPredicate;
 import seedu.address.model.person.Person;
+import seedu.address.model.product.Identifier;
+import seedu.address.model.product.Product;
 
 /**
  * Deletes a person identified using it's displayed index from the address book.
@@ -27,6 +32,8 @@ public class DeleteCommand extends Command {
             + "Example: " + COMMAND_WORD + " irfam@example.com";
 
     public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Person: %1$s";
+    public static final String MESSAGE_PRODUCTS_DELINKED =
+            "⚠ Warning: %1$d product(s) became unassociated from contact (%2$s).";
 
     public static final String CONFIRMATION_DELETE_PERSON_MESSAGE =
             "Confirm (y) you want to delete the following person shown below:";
@@ -74,12 +81,50 @@ public class DeleteCommand extends Command {
      *
      */
     public CommandResult deletePerson(Model model, Person personToDelete) {
+        List<Product> linkedProducts = collectLinkedProducts(model, personToDelete);
+
+        // Unlink products first
+        for (Product linkedProduct : linkedProducts) {
+            Product unlinkedProduct = linkedProduct.clearVendorEmail();
+            model.setProduct(linkedProduct, unlinkedProduct);
+        }
+
         model.deletePerson(personToDelete);
 
         model.commitVendorVault();
         model.updateFilteredPersonList(PREDICATE_SHOW_ACTIVE_PERSONS);
-        return new CommandResult(
-                String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete)));
+
+        String successMessage = String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete));
+        if (linkedProducts.isEmpty()) {
+            return new CommandResult(successMessage);
+        }
+
+        String linkedProductIds = linkedProducts.stream()
+                .map(Product::getIdentifier)
+                .map(Identifier::toString)
+                .collect(Collectors.joining(", "));
+        String warning = String.format(MESSAGE_PRODUCTS_DELINKED, linkedProducts.size(), linkedProductIds);
+
+        return new CommandResult(successMessage + "/n" + warning, CommandResult.FEEDBACK_TYPE_WARN);
+    }
+
+    /**
+     * Returns products currently linked to the given person via vendor email.
+     */
+    List<Product> collectLinkedProducts(Model model, Person personToDelete) {
+        List<Product> linkedProducts = new ArrayList<>();
+        ObservableList<Product> productList = model.getInventory().getProductList();
+
+        for (Product product : productList) {
+            if (product.getVendorEmail().isPresent()) {
+                Email vendorEmail = product.getVendorEmail().get();
+                if (vendorEmail.equals(personToDelete.getEmail())) {
+                    linkedProducts.add(product);
+                }
+            }
+        }
+
+        return linkedProducts;
     }
 
     /**
