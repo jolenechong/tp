@@ -7,6 +7,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_QUANTITY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_THRESHOLD;
 
 import seedu.address.logic.commands.AddProductCommand;
+import seedu.address.logic.commands.EditProductCommand.EditProductDescriptor;
 import seedu.address.model.product.Product;
 
 /**
@@ -34,8 +35,19 @@ public class ProductUtil {
         return sb.toString();
     }
 
-    /*
-    **
+    /**
      * Returns the part of command string for the given {@code EditProductDescriptor}'s details.
      */
+    public static String getEditProductDescriptorDetails(EditProductDescriptor descriptor) {
+        StringBuilder sb = new StringBuilder();
+        descriptor.getName().ifPresent(name -> sb.append(PREFIX_NAME).append(name.fullName).append(" "));
+        descriptor.getQuantity().ifPresent(quantity -> sb.append(PREFIX_QUANTITY).append(quantity).append(" "));
+        descriptor.getThreshold().ifPresent(threshold -> sb.append(PREFIX_THRESHOLD).append(threshold).append(" "));
+        if (descriptor.isVendorEmailEdited()) {
+            sb.append(PREFIX_EMAIL);
+            descriptor.getVendorEmail().ifPresent(email -> sb.append(email.value));
+            sb.append(" ");
+        }
+        return sb.toString();
+    }
 }

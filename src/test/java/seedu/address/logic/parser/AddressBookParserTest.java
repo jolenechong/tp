@@ -1,6 +1,7 @@
 package seedu.address.logic.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
@@ -30,6 +31,7 @@ import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.DeleteProductCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.address.logic.commands.EditProductCommand;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.HelpCommand;
@@ -260,6 +262,19 @@ public class AddressBookParserTest {
     }
 
     @Test
+    public void parseCommand_editProduct() throws Exception {
+        AddressBookParser parser = new AddressBookParser();
+
+        assertTrue(
+            parser.parseCommand(
+                "editproduct SKU-1001 n/iPad",
+                new PendingConfirmation(),
+                new ModelManager())
+            instanceof EditProductCommand
+        );
+    }
+
+    @Test
     public void parseCommand_alias() throws Exception {
         Command command = parser.parseCommand(AliasCommand.COMMAND_WORD + " "
                         + CommandType.LIST.getCommandWord() + " ls",
@@ -410,6 +425,22 @@ public class AddressBookParserTest {
         @Override
         public void addProduct(Product product) {
             throw new AssertionError("This method should not be called.");
+        }
+
+        @Test
+        public void parseCommand_editProduct() throws Exception {
+            AddressBookParser parser = new AddressBookParser();
+
+            Model model = new ModelManager();
+            PendingConfirmation pendingConfirmation = new PendingConfirmation();
+
+            Command command = parser.parseCommand(
+                    "editproduct SKU-1001 n/iPad",
+                    pendingConfirmation,
+                    model
+            );
+
+            assertTrue(command instanceof EditProductCommand);
         }
 
         @Override
