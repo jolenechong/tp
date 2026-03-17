@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -195,6 +196,11 @@ public class InventoryTest {
         @Override
         public ObservableList<Product> getProductList() {
             return products;
+        }
+
+        @Override
+        public Optional<Product> findSimilarNameMatch(Product candidate, Product exclude) {
+            throw new AssertionError("This method should not be called.");
         }
     }
 

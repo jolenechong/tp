@@ -112,6 +112,14 @@ public class Product {
                 DuplicateProductWarning.MESSAGE_SIMILAR_NAME);
     }
 
+    /**
+     * Returns true if this person has a similar name to {@code otherPerson}.
+     * Intended for use by {@code AddressBook} similarity checks.
+     */
+    public boolean isSimilarNameTo(Product otherProduct) {
+        return hasSimilarName(otherProduct);
+    }
+
     private boolean hasSimilarName(Product otherProduct) {
         String thisName = this.name.fullName.toLowerCase().trim();
         String otherName = otherProduct.getName().fullName.toLowerCase().trim();

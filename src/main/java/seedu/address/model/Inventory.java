@@ -3,6 +3,7 @@ package seedu.address.model;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
+import java.util.Optional;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
@@ -114,6 +115,14 @@ public class Inventory implements ReadOnlyInventory {
     @Override
     public ObservableList<Product> getProductList() {
         return products.asUnmodifiableObservableList();
+    }
+
+    @Override
+    public Optional<Product> findSimilarNameMatch(Product candidate, Product exclude) {
+        return products.asUnmodifiableObservableList().stream()
+                .filter(p -> exclude == null || !p.equals(exclude))
+                .filter(candidate::isSimilarNameTo)
+                .findFirst();
     }
 
     @Override

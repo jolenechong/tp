@@ -192,7 +192,7 @@ public class AddProductCommandTest {
 
         CommandResult result = new AddProductCommand(toAddWithDifferentWarningType).execute(modelStub);
 
-        assertFalse(result.getFeedbackToUser().contains("similar name"));
+        assertTrue(result.getFeedbackToUser().contains("similar name"));
         assertEquals(CommandResult.FEEDBACK_TYPE_SUCCESS, result.getFeedbackType());
         assertEquals(3, modelStub.productsAdded.size());
     }
@@ -588,6 +588,25 @@ public class AddProductCommandTest {
         public Optional<Person> findByEmail(Email email) {
             requireNonNull(email);
             return Optional.empty();
+        }
+
+        @Override
+        public ReadOnlyInventory getInventory() {
+            return new ReadOnlyInventory() {
+                @Override
+                public ObservableList<Product> getProductList() {
+                    return FXCollections.observableArrayList(productsAdded);
+                }
+
+                @Override
+                public Optional<Product> findSimilarNameMatch(Product candidate, Product exclude) {
+                    requireNonNull(candidate);
+                    return productsAdded.stream()
+                            .filter(p -> exclude == null || !p.equals(exclude))
+                            .filter(candidate::isSimilarNameTo)
+                            .findFirst();
+                }
+            };
         }
 
         void seedExistingProduct(Product product) {
