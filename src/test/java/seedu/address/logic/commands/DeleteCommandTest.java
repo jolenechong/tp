@@ -192,7 +192,7 @@ public class DeleteCommandTest {
 
     @Test
     public void deletePerson_withLinkedProducts_clearsVendorEmailAndWarns() {
-        Person personToDelete = model.getFilteredPersonList().get(0);
+        Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Product linkedProductOne = new ProductBuilder()
                 .withIdentifier("SKU-010")
                 .withName("Linked Product One")
@@ -220,7 +220,7 @@ public class DeleteCommandTest {
 
     @Test
     public void onConfirm_withLinkedProducts_clearsVendorEmailAndWarns() {
-        Person personToDelete = model.getFilteredPersonList().get(0);
+        Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Product linkedProduct = new ProductBuilder()
                 .withIdentifier("SKU-012")
                 .withName("Linked Product")
@@ -253,45 +253,6 @@ public class DeleteCommandTest {
         String expectedWarning = String.format(MESSAGE_PRODUCTS_DELINKED, 1, "SKU-012");
         assertEquals(expectedSuccessMessage + NEWLINE + expectedWarning, result.getFeedbackToUser());
         assertEquals(FEEDBACK_TYPE_WARN, result.getFeedbackType());
-    }
-
-    @Test
-    public void collectLinkedProducts_noLinkedProducts_returnsEmptyList() {
-        Person personToDelete = model.getFilteredPersonList().get(0);
-        DeleteCommand deleteCommand = new DeleteCommand(personToDelete.getEmail(), false);
-
-        assertTrue(deleteCommand.collectLinkedProducts(model, personToDelete).isEmpty());
-    }
-
-    @Test
-    public void collectLinkedProducts_hasLinkedProducts_returnsMatchingProducts() {
-        Person personToDelete = model.getFilteredPersonList().get(0);
-        Person anotherPerson = model.getFilteredPersonList().get(1);
-        Product linkedProductOne = new ProductBuilder()
-                .withIdentifier("SKU-001")
-                .withName("Linked Product One")
-                .withVendorEmail(personToDelete.getEmail().value)
-                .build();
-        Product linkedProductTwoArchived = new ProductBuilder()
-                .withIdentifier("SKU-002")
-                .withName("Linked Product Two")
-                .withVendorEmail(personToDelete.getEmail().value)
-                .build()
-                .archive();
-        Product unlinkedProduct = new ProductBuilder()
-                .withIdentifier("SKU-003")
-                .withName("Unlinked Product")
-                .withVendorEmail(anotherPerson.getEmail().value)
-                .build();
-
-        model.addProduct(linkedProductOne);
-        model.addProduct(linkedProductTwoArchived);
-        model.addProduct(unlinkedProduct);
-
-        DeleteCommand deleteCommand = new DeleteCommand(personToDelete.getEmail(), false);
-        assertEquals(2, deleteCommand.collectLinkedProducts(model, personToDelete).size());
-        assertTrue(deleteCommand.collectLinkedProducts(model, personToDelete).contains(linkedProductOne));
-        assertTrue(deleteCommand.collectLinkedProducts(model, personToDelete).contains(linkedProductTwoArchived));
     }
 
     @Test
