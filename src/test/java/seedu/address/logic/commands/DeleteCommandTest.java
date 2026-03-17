@@ -13,6 +13,7 @@ import static seedu.address.logic.commands.DeleteCommand.MESSAGE_DELETE_PERSON_S
 import static seedu.address.logic.commands.DeleteCommand.MESSAGE_PRODUCTS_DELINKED;
 import static seedu.address.logic.parser.ParserUtil.NEWLINE;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.address.testutil.TestUtil.getProductByIdentifier;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalProducts.getTypicalInventory;
@@ -29,7 +30,6 @@ import seedu.address.model.VendorVault;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.NameEqualsKeywordsPredicate;
 import seedu.address.model.person.Person;
-import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Product;
 import seedu.address.testutil.ProductBuilder;
 
@@ -200,7 +200,7 @@ public class DeleteCommandTest {
             throw new AssertionError("Execution of command should not fail.", ce);
         }
 
-        Product updatedLinkedOne = findProductByIdentifier(model, "SKU-010");
+        Product updatedLinkedOne = getProductByIdentifier(model, "SKU-010");
         assertTrue(updatedLinkedOne.getVendorEmail().isEmpty());
 
         String expectedSuccessMessage = String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete));
@@ -237,7 +237,7 @@ public class DeleteCommandTest {
             throw new AssertionError("Execution of command should not fail.", ce);
         }
 
-        Product updatedLinked = findProductByIdentifier(model, "SKU-012");
+        Product updatedLinked = getProductByIdentifier(model, "SKU-012");
         assertTrue(updatedLinked.getVendorEmail().isEmpty());
 
         String expectedSuccessMessage = String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete));
@@ -323,10 +323,4 @@ public class DeleteCommandTest {
         assertTrue(model.getFilteredPersonList().isEmpty());
     }
 
-    private Product findProductByIdentifier(Model model, String identifier) {
-        return model.getInventory().getProductList().stream()
-                .filter(product -> product.getIdentifier().equals(new Identifier(identifier)))
-                .findFirst()
-                .orElseThrow();
-    }
 }
