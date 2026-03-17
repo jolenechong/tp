@@ -101,7 +101,7 @@ public class DeleteCommand extends Command {
                 .collect(Collectors.joining(", "));
         String warning = String.format(MESSAGE_PRODUCTS_DELINKED, linkedProducts.size(), linkedProductIds);
 
-        return new CommandResult(successMessage + "/n" + warning, CommandResult.FEEDBACK_TYPE_WARN);
+        return new CommandResult(successMessage + "\n" + warning, CommandResult.FEEDBACK_TYPE_WARN);
     }
 
     /**

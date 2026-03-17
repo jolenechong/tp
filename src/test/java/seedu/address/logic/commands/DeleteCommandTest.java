@@ -213,7 +213,7 @@ public class DeleteCommandTest {
 
         String expectedSuccessMessage = String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete));
         String expectedWarning = String.format(MESSAGE_PRODUCTS_DELINKED, 1, "SKU-010");
-        assertEquals(expectedSuccessMessage + "/n" + expectedWarning, result.getFeedbackToUser());
+        assertEquals(expectedSuccessMessage + "\n" + expectedWarning, result.getFeedbackToUser());
         assertEquals(FEEDBACK_TYPE_WARN, result.getFeedbackType());
     }
 
@@ -250,7 +250,7 @@ public class DeleteCommandTest {
 
         String expectedSuccessMessage = String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete));
         String expectedWarning = String.format(MESSAGE_PRODUCTS_DELINKED, 1, "SKU-012");
-        assertEquals(expectedSuccessMessage + "/n" + expectedWarning, result.getFeedbackToUser());
+        assertEquals(expectedSuccessMessage + "\n" + expectedWarning, result.getFeedbackToUser());
         assertEquals(FEEDBACK_TYPE_WARN, result.getFeedbackType());
     }
 
