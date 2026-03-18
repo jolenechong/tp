@@ -384,6 +384,18 @@ public class EditProductCommandTest {
     }
 
     @Test
+    public void equals_sameIdentifier_true() {
+        EditProductDescriptor descriptor1 = new EditProductDescriptorBuilder()
+                .withIdentifier("SKU-9999")
+                .build();
+        EditProductDescriptor descriptor2 = new EditProductDescriptorBuilder()
+                .withIdentifier("SKU-9999")
+                .build();
+
+        assertTrue(descriptor1.equals(descriptor2));
+    }
+
+    @Test
     public void toStringMethod() {
         EditProductDescriptor descriptor =
                 new EditProductDescriptorBuilder()
