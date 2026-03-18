@@ -3,8 +3,8 @@ package seedu.address.logic.parser;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_ALIAS_CONTAINS_SPACE;
+import static seedu.address.logic.Messages.MESSAGE_ALIAS_FORMATTED_WRONGLY;
 import static seedu.address.logic.Messages.MESSAGE_ALIAS_IS_A_PREDEFINED_COMMAND;
-import static seedu.address.logic.Messages.MESSAGE_FORMATTED_WRONGLY;
 import static seedu.address.logic.Messages.MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS;
 import static seedu.address.testutil.Assert.assertThrows;
 
@@ -27,13 +27,14 @@ public class AliasCommandParserTest {
     @Test
     public void parse_onlyOneToken_throwsParseException() {
         assertThrows(ParseException.class,
-                MESSAGE_FORMATTED_WRONGLY, () -> parser.parse("list"));
+                MESSAGE_ALIAS_FORMATTED_WRONGLY, () -> parser.parse("list"));
     }
 
     @Test
     public void parse_invalidOriginalCommand_throwsParseException() {
         assertThrows(ParseException.class,
-                MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS, () -> parser.parse("invalidCommand ls"));
+                String.format(MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS, "invalidCommand"), () ->
+                        parser.parse("invalidCommand ls"));
     }
 
     @Test
@@ -46,7 +47,7 @@ public class AliasCommandParserTest {
     public void parse_aliasIsPredefinedCommand_throwsParseException() {
         // "find" is a predefined command, so it cannot be used as an alias
         assertThrows(ParseException.class,
-                MESSAGE_ALIAS_IS_A_PREDEFINED_COMMAND, () -> parser.parse("list find"));
+                String.format(MESSAGE_ALIAS_IS_A_PREDEFINED_COMMAND, "find"), () -> parser.parse("list find"));
     }
 
     @Test

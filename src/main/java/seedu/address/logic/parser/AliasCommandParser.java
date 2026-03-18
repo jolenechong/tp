@@ -1,8 +1,8 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_ALIAS_CONTAINS_SPACE;
+import static seedu.address.logic.Messages.MESSAGE_ALIAS_FORMATTED_WRONGLY;
 import static seedu.address.logic.Messages.MESSAGE_ALIAS_IS_A_PREDEFINED_COMMAND;
-import static seedu.address.logic.Messages.MESSAGE_FORMATTED_WRONGLY;
 import static seedu.address.logic.Messages.MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS;
 
 import seedu.address.logic.commands.AliasCommand;
@@ -32,14 +32,14 @@ public class AliasCommandParser implements Parser<AliasCommand> {
         System.out.println(args);
         System.out.println(tokens.length);
         if (tokens.length <= 1) {
-            throw new ParseException(MESSAGE_FORMATTED_WRONGLY);
+            throw new ParseException(MESSAGE_ALIAS_FORMATTED_WRONGLY);
         }
 
         String originalCommand = tokens[0];
         String newAlias = tokens[1];
 
         if (!CommandType.isValidAliasCommand(originalCommand)) {
-            throw new ParseException(MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS);
+            throw new ParseException(String.format(MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS, originalCommand));
         }
 
         if (newAlias.contains(" ")) {
@@ -47,7 +47,7 @@ public class AliasCommandParser implements Parser<AliasCommand> {
         }
 
         if (ValidCommand.isValidCommand(newAlias)) {
-            throw new ParseException(MESSAGE_ALIAS_IS_A_PREDEFINED_COMMAND);
+            throw new ParseException(String.format(MESSAGE_ALIAS_IS_A_PREDEFINED_COMMAND, newAlias));
         }
 
         Alias alias = new Alias(newAlias, originalCommand);
