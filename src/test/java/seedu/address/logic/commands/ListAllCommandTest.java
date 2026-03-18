@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.model.Model.PREDICATE_SHOW_ACTIVE_PERSONS;
 import static seedu.address.model.Model.PREDICATE_SHOW_ACTIVE_PRODUCTS;
@@ -35,6 +36,13 @@ public class ListAllCommandTest {
 
         assertCommandSuccess(command, model,
                 ListAllCommand.MESSAGE_SUCCESS, expectedModel);
+    }
+
+    @Test
+    public void getPendingConfirmation_returnsObject() {
+        ListAllCommand command = new ListAllCommand();
+
+        assertNotNull(command.getPendingConfirmation());
     }
 
     @Test

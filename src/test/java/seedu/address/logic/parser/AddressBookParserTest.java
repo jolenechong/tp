@@ -35,6 +35,7 @@ import seedu.address.logic.commands.EditProductCommand;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.HelpCommand;
+import seedu.address.logic.commands.ListAllCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.ListProductsCommand;
 import seedu.address.logic.commands.PendingConfirmation;
@@ -203,6 +204,12 @@ public class AddressBookParserTest {
         assertTrue(parser.parseCommand(ListCommand.COMMAND_WORD + " 3",
                 new PendingConfirmation(),
                 new ModelManager()) instanceof ListCommand);
+    }
+
+    @Test
+    public void parseCommand_listAll() throws Exception {
+        assertTrue(parser.parseCommand(ListAllCommand.COMMAND_WORD, new PendingConfirmation(), new ModelManager())
+                instanceof ListAllCommand);
     }
 
     @Test
