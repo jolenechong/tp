@@ -178,7 +178,7 @@ public class AddProductCommandTest {
                 new Name("Desk Lamp"),
                 new Quantity("5"),
                 new RestockThreshold("5"),
-                new DuplicateProductWarning("OTHER_WARNING_TYPE"));
+                new DuplicateProductWarning(true, "OTHER_WARNING_TYPE"));
 
         ModelStubAcceptingProductAdded modelStub = new ModelStubAcceptingProductAdded();
         modelStub.seedExistingProduct(new ProductBuilder()

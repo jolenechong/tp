@@ -1,6 +1,7 @@
 package seedu.address.logic.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 import static seedu.address.testutil.Assert.assertThrows;
@@ -159,19 +160,19 @@ public class ParserUtilTest {
     }
 
     @Test
-    public void parsePhone_multiplePhonesWithTrailingEmpty_returnsPhoneWithoutWarning() throws Exception {
+    public void parsePhone_multiplePhonesWithTrailingEmpty_returnsPhoneWithWarning() throws Exception {
         String multiplePhones = "61234567,";
         ParseResult<Phone> result = ParserUtil.parsePhone(multiplePhones);
         assertEquals(new Phone(multiplePhones), result.getValue());
-        assertTrue(result.getWarning().isEmpty());
+        assertFalse(result.getWarning().isEmpty());
     }
 
     @Test
-    public void parsePhone_multiplePhonesWithMiddleEmpty_returnsPhoneWithoutWarning() throws Exception {
+    public void parsePhone_multiplePhonesWithMiddleEmpty_returnsPhoneWithWarning() throws Exception {
         String multiplePhones = "12345678,,12345679";
         ParseResult<Phone> result = ParserUtil.parsePhone(multiplePhones);
         assertEquals(new Phone(multiplePhones), result.getValue());
-        assertTrue(result.getWarning().isEmpty());
+        assertFalse(result.getWarning().isEmpty());
     }
 
     @Test

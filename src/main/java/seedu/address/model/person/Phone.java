@@ -9,7 +9,8 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  */
 public class Phone {
 
-    public static final String MESSAGE_CONSTRAINTS = "Phone number should not be empty and must be at least 3 digits.";
+    public static final String MESSAGE_CONSTRAINTS = "Phone number should not be empty "
+            + "and must be at least 3 in length.";
     public static final String MESSAGE_WARN =
             "⚠ Warning: Phone number contains unusual symbols, is this intentional?";
     public static final String SOFT_VALIDATION_REGEX = "\\d{3,}";
@@ -40,7 +41,7 @@ public class Phone {
             return isValidPhoneEntry(test.trim());
         }
 
-        String[] phoneEntries = test.trim().split(",");
+        String[] phoneEntries = test.trim().split(",", -1);
         boolean hasNonEmptyEntry = false;
         for (String phoneEntry : phoneEntries) {
             String trimmedPhoneEntry = phoneEntry.trim();
@@ -71,15 +72,13 @@ public class Phone {
      * @return true if the string is a valid phone number according to the stronger validation criteria.
      */
     public static boolean isValidPhoneWarn(String test) {
-        if (!test.contains(",")) {
-            return isValidPhoneEntryWarn(test.trim());
-        }
-
-        String[] phoneEntries = test.trim().split(",");
+        String[] phoneEntries = test.trim().split(",", -1);
         boolean hasNonEmptyEntry = false;
+        boolean hasEmptyEntry = false;
         for (String phoneEntry : phoneEntries) {
             String trimmedPhoneEntry = phoneEntry.trim();
             if (trimmedPhoneEntry.isEmpty()) {
+                hasEmptyEntry = true;
                 continue;
             }
 
@@ -89,7 +88,7 @@ public class Phone {
             }
         }
 
-        return hasNonEmptyEntry;
+        return hasNonEmptyEntry && !hasEmptyEntry;
     }
 
     private static boolean isValidPhoneEntryWarn(String phoneEntry) {

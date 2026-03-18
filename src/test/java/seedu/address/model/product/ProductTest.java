@@ -168,7 +168,7 @@ public class ProductTest {
                 .withName("brown rice 5kg")
                 .build();
 
-        assertTrue(RICE.isSameProductWarn(other).getValue());
+        assertTrue(RICE.isSameProductWarn(other).isDuplicated());
     }
 
     @Test
@@ -178,12 +178,12 @@ public class ProductTest {
                 .withName("Fried Noodles Beef")
                 .build();
 
-        assertTrue(NOODLES.isSameProductWarn(other).getValue());
+        assertTrue(NOODLES.isSameProductWarn(other).isDuplicated());
     }
 
     @Test
     public void isSameProductWarn_completelyDifferentNames_noWarning() {
-        assertFalse(RICE.isSameProductWarn(OIL).getValue());
+        assertFalse(RICE.isSameProductWarn(OIL).isDuplicated());
     }
 
     @Test
@@ -193,6 +193,6 @@ public class ProductTest {
                 .withName("Ricecake Deluxe")
                 .build();
 
-        assertFalse(RICE.isSameProductWarn(other).getValue());
+        assertFalse(RICE.isSameProductWarn(other).isDuplicated());
     }
 }
