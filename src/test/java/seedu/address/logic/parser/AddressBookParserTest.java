@@ -27,6 +27,7 @@ import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandType;
 import seedu.address.logic.commands.ConfirmCommand;
+import seedu.address.logic.commands.DeleteAliasCommand;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.DeleteProductCommand;
 import seedu.address.logic.commands.EditCommand;
@@ -310,6 +311,32 @@ public class AddressBookParserTest {
     public void parseCommand_aliasNewAliasHasSpace_throwsParseException() {
         assertThrows(ParseException.class, ()
                 -> parser.parseCommand(AliasCommand.COMMAND_WORD + " list ls ls",
+                    new PendingConfirmation(),
+                    new ModelManager()));
+    }
+
+    @Test
+    public void parseCommand_deletealias() throws Exception {
+        Command command = parser.parseCommand(DeleteAliasCommand.COMMAND_WORD + " "
+                    + CommandType.LIST.getCommandWord() + "ls",
+                    new PendingConfirmation(),
+                    new ModelManager());
+
+        assertTrue(command instanceof DeleteAliasCommand);
+    }
+
+    @Test
+    public void parseCommand_deletealiasNoArguments_throwsParseException() {
+        assertThrows(ParseException.class, ()
+                -> parser.parseCommand(DeleteAliasCommand.COMMAND_WORD,
+                    new PendingConfirmation(),
+                    new ModelManager()));
+    }
+
+    @Test
+    public void parseCommand_deletealiasMoreThanOneArguments_throwsParseException() {
+        assertThrows(ParseException.class, ()
+                -> parser.parseCommand(DeleteAliasCommand.COMMAND_WORD + " a a",
                     new PendingConfirmation(),
                     new ModelManager()));
     }
