@@ -1,5 +1,5 @@
 ---
-  layout: default.md
+  layout: no_sidebar.md
   title: "User Guide"
   pageNav: 5
 ---
