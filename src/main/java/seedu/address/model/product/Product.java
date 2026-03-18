@@ -6,7 +6,6 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 import java.util.Objects;
 import java.util.Optional;
 
-import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.parser.ParserUtil;
 import seedu.address.model.person.Email;
 import seedu.address.model.product.warnings.DuplicateProductWarning;
@@ -193,13 +192,13 @@ public class Product {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .add("identifier", identifier)
-                .add("name", name)
-                .add("quantity", quantity)
-                .add("threshold", threshold)
-                .add("vendorEmail", vendorEmail)
-                .toString();
-    }
+        String emailStr = getVendorEmail().map(Email::toString).orElse("-");
 
+        return String.format("%s; ID: %s; Qty: %s; Threshold: %s; Email: %s",
+                name,
+                identifier,
+                quantity,
+                threshold,
+                emailStr);
+    }
 }

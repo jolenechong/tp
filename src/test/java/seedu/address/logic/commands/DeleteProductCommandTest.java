@@ -32,9 +32,32 @@ public class DeleteProductCommandTest {
         Product productToDelete = model.getFilteredProductList().get(0);
 
         DeleteProductCommand command =
+                new DeleteProductCommand(productToDelete.getIdentifier().toString(), false);
+
+        ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), getTypicalAliases());
+
+        expectedModel.deleteProduct(productToDelete);
+        expectedModel.commitVendorVault();
+        expectedModel.updateFilteredProductList(PREDICATE_SHOW_ACTIVE_PRODUCTS);
+
+        String expectedMessage =
+                String.format(MESSAGE_DELETE_PRODUCT_SUCCESS, productToDelete);
+
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_validProductConfirmation_success() {
+        Product productToDelete = model.getFilteredProductList().get(0);
+
+        DeleteProductCommand command =
                 new DeleteProductCommand(productToDelete.getIdentifier().toString(), true);
 
         ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), getTypicalAliases());
+
+        expectedModel.updateFilteredProductList(
+                p -> p.getIdentifier().toString().equals(productToDelete.getIdentifier().toString())
+        );
 
         assertCommandSuccess(command, model,
                 CONFIRMATION_DELETE_PRODUCT_MESSAGE,
@@ -51,10 +74,8 @@ public class DeleteProductCommandTest {
         PendingConfirmation pending;
 
         try {
-            CommandResult result = command.execute(model);
+            command.execute(model);
             pending = command.getPendingConfirmation();
-
-            assertEquals(CONFIRMATION_DELETE_PRODUCT_MESSAGE, result.getFeedbackToUser());
         } catch (CommandException e) {
             throw new AssertionError(e);
         }
@@ -65,11 +86,11 @@ public class DeleteProductCommandTest {
         Model expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), getTypicalAliases());
 
         expectedModel.deleteProduct(productToDelete);
+        expectedModel.commitVendorVault();
         expectedModel.updateFilteredProductList(PREDICATE_SHOW_ACTIVE_PRODUCTS);
 
         String expectedMessage =
-                String.format(MESSAGE_DELETE_PRODUCT_SUCCESS,
-                        productToDelete);
+                String.format(MESSAGE_DELETE_PRODUCT_SUCCESS, productToDelete);
 
         assertCommandSuccess(confirmCommand, model, expectedMessage, expectedModel);
     }

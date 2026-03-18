@@ -149,10 +149,15 @@ public class ProductTest {
 
     @Test
     public void toStringMethod() {
-        String expected =
-                Product.class.getCanonicalName() + "{identifier=" + RICE.getIdentifier() + ", name=" + RICE.getName()
-                        + ", quantity=" + RICE.getQuantity() + ", threshold=" + RICE.getRestockThreshold()
-                        + ", vendorEmail=null}";
+        String emailStr = RICE.getVendorEmail().map(Object::toString).orElse("-");
+
+        String expected = String.format("%s; ID: %s; Qty: %s; Threshold: %s; Email: %s",
+                RICE.getName(),
+                RICE.getIdentifier(),
+                RICE.getQuantity(),
+                RICE.getRestockThreshold(),
+                emailStr);
+
         assertEquals(expected, RICE.toString());
     }
 

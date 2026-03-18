@@ -82,7 +82,8 @@ public class DeleteProductCommand extends Command {
             this.onCancel(model)
         );
 
-        model.updateFilteredProductList(Model.PREDICATE_SHOW_ACTIVE_PRODUCTS);
+        model.updateFilteredProductList(p ->
+            p.getIdentifier().toString().equals(targetProductId));
 
         return new CommandResult(CONFIRMATION_DELETE_PRODUCT_MESSAGE);
     }

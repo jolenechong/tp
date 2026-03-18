@@ -77,7 +77,7 @@ public class RestoreProductCommand extends Command {
         model.commitVendorVault();
 
         return new CommandResult(
-                String.format(MESSAGE_RESTORE_SUCCESS, productToRestore.getName()),
+                String.format(MESSAGE_RESTORE_SUCCESS, productToRestore),
                 CommandResult.FEEDBACK_TYPE_SUCCESS
         );
     }
