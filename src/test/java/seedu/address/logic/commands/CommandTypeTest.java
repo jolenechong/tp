@@ -40,24 +40,24 @@ public class CommandTypeTest {
     }
 
     @Test
-    public void isValidCommand_validCommandWord_returnsTrue() {
-        assertTrue(CommandType.isValidCommand(AddCommand.COMMAND_WORD));
-        assertTrue(CommandType.isValidCommand(ListCommand.COMMAND_WORD));
-        assertTrue(CommandType.isValidCommand(UndoCommand.COMMAND_WORD));
+    public void isValidCommand_validAliasCommandWord_returnsTrue() {
+        assertTrue(CommandType.isValidAliasCommand(AddCommand.COMMAND_WORD));
+        assertTrue(CommandType.isValidAliasCommand(ListCommand.COMMAND_WORD));
+        assertTrue(CommandType.isValidAliasCommand(UndoCommand.COMMAND_WORD));
     }
 
     @Test
-    public void isValidCommand_emptyString_returnsFalse() {
-        assertFalse(CommandType.isValidCommand(""));
+    public void isValidAliasCommand_emptyString_returnsFalse() {
+        assertFalse(CommandType.isValidAliasCommand(""));
     }
 
     @Test
-    public void isValidCommand_invalidCommandWord_returnsFalse() {
-        assertFalse(CommandType.isValidCommand("invalidCommand"));
+    public void isValidCommand_invalidAliasCommandWord_returnsFalse() {
+        assertFalse(CommandType.isValidAliasCommand("invalidCommand"));
     }
 
     @Test
-    public void isValidCommand_validCommandWordWrongCase_returnsFalse() {
-        assertFalse(CommandType.isValidCommand(AddCommand.COMMAND_WORD.toUpperCase()));
+    public void isValidCommand_validAliasCommandWordWrongCase_returnsFalse() {
+        assertFalse(CommandType.isValidAliasCommand(AddCommand.COMMAND_WORD.toUpperCase()));
     }
 }

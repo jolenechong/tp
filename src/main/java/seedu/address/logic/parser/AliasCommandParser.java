@@ -7,6 +7,7 @@ import static seedu.address.logic.Messages.MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXI
 
 import seedu.address.logic.commands.AliasCommand;
 import seedu.address.logic.commands.CommandType;
+import seedu.address.logic.commands.ValidCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.alias.Alias;
 
@@ -37,7 +38,7 @@ public class AliasCommandParser implements Parser<AliasCommand> {
         String originalCommand = tokens[0];
         String newAlias = tokens[1];
 
-        if (!CommandType.isValidCommand(originalCommand)) {
+        if (!CommandType.isValidAliasCommand(originalCommand)) {
             throw new ParseException(MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS);
         }
 
@@ -45,7 +46,7 @@ public class AliasCommandParser implements Parser<AliasCommand> {
             throw new ParseException(MESSAGE_ALIAS_CONTAINS_SPACE);
         }
 
-        if (CommandType.isValidCommand(newAlias)) {
+        if (ValidCommand.isValidCommand(newAlias)) {
             throw new ParseException(MESSAGE_ALIAS_IS_A_PREDEFINED_COMMAND);
         }
 

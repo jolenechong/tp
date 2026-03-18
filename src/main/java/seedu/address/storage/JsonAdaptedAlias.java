@@ -57,7 +57,7 @@ public class JsonAdaptedAlias {
                     "original command"));
         }
 
-        if (!CommandType.isValidCommand(originalCommand)) {
+        if (!CommandType.isValidAliasCommand(originalCommand)) {
             throw new ParseException(MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS);
         }
 
@@ -69,7 +69,7 @@ public class JsonAdaptedAlias {
             throw new ParseException(MESSAGE_ALIAS_CONTAINS_SPACE);
         }
 
-        if (CommandType.isValidCommand(alias)) {
+        if (CommandType.isValidAliasCommand(alias)) {
             throw new ParseException(MESSAGE_ALIAS_IS_A_PREDEFINED_COMMAND);
         }
 

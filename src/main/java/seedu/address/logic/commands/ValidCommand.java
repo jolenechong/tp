@@ -1,17 +1,20 @@
 package seedu.address.logic.commands;
 
 /**
- * Represents the types of commands supported by the application for the alias command.
+ * Represents all commands supported by the application.
  * Each constant maps to a specific command's word string used for parsing.
  */
-public enum CommandType {
+public enum ValidCommand {
 
     ADD(AddCommand.COMMAND_WORD),
     ADDPRODUCT(AddProductCommand.COMMAND_WORD),
+    ALIAS(AliasCommand.COMMAND_WORD),
     ARCHIVE(ArchiveCommand.COMMAND_WORD),
     ARCHIVEPRODUCT(ArchiveProductCommand.COMMAND_WORD),
     CLEAR(ClearCommand.COMMAND_WORD),
     CLEARPRODUCT(ClearProductCommand.COMMAND_WORD),
+    CONFIRM(ConfirmCommand.COMMAND_WORD),
+    CONFIRMUPPER(ConfirmCommand.COMMAND_WORD.toUpperCase()),
     DELETE(DeleteCommand.COMMAND_WORD),
     DELETEPRODUCT(DeleteProductCommand.COMMAND_WORD),
     EDIT(EditCommand.COMMAND_WORD),
@@ -26,14 +29,10 @@ public enum CommandType {
     RESTOREPRODUCT(RestoreProductCommand.COMMAND_WORD),
     UNDO(UndoCommand.COMMAND_WORD);
 
-    private final String commandWord;
+    public final String commandWord;
 
-    CommandType(String commandWord) {
+    ValidCommand(String commandWord) {
         this.commandWord = commandWord;
-    }
-
-    public String getCommandWord() {
-        return this.commandWord;
     }
 
     /**
@@ -43,12 +42,12 @@ public enum CommandType {
      * @param command The command string to validate.
      * @return True if the command corresponds to a valid command, false otherwise.
      */
-    public static boolean isValidAliasCommand(String command) {
+    public static boolean isValidCommand(String command) {
         if (command.isEmpty()) {
             return false;
         }
 
-        for (CommandType type: CommandType.values()) {
+        for (ValidCommand type: ValidCommand.values()) {
             if (type.commandWord.equals(command)) {
                 return true;
             }
