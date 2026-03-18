@@ -704,8 +704,6 @@ Follow these steps:
 * Open the folder where VendorVault's `.jar` file is located.
 * Inside, locate the `data` folder, which contains `.json` files.
 
-</panel>
-
 <box type="warning" seamless>
 
 Please follow this format carefully. Files that do not adhere to the required format will be considered invalid.
@@ -761,6 +759,8 @@ This is the json for aliases:
   } ]
 }
 ```
+
+</panel>
 
 </panel>
 
