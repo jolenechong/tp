@@ -90,8 +90,8 @@ public class EditProductCommand extends Command {
         model.commitVendorVault();
 
         return new CommandResult(
-                String.format(MESSAGE_EDIT_PRODUCT_SUCCESS,
-                        Messages.formatProduct(editedProduct)));
+            String.format(MESSAGE_EDIT_PRODUCT_SUCCESS,
+                    Messages.formatProduct(editedProduct)));
     }
 
     /**

@@ -215,7 +215,13 @@ public class EditCommand extends Command {
         Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
 
-        return new Person(updatedName, updatedPhone, updatedEmail, updatedAddress, updatedTags);
+        Set<Tag> finalTags = new HashSet<>(updatedTags);
+
+        if (personToEdit.isArchived()) {
+            finalTags.add(new Tag("archived"));
+        }
+
+        return new Person(updatedName, updatedPhone, updatedEmail, updatedAddress, finalTags);
     }
 
     /**

@@ -73,15 +73,16 @@ public class Messages {
      * Formats the {@code product} for display to the user.
      */
     public static String formatProduct(Product product) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("Identifier: ")
-                .append(product.getIdentifier())
-                .append("; Name: ")
-                .append(product.getName())
-                .append("; Quantity: ")
-                .append(product.getQuantity())
-                .append("; Restock Threshold: ")
-                .append(product.getRestockThreshold());
-        return builder.toString();
+        String vendor = product.getVendorEmail().isPresent()
+                ? product.getVendorEmail().get().toString()
+                : "None";
+
+        return String.format(
+                "%s, Qty: %s, Threshold: %s, Vendor: %s",
+                product.getName(),
+                product.getQuantity(),
+                product.getRestockThreshold(),
+                vendor
+        );
     }
 }
