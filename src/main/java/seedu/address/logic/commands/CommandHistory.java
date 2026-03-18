@@ -2,13 +2,16 @@ package seedu.address.logic.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Stores command text history and supports shell-like navigation through it.
  */
 public class CommandHistory {
+
+    private static final int LATEST_POSITION = -1;
     private final List<String> commandTexts = new ArrayList<>();
-    private int currentIndex = 0;
+    private int currentIndex = LATEST_POSITION;
     private String draftCommandText = "";
 
     /**
@@ -32,12 +35,16 @@ public class CommandHistory {
      *                     when navigating back to the latest position.
      */
     public String getPrevious(String currentInput) {
+        currentInput = Objects.requireNonNullElse(currentInput, "");
+
         if (commandTexts.isEmpty()) {
             return currentInput;
         }
 
-        if (currentIndex == commandTexts.size()) {
+        if (currentIndex == LATEST_POSITION) {
             draftCommandText = currentInput;
+            currentIndex = commandTexts.size() - 1;
+            return commandTexts.get(currentIndex);
         }
 
         if (currentIndex > 0) {
@@ -55,8 +62,14 @@ public class CommandHistory {
      *         or current input if history is empty.
      */
     public String getNext(String currentInput) {
+        currentInput = Objects.requireNonNullElse(currentInput, "");
+
         if (commandTexts.isEmpty()) {
             return currentInput;
+        }
+
+        if (currentIndex == LATEST_POSITION) {
+            return draftCommandText;
         }
 
         if (currentIndex < commandTexts.size() - 1) {
@@ -64,7 +77,7 @@ public class CommandHistory {
             return commandTexts.get(currentIndex);
         }
 
-        currentIndex = commandTexts.size();
+        currentIndex = LATEST_POSITION;
         return draftCommandText;
     }
 
@@ -72,7 +85,7 @@ public class CommandHistory {
      * Resets cursor to the latest position so the next Up starts from the newest command.
      */
     public void resetNavigation() {
-        currentIndex = commandTexts.size();
+        currentIndex = LATEST_POSITION;
         draftCommandText = "";
     }
 }
