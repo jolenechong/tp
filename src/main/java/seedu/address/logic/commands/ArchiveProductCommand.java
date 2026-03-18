@@ -59,7 +59,7 @@ public class ArchiveProductCommand extends Command {
 
         String message = String.format(
                 MESSAGE_ARCHIVE_SUCCESS + SEPARATOR_NEW_LINE + MESSAGE_ARCHIVE_WARNING,
-                productToArchive.getName(),
+                productToArchive,
                 productToArchive.getIdentifier().value
         );
 
