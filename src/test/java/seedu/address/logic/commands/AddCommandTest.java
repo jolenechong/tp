@@ -11,6 +11,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
 import static seedu.address.logic.commands.CommandUtil.SEPARATOR_NEW_LINE;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_ADDRESS;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_NAME;
+import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_PHONE;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 
@@ -282,6 +283,32 @@ public class AddCommandTest {
 
         assertTrue(result.getFeedbackToUser().contains(String.format(
                 MESSAGE_SIMILAR_ADDRESS, existingPerson.getName(), existingPerson.getAddress())));
+        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+    }
+
+    @Test
+    public void execute_similarPhone_warningShown() throws Exception {
+        ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
+
+        Person existingPerson = new PersonBuilder()
+                .withName("Alice Supplies")
+                .withEmail("alice@example.com")
+                .withPhone("91234567")
+                .withAddress("1 Alpha Street")
+                .build();
+        modelStub.addPerson(existingPerson);
+
+        Person newPerson = new PersonBuilder()
+                .withName("Bob Traders")
+                .withEmail("bob@example.com")
+                .withPhone("00123456")
+                .withAddress("99 Beta Avenue")
+                .build();
+
+        CommandResult result = new AddCommand(newPerson).execute(modelStub);
+
+        assertTrue(result.getFeedbackToUser().contains(String.format(
+                MESSAGE_SIMILAR_PHONE, existingPerson.getName(), existingPerson.getPhone())));
         assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
     }
 

@@ -19,6 +19,23 @@ import seedu.address.testutil.PersonBuilder;
 public class PersonTest {
 
     @Test
+    public void isSimilarPhoneTo_nullOtherPerson_returnsFalse() {
+        Person person = new PersonBuilder().withPhone("92345678").build();
+        assertFalse(person.isSimilarPhoneTo(null));
+    }
+
+    @Test
+    public void isSimilarPhoneTo_numbersShorterThanMinLength_returnsFalse() {
+        Person shortNumber =
+                new PersonBuilder().withPhone("123").build();
+
+        Person other =
+                new PersonBuilder().withPhone("456").build();
+
+        assertFalse(shortNumber.isSimilarPhoneTo(other));
+    }
+
+    @Test
     public void asObservableList_modifyList_throwsUnsupportedOperationException() {
         Person person = new PersonBuilder().build();
         assertThrows(UnsupportedOperationException.class, () -> person.getTags().remove(0));
@@ -101,4 +118,5 @@ public class PersonTest {
                 + ", email=" + ALICE.getEmail() + ", address=" + ALICE.getAddress() + ", tags=" + ALICE.getTags() + "}";
         assertEquals(expected, ALICE.toString());
     }
+
 }

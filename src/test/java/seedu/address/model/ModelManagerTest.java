@@ -179,6 +179,43 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void findSimilarNameMatch_productNullCandidate_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> modelManager.findSimilarNameMatch((Product) null, OIL));
+    }
+
+    @Test
+    public void findSimilarNameMatch_productSimilarMatchFound_returnsMatch() {
+        Product existingProduct = new ProductBuilder()
+                .withIdentifier("SKU-1001")
+                .withName("Tray of Eggs")
+                .build();
+        Product candidate = new ProductBuilder()
+                .withIdentifier("SKU-2001")
+                .withName("Eggs Large")
+                .build();
+
+        modelManager.addProduct(existingProduct);
+
+        assertEquals(existingProduct, modelManager.findSimilarNameMatch(candidate, null).orElse(null));
+    }
+
+    @Test
+    public void findSimilarNameMatch_productExcludedMatch_returnsEmpty() {
+        Product existingProduct = new ProductBuilder()
+                .withIdentifier("SKU-1002")
+                .withName("Tray of Eggs")
+                .build();
+        Product candidate = new ProductBuilder()
+                .withIdentifier("SKU-2002")
+                .withName("Eggs Large")
+                .build();
+
+        modelManager.addProduct(existingProduct);
+
+        assertTrue(modelManager.findSimilarNameMatch(candidate, existingProduct).isEmpty());
+    }
+
+    @Test
     public void deleteProduct_missingProduct_throwsProductNotFoundException() {
         assertThrows(ProductNotFoundException.class, () -> modelManager.deleteProduct(OIL));
     }
