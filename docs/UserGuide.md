@@ -584,12 +584,12 @@ Create an alternative command word that triggers an existing command.
 
 Format:
 ```
-alias ALIAS ORIGINAL_COMMAND
+alias ORIGINAL_COMMAND ALIAS
 ```
 
 Example:
 * `alias` list all current aliases
-* `alias ls list` maps `ls` as an alias for the `list` command
+* `alias list ls` maps `ls` as an alias for the `list` command
 
 <div style="height: 30px;"></div>
 
