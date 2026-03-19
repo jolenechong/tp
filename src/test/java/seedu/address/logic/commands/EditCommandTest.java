@@ -14,6 +14,7 @@ import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_ADDRESS;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_NAME;
+import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_PHONE;
 import static seedu.address.testutil.TestUtil.getProductByIdentifier;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
@@ -327,7 +328,8 @@ public class EditCommandTest {
     }
 
     @Test
-    public void execute_editPhoneToMatchAnotherPerson_failure() {
+    public void execute_editPhoneToMatchAnotherPerson_warn() {
+        // same phone number is not considered duplicate
         Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Person secondPerson = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
 
@@ -336,7 +338,19 @@ public class EditCommandTest {
                 .withPhone(firstPerson.getPhone().value).build();
         EditCommand editCommand = new EditCommand(secondPerson.getEmail(), descriptor);
 
-        assertCommandFailure(editCommand, model, Messages.MESSAGE_DUPLICATE_PERSON);
+        Person editedPerson = new PersonBuilder(secondPerson)
+                .withPhone(firstPerson.getPhone().value)
+                .build();
+        String warningMessage = String.format(MESSAGE_SIMILAR_PHONE, firstPerson.getName(), firstPerson.getPhone());
+        String expectedMessage = String.format(
+                EditCommand.MESSAGE_EDIT_PERSON_SUCCESS + "\n" + warningMessage,
+                Messages.format(editedPerson));
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, CommandResult.FEEDBACK_TYPE_WARN);
+
+        Model expectedModel = new ModelManager(new VendorVault(model.getVendorVault()), new UserPrefs(), new Aliases());
+        expectedModel.setPerson(secondPerson, editedPerson);
+
+        assertCommandSuccess(editCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test

@@ -11,6 +11,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.formatAddressWarning;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.formatNameWarning;
+import static seedu.address.model.person.warnings.DuplicatePersonWarning.formatPhoneWarning;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
@@ -106,11 +107,14 @@ public class AddCommand extends Command {
      * Adds warnings when similar contacts are detected to avoid accidental duplicates.
      */
     private void appendSimilarContactWarnings(Model model, StringBuilder warnings) {
-        model.getAddressBook().findSimilarNameMatch(toAdd, null).ifPresent(match ->
+        model.findSimilarNameMatch(toAdd, null).ifPresent(match ->
                 appendWarning(warnings, formatNameWarning(match.getName())));
 
-        model.getAddressBook().findSimilarAddressMatch(toAdd, null).ifPresent(match ->
+        model.findSimilarAddressMatch(toAdd, null).ifPresent(match ->
                 appendWarning(warnings, formatAddressWarning(match.getName(), match.getAddress())));
+
+        model.findSimilarPhoneMatch(toAdd, null).ifPresent(match ->
+                appendWarning(warnings, formatPhoneWarning(match.getName(), match.getPhone())));
     }
 
     private void appendWarning(StringBuilder warnings, String message) {

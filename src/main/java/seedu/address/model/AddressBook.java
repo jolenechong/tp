@@ -120,10 +120,6 @@ public class AddressBook implements ReadOnlyAddressBook {
         persons.setPerson(person, restoredPerson);
     }
 
-    /**
-     * Returns the first person whose name is similar to {@code candidate},
-     * skipping {@code exclude} (pass null to skip no one).
-     */
     @Override
     public Optional<Person> findSimilarNameMatch(Person candidate, Person exclude) {
         return persons.asUnmodifiableObservableList().stream()
@@ -132,14 +128,18 @@ public class AddressBook implements ReadOnlyAddressBook {
                 .findFirst();
     }
 
-    /**
-     * Returns the first person whose address is similar to {@code candidate},
-     * skipping {@code exclude} (pass null to skip no one).
-     */
+    @Override
+    public Optional<Person> findSimilarPhoneMatch(Person candidate, Person exclude) {
+        return persons.asUnmodifiableObservableList().stream()
+                .filter(p -> !p.equals(exclude))
+                .filter(candidate::isSimilarPhoneTo)
+                .findFirst();
+    }
+
     @Override
     public Optional<Person> findSimilarAddressMatch(Person candidate, Person exclude) {
         return persons.asUnmodifiableObservableList().stream()
-                .filter(p -> exclude == null || !p.equals(exclude))
+                .filter(p -> !p.equals(exclude))
                 .filter(candidate::isSimilarAddressTo)
                 .findFirst();
     }

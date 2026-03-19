@@ -439,6 +439,26 @@ public class AddressBookParserTest {
         }
 
         @Override
+        public Optional<Person> findSimilarNameMatch(Person candidate, Person exclude) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Optional<Product> findSimilarNameMatch(Product candidate, Product exclude) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Optional<Person> findSimilarPhoneMatch(Person candidate, Person exclude) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Optional<Person> findSimilarAddressMatch(Person candidate, Person exclude) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public boolean hasProduct(Product product) {
             throw new AssertionError("This method should not be called.");
         }

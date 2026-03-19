@@ -2,6 +2,7 @@ package seedu.address.model.person.warnings;
 
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.Phone;
 
 /**
  * Represents a warning that is generated when a duplicate person is detected.
@@ -12,6 +13,8 @@ public class DuplicatePersonWarning {
             + "is this intentional?";
     public static final String MESSAGE_SIMILAR_ADDRESS = "⚠ Warning: There's a contact with a similar address "
             + "(name: %s, address: %s), is this intentional?";
+    public static final String MESSAGE_SIMILAR_PHONE = "⚠ Warning: There's a contact with a similar phone number "
+            + "(name: %s, phone number: %s)";
 
     private final String warning;
 
@@ -47,6 +50,16 @@ public class DuplicatePersonWarning {
      */
     public static String formatAddressWarning(Name name, Address address) {
         return String.format(MESSAGE_SIMILAR_ADDRESS, name, address);
+    }
+
+    /**
+     * Helper method to format name warning.
+     *
+     * @param name name of similar person
+     * @return String of formatted warning message
+     */
+    public static String formatPhoneWarning(Name name, Phone phone) {
+        return String.format(MESSAGE_SIMILAR_PHONE, name, phone);
     }
 
 }

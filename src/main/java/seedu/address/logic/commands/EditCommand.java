@@ -11,6 +11,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.model.Model.PREDICATE_SHOW_ACTIVE_PERSONS;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_ADDRESS;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.formatNameWarning;
+import static seedu.address.model.person.warnings.DuplicatePersonWarning.formatPhoneWarning;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -134,7 +135,7 @@ public class EditCommand extends Command {
         }
 
         StringBuilder allWarnings = new StringBuilder(warnings);
-        checkForSimilarContacts(editedPerson, personToEdit, model, allWarnings, editPersonDescriptor);
+        appendSimilarContactWarnings(editedPerson, personToEdit, model, allWarnings, editPersonDescriptor);
 
         if (shouldConfirmTagClear() && needsConfirmation) {
             pendingConfirmation = new PendingConfirmation(()
@@ -234,17 +235,22 @@ public class EditCommand extends Command {
      * @param warnings StringBuilder to append warnings to
      * @param descriptor The descriptor containing which fields were edited
      */
-    private void checkForSimilarContacts(Person editedPerson, Person personToEdit, Model model,
-                                         StringBuilder warnings, EditPersonDescriptor descriptor) {
+    private void appendSimilarContactWarnings(Person editedPerson, Person personToEdit, Model model,
+                                              StringBuilder warnings, EditPersonDescriptor descriptor) {
         if (descriptor.getName().isPresent()) {
-            model.getAddressBook().findSimilarNameMatch(editedPerson, personToEdit).ifPresent(match ->
+            model.findSimilarNameMatch(editedPerson, personToEdit).ifPresent(match ->
                     appendWarning(warnings, formatNameWarning(match.getName())));
         }
 
         if (descriptor.getAddress().isPresent()) {
-            model.getAddressBook().findSimilarAddressMatch(editedPerson, personToEdit).ifPresent(match ->
+            model.findSimilarAddressMatch(editedPerson, personToEdit).ifPresent(match ->
                     appendWarning(warnings, String.format(
                             MESSAGE_SIMILAR_ADDRESS, match.getName(), match.getAddress())));
+        }
+
+        if (descriptor.getPhone().isPresent()) {
+            model.findSimilarPhoneMatch(editedPerson, personToEdit).ifPresent(match ->
+                    appendWarning(warnings, formatPhoneWarning(match.getName(), match.getPhone())));
         }
     }
 

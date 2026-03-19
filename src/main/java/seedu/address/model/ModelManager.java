@@ -175,6 +175,30 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public Optional<Person> findSimilarNameMatch(Person candidate, Person exclude) {
+        requireNonNull(candidate);
+        return addressBook.findSimilarNameMatch(candidate, exclude);
+    }
+
+    @Override
+    public Optional<Product> findSimilarNameMatch(Product candidate, Product exclude) {
+        requireNonNull(candidate);
+        return inventory.findSimilarNameMatch(candidate, exclude);
+    }
+
+    @Override
+    public Optional<Person> findSimilarPhoneMatch(Person candidate, Person exclude) {
+        requireNonNull(candidate);
+        return addressBook.findSimilarPhoneMatch(candidate, exclude);
+    }
+
+    @Override
+    public Optional<Person> findSimilarAddressMatch(Person candidate, Person exclude) {
+        requireNonNull(candidate);
+        return addressBook.findSimilarAddressMatch(candidate, exclude);
+    }
+
+    @Override
     public void archivePerson(Person person) {
         requireNonNull(person);
 

@@ -159,6 +159,24 @@ public class VendorVaultTest {
         assertEquals(Optional.empty(), vault.findSimilarAddressMatch(candidate, existing));
     }
 
+    @Test
+    public void findSimilarPhoneMatch_matchExists_returnsMatchingPerson() {
+        Person existing = buildPerson("Phone Vendor", "91234567", "phone1@example.com", "12 One North");
+        VendorVault vault = createVaultWithPerson(existing);
+        Person candidate = buildPerson("Other Vendor", "00123456", "phone2@example.com", "99 Other Street");
+
+        assertEquals(Optional.of(existing), vault.findSimilarPhoneMatch(candidate, null));
+    }
+
+    @Test
+    public void findSimilarPhoneMatch_matchingPersonExcluded_returnsEmpty() {
+        Person existing = buildPerson("Phone Vendor", "97654321", "phone3@example.com", "18 Jurong East");
+        VendorVault vault = createVaultWithPerson(existing);
+        Person candidate = buildPerson("Another Vendor", "54300000", "phone4@example.com", "100 Somewhere Ave");
+
+        assertEquals(Optional.empty(), vault.findSimilarPhoneMatch(candidate, existing));
+    }
+
     // ---------------- Product Tests ----------------
 
     @Test

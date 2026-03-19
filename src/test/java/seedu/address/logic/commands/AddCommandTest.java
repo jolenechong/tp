@@ -11,6 +11,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
 import static seedu.address.logic.commands.CommandUtil.SEPARATOR_NEW_LINE;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_ADDRESS;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_NAME;
+import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_PHONE;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 
@@ -286,6 +287,32 @@ public class AddCommandTest {
     }
 
     @Test
+    public void execute_similarPhone_warningShown() throws Exception {
+        ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
+
+        Person existingPerson = new PersonBuilder()
+                .withName("Alice Supplies")
+                .withEmail("alice@example.com")
+                .withPhone("91234567")
+                .withAddress("1 Alpha Street")
+                .build();
+        modelStub.addPerson(existingPerson);
+
+        Person newPerson = new PersonBuilder()
+                .withName("Bob Traders")
+                .withEmail("bob@example.com")
+                .withPhone("00123456")
+                .withAddress("99 Beta Avenue")
+                .build();
+
+        CommandResult result = new AddCommand(newPerson).execute(modelStub);
+
+        assertTrue(result.getFeedbackToUser().contains(String.format(
+                MESSAGE_SIMILAR_PHONE, existingPerson.getName(), existingPerson.getPhone())));
+        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+    }
+
+    @Test
     public void getPendingConfirmation_returnsInactivePendingConfirmation() {
         Person validPerson = new PersonBuilder().build();
         AddCommand addCommand = new AddCommand(validPerson);
@@ -427,6 +454,26 @@ public class AddCommandTest {
         @Override
         public void setPerson(Person target, Person editedPerson) {
             throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Optional<Person> findSimilarNameMatch(Person candidate, Person exclude) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<Product> findSimilarNameMatch(Product candidate, Product exclude) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<Person> findSimilarPhoneMatch(Person candidate, Person exclude) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<Person> findSimilarAddressMatch(Person candidate, Person exclude) {
+            return Optional.empty();
         }
 
         @Override
@@ -577,6 +624,27 @@ public class AddCommandTest {
             AddressBook addressBook = new AddressBook();
             personsAdded.forEach(addressBook::addPerson);
             return addressBook;
+        }
+
+        @Override
+        public Optional<Person> findSimilarNameMatch(Person candidate, Person exclude) {
+            AddressBook addressBook = new AddressBook();
+            personsAdded.forEach(addressBook::addPerson);
+            return addressBook.findSimilarNameMatch(candidate, exclude);
+        }
+
+        @Override
+        public Optional<Person> findSimilarPhoneMatch(Person candidate, Person exclude) {
+            AddressBook addressBook = new AddressBook();
+            personsAdded.forEach(addressBook::addPerson);
+            return addressBook.findSimilarPhoneMatch(candidate, exclude);
+        }
+
+        @Override
+        public Optional<Person> findSimilarAddressMatch(Person candidate, Person exclude) {
+            AddressBook addressBook = new AddressBook();
+            personsAdded.forEach(addressBook::addPerson);
+            return addressBook.findSimilarAddressMatch(candidate, exclude);
         }
     }
 

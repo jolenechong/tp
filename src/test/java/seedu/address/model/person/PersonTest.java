@@ -12,11 +12,64 @@ import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.BOB;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.testutil.PersonBuilder;
 
 public class PersonTest {
+
+    @Test
+    public void isSimilarPhoneTo_nullOtherPerson_returnsFalse() {
+        Person person = new PersonBuilder().withPhone("92345678").build();
+        assertFalse(person.isSimilarPhoneTo(null));
+    }
+
+    @Test
+    public void isSimilarPhoneTo_numbersShorterThanMinLength_returnsFalse() {
+        Person shortNumber =
+                new PersonBuilder().withPhone("123").build();
+
+        Person other =
+                new PersonBuilder().withPhone("456").build();
+
+        assertFalse(shortNumber.isSimilarPhoneTo(other));
+    }
+
+    @Test
+    public void isSimilarPhoneTo_emptyOrShortNormalizedDigits_returnsFalse() throws Exception {
+        Person valid = new PersonBuilder().withPhone("92345678").build();
+
+        Person thisEmptyDigits = createPersonWithRawPhoneValue("abc", "empty-this@example.com");
+        assertFalse(thisEmptyDigits.isSimilarPhoneTo(valid));
+
+        Person otherEmptyDigits = createPersonWithRawPhoneValue("xyz", "empty-other@example.com");
+        assertFalse(valid.isSimilarPhoneTo(otherEmptyDigits));
+
+        Person thisShortDigits = createPersonWithRawPhoneValue("12", "short-this@example.com");
+        assertFalse(thisShortDigits.isSimilarPhoneTo(valid));
+
+        Person otherShortDigits = createPersonWithRawPhoneValue("12", "short-other@example.com");
+        assertFalse(valid.isSimilarPhoneTo(otherShortDigits));
+    }
+
+    @Test
+    public void isSimilarPhoneTo_contiguousMatchExists_returnsTrue() {
+        Person first = new PersonBuilder().withPhone("91234567").build();
+        Person second = new PersonBuilder().withPhone("00123456").build();
+
+        assertTrue(first.isSimilarPhoneTo(second));
+    }
+
+    @Test
+    public void hasContiguousMatch_inputShorterThanMinLength_returnsFalse() throws Exception {
+        Person person = new PersonBuilder().withPhone("81234567").build();
+
+        assertFalse(invokeHasContiguousMatch(person, "12", "123"));
+        assertFalse(invokeHasContiguousMatch(person, "123", "12"));
+    }
 
     @Test
     public void asObservableList_modifyList_throwsUnsupportedOperationException() {
@@ -41,21 +94,14 @@ public class PersonTest {
                 .build();
         assertTrue(ALICE.isSamePerson(editedAlice));
 
-        // same single phone, all other attributes different -> returns true
+        // same phone but different email -> returns false (only email is checked for duplicates)
         Person samePhoneDifferentEmail = new PersonBuilder(ALICE)
                 .withName(VALID_NAME_BOB)
                 .withEmail(VALID_EMAIL_BOB)
                 .build();
-        assertTrue(ALICE.isSamePerson(samePhoneDifferentEmail));
+        assertFalse(ALICE.isSamePerson(samePhoneDifferentEmail));
 
-        // overlapping comma-separated phone entries -> returns true
-        Person overlappingMultiPhone = new PersonBuilder(ALICE)
-                .withPhone("11111111, " + ALICE.getPhone().value + " (HP)")
-                .withEmail(VALID_EMAIL_BOB)
-                .build();
-        assertTrue(ALICE.isSamePerson(overlappingMultiPhone));
-
-        // different email and no overlapping phone entries -> returns false
+        // different email -> returns false
         Person differentIdentity = new PersonBuilder(ALICE)
                 .withPhone("11111111, 22222222")
                 .withEmail(VALID_EMAIL_BOB)
@@ -108,4 +154,25 @@ public class PersonTest {
                 + ", email=" + ALICE.getEmail() + ", address=" + ALICE.getAddress() + ", tags=" + ALICE.getTags() + "}";
         assertEquals(expected, ALICE.toString());
     }
+
+    private Person createPersonWithRawPhoneValue(String rawPhoneValue, String email) throws Exception {
+        Phone phone = new Phone("123");
+        Field valueField = Phone.class.getDeclaredField("value");
+        valueField.setAccessible(true);
+        valueField.set(phone, rawPhoneValue);
+
+        return new Person(
+                new Name("Test Vendor"),
+                phone,
+                new Email(email),
+                new Address("123 Test Street"),
+                java.util.Set.of());
+    }
+
+    private boolean invokeHasContiguousMatch(Person person, String str1, String str2) throws Exception {
+        Method method = Person.class.getDeclaredMethod("hasContiguousMatch", String.class, String.class);
+        method.setAccessible(true);
+        return (boolean) method.invoke(person, str1, str2);
+    }
+
 }
