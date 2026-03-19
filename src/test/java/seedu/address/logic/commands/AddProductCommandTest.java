@@ -465,6 +465,26 @@ public class AddProductCommandTest {
         }
 
         @Override
+        public Optional<Person> findSimilarNameMatch(Person candidate, Person exclude) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<Product> findSimilarNameMatch(Product candidate, Product exclude) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<Person> findSimilarPhoneMatch(Person candidate, Person exclude) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<Person> findSimilarAddressMatch(Person candidate, Person exclude) {
+            return Optional.empty();
+        }
+
+        @Override
         public void archivePerson(Person person) {
             throw new AssertionError("This method should not be called.");
         }
@@ -607,6 +627,26 @@ public class AddProductCommandTest {
                             .findFirst();
                 }
             };
+        }
+
+        @Override
+        public Optional<Person> findSimilarNameMatch(Person candidate, Person exclude) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<Product> findSimilarNameMatch(Product candidate, Product exclude) {
+            return getInventory().findSimilarNameMatch(candidate, exclude);
+        }
+
+        @Override
+        public Optional<Person> findSimilarPhoneMatch(Person candidate, Person exclude) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<Person> findSimilarAddressMatch(Person candidate, Person exclude) {
+            return Optional.empty();
         }
 
         void seedExistingProduct(Product product) {

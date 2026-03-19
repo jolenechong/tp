@@ -430,6 +430,26 @@ public class AddCommandTest {
         }
 
         @Override
+        public Optional<Person> findSimilarNameMatch(Person candidate, Person exclude) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<Product> findSimilarNameMatch(Product candidate, Product exclude) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<Person> findSimilarPhoneMatch(Person candidate, Person exclude) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<Person> findSimilarAddressMatch(Person candidate, Person exclude) {
+            return Optional.empty();
+        }
+
+        @Override
         public boolean hasProduct(Product product) {
             throw new AssertionError("This method should not be called.");
         }
@@ -572,6 +592,27 @@ public class AddCommandTest {
             AddressBook addressBook = new AddressBook();
             personsAdded.forEach(addressBook::addPerson);
             return addressBook;
+        }
+
+        @Override
+        public Optional<Person> findSimilarNameMatch(Person candidate, Person exclude) {
+            AddressBook addressBook = new AddressBook();
+            personsAdded.forEach(addressBook::addPerson);
+            return addressBook.findSimilarNameMatch(candidate, exclude);
+        }
+
+        @Override
+        public Optional<Person> findSimilarPhoneMatch(Person candidate, Person exclude) {
+            AddressBook addressBook = new AddressBook();
+            personsAdded.forEach(addressBook::addPerson);
+            return addressBook.findSimilarPhoneMatch(candidate, exclude);
+        }
+
+        @Override
+        public Optional<Person> findSimilarAddressMatch(Person candidate, Person exclude) {
+            AddressBook addressBook = new AddressBook();
+            personsAdded.forEach(addressBook::addPerson);
+            return addressBook.findSimilarAddressMatch(candidate, exclude);
         }
     }
 

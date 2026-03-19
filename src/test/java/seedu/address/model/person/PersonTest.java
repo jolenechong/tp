@@ -41,21 +41,14 @@ public class PersonTest {
                 .build();
         assertTrue(ALICE.isSamePerson(editedAlice));
 
-        // same single phone, all other attributes different -> returns true
+        // same phone but different email -> returns false (only email is checked for duplicates)
         Person samePhoneDifferentEmail = new PersonBuilder(ALICE)
                 .withName(VALID_NAME_BOB)
                 .withEmail(VALID_EMAIL_BOB)
                 .build();
-        assertTrue(ALICE.isSamePerson(samePhoneDifferentEmail));
+        assertFalse(ALICE.isSamePerson(samePhoneDifferentEmail));
 
-        // overlapping comma-separated phone entries -> returns true
-        Person overlappingMultiPhone = new PersonBuilder(ALICE)
-                .withPhone("11111111, " + ALICE.getPhone().value + " (HP)")
-                .withEmail(VALID_EMAIL_BOB)
-                .build();
-        assertTrue(ALICE.isSamePerson(overlappingMultiPhone));
-
-        // different email and no overlapping phone entries -> returns false
+        // different email -> returns false
         Person differentIdentity = new PersonBuilder(ALICE)
                 .withPhone("11111111, 22222222")
                 .withEmail(VALID_EMAIL_BOB)

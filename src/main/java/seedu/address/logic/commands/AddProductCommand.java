@@ -108,7 +108,7 @@ public class AddProductCommand extends Command {
      * Adds warnings when similar products are detected to avoid accidental duplicates.
      */
     private void appendSimilarProductWarnings(Model model, StringBuilder warnings) {
-        model.getInventory().findSimilarNameMatch(toAdd, null).ifPresent(match ->
+        model.findSimilarNameMatch(toAdd, null).ifPresent(match ->
                 appendWarning(warnings, formatNameWarning(match.getIdentifier(), match.getName())));
     }
 

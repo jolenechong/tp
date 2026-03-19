@@ -122,6 +122,47 @@ public interface Model {
      */
     void setPerson(Person target, Person editedPerson);
 
+    /**
+     * Returns the first person in the list whose name is similar to {@code candidate},
+     * excluding {@code exclude} (may be null).
+     *
+     * @param candidate the person whose name is being compared against the list.
+     * @param exclude the person to exclude from the search (may be null).
+     * @return Optional<Person> the matched person (if any).
+     */
+    Optional<Person> findSimilarNameMatch(Person candidate, Person exclude);
+
+    /**
+     * Returns the first product in the product whose name is similar to {@code candidate},
+     * excluding {@code exclude} (may be null).
+     *
+     * @param candidate the product whose name is being compared against the list.
+     * @param exclude the product to exclude from the search (may be null).
+     * @return Optional<Product> the matched product (if any).
+     */
+    Optional<Product> findSimilarNameMatch(Product candidate, Product exclude);
+
+    /**
+     * Returns the first person in the list whose phone number is similar to {@code condidate}
+     * excluding {@code exclude} (may be null).
+     *
+     * @param candidate the person whose phone number is being compared against the list.
+     * @param exclude the person to exclude from the search (may be null).
+     * @return Optional<Person> the matched person (if any).
+     */
+    Optional<Person> findSimilarPhoneMatch(Person candidate, Person exclude);
+
+    /**
+     * Returns the first person in the list whose address is similar to {@code candidate},
+     * excluding {@code exclude} (may be null).
+     *
+     * @param candidate the person whose address is being compared against the list.
+     * @param exclude the person to exclude from the search (may be null).
+     * @return Optional<Person> the matched person (if any).
+     */
+    Optional<Person> findSimilarAddressMatch(Person candidate, Person exclude);
+
+
     /** Returns an unmodifiable view of the filtered person list */
     ObservableList<Person> getFilteredPersonList();
 
@@ -185,7 +226,7 @@ public interface Model {
 
     void restoreProduct(Product product);
 
-    // =========== AddressBookVersioning ========================================================================
+    // =========== VendorVaultkVersioning ========================================================================
     /**
      * Commits the current state of vendor vault. This should be called after any operation
      * that modifies vendor vault, such as adding, deleting, or editing a person (same as vendor).

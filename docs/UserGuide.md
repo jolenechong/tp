@@ -227,13 +227,12 @@ add n/DigiKey Singapore p/61234567, 87654321 e/sg.sales@digikey.com a/71 Ayer Ra
 
 A contact is considered a duplicate if:
 
-* It has the **same email or phone number as an existing contact** in VendorVault.
-* Phone numbers are compared while ignoring labels (such as “(Office)” or “(HP)”). Multiple phone numbers should be separated by commas.
+* It has the **same email as an existing contact** in VendorVault.
 
-For example, these contacts are considered duplicates because they share the same phone number `61234567` and email `contact@company.com`:<br>
+For example, these contacts are considered duplicates because they share the same email `contact@company.com`:<br>
 
 ```
-add n/DigiKey Singapore p/61234567, 98765432 e/contact@company.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951
+add n/DigiKey Singapore p/61234567 e/contact@company.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951
 add n/DigiKey Singapore p/61234567, 12345678 e/contact@company.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951
 ```
 
@@ -791,21 +790,21 @@ This is the json for aliases:
 
 Use this section when `add` fails or returns a warning.
 
-| Scenario                                                                         | Message shown                                                             | How to fix                                                                      |
-|----------------------------------------------------------------------------------|---------------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| Missing one or more required prefixes (`n/`, `p/`, `e/`, `a/`)                   | `Missing required field(s): ...`                                          | Include all required prefixed fields in your command.                           |
-| No prefixes at all                                                               | `All required prefixes are missing, ...`                                  | Use the full prefixed format, e.g. `add n/... p/... e/... a/...`.               |
-| Text appears before the first prefix                                             | `No non-prefix characters before prefix(es) is allowed, ...`              | Remove any text before `n/`.                                                    |
-| Same single-value field repeated (e.g. two `n/` or two `e/`)                     | `Multiple values specified for the following single-valued field(s): ...` | Keep only one value for each of `n/`, `p/`, `e/`, `a/`.                         |
-| Name is blank                                                                    | `Name should not be blank.`                                               | Provide a non-empty name after `n/`.                                            |
-| Name is too long                                                                 | `Name should be at most 256 characters.`                                  | Shorten the name.                                                               |
-| Phone is blank/too short                                                         | `Phone number should not be empty and must be at least 3 digits.`         | Ensure each phone entry has at least 3 digits.                                  |
-| Email is blank                                                                   | `Email should not be blank.`                                              | Provide a non-empty email after `e/`.                                           |
-| Email format is invalid                                                          | `Email should be of the format local-part@domain ...`                     | Use a valid email format (e.g. `sales@vendor.com`) less than 320 characters.    |
-| Address is blank                                                                 | `Address can take any values, and it should not be blank`                 | Provide a non-empty address after `a/`.                                         |
-| Address is too long                                                              | `Address should be at most 500 characters.`                               | Shorten the address.                                                            |
-| Tag contains non-alphanumeric characters                                         | `Tag names should be alphanumeric`                                        | Use letters/numbers only for each `t/` value.                                   |
-| Contact duplicates an existing contact by same email or overlapping phone number | `This vendor contact already exists with the same email or phone number.` | Change the phone/email, or edit the existing contact instead.                   |
+| Scenario                                                       | Message shown                                                            | How to fix                                                                      |
+|----------------------------------------------------------------|--------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| Missing one or more required prefixes (`n/`, `p/`, `e/`, `a/`) | `Missing required field(s): ...`                                         | Include all required prefixed fields in your command.                           |
+| No prefixes at all                                             | `All required prefixes are missing, ...`                                 | Use the full prefixed format, e.g. `add n/... p/... e/... a/...`.               |
+| Text appears before the first prefix                           | `No non-prefix characters before prefix(es) is allowed, ...`             | Remove any text before `n/`.                                                    |
+| Same single-value field repeated (e.g. two `n/` or two `e/`)   | `Multiple values specified for the following single-valued field(s): ...` | Keep only one value for each of `n/`, `p/`, `e/`, `a/`.                         |
+| Name is blank                                                  | `Name should not be blank.`                                              | Provide a non-empty name after `n/`.                                            |
+| Name is too long                                               | `Name should be at most 256 characters.`                                 | Shorten the name.                                                               |
+| Phone is blank/too short                                       | `Phone number should not be empty and must be at least 3 digits.`        | Ensure each phone entry has at least 3 digits.                                  |
+| Email is blank                                                 | `Email should not be blank.`                                             | Provide a non-empty email after `e/`.                                           |
+| Email format is invalid                                        | `Email should be of the format local-part@domain ...`                    | Use a valid email format (e.g. `sales@vendor.com`) less than 320 characters.    |
+| Address is blank                                               | `Address can take any values, and it should not be blank`                | Provide a non-empty address after `a/`.                                         |
+| Address is too long                                            | `Address should be at most 500 characters.`                              | Shorten the address.                                                            |
+| Tag contains non-alphanumeric characters                       | `Tag names should be alphanumeric`                                       | Use letters/numbers only for each `t/` value.                                   |
+| Contact duplicates an existing contact by same email.          | `This vendor contact already exists with the same email.`                | Change the phone/email, or edit the existing contact instead.                   |
 
 Common `add` warnings:
 

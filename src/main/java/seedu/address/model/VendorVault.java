@@ -91,10 +91,15 @@ public class VendorVault implements ReadOnlyVendorVault {
         return addressBook.findSimilarNameMatch(candidate, exclude);
     }
 
-    // part of inventory but overloaded methods must be placed together
+    // for inventory but overloaded methods must be placed together
     @Override
     public Optional<Product> findSimilarNameMatch(Product candidate, Product exclude) {
         return inventory.findSimilarNameMatch(candidate, exclude);
+    }
+
+    @Override
+    public Optional<Person> findSimilarPhoneMatch(Person candidate, Person exclude) {
+        return addressBook.findSimilarPhoneMatch(candidate, exclude);
     }
 
     @Override
