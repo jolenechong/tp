@@ -10,7 +10,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class Quantity {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Quantity should be a non-negative integer.";
+            "Quantity should be a non-negative valid integer.";
 
     public final int value;
 

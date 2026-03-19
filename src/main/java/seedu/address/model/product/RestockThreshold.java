@@ -10,7 +10,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class RestockThreshold {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Restock threshold should be a non-negative integer.";
+            "Restock threshold should be a non-negative valid integer.";
 
     public final int value;
 
