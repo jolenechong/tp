@@ -69,6 +69,22 @@ public class AliasList {
         this.aliases.add(alias);
     }
 
+    /**
+     * Removes the alias with matching aliasStr from the list.
+     *
+     * @param aliasStr The alias name to search for and delete.
+     * @throws NoAliasFoundInAliasListException If no alias with the specified name is found.
+     */
+    public void removeAlias(String aliasStr) throws NoAliasFoundInAliasListException {
+        if (!aliasHashSet.contains(aliasStr)) {
+            throw new NoAliasFoundInAliasListException();
+        }
+
+        Alias deleteAlias = findAlias(aliasStr);
+        this.aliasHashSet.remove(aliasStr);
+        this.aliases.remove(deleteAlias);
+    }
+
     public List<Alias> toList() {
         return this.aliases.stream().toList();
     }

@@ -461,4 +461,23 @@ public class ModelManagerTest {
         assertTrue(result.contains(alias1));
         assertTrue(result.contains(alias2));
     }
+
+    @Test
+    public void removeAlias_nullAlias_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> modelManager.removeAlias(null));
+    }
+
+    @Test
+    public void removeAlias_validAlias_success() throws Exception {
+        Alias alias = new Alias("ls", ListCommand.COMMAND_WORD);
+        modelManager.addAlias(alias);
+        assertEquals(alias, modelManager.findAlias("ls"));
+        modelManager.removeAlias(alias.getAlias());
+        assertThrows(NoAliasFoundInAliasListException.class, () -> modelManager.findAlias(alias.getAlias()));
+    }
+
+    @Test
+    public void removeAlias_noAlias_throwsNoAliasFoundInAliasListException() throws Exception {
+        assertThrows(NoAliasFoundInAliasListException.class, () -> modelManager.removeAlias("ls"));
+    }
 }

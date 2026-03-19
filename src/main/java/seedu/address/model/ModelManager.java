@@ -232,6 +232,12 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public void removeAlias(String aliasStr) throws NoAliasFoundInAliasListException {
+        requireNonNull(aliasStr);
+        aliases.removeAlias(aliasStr);
+    }
+
+    @Override
     public List<Alias> getAliasList() {
         return aliases.getAliasList();
     }

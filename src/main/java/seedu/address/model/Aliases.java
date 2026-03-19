@@ -59,6 +59,10 @@ public class Aliases implements ReadOnlyAliases {
         return this.aliasList.findAlias(aliasStr);
     }
 
+    public void removeAlias(String aliasStr) throws NoAliasFoundInAliasListException {
+        this.aliasList.removeAlias(aliasStr);
+    }
+
     @Override
     public List<Alias> getAliasList() {
         return aliasList.toList();

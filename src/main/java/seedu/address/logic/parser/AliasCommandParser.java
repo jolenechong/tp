@@ -29,8 +29,6 @@ public class AliasCommandParser implements Parser<AliasCommand> {
         }
 
         String[] tokens = argsTrimmed.split(" ", 2);
-        System.out.println(args);
-        System.out.println(tokens.length);
         if (tokens.length <= 1) {
             throw new ParseException(MESSAGE_ALIAS_FORMATTED_WRONGLY);
         }

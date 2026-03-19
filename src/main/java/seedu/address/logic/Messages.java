@@ -40,6 +40,8 @@ public class Messages {
             "Message is formatted wrongly.\nThe correct format is alias <ORIGINAL_COMMAND> <NEW_ALIAS>";
     public static final String MESSAGE_ALIAS_IS_A_PREDEFINED_COMMAND =
             "%s is a predefined command, please choose another alias.";
+    public static final String MESSAGE_ALIAS_IS_NOT_FOUND =
+            "No alias found in AliasList.";
 
     /**
      * Returns an error message indicating the duplicate prefixes.

@@ -465,6 +465,11 @@ public class AddCommandTest {
         }
 
         @Override
+        public void removeAlias(String aliasStr) throws NoAliasFoundInAliasListException {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public List<Alias> getAliasList() {
             throw new AssertionError("This method should not be called.");
         }

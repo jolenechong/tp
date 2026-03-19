@@ -165,6 +165,7 @@ public interface Model {
 
     public Alias findAlias(String aliasStr) throws NoAliasFoundInAliasListException;
 
+    public void removeAlias(String aliasStr) throws NoAliasFoundInAliasListException;
 
     /**
      * Returns an unmodifiable view of the alias list.

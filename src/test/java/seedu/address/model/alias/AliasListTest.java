@@ -86,6 +86,50 @@ public class AliasListTest {
     }
 
     @Test
+    public void removeAlias_existingAlias_removesSuccessfully() throws Exception {
+        AliasList aliasList = new AliasList();
+        aliasList.addAlias(new Alias(aliasString, originalCommand));
+        aliasList.removeAlias(aliasString);
+        assertEquals(0, aliasList.getSize());
+    }
+
+    @Test
+    public void removeAlias_nonExistentAlias_throwsNoAliasFoundInAliasListException() {
+        AliasList aliasList = new AliasList();
+        aliasList.addAlias(new Alias(aliasString, originalCommand));
+        assertThrows(NoAliasFoundInAliasListException.class, () ->
+                aliasList.removeAlias("nonexistent"));
+    }
+
+    @Test
+    public void removeAlias_emptyList_throwsNoAliasFoundInAliasListException() {
+        AliasList aliasList = new AliasList();
+        assertThrows(NoAliasFoundInAliasListException.class, () ->
+                aliasList.removeAlias(aliasString));
+    }
+
+    @Test
+    public void removeAlias_alreadyRemovedAlias_throwsNoAliasFoundInAliasListException() throws Exception {
+        AliasList aliasList = new AliasList();
+        aliasList.addAlias(new Alias(aliasString, originalCommand));
+        aliasList.removeAlias(aliasString);
+        assertThrows(NoAliasFoundInAliasListException.class, () ->
+                aliasList.removeAlias(aliasString));
+    }
+
+    @Test
+    public void removeAlias_onlyTargetAliasRemoved_otherAliasesUnaffected() throws Exception {
+        AliasList aliasList = new AliasList();
+
+        aliasList.addAlias(new Alias(aliasString, originalCommand));
+        aliasList.addAlias(new Alias("cl", "clear"));
+        aliasList.removeAlias(aliasString);
+
+        assertEquals(1, aliasList.getSize());
+        assertEquals("cl", aliasList.findAlias("cl").getAlias());
+    }
+
+    @Test
     public void equals() {
         AliasList aliasList = new AliasList();
         // same object -> returns true
