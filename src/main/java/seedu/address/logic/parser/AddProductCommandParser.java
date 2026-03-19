@@ -34,11 +34,11 @@ import seedu.address.model.product.RestockThreshold;
 public class AddProductCommandParser implements Parser<AddProductCommand> {
 
     public static final String DEFAULT_QUANTITY = "0";
-    public static final String DEFAULT_THRESHOLD = "10";
+    public static final String DEFAULT_THRESHOLD = "0";
     public static final String MESSAGE_QUANTITY_DEFAULTED =
             "⚠ Warning: Quantity missing, defaulted to 0.";
     public static final String MESSAGE_THRESHOLD_DEFAULTED =
-            "⚠ Warning: Restock threshold missing, defaulted to 10.";
+            "⚠ Warning: Restock threshold missing, defaulted to 0.";
     public static final String MESSAGE_VENDOR_EMAIL_MISSING =
             "⚠ Warning: Vendor email missing, product will not be associated with a vendor.";
 

@@ -391,30 +391,30 @@ Format:
 
 **Tip:**
 <br>
-If quantity is not specified, it will default to 0.
+If quantity is omitted, it will default to 0.
 <br>
-If threshold is not specified, it will default to 0.
+If threshold is omitted, it will default to 0.
 
 </box>
 
 <box type="info" seamless>
 
-`VENDOR_EMAIL` must match the email of an existing contact.
+`VENDOR_EMAIL` must match the email of an existing contact. If omitted, product will not be associated with a vendor.
 
 </box>
 
 Examples:
 
-* `addproduct id/Pr1 n/HP LaserJet (M428fdw) q/50 th/10`
+* `addproduct id/SKU-288 n/HP LaserJet (M428fdw) q/17 th/15`
 * `addproduct id/DE/5 n/PlayStation e/sg.sales@cytron.io`
 
 <panel header="What products are considered duplicates?" type="seamless" id="faq-duplicate-products">
 
-A product is considered a duplicate if it has the **same identifier (id) as an existing product**. For example, these products have the same identifier `SKU-1003`:
+A product is considered a duplicate if it has the **same identifier (id) as an existing product**. For example:
 
 ```
-addproduct id/SKU-1003 n/Arduino Uno R4 Development Board
-addproduct id/SKU-1003 n/Raspberry Pi 5 (8GB RAM)
+addproduct id/SKU-1003 n/Arduino Uno R4
+addproduct id/SKU-1003 n/Raspberry Pi 5
 ```
 
 </panel>
@@ -927,8 +927,10 @@ Use this section when `addproduct` fails or returns a warning.
 | Missing one or more required prefixes (`id/`, `n/`) | `Missing required field(s): ...`                                          | Include all required prefixed fields in your command.                           |
 | No prefixes at all                                  | `All required prefixes are missing, ...`                                  | Use the full prefixed format, e.g. `addproduct id/... n/...`.                   |
 | Text appears before the first prefix                | `No non-prefix characters before prefix(es) is allowed, ...`              | Remove any text before `id/`.                                                   |
-| Same single-value field repeated (e.g. two `q/`)    | `Multiple values specified for the following single-valued field(s): ...` | Keep only one value for each of `id/`, `n/`, `q/`, `th/`.                       |
+| Same single-value field repeated (e.g. two `q/`)    | `Multiple values specified for the following single-valued field(s): ...` | Keep only one value for each of `id/`, `n/`, `q/`, `th/`, `e/`.                 |
 | Identifier is blank                                 | `Identifier should not be blank.`                                         | Provide a non-empty identifier after `id/`.                                     |
+| Identifier is too long                              | `Identifier should be at most 120 characters.`                            | Shorten the identifier.                                                         |
+| Name is blank                                       | `Name should not be blank.`                                               | Provide a non-empty name after `n/`.                                            |
 | Name is too long                                    | `Name should be at most 120 characters.`                                  | Shorten the name.                                                               |
 | Product is a duplicate                              | `This product already exists with the same identifier.`                   | Change the identifier, or edit the existing product instead.                    |
 | Product's vendor does not exist                     | `Vendor email ... does not match any existing contact.`                   | Check that the email matches an existing contact's email, or add a new contact. |
@@ -937,9 +939,9 @@ Use this section when `addproduct` fails or returns a warning.
 
 Common `addproduct` warnings:
 
-| Warning trigger                     | Warning shown                                                                                                                                   | What it means                                                                                                                   |
-|-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| Identifier/Name has unusual symbols | `⚠ Warning: Identifier contains unusual symbols, is this intentional?`<br><br/>`⚠ Warning: Name contains unusual symbols, is this intentional?` | Identifier/Name is accepted, but looks unusual. You can verify if you entered it correctly.                                     |
+| Warning trigger                     | Warning shown                                                                                                                                   | What it means                                                                                                                  |
+|-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| Identifier/Name has unusual symbols | `⚠ Warning: Identifier contains unusual symbols, is this intentional?`<br><br/>`⚠ Warning: Name contains unusual symbols, is this intentional?` | Identifier/Name is accepted, but [looks unusual](#product-name-format). You can verify if you entered it correctly.            |
 | Similar name to an existing product | `⚠ Warning: There's a product with a similar name (name: <similar-name>), is this intentional?`                                                 | Possible duplicate by similar name. You can check if the name in the warning message is the same as what you were about to add. |
 
 <div style="height: 30px;"></div>
@@ -1018,9 +1020,9 @@ Use this section when `deleteproduct` fails.
 
 ### Why am I seeing warnings?
 
-Warnings are shown when the command succeeds but the provided information do not meet the recommended format. This is to help you catch possible mistakes or unintended data formats. You can choose to ignore the warning if the data is correct as intended.
+Warnings are shown when the command succeeds, but the provided information does not meet the recommended format. This is to help you catch possible mistakes or unintended data formats. You can choose to ignore the warning if the data is correct as intended.
 
-<panel header="What is the recommended contact name format?" type="seamless" id="contact-name-format">
+<panel header="Recommended contact name format" type="seamless" id="contact-name-format">
 
 Name is recommended to meet the following guidelines:
 - It can contain letters, numbers and spaces
@@ -1029,7 +1031,7 @@ You may see a warning if the vendor name includes special characters. This is on
 
 </panel>
 
-<panel header="What is the recommended phone number format?" type="seamless" id="contact-phone-format">
+<panel header="Recommended phone number format" type="seamless" id="contact-phone-format">
 
 Phone number(s) is recommended to meet the following guidelines:
 1. It should contain only digits, spaces, '+' or '-' in the number part.
@@ -1037,6 +1039,30 @@ Phone number(s) is recommended to meet the following guidelines:
 Example: 12345678, 62345678
 
 You may see a warning if your phone number contains unusual symbols or format, but you can safely ignore it if you are providing labels for the phone number (e.g. `61234567 (Office)`).
+
+</panel>
+
+<panel header="Recommended product identifier format" type="seamless" id="product-id-format">
+
+Product identifier can contain:
+- Letters
+- Numbers
+- Spaces
+- Symbols `/` `-`
+
+You will see a warning if the identifier contains other symbols.
+
+</panel>
+
+<panel header="Recommended product name format" type="seamless" id="product-name-format">
+
+Product name can contain:
+- Letters
+- Numbers
+- Spaces
+- Symbols `.` `,` `&` `+` `(` `)` `/` `\` `-` `'`
+
+You will see a warning if the name contains other symbols.
 
 </panel>
 

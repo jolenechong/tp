@@ -48,7 +48,7 @@ public class CommandTestUtil {
     public static final String VALID_QUANTITY_IPAD = "0";
     public static final String VALID_QUANTITY_IPHONE = "30";
     public static final String VALID_QUANTITY_AIRPODS = "45";
-    public static final String VALID_THRESHOLD_IPAD = "10";
+    public static final String VALID_THRESHOLD_IPAD = "0";
     public static final String VALID_THRESHOLD_AIRPODS = "45";
 
     public static final String NAME_DESC_AMY = " " + PREFIX_NAME + VALID_NAME_AMY;
