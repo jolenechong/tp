@@ -940,9 +940,9 @@ Use this section when `addproduct` fails or returns a warning.
 
 Common `addproduct` warnings:
 
-| Warning trigger                     | Warning shown                                                                                                                                   | What it means                                                                                                                   |
-|-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| Identifier/Name has unusual symbols | `⚠ Warning: Identifier contains unusual symbols, is this intentional?`<br><br/>`⚠ Warning: Name contains unusual symbols, is this intentional?` | Identifier/Name is accepted, but looks unusual. You can verify if you entered it correctly.                                     |
+| Warning trigger                     | Warning shown                                                                                                                                   | What it means                                                                                                                  |
+|-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| Identifier/Name has unusual symbols | `⚠ Warning: Identifier contains unusual symbols, is this intentional?`<br><br/>`⚠ Warning: Name contains unusual symbols, is this intentional?` | Identifier/Name is accepted, but [looks unusual](#product-name-format). You can verify if you entered it correctly.            |
 | Similar name to an existing product | `⚠ Warning: There's a product with a similar name (name: <similar-name>), is this intentional?`                                                 | Possible duplicate by similar name. You can check if the name in the warning message is the same as what you were about to add. |
 
 <div style="height: 30px;"></div>
@@ -1021,9 +1021,9 @@ Use this section when `deleteproduct` fails.
 
 ### Why am I seeing warnings?
 
-Warnings are shown when the command succeeds but the provided information do not meet the recommended format. This is to help you catch possible mistakes or unintended data formats. You can choose to ignore the warning if the data is correct as intended.
+Warnings are shown when the command succeeds, but the provided information does not meet the recommended format. This is to help you catch possible mistakes or unintended data formats. You can choose to ignore the warning if the data is correct as intended.
 
-<panel header="What is the recommended contact name format?" type="seamless" id="contact-name-format">
+<panel header="Recommended contact name format" type="seamless" id="contact-name-format">
 
 Name is recommended to meet the following guidelines:
 - It can contain letters, numbers and spaces
@@ -1032,7 +1032,7 @@ You may see a warning if the vendor name includes special characters. This is on
 
 </panel>
 
-<panel header="What is the recommended phone number format?" type="seamless" id="contact-phone-format">
+<panel header="Recommended phone number format" type="seamless" id="contact-phone-format">
 
 Phone number(s) is recommended to meet the following guidelines:
 1. It should contain only digits, spaces, '+' or '-' in the number part.
@@ -1040,6 +1040,30 @@ Phone number(s) is recommended to meet the following guidelines:
 Example: 12345678, 62345678
 
 You may see a warning if your phone number contains unusual symbols or format, but you can safely ignore it if you are providing labels for the phone number (e.g. `61234567 (Office)`).
+
+</panel>
+
+<panel header="Recommended product identifier format" type="seamless" id="product-id-format">
+
+Product identifier can contain:
+- Letters
+- Numbers
+- Spaces
+- Symbols `/` `-`
+
+You will see a warning if the identifier contains other symbols.
+
+</panel>
+
+<panel header="Recommended product name format" type="seamless" id="product-name-format">
+
+Product name can contain:
+- Letters
+- Numbers
+- Spaces
+- Symbols `.` `,` `&` `+` `(` `)` `/` `\` `-` `'`
+
+You will see a warning if the name contains other symbols.
 
 </panel>
 
