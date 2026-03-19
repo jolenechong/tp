@@ -34,7 +34,7 @@ public class ClearProductCommand extends Command {
             "Clear product operation cancelled.";
 
     /** Stores the pending confirmation for this command. */
-    private PendingConfirmation pendingConfirmation;
+    private PendingConfirmation pendingConfirmation = new PendingConfirmation();
 
     /** Indicates whether confirmation is required before clearing products. */
     private final boolean needsConfirmation;
