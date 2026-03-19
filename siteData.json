@@ -113,7 +113,6 @@
         "quick-start": "Quick start",
         "features": "Features",
         "before-you-begin": "Before you begin",
-        "viewing-help-help": "Viewing help : help",
         "managing-vendor-contacts": "Managing Vendor Contacts",
         "managing-inventory": "Managing Inventory",
         "utility-commands": "Utility Commands",
@@ -124,7 +123,8 @@
         "faq": "FAQ",
         "troubleshooting": "Troubleshooting",
         "managing-contacts": "Managing contacts",
-        "managing-inventory-2": "Managing inventory"
+        "managing-inventory-2": "Managing inventory",
+        "why-am-i-seeing-warnings": "Why am I seeing warnings?"
       },
       "headingKeywords": {}
     },
