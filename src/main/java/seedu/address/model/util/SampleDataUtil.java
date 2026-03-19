@@ -76,18 +76,26 @@ public class SampleDataUtil {
 
     public static Product[] getSampleProducts() {
         return new Product[] {
-            new Product(new Identifier("DS-1001"), productName("AA Batteries 4 Pack"),
-                    new Quantity("10"), new RestockThreshold("11")),
-            new Product(new Identifier("DS-1002"), productName("LED Bulb 9W"),
-                    new Quantity("45"), new RestockThreshold("40")),
-            new Product(new Identifier("DS-1003"), productName("Toothpaste 120g"),
-                    new Quantity("38"), new RestockThreshold("38")),
-            new Product(new Identifier("DS-1004"), productName("Dish Sponge 3 Pack"),
-                    new Quantity("52"), new RestockThreshold("20")),
-            new Product(new Identifier("DS-1005"), productName("Notebook A5"),
-                    new Quantity("70"), new RestockThreshold("0")),
-            new Product(new Identifier("DS-1006"), productName("Laundry Detergent 1L"),
-                    new Quantity("24"), new RestockThreshold("37"))
+            new Product(new Identifier("SKU-1003"), productName("Arduino Uno R4"),
+                    new Quantity("50"), new RestockThreshold("10"), new Email("sales@techsource.com")),
+            new Product(new Identifier("SKU-288"), productName("HP LaserJet (M428fdw)"),
+                    new Quantity("17"), new RestockThreshold("5")),
+            new Product(new Identifier("DE/5"), productName("PlayStation"),
+                    new Quantity("0"), new RestockThreshold("0"), new Email("sg.sales@cytron.io")),
+            new Product(new Identifier("POS-THERMAL-80"), productName("Thermal Receipt Printer"),
+                    new Quantity("8"), new RestockThreshold("3")),
+            new Product(new Identifier("DE/870"), productName("ASUS X870 Motherboard"),
+                    new Quantity("11"), new RestockThreshold("3"), new Email("hello@synapse.sg")),
+            new Product(new Identifier("SKU-256/SG"), productName("microSD Card 256GB"),
+                    new Quantity("30"), new RestockThreshold("15"), new Email("support.rochor@yahoo.com")),
+            new Product(new Identifier("SKU-610/INTL"), productName("Light & Color Sensor"),
+                    new Quantity("50"), new RestockThreshold("25"), new Email("support@adafruit.com")),
+            new Product(new Identifier("DE/480-REF"), productName("ThinkPad T480 Refurbished"),
+                    new Quantity("3"), new RestockThreshold("0"), new Email("bytelabs@gmail.com")),
+            new Product(new Identifier("CAM-817"), productName("Nikon 24-70MM Camera"),
+                    new Quantity("1"), new RestockThreshold("3"), new Email("sales@ah.com")),
+            new Product(new Identifier("DE/339"), productName("NVMe SSD 2TB"),
+                    new Quantity("10"), new RestockThreshold("10"), new Email("support.rochor@yahoo.com")),
         };
     }
 
