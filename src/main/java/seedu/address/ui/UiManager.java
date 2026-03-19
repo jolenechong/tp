@@ -1,5 +1,7 @@
 package seedu.address.ui;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +12,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import seedu.address.MainApp;
 import seedu.address.commons.core.LogsCenter;
@@ -56,6 +59,8 @@ public class UiManager implements Ui {
 
         try {
             initBrandFonts();
+            resolvedDarkThemeUrl = buildResolvedDarkThemeStylesheetUrl();
+
             mainWindow = new MainWindow(primaryStage, logic);
             mainWindow.show(); //This should be called before creating other UI parts
             mainWindow.fillInnerParts();
@@ -124,6 +129,34 @@ public class UiManager implements Ui {
         combined[candidates.length] = fallbackCandidate;
         return combined;
     }
+
+    private String buildResolvedDarkThemeStylesheetUrl() throws IOException {
+        String cssTemplate = readCssTemplate();
+        String resolvedCss = cssTemplate
+                .replace("__VV_FONT_UI__", escapeFontForCss(uiFont))
+                .replace("__VV_FONT_UI_SEMIBOLD__", escapeFontForCss(uiFontSemibold))
+                .replace("__VV_FONT_UI_LIGHT__", escapeFontForCss(uiFontLight))
+                .replace("__VV_FONT_MONO__", escapeFontForCss(monoFont));
+
+        Path tempCss = Files.createTempFile("vendervault-darktheme-", ".css");
+        Files.writeString(tempCss, resolvedCss, StandardCharsets.UTF_8);
+        tempCss.toFile().deleteOnExit();
+        return tempCss.toUri().toString();
+    }
+
+    private String readCssTemplate() throws IOException {
+        try (InputStream input = MainApp.class.getResourceAsStream(DARK_THEME_RESOURCE_PATH)) {
+            if (input == null) {
+                throw new IOException("Missing stylesheet resource: " + DARK_THEME_RESOURCE_PATH);
+            }
+            return new String(input.readAllBytes(), StandardCharsets.UTF_8);
+        }
+    }
+
+    private String escapeFontForCss(String family) {
+        return family.replace("\\", "\\\\").replace("\"", "\\\"");
+    }
+
     void showAlertDialogAndWait(Alert.AlertType type, String title, String headerText, String contentText) {
         showAlertDialogAndWait(mainWindow.getPrimaryStage(), type, title, headerText, contentText);
     }
