@@ -179,7 +179,11 @@ public class UiManager implements Ui {
     }
 
     void showAlertDialogAndWait(Alert.AlertType type, String title, String headerText, String contentText) {
-        showAlertDialogAndWait(mainWindow.getPrimaryStage(), type, title, headerText, contentText);
+        Stage owner = null;
+        if (mainWindow != null) {
+            owner = mainWindow.getPrimaryStage();
+        }
+        showAlertDialogAndWait(owner, type, title, headerText, contentText);
     }
 
     /**
@@ -190,6 +194,9 @@ public class UiManager implements Ui {
                                                String contentText) {
         final Alert alert = new Alert(type);
         alert.getDialogPane().getStylesheets().add(resolvedDarkThemeUrl);
+        if (owner != null) {
+            alert.initOwner(owner);
+        }
         alert.setTitle(title);
         alert.setHeaderText(headerText);
         alert.setContentText(contentText);
