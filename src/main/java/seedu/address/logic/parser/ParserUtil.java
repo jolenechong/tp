@@ -298,15 +298,21 @@ public class ParserUtil {
             WarningValidator softValidator,
             String softWarningMessage
     ) throws ParseException {
+        requireNonNull(value);
+        requireNonNull(blankException);
+        requireNonNull(lengthException);
+        requireNonNull(softValidator);
+        requireNonNull(softWarningMessage);
+
         if (value.isBlank()) {
             throw blankException.get();
         }
 
-        if (maxLength > 0 && value.length() > maxLength) {
+        if (value.length() > maxLength) {
             throw lengthException.get();
         }
 
-        if (softValidator != null && !softValidator.validate(value)) {
+        if (!softValidator.validate(value)) {
             return Optional.of(softWarningMessage);
         }
 

@@ -22,6 +22,12 @@ import seedu.address.testutil.PersonBuilder;
 public class PersonTest {
 
     @Test
+    public void isSimilarNameTo_nullOtherPerson_returnsFalse() {
+        Person person = new PersonBuilder().withName("John Doe").build();
+        assertFalse(person.isSimilarNameTo(null));
+    }
+
+    @Test
     public void isSimilarPhoneTo_nullOtherPerson_returnsFalse() {
         Person person = new PersonBuilder().withPhone("92345678").build();
         assertFalse(person.isSimilarPhoneTo(null));
