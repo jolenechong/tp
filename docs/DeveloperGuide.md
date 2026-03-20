@@ -1,5 +1,5 @@
 ---
-  layout: default.md
+  layout: no_sidebar.md
   title: "Developer Guide"
   pageNav: 3
 ---
@@ -286,9 +286,16 @@ Given that only certain commands should create undoable states, we chose Alterna
 <div style="height: 10px;"></div>
 
 ### Command History Feature
-To be added.
 
 #### Implementation
+The command history feature is implemented using a `CommandHistory` class that maintains a list of previously executed commands. Each time a command is executed, it is added to the `CommandHistory`. Additionally, it implements the following operations:
+* `CommandHistory#add(String commandText)` — Adds a command as a string to the history.
+* `CommandHistory#getPrevious(String currentInput)` — Returns the previous command in the history.
+* `CommandHistory#getNext(String currentInput)` — Returns the next command in the history.
+* `CommandHistory#resetNavigation()` — Resets the navigation pointer to the end of the history.
+
+These operations are exposed in the `Logic` interface through the `Logic#getCommandHistory()` method, which returns the `CommandHistory` object, allowing the UI to access the command history and implement features such as navigating through previous commands using the up/down arrow keys.
+
 #### Usage Scenario
 #### Design Considerations
 
