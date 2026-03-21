@@ -298,6 +298,29 @@ These operations are exposed in the `Logic` interface through the `Logic#getComm
 
 #### Usage Scenario
 #### Design Considerations
+**Aspect: How command history stores input:**
+
+* **Alternative 1 (current choice):** Maintain a list of command strings and navigate via an index.
+    * Pros: Simple, lightweight and easy to integrate with UI navigation (UP/DOWN keys).
+    * Cons: Only stores raw strings, so it cannot preserve command execution context.
+
+* **Alternative 2:** Store command objects with full state.
+    * Pros: Could enable richer functionality
+    * Cons: More complex, higher memory usage, unnecessary for typical command history navigation.
+
+Since the goal is shell-like navigation, storing only strings is sufficient and keeps the implementation simple.
+
+**Aspect: How navigation handles partially typed input:**
+
+* **Alternative 1 (current choice):** Preserve the current input as a “draft” when the user navigates through history.
+    * Pros: More UX-friendly, as user can return to unfinished input after scrolling through history.
+    * Cons: Slight increase in code complexity to manage a separate draftCommandText.
+
+* **Alternative 2:** Ignore partially typed input and always replace with history.
+    * Pros: Simpler, no need for a draft variable.
+    * Cons: User loses in-progress typing when navigating, which is frustrating in practice.
+
+Preserving draft input improves user experience and is easy to implement with minimal overhead.
 
 <div style="height: 10px;"></div>
 
