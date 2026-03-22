@@ -55,7 +55,7 @@ public class VendorEmailMatchesContactsPredicate implements Predicate<Product> {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).add("emails", contacts
+        return new ToStringBuilder(this).add("contacts", contacts
         ).toString();
     }
 }
