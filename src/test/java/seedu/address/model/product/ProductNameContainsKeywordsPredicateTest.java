@@ -1,5 +1,6 @@
 package seedu.address.model.product;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -77,5 +78,14 @@ public class ProductNameContainsKeywordsPredicateTest {
                 Arrays.asList("DE/339", "support.rochor@yahoo.com", "10", "10"));
         assertFalse(predicate.test(new ProductBuilder().withName("NVMe SSD 2TB").withIdentifier("DE/339")
                 .withQuantity("10").withThreshold("10").withVendorEmail("support.rochor@yahoo.com").build()));
+    }
+
+    @Test
+    public void toStringMethod() {
+        List<String> keywords = List.of("keyword1", "keyword2");
+        ProductNameContainsKeywordsPredicate predicate = new ProductNameContainsKeywordsPredicate(keywords);
+
+        String expected = ProductNameContainsKeywordsPredicate.class.getCanonicalName() + "{keywords=" + keywords + "}";
+        assertEquals(expected, predicate.toString());
     }
 }
