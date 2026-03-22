@@ -24,6 +24,7 @@ public class Messages {
     public static final String MESSAGE_INVALID_PERSON_DISPLAYED_EMAIL = "No contact with"
             + " the specified email was found.";
     public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d contacts listed!";
+    public static final String MESSAGE_PRODUCTS_LISTED_OVERVIEW = "%1$d products listed!";
     public static final String MESSAGE_DUPLICATE_FIELDS =
                 "Multiple values specified for the following single-valued field(s): ";
     public static final String MESSAGE_DUPLICATE_PERSON = "This vendor contact already exists "
