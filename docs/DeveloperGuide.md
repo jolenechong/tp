@@ -356,10 +356,10 @@ Preserving draft input improves user experience and is easy to implement with mi
 
 The archive feature allows vendor contacts to be hidden from the main list without permanently deleting them. Archived vendors remain stored in the system and can be restored later.
 
-The feature introduces two new commands:
+The feature introduces two commands:
 ```
-archive INDEX
-restore INDEX
+archive EMAIL
+restore EMAIL
 ```
 
 Internally, vendors are represented using the `Person` class. A boolean field `archived` is introduced in the `Person` model to track whether a vendor is archived.
@@ -377,7 +377,7 @@ These operations update the `Person` object.
 
 #### Command Flow
 
-The following sequence occurs when executing `archive 1`:
+The following sequence occurs when executing `archive support@adafruit.com`:
 
 1. The user enters the command `archive 1`.
 2. `AddressBookParser` identifies the command word `archive`.
@@ -389,7 +389,7 @@ The following sequence occurs when executing `archive 1`:
 8. The `Person` object is replaced with a new instance with `archived = true`.
 9. The UI updates automatically because archived vendors are excluded from the filtered list.
 
-The `restore vendor INDEX` command follows a similar flow but sets `archived = false`.
+The `restore EMAIL` command follows a similar flow but sets `archived = false`.
 
 #### Filtering Behaviour
 
@@ -406,11 +406,11 @@ When a vendor is restored, the archived flag is set to `false`, causing the vend
 
 #### Error Handling
 
-Error handling is implemented for index.
+Error handling is implemented for email lookups.
 {more implementations to be added}
 
 
-If the index is outside the displayed list range, a `CommandException` is thrown.
+If the email does not match a valid target, a `CommandException` is thrown.
 
 **Model Layer**
 
