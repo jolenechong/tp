@@ -379,15 +379,14 @@ These operations update the `Person` object.
 
 The following sequence occurs when executing `archive support@adafruit.com`:
 
-1. The user enters the command `archive 1`.
-2. `AddressBookParser` identifies the command word `archive`.
-3. `ArchiveCommandParser` parses the index argument.
-4. An `ArchiveCommand` object is created.
-5. `LogicManager` executes the command.
-6. The command retrieves the vendor from the filtered person list.
-7. `Model.archivePerson()` is called.
-8. The `Person` object is replaced with a new instance with `archived = true`.
-9. The UI updates automatically because archived vendors are excluded from the filtered list.
+1. `AddressBookParser` identifies the command word `archive`.
+2. `ArchiveCommandParser` parses the email argument.
+3. An `ArchiveCommand` object is created.
+4. `LogicManager` executes the command.
+5. The command retrieves the vendor from the filtered list.
+6. `Model.archivePerson()` is called.
+7. The `Person` object is replaced with a new instance with `archived = true`.
+8. The UI updates automatically because archived vendors are excluded from the filtered list.
 
 The `restore EMAIL` command follows a similar flow but sets `archived = false`.
 
@@ -747,53 +746,44 @@ Accessibility:
 
 ## **Appendix: Instructions for manual testing**
 
-Given below are instructions to test the app manually.
-
-<box type="info" seamless>
-
-**Note:** These instructions only provide a starting point for testers to work on;
-testers are expected to do more *exploratory* testing.
-
-</box>
-
 ### Launch and shutdown
 
-1. Initial launch
+1. Initial launch as per [Quick Start](./UserGuide.md#quick-start)
 
-   1. Download the jar file and copy into an empty folder
+   - Expected: Full-screen GUI with sample contacts and products. 
 
-   1. Double-click the jar file Expected: Shows the GUI with a set of sample contacts. The window size may not be optimum.
+2. Saving window preferences
 
-1. Saving window preferences
+   - Resize the window to an optimum size. Move the window to a different location. Close the window.
 
-   1. Resize the window to an optimum size. Move the window to a different location. Close the window.
+   - Re-launch app.<br> Expected: The most recent window size and location is retained.
 
-   1. Re-launch the app by double-clicking the jar file.<br>
-       Expected: The most recent window size and location is retained.
+3. _{ more test cases …​ }_
 
-1. _{ more test cases …​ }_
+### Deleting a contact
 
-### Deleting a person
+1. Deleting a contact while all contacts are being shown
 
-1. Deleting a person while all persons are being shown
+   - Prerequisites: List all contacts using the `list` command. Multiple contacts in the list.
 
-   1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+2. Test case: `delete support@adafruit.com`
 
-   1. Test case: `delete 1`<br>
-      Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+   - Expected: Matching contact is deleted from the list. Details of the deleted contact shown in the status message.
 
-   1. Test case: `delete 0`<br>
-      Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
+3. Test case: `delete notfound@example.com`
 
-   1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
-      Expected: Similar to previous.
+   - Expected: No contact is deleted. Error shown in the status message.
 
-1. _{ more test cases …​ }_
+4. Other incorrect delete commands to try: `delete`, `delete invalid-email`
+
+   - Expected: Similar to previous.
+
+5. _{ more test cases …​ }_
 
 ### Saving data
 
 1. Dealing with missing/corrupted data files
 
-   1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+   - _{explain how to simulate a missing/corrupted file, and the expected behavior}_
 
-1. _{ more test cases …​ }_
+2. _{ more test cases …​ }_
