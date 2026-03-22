@@ -24,7 +24,7 @@ import seedu.address.model.UserPrefs;
 import seedu.address.model.VendorVault;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.product.Product;
-import seedu.address.model.product.VendorEmailMatchesEmailsPredicate;
+import seedu.address.model.product.VendorEmailMatchesContactsPredicate;
 import seedu.address.testutil.ProductBuilder;
 
 /**
@@ -140,6 +140,6 @@ public class FindCommandTest {
     }
 
     private void updateExpectedProductFilter(Model model) {
-        model.updateFilteredProductList(new VendorEmailMatchesEmailsPredicate(model.getFilteredPersonList()));
+        model.updateFilteredProductList(new VendorEmailMatchesContactsPredicate(model.getFilteredPersonList()));
     }
 }

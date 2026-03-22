@@ -131,7 +131,8 @@ public class MainWindow extends UiPart<Stage> {
     }
 
     /**
-     * Sets the default size based on {@code guiSettings}.
+     * Sets the default size and minimum size based on {@code guiSettings} and sets
+     * to maximized if it is specified in {@code guiSettings}.
      */
     private void setWindowDefaultSize(GuiSettings guiSettings) {
 
@@ -192,19 +193,8 @@ public class MainWindow extends UiPart<Stage> {
         try {
             CommandResult commandResult = logic.execute(commandText);
             logger.info("Result: " + commandResult.getFeedbackToUser());
-            resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser(), commandResult.getFeedbackType());
 
-            if (commandResult.isShowHelp()) {
-                handleHelp();
-            }
-
-            if (commandResult.isExit()) {
-                handleExit();
-            }
-
-            if (commandResult.isScrollPersonListToBottom()) {
-                personListPanel.scrollToBottom();
-            }
+            handleCommandResultEffects(commandResult);
 
             return commandResult;
         } catch (CommandException | ParseException e) {
@@ -212,5 +202,23 @@ public class MainWindow extends UiPart<Stage> {
             resultDisplay.setFeedbackToUser(e.getMessage(), CommandResult.FEEDBACK_TYPE_ERROR);
             throw e;
         }
+    }
+
+    // Handles the UI effects based on the command result,
+    private void handleCommandResultEffects(CommandResult commandResult) {
+
+        if (commandResult.isShowHelp()) {
+            handleHelp();
+        }
+
+        if (commandResult.isExit()) {
+            handleExit();
+        }
+
+        if (commandResult.isScrollPersonListToBottom()) {
+            personListPanel.scrollToBottom();
+        }
+        resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser(), commandResult.getFeedbackType());
+
     }
 }

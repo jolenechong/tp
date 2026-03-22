@@ -6,7 +6,7 @@ import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.model.Model;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
-import seedu.address.model.product.VendorEmailMatchesEmailsPredicate;
+import seedu.address.model.product.VendorEmailMatchesContactsPredicate;
 
 /**
  * Finds and lists all persons in address book whose name contains any of the argument keywords.
@@ -33,8 +33,9 @@ public class FindCommand extends Command {
 
         model.updateFilteredPersonList(predicate);
 
-        model.updateFilteredProductList(
-                new VendorEmailMatchesEmailsPredicate(model.getFilteredPersonList()));
+        VendorEmailMatchesContactsPredicate productPredicate = new VendorEmailMatchesContactsPredicate(
+                model.getFilteredPersonList());
+        model.updateFilteredProductList(productPredicate);
 
         return new CommandResult(
                 String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, model.getFilteredPersonList().size()));

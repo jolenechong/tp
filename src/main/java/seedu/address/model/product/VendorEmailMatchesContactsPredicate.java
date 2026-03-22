@@ -12,13 +12,15 @@ import seedu.address.model.person.Person;
 /**
  * Tests that a {@code Product}'s vendor email is in the provided email list.
  */
-public class VendorEmailMatchesEmailsPredicate implements Predicate<Product> {
+public class VendorEmailMatchesContactsPredicate implements Predicate<Product> {
     private final Set<Person> contacts;
 
     /**
-     * Initializes VendorEmailMatchesEmailsPredicate given a list of vendors
+     * Initializes a predicate that matches products whose vendor emails are in the given list of contacts.
+     *
+     * @param contacts List of contacts whose emails are used for matching.
      */
-    public VendorEmailMatchesEmailsPredicate(List<Person> contacts) {
+    public VendorEmailMatchesContactsPredicate(List<Person> contacts) {
         requireNonNull(contacts);
         this.contacts = Set.copyOf(contacts);
     }
@@ -26,10 +28,15 @@ public class VendorEmailMatchesEmailsPredicate implements Predicate<Product> {
     @Override
     public boolean test(Product product) {
         requireNonNull(product);
-        return !product.isArchived()
-                && product.getVendorEmail()
-                    .map(email -> contacts.stream().anyMatch(contact -> contact.getEmail().equals(email)))
-                    .orElse(false);
+
+        if (product.isArchived()) {
+            return false;
+        }
+
+        return product.getVendorEmail()
+                .map(email -> contacts.stream()
+                        .anyMatch(contact -> contact.getEmail().equals(email)))
+                .orElse(false);
     }
 
     @Override
@@ -38,11 +45,11 @@ public class VendorEmailMatchesEmailsPredicate implements Predicate<Product> {
             return true;
         }
 
-        if (!(other instanceof VendorEmailMatchesEmailsPredicate)) {
+        if (!(other instanceof VendorEmailMatchesContactsPredicate)) {
             return false;
         }
 
-        VendorEmailMatchesEmailsPredicate otherPredicate = (VendorEmailMatchesEmailsPredicate) other;
+        VendorEmailMatchesContactsPredicate otherPredicate = (VendorEmailMatchesContactsPredicate) other;
         return contacts.equals(otherPredicate.contacts);
     }
 

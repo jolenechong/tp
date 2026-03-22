@@ -121,8 +121,13 @@ public class Product {
     }
 
     /**
-     * Returns true if this person has a similar name to {@code otherPerson}.
-     * Intended for use by {@code AddressBook} similarity checks.
+     * Returns true if this product has a name similar to the specified {@code otherProduct}.
+     * <p>
+     * Two names are considered similar if they share one or more words.
+     * </p>
+     *
+     * @param otherProduct the product to compare with
+     * @return {@code true} if the names are similar, {@code false} otherwise
      */
     public boolean isSimilarNameTo(Product otherProduct) {
         return hasSimilarName(otherProduct);

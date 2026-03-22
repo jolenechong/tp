@@ -18,8 +18,8 @@ import seedu.address.model.tag.Tag;
 public class Person {
 
     private static final String WHITESPACE_REGEX = "\\s+";
-    private static final String SEPARATOR_SPACE = "\\s+";
-    private static final int ZERO_INDEX = 0;
+    private static final String COMMA_REGEX = ",";
+    private static final int START_INDEX = 0;
 
     // Identity fields
     private final Name name;
@@ -79,25 +79,40 @@ public class Person {
     }
 
     /**
-     * Returns true if this person has a similar name to {@code otherPerson}.
-     * Intended for use by {@code AddressBook} similarity checks.
+     * Returns true if this person has a name similar to the specified {@code otherPerson}.
+     * <p>
+     * Two names are considered similar if they share one or more words.
+     * </p>
+     *
+     * @param otherPerson the person to compare with
+     * @return {@code true} if the names are similar, {@code false} otherwise
      */
     public boolean isSimilarNameTo(Person otherPerson) {
         return hasSimilarName(otherPerson);
     }
 
     /**
-     * Returns true if this person has a similar address to {@code otherPerson}.
-     * Intended for use by {@code AddressBook} similarity checks.
+     * Returns true if this person has an address similar to the specified {@code otherPerson}.
+     * <p>
+     * Two addresses are considered similar if one fully contains the other.
+     * </p>
+     *
+     * @param otherPerson the person to compare with
+     * @return {@code true} if the addresses are considered similar, {@code false} otherwise
      */
     public boolean isSimilarAddressTo(Person otherPerson) {
         return hasSimilarAddress(otherPerson);
     }
 
     /**
-     * Returns true if this person has a similar phone number to {@code otherPerson}.
-     * Similarity is determined by having Phone.MIN_LENGTH contiguous digits in common.
-     * Intended for use by {@code AddressBook} similarity checks.
+     * Returns true if this person has a phone number similar to the specified {@code otherPerson}.
+     * <p>
+     * Two phone numbers are considered similar if they share any
+     * {@code Phone.MIN_LENGTH} contiguous digits.
+     * </p>
+     *
+     * @param otherPerson the person to compare with
+     * @return {@code true} if the phone numbers are similar, {@code false} otherwise
      */
     public boolean isSimilarPhoneTo(Person otherPerson) {
         return hasSimilarPhone(otherPerson);
@@ -115,18 +130,13 @@ public class Person {
             return true;
         }
 
-        String[] thisParts = thisName.split(SEPARATOR_SPACE);
-        String[] otherParts = otherName.split(SEPARATOR_SPACE);
+        String[] thisParts = thisName.split(WHITESPACE_REGEX);
+        String[] otherParts = otherName.split(WHITESPACE_REGEX);
 
         Set<String> nameParts = new HashSet<>(Arrays.asList(thisParts));
 
-        for (String part : otherParts) {
-            if (nameParts.contains(part)) {
-                return true;
-            }
-        }
-
-        return false;
+        return Arrays.stream(otherParts)
+                .anyMatch(nameParts::contains);
     }
 
     private static String normalizeName(String name) {
@@ -145,27 +155,20 @@ public class Person {
             return false;
         }
 
-        String[] thisPhones = this.phone.value.split(",");
-        String[] otherPhones = otherPerson.getPhone().value.split(",");
+        String[] thisPhoneNumbers = splitAndCleanPhoneNumbers(this.phone.value);
+        String[] otherPhoneNumbers = splitAndCleanPhoneNumbers(otherPerson.getPhone().value);
 
-        // Check each phone number from this person against each from the other person
-        for (String thisPhone : thisPhones) {
-            String thisPhoneDigits = thisPhone.trim()
-                    .replaceAll(VALIDATION_EXCLUDE_DIGITS_REGEX, "");
-
-            if (thisPhoneDigits.length() < Phone.MIN_LENGTH) {
+        for (String thisNumber : thisPhoneNumbers) {
+            if (thisNumber.length() < Phone.MIN_LENGTH) {
                 continue;
             }
 
-            for (String otherPhone : otherPhones) {
-                String otherPhoneDigits = otherPhone.trim()
-                        .replaceAll(VALIDATION_EXCLUDE_DIGITS_REGEX, "");
-
-                if (otherPhoneDigits.length() < Phone.MIN_LENGTH) {
+            for (String otherNumber : otherPhoneNumbers) {
+                if (otherNumber.length() < Phone.MIN_LENGTH) {
                     continue;
                 }
 
-                if (hasContiguousMatch(thisPhoneDigits, otherPhoneDigits)) {
+                if (hasContiguousMatch(thisNumber, otherNumber)) {
                     return true;
                 }
             }
@@ -174,23 +177,30 @@ public class Person {
         return false;
     }
 
+    private String[] splitAndCleanPhoneNumbers(String phoneString) {
+        return Arrays.stream(phoneString.split(COMMA_REGEX))
+                .map(String::trim)
+                .map(s -> s.replaceAll(VALIDATION_EXCLUDE_DIGITS_REGEX, ""))
+                .toArray(String[]::new);
+    }
+
     private boolean hasContiguousMatch(String str1, String str2) {
         if (str1.length() < Phone.MIN_LENGTH || str2.length() < Phone.MIN_LENGTH) {
             return false;
         }
 
-        Set<String> contiguousSubstrings = new HashSet<>();
-        for (int i = ZERO_INDEX; i <= str1.length() - Phone.MIN_LENGTH; i++) {
-            contiguousSubstrings.add(str1.substring(i, i + Phone.MIN_LENGTH));
-        }
+        Set<String> substringOfFirst = generatePhoneSubstrings(str1);
 
-        for (int i = ZERO_INDEX; i <= str2.length() - Phone.MIN_LENGTH; i++) {
-            if (contiguousSubstrings.contains(str2.substring(i, i + Phone.MIN_LENGTH))) {
-                return true;
-            }
-        }
+        return generatePhoneSubstrings(str2)
+                .stream().anyMatch(substringOfFirst::contains);
+    }
 
-        return false;
+    private Set<String> generatePhoneSubstrings(String input) {
+        Set<String> substrings = new HashSet<>();
+        for (int i = START_INDEX; i <= input.length() - Phone.MIN_LENGTH; i++) {
+            substrings.add(input.substring(i, i + Phone.MIN_LENGTH));
+        }
+        return substrings;
     }
 
     /**
