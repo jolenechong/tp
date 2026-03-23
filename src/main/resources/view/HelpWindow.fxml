@@ -29,11 +29,6 @@
 
         <HBox fx:id="helpTitleBar" alignment="CENTER_LEFT" spacing="10"
               style="-fx-padding: 14 18 14 18; -fx-border-color: #444; -fx-border-width: 0 0 1 0;">
-          <ImageView fitHeight="22" fitWidth="22" preserveRatio="true">
-            <image>
-              <Image url="@/images/help_icon.png"/>
-            </image>
-          </ImageView>
           <Label text="VendorVault — Help" styleClass="label-header"
                  style="-fx-font-size: 18pt;"/>
           <Region HBox.hgrow="ALWAYS"/>
