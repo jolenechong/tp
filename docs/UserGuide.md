@@ -7,17 +7,11 @@
 
 # VendorVault User Guide
 
-VendorVault is a **desktop app for managing your vendors and inventory all in one place**. It combines the speed of typing commands with the simplicity of a visual interface, allowing you to update products, their quantities, track vendors, and organise their contacts quickly and efficiently, all optimised for use via a Command Line Interface (CLI).
+Are you a small business owner who prefers **typing commands** to get things done quickly?
 
-Spend less time searching through spreadsheets and switching between apps. VendorVault keeps your business information organised so you can focus on what matters most: growing your business.
+VendorVault is a **desktop app for managing your vendors and inventory all in one place**. It combines the speed of typing commands with the simplicity of a visual interface, allowing you to organise your vendor contacts and track your products efficiently.
 
-<br>
-
-VendorVault is designed for:
-
-* **Small business owners** managing vendor contacts and suppliers
-* **Small business owners** who track inventory and vendor information
-* **Users comfortable with typing commands** to quickly manage data
+Spend less time searching through spreadsheets and switching between apps. VendorVault keeps your business information organised so you can focus on what matters most: **growing your business**.
 
 <!-- * Table of Contents -->
 <page-nav-print />
@@ -41,7 +35,7 @@ Follow these steps to get VendorVault up and running:
 
    </box>
 
-2. Download the latest version of VendorVault [here](https://github.com/AY2526S2-CS2103T-W08-2/tp).
+2. Download the latest version of VendorVault [here](https://github.com/AY2526S2-CS2103T-W08-2/tp/releases/).
     * Specifically, choose to download the `.jar` file.
     * If necessary, move the file to a folder you want to use as the _home folder_ for VendorVault.
 <br><br>
@@ -57,7 +51,7 @@ cd PATH_TO_FOLDER_CONTAINING_JAR_FILE
 java -jar vendorvault.jar
 ```
 
-For example, if you placed the `.jar` file in `C:\Users\John\Downloads`:
+For example, if you placed the `.jar` file in your Downloads folder:
 
 ```bash
 cd C:\Users\John\Downloads
@@ -84,14 +78,14 @@ java -jar vendorvault.jar
   </tab>
   <tab header="Linux">
 
-Open a **Terminal** and run:
+Open **Terminal** and run:
 
 ```bash
 cd PATH_TO_FOLDER_CONTAINING_JAR_FILE
 java -jar vendorvault.jar
 ```
 
-For example, if you placed the `.jar` file in a `vendorvault` folder in your home directory:
+For example, if you placed the `.jar` file your Downloads folder:
 
 ```bash
 cd ~/vendorvault
@@ -107,21 +101,22 @@ If you get a permission error, make the file executable first: `chmod +x vendorv
   </tab>
 </tabs>
 
-   VendorVault should start up and you should see a GUI similar to the below in a few seconds. Note how the app contains some sample data.<br>
+   VendorVault should start up. Note how the app contains some sample data.<br>
    ![Ui](images/Ui.png)
 <br><br>
-4. Now, we're ready to use the app! At the top left of the app, you should see a command box with the text `Type a
-command here...`. This is where you can type in commands to interact with the app. You can also access the list of available commands by clicking on the `Help` menu at the top of the app or by pressing `F1` on your keyboard.
-<br><br>
+4. At the top left of the app, you should see a box where you can start typing commands. For more information, you can access the list of available commands with [`help`](#viewing-help-help).
+
 Some example commands you can try:
 
-* `add n/TechSource Electronics p/61234567 e/sales@techsource.com a/15 Kallang Way, Singapore` : Adds a vendor contact named `TechSource Electronics` to VendorVault.
+* `add n/TechSource Electronics p/61234567 e/sales@techsource.com a/15 Kallang Way, Singapore` : Adds a vendor contact named `TechSource Electronics`.
 
 * `delete sales@techsource.com` : Deletes `TechSource Electronics`.
 
-* `help`: View available commands within the app.
+* `addproduct id/SKU-1003 n/Arduino Uno R4 q/50 th/10 e/sales@techsource.com`: Adds a product `Arduino Uno`.
 
-5\. Refer to the [Features](#features) below for details of each command. Or [Command Summary](#command-summary) for a quick summary of all commands.
+* `deleteproduct SKU-1003`: Deletes `Arduino Uno`.  
+
+5\. Refer to the [Features](#features) below for details of each command, or [Command Summary](#command-summary) for a quick summary of all commands.
 
 <br>
 
@@ -137,51 +132,36 @@ Some example commands you can try:
 <!-- <box type="important" seamless> -->
 
 
-VendorVault keeps your data in one of three states. Understanding this will help you choose the right command every time:
+VendorVault keeps your data in one of three states:
 
-| State        | What it means                                  | How to get there                                          |
+| State        | What it means                                  | Related commands                                          |
 |--------------|------------------------------------------------|-----------------------------------------------------------|
-| **Active**   | Visible in the main list, fully usable         | Default / `restore` / `restoreproduct`                    |
-| **Archived** | Hidden but recoverable, data is kept           | `archive` / `archiveproduct`                              |
-| **Deleted**  | Permanently gone, cannot be recovered          | `delete` / `deleteproduct` / `clear` / `clearproduct`     |
+| **Active**   | Visible on the home page        | `listall`                    |
+| **Archived** | Hidden but recoverable           | `archive` / `archiveproduct`                              |
+| **Deleted**  | Permanently gone          | `delete` / `deleteproduct` / `clear` / `clearproduct`     |
 
 When in doubt, **archive, don't delete.**
 
 </box>
-
-<div style="height: 20px;"></div>
 
 <box type="info" seamless>
 
 **Note about destructive commands:**
 
 * You can use undo to restore the data only **within the same app session**.
-* If you may need the contact/product again in the future, consider using [`archive`](#archiving-a-contact-archive) / [`archiveproduct`](#archiving-a-product-archiveproduct) respectively.
+* If you need the contact or product again, consider using [`archive`](#archiving-a-contact-archive) / [`archiveproduct`](#archiving-a-product-archiveproduct).
 
 </box>
 
 <box type="info" seamless>
 
-**Notes about the command format:**<br>
+**Notes about the command format:**
 
+* Words in `UPPER_CASE` are the parameters to be supplied.
+* Items in square brackets such as `[t/TAG]` are optional.
+* Parameters can be supplied in any order.
 * To skip the confirmation prompt, use the `-y` flag: `deleteproduct -y PRODUCT_IDENTIFIER`
 
-* Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
-  e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
-
-* Items in square brackets are optional.<br>
-  e.g. `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
-
-* Items with `…`​ after them can be used multiple times including zero times.<br>
-  e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
-
-* Parameters can be in any order.<br>
-  e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
-
-* Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `listproduct`, `exit`, `clear` and `clearproduct`) will be ignored.<br>
-  e.g. if the command specifies `help 123`, it will be interpreted as `help`.
-
-* If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
 </box>
 
 <div style="height: 20px;"></div>
@@ -192,7 +172,7 @@ When in doubt, **archive, don't delete.**
 
 #### Adding a contact: `add`
 
-Adds a contact to VendorVault.
+Adds a vendor contact.
 
 Format:
 
@@ -203,7 +183,7 @@ add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​
 Examples:
 
 * `add n/Adafruit Industries p/64601234 e/support@adafruit.com a/151 Varick St, New York, NY 10013, USA`
-* `add n/Cytron Technologies Pte. Ltd. p/65480668 (Office), 91234567 (Sales) e/sg.sales@cytron.io a/09 Collyer Quay t/electronics`
+* `add n/Cytron Technologies Pte. Ltd. p/65480668 (Office), 91234567 (Sales) e/sg.sales@cytron.io a/09 Collyer Quay t/electronics t/technology`
 
 <box type="tip" seamless>
 
@@ -217,30 +197,22 @@ To include multiple phone numbers for a contact, you can **separate them with co
 
 For example, the following command adds a contact with two phone numbers: `61234567` and `87654321`:
 
-```
-add n/DigiKey Singapore p/61234567, 87654321 e/sg.sales@digikey.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951
-```
+`add n/DigiKey Singapore p/61234567, 87654321 e/sg.sales@digikey.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951`
 
 </panel>
 
 <panel header="What contacts are considered duplicates?" type="seamless" id="faq-duplicate-contacts">
 
-A contact is considered a duplicate if:
+A contact is considered a duplicate if it has the **same email as an existing contact**. For example:<br>
 
-* It has the **same email as an existing contact** in VendorVault.
-
-For example, these contacts are considered duplicates because they share the same email `contact@company.com`:<br>
-
-```
-add n/DigiKey Singapore p/61234567 e/contact@company.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951
-add n/DigiKey Singapore p/61234567, 12345678 e/contact@company.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951
-```
+* `add n/DigiKey Singapore p/61234567 e/contact@company.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951`
+* `add n/DigiKey Singapore p/61234567, 12345678 e/contact@company.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951`
 
 </panel>
 
 <br>
 
-For more details on possible warnings and errors when adding a contact, refer to the [troubleshooting guide for add contact](#troubleshooting-add-contact) below.
+For more details on possible warnings and errors, refer to the [troubleshooting guide](#troubleshooting-add-contact) below.
 
 <div style="height: 30px;"></div>
 
@@ -258,7 +230,7 @@ list
 
 #### Editing a contact : `edit`
 
-Edits a contact using the given email. Only the fields you specify will be updated, all others stay the same.
+Edits a contact with the given email. Only the fields you specify will be updated, all other fields stay the same.
 
 Format:
 
@@ -268,29 +240,26 @@ edit EMAIL [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​
 
 Examples:
 
-* `edit support@adafruit.com p/98196742 a/New York, USA` Updates the phone number and address for `support@adafruit.com`. The name, email, and tags remain unchanged.
-* `edit sg.sales@cytron.io n/Cytron t/` Updates the name to Cytron for `sg.sales@cytron.io` and clears all existing tags.
+* `edit support@adafruit.com p/98196742 a/New York, USA` Updates the phone number and address.
+* `edit sg.sales@cytron.io n/Cytron t/` Updates the name and clears all existing tags.
 
 <panel header="What happens when I edit a contact's tag?" type="seamless">
 
 The existing tags are **removed and replaced with the new tags you specified**, new tags are not cumulative.
 
-For example, if a contact has existing tags `t/electronics t/supplier` and you edit it with `edit EMAIL t/wholesale`, the contact's tags will be updated to only have `t/wholesale` and the previous tags will be removed.
+For example, if a contact has tags `t/electronics t/supplier` and you run `edit EMAIL t/wholesale`, the existing tags will be replaced with `t/wholesale`.
 
 </panel>
 
 <panel header="How do I remove all tags from a contact?" type="seamless">
 
-Simply type `t/` without specifying any tags.
-
-For example, `edit EMAIL t/` will remove all tags from the contact with the specified email. You will be prompted to confirm the removal of all tags.
+Simply type `edit EMAIL t/` without specifying any tags. You will be prompted to confirm the removal of all tags.
 
 </panel>
 
 <br>
 
-The same rules for multiple phone numbers and duplicates that apply to `add` also apply to `edit`.
-For more details on possible warnings and errors when editing a contact, refer to the [troubleshooting guide for edit contact](#troubleshooting-edit-contact) below.
+The same rules for multiple phone numbers and duplicates that apply to `add` also apply to `edit`. For more details on possible warnings and errors, refer to the [troubleshooting guide](#troubleshooting-edit-contact) below.
 
 <div style="height: 30px;"></div>
 
@@ -304,7 +273,7 @@ For more details on possible warnings and errors when editing a contact, refer t
 
 #### Archiving a contact : `archive`
 
-Moves a contact to the archive. Archived contacts are hidden from the main list but are **not permanently deleted**. They can be restored at any time.
+Hides a contact from the home page. It is **not permanently deleted** and can be restored at any time.
 
 Format:
 
@@ -314,25 +283,29 @@ archive EMAIL
 
 Examples:
 
-* `archive sg.sales@cytron.io` archives the contact associated with the email `sg.sales@cytron.io`.
+* `archive sg.sales@cytron.io`
 
 <box type="tip" seamless>
 
-**Tip:** Archiving is the recommended way to remove vendors you no longer work with, but may need to reference in future. To permanently delete a contact, use [`delete`](#deleting-a-contact-delete).
+**Tip:** Archive a vendor you no longer work with, but may need to reference in future. To permanently delete a contact, use [`delete`](#deleting-a-contact-delete).
 
 </box>
 
 <panel header="How do I view or recover archived contacts?" type="seamless">
 
-Use [`restore`](#restoring-an-archived-contact-restore) without any argument to view all archived contacts. Then use `restore EMAIL` to bring a specific contact back to the active list.
+Use [`restore`](#restoring-an-archived-contact-restore) without any parameters to view all archived contacts. Then, use `restore EMAIL` to return the contact to active state.
 
 </panel>
+<br>
+
+For more details on possible warnings and errors, refer to the [troubleshooting guide](#troubleshooting-archive-contact) below.
+
 
 <div style="height: 30px;"></div>
 
 #### Restoring an archived contact : `restore`
 
-Moves a previously archived contact back to the active contact list. If `EMAIL` is omitted, VendorVault will display all archived contacts so you can find the one you want to restore.
+Unhides a previously archived contact. 
 
 Format:
 
@@ -342,12 +315,12 @@ restore EMAIL
 
 Examples:
 
-* `restore`: shows all archived contacts in the panel.
-* `restore sg.sales@cytron.io`: restores the archived contact with email `sg.sales@cytron.io`.
+* `restore`: shows all archived contacts.
+* `restore sg.sales@cytron.io`
 
-<box type="info" seamless>
+<box type="tip" seamless>
 
-Only contacts that have been archived can be restored. If you try to restore an email that does not match any archived contact, VendorVault will show the archived contacts list to help you find the right email.
+If `EMAIL` is omitted or invalid, all archived contacts will be displayed, so you can find what you want to restore.
 
 </box>
 
@@ -355,8 +328,8 @@ Only contacts that have been archived can be restored. If you try to restore an 
 
 #### Deleting a contact : `delete`
 
-Removes a contact from the address book using their email address as the _unique identifier_.
-You will be prompted to confirm the deletion before any changes are made.
+Removes a vendor contact.
+You will be prompted to confirm the deletion.
 
 Format:
 
@@ -366,15 +339,19 @@ delete EMAIL
 
 Examples:
 
-* `delete support@adafruit.com` deletes the contact associated with the email `support@adafruit.com`.
+* `delete support@adafruit.com`
 
 <div style="height: 30px;"></div>
 
 #### Clearing all contacts: `clear`
 
-Permanently removes all contacts from the address book.
+Removes all contacts permanently.
+You will be prompted to confirm the deletion.
 
-Format: `clear`
+Format: 
+```
+clear
+```
 
 <div style="height: 30px;"></div>
 
@@ -389,37 +366,31 @@ Format:
 addproduct id/IDENTIFIER n/NAME [q/QUANTITY] [th/RESTOCK_THRESHOLD] [e/VENDOR_EMAIL]
 ```
 
-<box type="tip" seamless>
-
-**Tip:**
-<br>
-If quantity is omitted, it will default to 0.
-<br>
-If threshold is omitted, it will default to 0.
-
-</box>
-
-<box type="info" seamless>
-
-`VENDOR_EMAIL` must match the email of an existing contact. If omitted, product will not be associated with a vendor.
-
-</box>
-
 Examples:
 
 * `addproduct id/SKU-288 n/HP LaserJet (M428fdw) q/17 th/15`
 * `addproduct id/DE/5 n/PlayStation e/sg.sales@cytron.io`
 
+<box type="info" seamless>
+
+If quantity and/or threshold is omitted, it will default to 0. 
+If vendor email is omitted, product will not be associated with a vendor.
+
+</box>
+
 <panel header="What products are considered duplicates?" type="seamless" id="faq-duplicate-products">
 
 A product is considered a duplicate if it has the **same identifier (id) as an existing product**. For example:
 
-```
-addproduct id/SKU-1003 n/Arduino Uno R4
-addproduct id/SKU-1003 n/Raspberry Pi 5
-```
+* `addproduct id/SKU-1003 n/Arduino Uno R4`
+* `addproduct id/SKU-1003 n/Raspberry Pi 5`
 
 </panel>
+
+<br>
+
+For more details on possible warnings and errors, refer to the [troubleshooting guide](#troubleshooting-addproduct) below.
+
 <div style="height: 30px;"></div>
 
 #### Listing all products : `listproduct`
@@ -436,18 +407,12 @@ listproduct
 
 #### Editing a product : `editproduct`
 
-Edits the details of an existing product in the inventory. Only the fields you specify will be updated, all others stay the same.
+Edits a product with the given identifier. Only the fields you specify will be updated, all other fields stay the same.
 
 Format:
 ```
 editproduct IDENTIFIER [id/NEW_IDENTIFIER] [n/NAME] [q/QUANTITY] [th/RESTOCK_THRESHOLD] [e/VENDOR_EMAIL]
 ```
-
-<box type="info" seamless>
-
-**Note:** `VENDOR_EMAIL` must match the email of an existing contact. If the contact does not exist in VendorVault, the edit will **not** go through.
-
-</box>
 
 Examples:
 
@@ -456,23 +421,12 @@ Examples:
 
 <panel header="How do I remove the vendor email from a product?" type="seamless">
 
-Simply type `e/` without specifying any email.
+Simply type `editproduct EMAIL e/` without specifying any email.
 
-For example, `editproduct SKU-1003 e/` will remove the vendor email from the product with identifier `SKU-1003`.
+</panel><br>
 
-</panel>
 
-<br>
-
-For more details on possible warnings and errors when editing a product, refer to the [troubleshooting guide for editproduct](#troubleshooting-editproduct) below.
-
-<div style="height: 30px;"></div>
-
-<box type="info" seamless>
-
-**This feature is currently in progress** and will be available in a future release. `editproduct` will allow you to update a product's name, quantity, or restock threshold without having to delete and re-add it.
-
-</box>
+The same rules for email that apply to add also apply to edit. For more details on possible warnings and errors, refer to the [troubleshooting guide](#troubleshooting-editproduct) below.
 
 <div style="height: 30px;"></div>
 
@@ -488,7 +442,7 @@ For more details on possible warnings and errors when editing a product, refer t
 
 #### Archiving a product : `archiveproduct`
 
-Moves a product to the archive. Archived products are hidden from the main inventory list but are **not permanently deleted**. They can be restored at any time using their identifier.
+Hides a product from the home page. It is **not permanently deleted** and can be restored at any time.
 
 Format:
 
@@ -498,27 +452,30 @@ archiveproduct IDENTIFIER
 
 Examples:
 
-* `archiveproduct SKU-1003` archives the product with identifier `SKU-1003`.
-* `archiveproduct SKU-2048` archives the product with identifier `SKU-2048`.
+* `archiveproduct SKU-1003`
+* `archiveproduct SKU-2048`
 
 
 <box type="tip" seamless>
 
-**Tip:** Use `archiveproduct` for products that are temporarily out of stock or discontinued, but may return. To permanently remove a product, use [`deleteproduct`](#deleting-a-product-deleteproduct).
+**Tip:** Tip: Archive a product you no longer have, but may bring back in future. To permanently delete a product, use `deleteproduct`.
 
 </box>
 
 <panel header="How do I view or recover archived products?" type="seamless">
 
-Use [`restoreproduct`](#restoring-an-archived-product-restoreproduct) without any argument to display all archived products. Then run `restoreproduct IDENTIFIER` to restore the one you need.
+Use [`restoreproduct`](#restoring-an-archived-product-restoreproduct) without any parameters to view all archived products. Then, use `restore IDENTIFIER` to return the product to active state.
 
-</panel>
+</panel><br>
+
+For more details on possible warnings and errors, refer to the [troubleshooting guide](#troubleshooting-archiveproduct) below.
+
 
 <div style="height: 30px;"></div>
 
 #### Restoring an archived product : `restoreproduct`
 
-Moves a previously archived product back to the active inventory list.
+Unhides a previously archived product.
 
 Format:
 
@@ -526,16 +483,14 @@ Format:
 restoreproduct IDENTIFIER
 ```
 
-* If `IDENTIFIER` is omitted, VendorVault will display all archived products so you can find the one you want to restore.
-
 Examples:
 
-* `restoreproduct`: shows all archived products in the panel.
-* `restoreproduct SKU-1003`: restores the archived product with identifier `SKU-1003`.
+* `restoreproduct`: shows all archived products.
+* `restoreproduct SKU-1003`
 
-<box type="info" seamless>
+<box type="tip" seamless>
 
-Only products that have been archived can be restored. If the identifier does not match any archived product, VendorVault will show the archived products list to help you find the correct identifier.
+If `IDENTIFIER` is omitted or invalid, all archived products will be displayed, so you can find what you want to restore.
 
 </box>
 
@@ -543,8 +498,8 @@ Only products that have been archived can be restored. If the identifier does no
 
 #### Deleting a product : `deleteproduct`
 
-Permanently removes a product from the inventory using its product identifier.
-You will be prompted to confirm the deletion before any changes are made.
+Removes a product.
+You will be prompted to confirm the deletion.
 
 Format:
 
@@ -554,15 +509,20 @@ deleteproduct PRODUCT_IDENTIFIER
 
 Examples:
 
-* `deleteproduct SKU-1003` deletes the product with identifier `SKU-1003`.
+* `deleteproduct SKU-1003`
 
 <div style="height: 30px;"></div>
 
 #### Clearing all products : `clearproduct`
 
-Permanently removes **all** products from the inventory.
+Removes all products permanently.
+You will be prompted to confirm the deletion.
 
-Format: `clearproduct`
+Format: 
+
+```
+clearproduct
+```
 
 <div style="height: 30px;"></div>
 
@@ -570,7 +530,7 @@ Format: `clearproduct`
 
 #### Viewing help : `help`
 
-Shows a message explaining how to access the help page.
+Shows a message (tbd) explaining how to access the help page.
 
 Format:
 ```
@@ -581,7 +541,7 @@ help
 
 #### Add a command alias : `alias`
 
-Create an alternative command word that triggers an existing command (excluding `alias`).
+Creates a shortcut to an existing command (excluding `alias`).
 
 Format:
 ```
@@ -589,14 +549,14 @@ alias ORIGINAL_COMMAND ALIAS
 ```
 
 Example:
-* `alias` list all current aliases
-* `alias list ls` maps `ls` as an alias for the `list` command
+* `alias` list all current aliases.
+* `alias list ls` maps `ls` as an alias for the `list` command.
 
 <div style="height: 30px;"></div>
 
-#### Undoing the previous command : `undo`
+#### Undoing the previous change : `undo`
 
-Undoes the last change you made to your contacts or products. You can repeat `undo` to go back through multiple changes in the current app session.
+Undoes the last change to contacts or products. You can repeat the command to undo multiple changes in the current session.
 
 Format:
 
@@ -606,9 +566,9 @@ undo
 
 <div style="height: 30px;"></div>
 
-#### Redoing the previous undone command : `redo`
+#### Redoing the previous undone change : `redo`
 
-Redoes the last change you undid on your contacts or products. You can repeat `redo` to go forward through multiple undone changes in the current app session.
+Redoes the last change you undid on contacts or products. You can repeat the command to redo multiple changes in the current session.
 
 Format:
 
@@ -620,7 +580,7 @@ redo
 
 #### Listing all contacts and products : `listall`
 
-Shows a list of all **active** contacts and products at once. Useful for getting a full overview of your data after using `find` or `findproduct` and `restore` or `restoreproduct`.
+Shows a list of all **active** contacts and products at once. 
 
 Format:
 ```
@@ -629,9 +589,9 @@ listall
 
 <div style="height: 30px;"></div>
 
-#### Exiting the program : `exit`
+#### Exiting the app : `exit`
 
-Exits the program.
+Exits VendorVault.
 
 Format:
 ```
@@ -650,11 +610,13 @@ exit
 
 | Action             | Command                                                                | Example                                                                                                    | What it does                             |
 |--------------------|------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|------------------------------------------|
-| **Add Contact**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`               | `add n/TechSource Electronics p/61234567 e/sales@techsource.com a/15 Kallang Way, Singapore t/electronics` | Adds vendor contact                      |
-| **Edit Contact**   | `edit EMAIL [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​` | `edit sales@techsource.com n/TechSource p/61234568`                                                        | Edits specified fields of vendor contact |
-| **Delete Contact** | `delete EMAIL`                                                         | `delete sales@techsource.com`                                                                              | Deletes contact by email                 |
-| **List**           | `list`                                                                 |                                                                                                            | Lists active contacts                       |
-| **Find Contact**   | `find KEYWORD [MORE_KEYWORDS]`                                         | `find TechSource`                                                                                          | Lists all contacts matching `KEYWORD`    |
+| **Add Contact**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`               | `add n/TechSource Electronics p/61234567 e/sales@techsource.com a/15 Kallang Way, Singapore t/electronics` | Adds a contact                      |
+| **Edit Contact**   | `edit EMAIL [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​` | `edit sales@techsource.com n/TechSource p/61234568`                                                        | Edits a contact's details |
+| **Delete Contact** | `delete EMAIL`                                                         | `delete sales@techsource.com`                                                                              | Deletes a contact                |
+| **List Contacts**           | `list`                                                                 |                                                                                                            | Lists active contacts                       |
+| **Find Contacts**   | `find KEYWORD [MORE_KEYWORDS]`                                         | `find TechSource`                                                                                          | Lists all contacts matching `KEYWORD`    |
+| **Archive Contact**   | `archive EMAIL`                                         | `archive sales@techsource.com`                                                                                          | Archives a contact    |
+| **Restore Contact**   | `restore [EMAIL]`                                         | `restore sales@techsource.com`                                                                                          | Restores an archived contact; lists all archived if no email given    |
 | **Clear Contacts** | `clear`                                                                |                                                                                                            | Clears all contacts                      |
 
 <div style="height: 30px;"></div>
@@ -663,24 +625,23 @@ exit
 
 | Action              | Command                                                                                | Example                                                                     | What it does                                                         |
 |---------------------|----------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|----------------------------------------------------------------------|
-| **Add Product**     | `addproduct id/IDENTIFIER n/NAME [q/QUANTITY] [th/RESTOCK_THRESHOLD] [e/VENDOR_EMAIL]` | `addproduct id/SKU-1003 n/Arduino Uno R4 q/50 th/10 e/sales@techsource.com` | Adds product                                                         |
+| **Add Product**     | `addproduct id/IDENTIFIER n/NAME [q/QUANTITY] [th/RESTOCK_THRESHOLD] [e/VENDOR_EMAIL]` | `addproduct id/SKU-1003 n/Arduino Uno R4 q/50 th/10 e/sales@techsource.com` | Adds a product                                                         |
 | **Edit Product**    | `editproduct IDENTIFIER [id/NEW_IDENTIFIER] [n/NAME] [q/QUANTITY] [th/RESTOCK_THRESHOLD] [e/VENDOR_EMAIL]` | `editproduct SKU-1003 n/Arduino Uno R4 q/50` | Edits a product's details  |
-| **Delete Product**  | `deleteproduct PRODUCT_IDENTIFIER`    | `deleteproduct SKU-1003`  | Permanently deletes product by identifier; prompts for confirmation |
-| **List Products**   | `listproduct`                                                                          |                                                                             | Lists all active products                                            |
-| **Find Product**    | `findproduct` _(coming soon)_                                                          |                                                                             |
-| **Clear Products**  | `clearproduct`                        |                           | Permanently clears all active products; prompts for confirmation    |
-| **Archive Product** | `archiveproduct IDENTIFIER`                                                            | `archiveproduct SKU-1003`                                                   | Archives product (hidden, not deleted)                               |
-| **Restore Product** | `restoreproduct [IDENTIFIER]`                                                          | `restoreproduct SKU-1003`                                                   | Restores archived product; lists all archived if no identifier given |
-| **Delete Product**  | `deleteproduct IDENTIFIER`                                                             | `deleteproduct SKU-1003`                                                    | Permanently deletes product by identifier                            |
-| **Clear Products**  | `clearproduct`                                                                         |                                                                             | Permanently clears all products                                      |
+| **Delete Product**  | `deleteproduct PRODUCT_IDENTIFIER`    | `deleteproduct SKU-1003`  | Deletes a product |
+| **List Products**   | `listproduct`                                                                          |                                                                             | Lists active products                                            |
+| **Find Products**    | `findproduct` _(coming soon)_                                                          |                                                                             |
+| **Archive Product** | `archiveproduct IDENTIFIER`                                                            | `archiveproduct SKU-1003`                                                   | Archives a product                               |
+| **Restore Product** | `restoreproduct [IDENTIFIER]`                                                          | `restoreproduct SKU-1003`                                                   | Restores an archived product; lists all archived if no identifier given |
+| **Clear Products**  | `clearproduct`                                                                         |                                                                             | Clears all products                                       |
+
+<div style="height: 30px;"></div>
 
 ### General Commands
-
 | Action    | Command | What it does               |
 |-----------|---------|----------------------------|
-| **Alias** | `alias` | Add a new alias            |
-| **Undo**  | `undo`  | Undoes previous command    |
-| **Redo**  | `redo`  | Redoes last undone command |
+| **Alias** | `alias [ORIGINAL_COMMAND] [ALIAS] ` | Add a new alias; List all aliases if original command and alias are not given            |
+| **Undo**  | `undo`  | Undoes previous changes    |
+| **Redo**  | `redo`  | Redoes last undone changes |
 | **List All** | `listall` | Lists all active contacts and products |
 | **Help**  | `help`  | Shows help message         |
 | **Exit**  | `exit`  | Exits VendorVault          |
@@ -690,12 +651,6 @@ exit
 <br>
 
 ## FAQ
-
-<panel header="I accidentally entered a command that changed the data. Can I undo that?" type="seamless">
-
-Yes, you can undo the previous command that changed the data by using the `undo` command. For example, if you accidentally deleted a contact, simply enter `undo` and the contact will be restored.
-
-</panel>
 
 <panel header="I edited the data file directly and now VendorVault is not working. What should I do?" type="seamless">
 
@@ -1029,53 +984,41 @@ Warnings are shown when the command succeeds, but the provided information does 
 
 <panel header="Recommended contact name format" type="seamless" id="contact-name-format">
 
-Name is recommended to meet the following guidelines:
+Name is recommended to meet the following guidelines, otherwise you will see a warning:
 - It can contain letters, numbers and spaces
-
-You may see a warning if the vendor name includes special characters. This is only a recommendation, you may safely ignore the warning if the name is correct (e.g. `Cytron Technologies Pte. Ltd.`).
 
 </panel>
 
-<panel header="Recommended phone number format" type="seamless" id="contact-phone-format">
+<panel header="Recommended contact phone number format" type="seamless" id="contact-phone-format">
 
-Phone number(s) is recommended to meet the following guidelines:
-1. It should contain only digits, spaces, '+' or '-' in the number part.
-2. Multiple phone numbers should be separated by commas.
+Phone number(s) is recommended to meet the following guidelines, otherwise you will see a warning:
+* It should contain only digits, spaces, '+' or '-' in the number part.
+* Multiple phone numbers should be separated by commas.
 Example: 12345678, 62345678
-
-You may see a warning if your phone number contains unusual symbols or format, but you can safely ignore it if you are providing labels for the phone number (e.g. `61234567 (Office)`).
 
 </panel>
 
 <panel header="Recommended product identifier format" type="seamless" id="product-id-format">
 
-Product identifier can contain:
-- Letters
-- Numbers
-- Spaces
-- Symbols `/` `-`
-
-You will see a warning if the identifier contains other symbols.
+Product identifier is recommended to meet the following guidelines, otherwise you will see a warning:
+- It should contain only letters, numbers, spaces, and symbols.
+- Symbols include: `/` `-`
 
 </panel>
 
 <panel header="Recommended product name format" type="seamless" id="product-name-format">
 
-Product name can contain:
-- Letters
-- Numbers
-- Spaces
-- Symbols `.` `,` `&` `+` `(` `)` `/` `\` `-` `'`
-
-You will see a warning if the name contains other symbols.
+Product name is recommended to meet the following guidelines, otherwise you will see a warning:
+- It should contain only letters, numbers, spaces, and symbols.
+- Symbols include: `.` `,` `&` `+` `(` `)` `/` `\` `-` `'`
 
 </panel>
 
 <panel header="Why am I seeing warnings for possible duplicates?" type="seamless" id="duplicate-warnings">
 
-**Contact and Product Names** warnings are shown when a new entry **shares words** with an existing one. For example, “Cytron Technologies” and “Cytron T.” is flagged because the first part matches.
+**Contact and Product Names** warnings appear when a new name **shares words** with an existing one. For example, “Cytron Technologies” and “Cytron T.”.
 
-**Contact Addresses** warnings appear when one address **fully contains** the other. For example, “123 Main Street” and “123 Main St” are flagged because they point to the same place.
+**Contact Addresses** warnings appear when one address **fully contains** the other. For example, “123 Main Street” and “123 Main St”.
 
 </panel>
 
