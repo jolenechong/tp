@@ -33,3 +33,7 @@
 .scroll-pane > .viewport {
     -fx-background-color: #282A36;
 }
+
+.command-row {
+    -fx-background-color: #363846;
+}

@@ -1,5 +1,6 @@
 package seedu.address.ui;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
@@ -78,9 +79,11 @@ public class HelpWindow extends UiPart<Stage> {
     public void populateCommandsToCommandListContainer() {
         commandListContainer.getChildren().addAll(
                 createSectionHeadingLabel(DISPLAY_CONTACT_COMMANDS),
-                createCommandBox("Command 1", "command 1 example", "description"),
-                createCommandBox("Command 2", "command 2 example", "description"),
-                createCommandBox("Command 3", "command 3 example", "description"),
+                createCommandGroup(List.of(
+                        new String[]{"Command 1", "command 1 example", "description"},
+                        new String[]{"Command 2", "command 2 example", "description"},
+                        new String[]{"Command 3", "command 3 example", "description"}
+                )),
                 createSectionHeadingLabel(DISPLAY_INVENTORY_COMMANDS),
                 createCommandBox("Command 4", "command 4 example", "description"),
                 createCommandBox("Command 5", "command 5 example", "description"),
@@ -96,6 +99,22 @@ public class HelpWindow extends UiPart<Stage> {
         Label label = new Label(text);
         label.getStyleClass().add("label-help-header");
         return label;
+    }
+
+    private VBox createCommandGroup(List<String[]> commands) {
+        VBox group = new VBox(0);
+        group.getStyleClass().add("command-group");
+
+        for (int i = 0; i < commands.size(); i++) {
+            String[] cmd = commands.get(i);
+            group.getChildren().add(createCommandBox(cmd[0], cmd[1], cmd[2]));
+            if (i < commands.size() - 1) {
+                Region separator = new Region();
+                group.getChildren().add(separator);
+            }
+        }
+
+        return group;
     }
 
     private HBox createCommandBox(String name, String commandEg, String description) {
