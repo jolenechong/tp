@@ -1,12 +1,18 @@
 package seedu.address.ui;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
 
@@ -16,7 +22,18 @@ import seedu.address.commons.core.LogsCenter;
 public class HelpWindow extends UiPart<Stage> {
 
     public static final String USERGUIDE_URL = "https://ay2526s2-cs2103t-w08-2.github.io/tp/UserGuide.html";
-    public static final String HELP_MESSAGE = "Refer to the user guide: " + USERGUIDE_URL;
+
+    public static final String DISPLAY_CONTACT_COMMANDS = "Contact Commands";
+    public static final String DISPLAY_INVENTORY_COMMANDS = "Inventory Commands";
+    public static final String DISPLAY_GENERAL_COMMANDS = "General Commands";
+
+    private static final String LABEL_HEADER_CLASS = "label-help-header";
+    private static final String COMMAND_GROUP_CLASS = "command-group";
+    private static final String COMMAND_SEPARATOR_CLASS = "command-separator";
+    private static final String COMMAND_NAME_CLASS = "command-name";
+    private static final String COMMAND_EXAMPLE_CLASS = "command-example";
+    private static final String COMMAND_DESCRIPTION_CLASS = "command-desc";
+    private static final String COMMAND_ROW_CLASS = "command-row";
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
     private static final String FXML = "HelpWindow.fxml";
@@ -25,7 +42,7 @@ public class HelpWindow extends UiPart<Stage> {
     private Button copyButton;
 
     @FXML
-    private Label helpMessage;
+    private VBox commandListContainer;
 
     /**
      * Creates a new HelpWindow.
@@ -34,7 +51,7 @@ public class HelpWindow extends UiPart<Stage> {
      */
     public HelpWindow(Stage root) {
         super(FXML, root);
-        helpMessage.setText(HELP_MESSAGE);
+        populateCommandsToCommandListContainer();
     }
 
     /**
@@ -66,6 +83,78 @@ public class HelpWindow extends UiPart<Stage> {
         logger.fine("Showing help page about the application.");
         getRoot().show();
         getRoot().centerOnScreen();
+    }
+
+    /**
+     * Populate the {@code commandListContainer} with all of VendorVault commands.
+     */
+    public void populateCommandsToCommandListContainer() {
+        commandListContainer.getChildren().addAll(
+                createSectionHeadingLabel(DISPLAY_CONTACT_COMMANDS),
+                createCommandGroup(List.of(
+                        new String[]{"Command 1", "command 1 example", "description"},
+                        new String[]{"Command 2", "command 2 example", "description"},
+                        new String[]{"Command 3", "command 3 example", "description"}
+                )),
+                createSectionHeadingLabel(DISPLAY_INVENTORY_COMMANDS),
+                createCommandGroup(List.of(
+                        new String[]{"Command 4", "command 4 example", "description"},
+                        new String[]{"Command 5", "command 5 example", "description"},
+                        new String[]{"Command 6", "command 6 example", "description"},
+                        new String[]{"Command 7", "command 7 example", "description"}
+                )),
+                createSectionHeadingLabel(DISPLAY_GENERAL_COMMANDS),
+                createCommandGroup(List.of(
+                        new String[]{"Command 8", "command 8 example", "description"},
+                        new String[]{"Command 9", "command 9 example", "description"}
+                )));
+    }
+
+    private Label createSectionHeadingLabel(String text) {
+        Label label = new Label(text);
+        label.getStyleClass().add(LABEL_HEADER_CLASS);
+        return label;
+    }
+
+    private VBox createCommandGroup(List<String[]> commands) {
+        VBox group = new VBox(0);
+        group.getStyleClass().add(COMMAND_GROUP_CLASS);
+
+        for (int i = 0; i < commands.size(); i++) {
+            String[] cmd = commands.get(i);
+            group.getChildren().add(createCommandBox(cmd[0], cmd[1], cmd[2]));
+            if (i < commands.size() - 1) {
+                group.getChildren().add(createSeparator());
+            }
+        }
+
+        return group;
+    }
+
+    private Region createSeparator() {
+        Region separator = new Region();
+        separator.getStyleClass().add(COMMAND_SEPARATOR_CLASS);
+        return separator;
+    }
+
+    private HBox createCommandBox(String name, String commandEg, String description) {
+        Label nameLabel = new Label(name);
+        nameLabel.getStyleClass().add(COMMAND_NAME_CLASS);
+
+        Label commandEgLabel = new Label(commandEg);
+        commandEgLabel.getStyleClass().add(COMMAND_EXAMPLE_CLASS);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Label descriptionLabel = new Label(description);
+        descriptionLabel.getStyleClass().add(COMMAND_DESCRIPTION_CLASS);
+
+        HBox row = new HBox(10, nameLabel, commandEgLabel, spacer, descriptionLabel);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.getStyleClass().add(COMMAND_ROW_CLASS);
+
+        return row;
     }
 
     /**
