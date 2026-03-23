@@ -3,10 +3,13 @@ package seedu.address.logic.commands;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_DUPLICATE_PRODUCT;
 import static seedu.address.logic.commands.CommandUtil.SEPARATOR_NEW_LINE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_IDENTIFIER;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_QUANTITY;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_THRESHOLD;
 import static seedu.address.model.product.warnings.DuplicateProductWarning.formatNameWarning;
 
@@ -25,6 +28,13 @@ import seedu.address.model.product.Product;
 public class AddProductCommand extends Command {
 
     public static final String COMMAND_WORD = "addproduct";
+    public static final String COMMAND_USAGE = COMMAND_WORD + " " + PREFIX_IDENTIFIER + "IDENTIFIER "
+            + PREFIX_NAME + "NAME "
+            + "[" + PREFIX_QUANTITY + "QUANTITY] "
+            + "[" + PREFIX_THRESHOLD + "THRESHOLD] "
+            + "[" + PREFIX_EMAIL + "VENDOR_EMAIL]";
+    public static final String COMMAND_DESCRIPTION = "Adds a product.";
+
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a product to the inventory. "
             + "Parameters: "

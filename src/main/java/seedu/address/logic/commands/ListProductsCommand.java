@@ -15,6 +15,8 @@ import seedu.address.model.Model;
 public class ListProductsCommand extends Command {
 
     public static final String COMMAND_WORD = "listproduct";
+    public static final String COMMAND_USAGE = COMMAND_WORD;
+    public static final String COMMAND_DESCRIPTION = "Lists active products.";
 
     public static final String INVALID_COMMAND_WORD = "listproducts";
 

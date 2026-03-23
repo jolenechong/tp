@@ -47,7 +47,7 @@ public class EditCommand extends Command {
             + "[" + PREFIX_PHONE + "PHONE] "
             + "[" + PREFIX_EMAIL + "EMAIL] "
             + "[" + PREFIX_ADDRESS + "ADDRESS] "
-            + "[" + PREFIX_TAG + "TAG]...\n";
+            + "[" + PREFIX_TAG + "TAG]...";
     public static final String COMMAND_DESCRIPTION = "Edits a contact's details.";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the vendor contact identified "

@@ -1,6 +1,7 @@
 package seedu.address.ui;
 
 import static seedu.address.logic.commands.ContactCommand.getContactCommands;
+import static seedu.address.logic.commands.InventoryCommand.getInventoryCommands;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -17,6 +18,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.logic.commands.CommandWord;
 import seedu.address.logic.commands.ContactCommand;
 
 /**
@@ -41,7 +43,7 @@ public class HelpWindow extends UiPart<Stage> {
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
     private static final String FXML = "HelpWindow.fxml";
 
-    private static final int nameLabelSpacing = 50;
+    private static final int nameLabelSpacing = 90;
 
     @FXML
     private Button copyButton;
@@ -98,6 +100,7 @@ public class HelpWindow extends UiPart<Stage> {
                 createSectionHeadingLabel(DISPLAY_CONTACT_COMMANDS),
                 createCommandGroup(getContactCommands()),
                 createSectionHeadingLabel(DISPLAY_INVENTORY_COMMANDS),
+                createCommandGroup(getInventoryCommands()),
                 createSectionHeadingLabel(DISPLAY_GENERAL_COMMANDS));
     }
 
@@ -107,12 +110,12 @@ public class HelpWindow extends UiPart<Stage> {
         return label;
     }
 
-    private VBox createCommandGroup(List<ContactCommand> commands) {
+    private VBox createCommandGroup(List<CommandWord> commands) {
         VBox group = new VBox(0);
         group.getStyleClass().add(COMMAND_GROUP_CLASS);
 
         for (int i = 0; i < commands.size(); i++) {
-            ContactCommand cmd = commands.get(i);
+            CommandWord cmd = commands.get(i);
             group.getChildren().add(
                     createCommandBox(cmd.getCommandWord(), cmd.getCommandUsage(), cmd.getCommandDescription()));
             if (i < commands.size() - 1) {

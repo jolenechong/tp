@@ -1,6 +1,5 @@
 package seedu.address.logic.commands;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public enum ContactCommand implements CommandWord {
@@ -28,15 +27,17 @@ public enum ContactCommand implements CommandWord {
         return commandWord;
     }
 
+    @Override
     public String getCommandUsage() {
         return commandUsage;
     }
 
+    @Override
     public String getCommandDescription() {
         return commandDescription;
     }
 
-    public static List<ContactCommand> getContactCommands() {
+    public static List<CommandWord> getContactCommands() {
         return List.of(values());
     }
 }
