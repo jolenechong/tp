@@ -1,0 +1,25 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+
+start
+:User presses a key;
+
+'Since the beta syntax does not support placing the condition outside the
+'diamond we place it as the true branch instead.
+
+if () then ([KeyCode.UP])
+    :Fetch previous command;
+    :Replace input text with previous command;
+else ([else])
+    if () then ([KeyCode.DOWN])
+        :Fetch next command;
+        :Replace input text with next command;
+    else ([else])
+    endif
+endif
+
+stop
+
+@enduml
