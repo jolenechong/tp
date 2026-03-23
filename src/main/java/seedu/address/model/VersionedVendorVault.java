@@ -4,16 +4,22 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.RedoCommand;
 import seedu.address.logic.commands.UndoCommand;
 
 /**
  * Represents the version history of whole of VendorVault.
  */
-public class VersionedVendorVault extends VendorVault {
+public class VersionedVendorVault {
 
-    private final List<VendorVault> vendorVaultStateList;
+    private static final int INITIAL_STATE = 0;
+    private static final int HISTORY_STEP = 1;
+    private static final Logger logger = LogsCenter.getLogger(VersionedVendorVault.class);
+
+    private final List<VendorVault> vendorVaultStateList; // list elements mutability is intended
     private int currentStatePointer;
 
     /**
@@ -22,9 +28,13 @@ public class VersionedVendorVault extends VendorVault {
      * @param vendorVault Initial state of the VendorVault.
      */
     public VersionedVendorVault(ReadOnlyVendorVault vendorVault) {
+        requireNonNull(vendorVault);
+
         this.vendorVaultStateList = new ArrayList<>();
         this.vendorVaultStateList.add(new VendorVault(vendorVault));
-        this.currentStatePointer = 0;
+        this.currentStatePointer = INITIAL_STATE;
+
+        checkInvariant();
     }
 
     /**
@@ -32,11 +42,15 @@ public class VersionedVendorVault extends VendorVault {
      */
     public void commit(VendorVault currentState) {
         requireNonNull(currentState);
-        vendorVaultStateList.subList(currentStatePointer + 1, vendorVaultStateList.size()).clear();
 
+        // to discard all irrelevant states
+        vendorVaultStateList.subList(currentStatePointer + HISTORY_STEP, vendorVaultStateList.size()).clear();
         vendorVaultStateList.add(new VendorVault(currentState));
 
         currentStatePointer++;
+
+        logger.info("Committed new state. Current state pointer: " + currentStatePointer);
+        checkInvariant();
     }
 
     /**
@@ -50,6 +64,9 @@ public class VersionedVendorVault extends VendorVault {
         }
         currentStatePointer--;
         currentState.resetData(vendorVaultStateList.get(currentStatePointer));
+
+        logger.info("Undo performed. Current state pointer: " + currentStatePointer);
+        checkInvariant();
     }
 
     /**
@@ -63,13 +80,29 @@ public class VersionedVendorVault extends VendorVault {
         }
         currentStatePointer++;
         currentState.resetData(vendorVaultStateList.get(currentStatePointer));
+
+        logger.info("Redo performed. Current state pointer: " + currentStatePointer);
+        checkInvariant();
     }
 
     public boolean canUndo() {
-        return currentStatePointer > 0;
+        return currentStatePointer > INITIAL_STATE;
     }
 
     public boolean canRedo() {
-        return currentStatePointer < vendorVaultStateList.size() - 1;
+        return currentStatePointer < vendorVaultStateList.size() - HISTORY_STEP;
     }
+
+    /**
+     * Checks the internal invariants of this VersionedVendorVault.
+     */
+    private void checkInvariant() {
+        assert !vendorVaultStateList.isEmpty()
+                : "History must never be empty";
+
+        assert currentStatePointer >= INITIAL_STATE
+                && currentStatePointer < vendorVaultStateList.size()
+                : "Invalid state pointer: " + currentStatePointer;
+    }
+
 }

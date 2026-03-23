@@ -671,7 +671,7 @@ public class AddProductCommandTest {
         }
 
         @Override
-        public DuplicateProductWarning isSameProductWarn(Product otherProduct) {
+        public DuplicateProductWarning generateDuplicateWarning(Product otherProduct) {
             return forcedWarning;
         }
     }

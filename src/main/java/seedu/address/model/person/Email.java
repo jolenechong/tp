@@ -9,7 +9,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  */
 public class Email {
 
-    public static final String SOFT_VALIDATION_REGEX = "^.{0,256}$";
+    public static final String WARNING_VALIDATION_REGEX = "^.{0,256}$";
     public static final String MESSAGE_BLANK = "Email should not be blank.";
     public static final String MESSAGE_WARN = "⚠ Warning: This email address is unusually long, is this intentional?";
     private static final int MAX_LENGTH = 320;
@@ -53,6 +53,8 @@ public class Email {
      * Returns if a given string is a valid email.
      */
     public static boolean isValidEmail(String test) {
+        requireNonNull(test);
+
         if (test.length() > MAX_LENGTH) {
             return false;
         }
@@ -60,15 +62,16 @@ public class Email {
     }
 
     /**
-     * Returns true if a given string is a valid email.
-     * Additional validation to {@link #isValidEmail(String)}.
+     * Returns true if a given string is a valid email with stronger validation.
      * Used for warning users about potential issues with their input.
      *
      * @param test the string to test.
      * @return true if the string is a valid email according to the length validation criteria.
      */
     public static boolean isValidEmailWarn(String test) {
-        return test.matches(SOFT_VALIDATION_REGEX);
+        requireNonNull(test);
+
+        return test.matches(WARNING_VALIDATION_REGEX);
     }
 
     @Override

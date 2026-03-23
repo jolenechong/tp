@@ -8,9 +8,11 @@ import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +34,8 @@ import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.commands.EditProductCommand;
 import seedu.address.logic.commands.ExitCommand;
+import seedu.address.logic.commands.FindCommand;
+import seedu.address.logic.commands.FindProductCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListAllCommand;
 import seedu.address.logic.commands.ListCommand;
@@ -52,8 +56,10 @@ import seedu.address.model.alias.Alias;
 import seedu.address.model.alias.exceptions.DuplicateAliasException;
 import seedu.address.model.alias.exceptions.NoAliasFoundInAliasListException;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
+import seedu.address.model.product.ProductNameContainsKeywordsPredicate;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.PersonUtil;
@@ -173,6 +179,26 @@ public class AddressBookParserTest {
         assertTrue(parser.parseCommand(ExitCommand.COMMAND_WORD + " 3",
                 new PendingConfirmation(),
                 new ModelManager()) instanceof ExitCommand);
+    }
+
+    @Test
+    public void parseCommand_find() throws Exception {
+        List<String> keywords = Arrays.asList("foo", "bar", "baz");
+        FindCommand command = (FindCommand) parser.parseCommand(
+                FindCommand.COMMAND_WORD + " " + keywords.stream().collect(Collectors.joining(" ")),
+                new PendingConfirmation(),
+                new ModelManager());
+        assertEquals(new FindCommand(new NameContainsKeywordsPredicate(keywords)), command);
+    }
+
+    @Test
+    public void parseCommand_findProduct() throws Exception {
+        List<String> keywords = Arrays.asList("foo", "bar", "baz");
+        FindProductCommand command = (FindProductCommand) parser.parseCommand(
+                FindProductCommand.COMMAND_WORD + " " + keywords.stream().collect(Collectors.joining(" ")),
+                new PendingConfirmation(),
+                new ModelManager());
+        assertEquals(new FindProductCommand(new ProductNameContainsKeywordsPredicate(keywords)), command);
     }
 
     @Test

@@ -1,6 +1,9 @@
 package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -40,12 +43,15 @@ public class CommandHistoryTest {
     }
 
     @Test
-    public void add_nullCommand_ignored() {
+    public void getHistorySnapshot_returnsImmutableSnapshot() {
         CommandHistory history = new CommandHistory();
-        history.add(null);
+        history.add("list");
+        history.add("clear");
 
-        assertEquals("draft", history.getNext("draft"));
-        assertEquals("draft", history.getPrevious("draft"));
+        List<String> snapshot = history.getHistorySnapshot();
+
+        assertEquals(List.of("list", "clear"), snapshot);
+        assertThrows(UnsupportedOperationException.class, () -> snapshot.add("delete 1"));
     }
 
 }

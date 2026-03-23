@@ -202,6 +202,7 @@ public class InventoryTest {
         public Optional<Product> findSimilarNameMatch(Product candidate, Product exclude) {
             throw new AssertionError("This method should not be called.");
         }
+
     }
 
 }

@@ -25,6 +25,7 @@ import seedu.address.model.person.Person;
 public class PersonListPanel extends UiPart<Region> {
     private static final String FXML = "PersonListPanel.fxml";
     private static final int SCROLL_ANIMATION_DURATION_MS = 300;
+    private static final String SCROLL_BAR_CSS_CLASS = ".scroll-bar";
     private final Logger logger = LogsCenter.getLogger(PersonListPanel.class);
 
     @FXML
@@ -49,6 +50,7 @@ public class PersonListPanel extends UiPart<Region> {
         }
 
         Platform.runLater(() -> {
+            // Animate the scroll to smoothly move to the bottom instead of jumping instantly
             ScrollBar scrollBar = getVerticalScrollBar();
             if (scrollBar == null) {
                 personListView.scrollTo(lastIndex);
@@ -57,6 +59,7 @@ public class PersonListPanel extends UiPart<Region> {
             double startValue = scrollBar.getValue();
             double endValue = scrollBar.getMax();
             if (startValue >= endValue) {
+                // Skip animation if scroll is already at or beyond the bottom
                 return;
             }
             Timeline timeline = new Timeline(
@@ -71,7 +74,7 @@ public class PersonListPanel extends UiPart<Region> {
      * Returns the vertical {@code ScrollBar} of the person list view, or {@code null} if not found.
      */
     private ScrollBar getVerticalScrollBar() {
-        for (Node node : personListView.lookupAll(".scroll-bar")) {
+        for (Node node : personListView.lookupAll(SCROLL_BAR_CSS_CLASS)) {
             if (node instanceof ScrollBar && ((ScrollBar) node).getOrientation() == Orientation.VERTICAL) {
                 return (ScrollBar) node;
             }

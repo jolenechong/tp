@@ -1,8 +1,9 @@
 package seedu.address.logic.commands;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Stores command text history and supports shell-like navigation through it.
@@ -20,7 +21,9 @@ public class CommandHistory {
      * @param commandText the command text to add to history.
      */
     public void add(String commandText) {
-        if (commandText == null || commandText.isBlank()) {
+        requireNonNull(commandText);
+
+        if (commandText.isBlank()) {
             return;
         }
 
@@ -35,7 +38,7 @@ public class CommandHistory {
      *                     when navigating back to the latest position.
      */
     public String getPrevious(String currentInput) {
-        currentInput = safeInput(currentInput);
+        requireNonNull(currentInput);
 
         if (commandTexts.isEmpty()) {
             return currentInput;
@@ -60,7 +63,7 @@ public class CommandHistory {
      *         or current input if history is empty.
      */
     public String getNext(String currentInput) {
-        currentInput = safeInput(currentInput);
+        requireNonNull(currentInput);
 
         if (commandTexts.isEmpty()) {
             return currentInput;
@@ -102,15 +105,18 @@ public class CommandHistory {
         return commandTexts.get(currentIndex);
     }
 
-    private String safeInput(String input) {
-        return Objects.requireNonNullElse(input, "");
-    }
-
     /**
      * Resets cursor to the latest position so the next Up starts from the newest command.
      */
     public void resetNavigation() {
         currentIndex = LATEST_POSITION;
         draftCommandText = "";
+    }
+
+    /**
+     * Returns an immutable snapshot of the command history.
+     */
+    public List<String> getHistorySnapshot() {
+        return List.copyOf(commandTexts);
     }
 }

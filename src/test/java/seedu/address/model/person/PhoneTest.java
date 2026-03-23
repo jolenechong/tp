@@ -34,6 +34,7 @@ public class PhoneTest {
 
         assertFalse(Phone.isValidPhone("61234567, 12 (Home)")); // one too short
         assertFalse(Phone.isValidPhone(",,")); // all entries empty
+        assertFalse(Phone.isValidPhone(",")); // all entries empty
 
         // valid phone numbers
         assertTrue(Phone.isValidPhoneWarn("911")); // exactly 3 numbers
@@ -49,6 +50,11 @@ public class PhoneTest {
         assertTrue(Phone.isValidPhone("61234567 (Mobile), 12345678 (Home)"));
         assertTrue(Phone.isValidPhone("12345678,,12345679"));
         assertTrue(Phone.isValidPhone("12345678,"));
+
+        // inputs that result in entries being empty after splitting
+        assertFalse(Phone.isValidPhoneWarn(","));
+        assertFalse(Phone.isValidPhoneWarn(",,,"));
+        assertFalse(Phone.isValidPhoneWarn(" , , "));
     }
 
     @Test

@@ -1,7 +1,7 @@
 {
   "baseUrl": "",
   "titlePrefix": "VendorVault",
-  "titleSuffix": "AddressBook Level-3",
+  "titleSuffix": "VendorVault",
   "faviconPath": "images/SeEduLogo.png",
   "style": {
     "codeTheme": "light"

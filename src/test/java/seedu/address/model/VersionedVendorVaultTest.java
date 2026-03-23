@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.testutil.PersonBuilder;
 
-public class VersionedAddressBookTest {
+public class VersionedVendorVaultTest {
 
     private VendorVault vendorVault;
     private VersionedVendorVault versionedVendorVault;

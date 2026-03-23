@@ -18,6 +18,7 @@ public enum CommandType {
     EDITPRODUCT(EditProductCommand.COMMAND_WORD),
     EXIT(ExitCommand.COMMAND_WORD),
     FIND(FindCommand.COMMAND_WORD),
+    FINDPRODUCT(FindProductCommand.COMMAND_WORD),
     HELP(HelpCommand.COMMAND_WORD),
     LIST(ListCommand.COMMAND_WORD),
     LISTPRODUCT(ListProductsCommand.COMMAND_WORD),

@@ -35,7 +35,7 @@ Given below is a quick overview of main components and how they interact with ea
 
 **Main components of the architecture**
 
-**`Main`** (consisting of classes [`Main`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
+**`Main`** (consisting of classes [`Main`](https://github.com/AY2526S2-CS2103T-W08-2/tp/blob/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/AY2526S2-CS2103T-W08-2/tp/blob/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
 * At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
 * At shut down, it shuts down the other components and invokes cleanup methods where necessary.
 
@@ -50,16 +50,16 @@ The bulk of the app's work is done by the following four components:
 
 **How the architecture components interact with each other**
 
-The *Sequence Diagram* below shows how the components interact with each other for the scenario where the user issues the command `delete 1`.
+The *Sequence Diagram* below shows how the components interact with each other for the scenario where the user issues the command `delete support@adafruit.com`.
 
 <puml src="diagrams/ArchitectureSequenceDiagram.puml" width="574" />
 
 Each of the four main components (also shown in the diagram above),
 
 * defines its *API* in an `interface` with the same name as the Component.
-* implements its functionality using a concrete `{Component Name}Manager` class (which follows the corresponding API `interface` mentioned in the previous point.
+* implements its functionality using a concrete `{Component Name}Manager` class
 
-For example, the `Logic` component defines its API in the `Logic.java` interface and implements its functionality using the `LogicManager.java` class which follows the `Logic` interface. Other components interact with a given component through its interface rather than the concrete class (reason: to prevent outside component's being coupled to the implementation of a component), as illustrated in the (partial) class diagram below.
+For example, the `Logic` component defines its API in the `Logic.java` interface and implements its functionality using the `LogicManager.java` class which follows the `Logic` interface. Other components interact with a given component through its interface rather than the concrete class, as illustrated below.
 
 <puml src="diagrams/ComponentManagers.puml" width="300" />
 
@@ -67,15 +67,15 @@ The sections below give more details of each component.
 
 ### UI component
 
-The **API** of this component is specified in [`Ui.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/Ui.java)
+The **API** of this component is specified in [`Ui.java`](https://github.com/AY2526S2-CS2103T-W08-2/tp/blob/master/src/main/java/seedu/address/ui/Ui.java)
 
 <puml src="diagrams/UiClassDiagram.puml" alt="Structure of the UI Component"/>
 
 The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
 
-The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/resources/view/MainWindow.fxml)
+The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S2-CS2103T-W08-2/tp/blob/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S2-CS2103T-W08-2/tp/blob/master/src/main/resources/view/MainWindow.fxml)
 
-The `UI` component,
+The `UI` component
 
 * executes user commands using the `Logic` component.
 * listens for changes to `Model` data so that the UI can be updated with the modified data.
@@ -84,15 +84,15 @@ The `UI` component,
 
 ### Logic component
 
-**API** : [`Logic.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/logic/Logic.java)
+**API** : [`Logic.java`](https://github.com/AY2526S2-CS2103T-W08-2/tp/blob/master/src/main/java/seedu/address/logic/Logic.java)
 
 Here's a (partial) class diagram of the `Logic` component:
 
 <puml src="diagrams/LogicClassDiagram.puml" width="550"/>
 
-The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` API call as an example.
+The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete support@adafruit.com")` API call as an example.
 
-<puml src="diagrams/DeleteSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `delete 1` Command" />
+<puml src="diagrams/DeleteSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `delete support@adafruit.com` Command" />
 
 <box type="info" seamless>
 
@@ -102,10 +102,10 @@ The sequence diagram below illustrates the interactions within the `Logic` compo
 How the `Logic` component works:
 
 1. When `Logic` is called upon to execute a command, it is passed to an `AddressBookParser` object which in turn creates a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
-1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
-1. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
+2. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
+3. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
    Note that although this is shown as a single step in the diagram above (for simplicity), in the code it can take several interactions (between the command object and the `Model`) to achieve.
-1. The result of the command execution is encapsulated as a `CommandResult` object which is returned back from `Logic`.
+4. The result of the command execution is encapsulated as a `CommandResult` object which is returned back from `Logic`.
 
 Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
 
@@ -116,17 +116,19 @@ How the parsing works:
 * All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
 
 ### Model component
-**API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
+**API** : [`Model.java`](https://github.com/AY2526S2-CS2103T-W08-2/tp/blob/master/src/main/java/seedu/address/model/Model.java)
 
 <puml src="diagrams/ModelClassDiagram.puml" width="450" />
 
 
-The `Model` component,
+The `Model` component
 
-* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
-* stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
-* stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
-* does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
+* stores vendor contact data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
+* stores inventory data i.e., all `Product` objects (which are contained in a `UniqueProductList` object).
+* stores the current set of `Person`/`Product` objects as a separate _filtered_ list which is exposed as an unmodifiable `ObservableList<Person>`/`ObservableList<Product>`.
+* stores alias data i.e., all `Alias` objects (which are contained in a `AliasList` object).
+* stores a `UserPref` object that represents the user’s preferences. This is exposed as a `ReadOnlyUserPref` object.
+* does not depend on any of the other three components.
 
 <box type="info" seamless>
 
@@ -139,13 +141,13 @@ The `Model` component,
 
 ### Storage component
 
-**API** : [`Storage.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/storage/Storage.java)
+**API** : [`Storage.java`](https://github.com/AY2526S2-CS2103T-W08-2/tp/blob/master/src/main/java/seedu/address/storage/Storage.java)
 
 <puml src="diagrams/StorageClassDiagram.puml" width="550" />
 
-The `Storage` component,
-* can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
-* inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
+The `Storage` component
+* saves contact, inventory, alias and user preference data in JSON format, and reads them back into corresponding objects.
+* inherits from `AddressBookStorage`, `InventoryStorage`, `AliasStorage` and `UserPrefStorage`
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
 
 ### Common classes
@@ -356,10 +358,10 @@ Preserving draft input improves user experience and is easy to implement with mi
 
 The archive feature allows vendor contacts to be hidden from the main list without permanently deleting them. Archived vendors remain stored in the system and can be restored later.
 
-The feature introduces two new commands:
+The feature introduces two commands:
 ```
-archive INDEX
-restore INDEX
+archive EMAIL
+restore EMAIL
 ```
 
 Internally, vendors are represented using the `Person` class. A boolean field `archived` is introduced in the `Person` model to track whether a vendor is archived.
@@ -377,19 +379,18 @@ These operations update the `Person` object.
 
 #### Command Flow
 
-The following sequence occurs when executing `archive 1`:
+The following sequence occurs when executing `archive support@adafruit.com`:
 
-1. The user enters the command `archive 1`.
-2. `AddressBookParser` identifies the command word `archive`.
-3. `ArchiveCommandParser` parses the index argument.
-4. An `ArchiveCommand` object is created.
-5. `LogicManager` executes the command.
-6. The command retrieves the vendor from the filtered person list.
-7. `Model.archivePerson()` is called.
-8. The `Person` object is replaced with a new instance with `archived = true`.
-9. The UI updates automatically because archived vendors are excluded from the filtered list.
+1. `AddressBookParser` identifies the command word `archive`.
+2. `ArchiveCommandParser` parses the email argument.
+3. An `ArchiveCommand` object is created.
+4. `LogicManager` executes the command.
+5. The command retrieves the vendor from the filtered list.
+6. `Model.archivePerson()` is called.
+7. The `Person` object is replaced with a new instance with `archived = true`.
+8. The UI updates automatically because archived vendors are excluded from the filtered list.
 
-The `restore vendor INDEX` command follows a similar flow but sets `archived = false`.
+The `restore EMAIL` command follows a similar flow but sets `archived = false`.
 
 #### Filtering Behaviour
 
@@ -406,11 +407,11 @@ When a vendor is restored, the archived flag is set to `false`, causing the vend
 
 #### Error Handling
 
-Error handling is implemented for index.
+Error handling is implemented for email lookups.
 {more implementations to be added}
 
 
-If the index is outside the displayed list range, a `CommandException` is thrown.
+If the email does not match a valid target, a `CommandException` is thrown.
 
 **Model Layer**
 
@@ -747,53 +748,44 @@ Accessibility:
 
 ## **Appendix: Instructions for manual testing**
 
-Given below are instructions to test the app manually.
-
-<box type="info" seamless>
-
-**Note:** These instructions only provide a starting point for testers to work on;
-testers are expected to do more *exploratory* testing.
-
-</box>
-
 ### Launch and shutdown
 
-1. Initial launch
+1. Initial launch as per [Quick Start](./UserGuide.md#quick-start)
 
-   1. Download the jar file and copy into an empty folder
+   - Expected: Full-screen GUI with sample contacts and products. 
 
-   1. Double-click the jar file Expected: Shows the GUI with a set of sample contacts. The window size may not be optimum.
+2. Saving window preferences
 
-1. Saving window preferences
+   - Resize the window as desired. Move the window to a different location. Close the window.
 
-   1. Resize the window to an optimum size. Move the window to a different location. Close the window.
+   - Re-launch app.<br> Expected: The most recent window size and location is retained.
 
-   1. Re-launch the app by double-clicking the jar file.<br>
-       Expected: The most recent window size and location is retained.
+3. _{ more test cases …​ }_
 
-1. _{ more test cases …​ }_
+### Deleting a contact
 
-### Deleting a person
+1. Deleting a contact while all contacts are being shown
 
-1. Deleting a person while all persons are being shown
+   - Prerequisites: List all contacts using the `list` command. Multiple contacts in the list.
 
-   1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+2. Test case: `delete support@adafruit.com`
 
-   1. Test case: `delete 1`<br>
-      Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+   - Expected: Matching contact is deleted from the list. Details of the deleted contact shown in the status message.
 
-   1. Test case: `delete 0`<br>
-      Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
+3. Test case: `delete notfound@example.com`
 
-   1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
-      Expected: Similar to previous.
+   - Expected: No contact is deleted. Error shown in the status message.
 
-1. _{ more test cases …​ }_
+4. Other incorrect delete commands to try: `delete`, `delete invalid-email`
+
+   - Expected: Similar to previous.
+
+5. _{ more test cases …​ }_
 
 ### Saving data
 
 1. Dealing with missing/corrupted data files
 
-   1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+   - _{explain how to simulate a missing/corrupted file, and the expected behavior}_
 
-1. _{ more test cases …​ }_
+2. _{ more test cases …​ }_
