@@ -25,6 +25,12 @@ import seedu.address.model.person.Person;
 public class AddCommand extends Command {
 
     public static final String COMMAND_WORD = "add";
+    public static final String COMMAND_USAGE = COMMAND_WORD + PREFIX_NAME + "NAME "
+                    + PREFIX_PHONE + "PHONE "
+                    + PREFIX_EMAIL + "EMAIL "
+                    + PREFIX_ADDRESS + "ADDRESS "
+                    + "[" + PREFIX_TAG + "TAG]...";
+    public static final String COMMAND_DESCRIPTION = "Adds a contact.";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a vendor contact to VendorVault. "
             + "Parameters: "

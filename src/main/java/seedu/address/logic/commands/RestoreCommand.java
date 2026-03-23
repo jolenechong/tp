@@ -20,6 +20,9 @@ import seedu.address.model.person.Person;
 public class RestoreCommand extends Command {
 
     public static final String COMMAND_WORD = "restore";
+    public static final String COMMAND_USAGE = COMMAND_WORD + " [EMAIL]";
+    public static final String COMMAND_DESCRIPTION =
+            "Restores an archived contact; lists all archived if no email given";
 
     public static final String MESSAGE_VENDOR_NOT_FOUND = "No archived vendor found with email: %1$s";
 
