@@ -23,10 +23,10 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.VendorVault;
-import seedu.address.model.product.ProductNameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.VendorEmailMatchesProductsPredicate;
 import seedu.address.model.product.Product;
+import seedu.address.model.product.ProductNameContainsKeywordsPredicate;
 import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.ProductBuilder;
 
