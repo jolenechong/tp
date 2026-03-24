@@ -21,6 +21,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.NameContainsKeywordsScoredPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
+import seedu.address.model.product.ProductNameContainsKeywordsScoredPredicate;
 
 /**
  * Represents the in-memory model of the vendor vault data.
@@ -36,6 +37,7 @@ public class ModelManager implements Model {
     private final FilteredList<Person> filteredPersons;
     private final SortedList<Person> sortedFilteredPersons;
     private final FilteredList<Product> filteredProducts;
+    private final SortedList<Product> sortedFilteredProducts;
     private final VersionedVendorVault versionedVendorVault;
 
     /**
@@ -58,6 +60,7 @@ public class ModelManager implements Model {
         sortedFilteredPersons = new SortedList<>(filteredPersons);
         filteredProducts = new FilteredList<>(this.inventory.getProductList());
         filteredProducts.setPredicate(product -> !product.isArchived());
+        sortedFilteredProducts = new SortedList<>(filteredProducts);
         versionedVendorVault = new VersionedVendorVault(this.vendorVault);
     }
 
@@ -302,13 +305,22 @@ public class ModelManager implements Model {
      */
     @Override
     public ObservableList<Product> getFilteredProductList() {
-        return filteredProducts;
+        return sortedFilteredProducts;
     }
 
     @Override
     public void updateFilteredProductList(Predicate<Product> predicate) {
         requireNonNull(predicate);
+        if (predicate instanceof ProductNameContainsKeywordsScoredPredicate) {
+            ProductNameContainsKeywordsScoredPredicate scoredPredicate =
+                    (ProductNameContainsKeywordsScoredPredicate) predicate;
+            filteredProducts.setPredicate(product -> !product.isArchived() && scoredPredicate.test(product));
+            sortedFilteredProducts.setComparator(scoredPredicate.createProductComparator());
+            return;
+        }
+
         filteredProducts.setPredicate(predicate);
+        sortedFilteredProducts.setComparator(null);
     }
 
     @Override
