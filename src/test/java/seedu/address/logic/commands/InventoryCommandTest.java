@@ -24,13 +24,13 @@ public class InventoryCommandTest {
 
     @Test
     public void getGeneralCommands_returnsAllCommands() {
-        List<CommandWord> commands = GeneralCommand.getGeneralCommands();
-        assertEquals(GeneralCommand.values().length, commands.size());
+        List<InventoryCommand> commands = InventoryCommand.getGeneralCommands();
+        assertEquals(InventoryCommand.values().length, commands.size());
     }
 
     @Test
     public void getCommandWord_allCommands_notNullOrEmpty() {
-        for (GeneralCommand command : GeneralCommand.values()) {
+        for (InventoryCommand command : InventoryCommand.values()) {
             assertNotNull(command.getCommandWord(), command + " has null command word");
             assertFalse(command.getCommandWord().isEmpty(), command + " has empty command word");
         }
@@ -38,7 +38,7 @@ public class InventoryCommandTest {
 
     @Test
     public void getCommandUsage_allCommands_notNullOrEmpty() {
-        for (GeneralCommand command : GeneralCommand.values()) {
+        for (InventoryCommand command : InventoryCommand.values()) {
             assertNotNull(command.getCommandUsage(), command + " has null command usage");
             assertFalse(command.getCommandUsage().isEmpty(), command + " has empty command usage");
         }
@@ -46,7 +46,7 @@ public class InventoryCommandTest {
 
     @Test
     public void getCommandDescription_allCommands_notNullOrEmpty() {
-        for (GeneralCommand command : GeneralCommand.values()) {
+        for (InventoryCommand command : InventoryCommand.values()) {
             assertNotNull(command.getCommandDescription(), command + " has null command description");
             assertFalse(command.getCommandDescription().isEmpty(), command + " has empty command description");
         }

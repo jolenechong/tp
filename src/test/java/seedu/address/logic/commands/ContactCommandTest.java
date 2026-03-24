@@ -23,13 +23,13 @@ public class ContactCommandTest {
 
     @Test
     public void getGeneralCommands_returnsAllCommands() {
-        List<CommandWord> commands = GeneralCommand.getGeneralCommands();
-        assertEquals(GeneralCommand.values().length, commands.size());
+        List<CommandWord> commands = ContactCommand.getContactCommands();
+        assertEquals(ContactCommand.values().length, commands.size());
     }
 
     @Test
     public void getCommandWord_allCommands_notNullOrEmpty() {
-        for (GeneralCommand command : GeneralCommand.values()) {
+        for (ContactCommand command : ContactCommand.values()) {
             assertNotNull(command.getCommandWord(), command + " has null command word");
             assertFalse(command.getCommandWord().isEmpty(), command + " has empty command word");
         }
@@ -37,7 +37,7 @@ public class ContactCommandTest {
 
     @Test
     public void getCommandUsage_allCommands_notNullOrEmpty() {
-        for (GeneralCommand command : GeneralCommand.values()) {
+        for (ContactCommand command : ContactCommand.values()) {
             assertNotNull(command.getCommandUsage(), command + " has null command usage");
             assertFalse(command.getCommandUsage().isEmpty(), command + " has empty command usage");
         }
@@ -45,7 +45,7 @@ public class ContactCommandTest {
 
     @Test
     public void getCommandDescription_allCommands_notNullOrEmpty() {
-        for (GeneralCommand command : GeneralCommand.values()) {
+        for (ContactCommand command : ContactCommand.values()) {
             assertNotNull(command.getCommandDescription(), command + " has null command description");
             assertFalse(command.getCommandDescription().isEmpty(), command + " has empty command description");
         }
