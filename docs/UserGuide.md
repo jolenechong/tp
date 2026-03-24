@@ -401,6 +401,9 @@ Examples:
 
 </box>
 
+For more details on possible warnings and errors, refer to the [troubleshooting guide](#troubleshooting-delete-contact) 
+below.
+
 <div style="height: 30px;"></div>
 
 #### Clearing all contacts: `clear`
@@ -636,6 +639,9 @@ Examples:
 **Expected output:** Once confirmed, the product is permanently removed from the list.
 
 </box>
+
+For more details on possible warnings and errors, refer to the [troubleshooting guide](#troubleshooting-deleteproduct) 
+below.
 
 <div style="height: 30px;"></div>
 
