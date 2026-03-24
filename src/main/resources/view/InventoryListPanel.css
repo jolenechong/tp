@@ -1,0 +1,44 @@
+/* =========================================================
+   InventoryListPanel.css
+   Styles for the inventory list, header row, and stock badges
+   ========================================================= */
+
+/* ---------- Header labels ---------- */
+.inventory-header-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* ---------- Item row ---------- */
+.inventory-id-label {
+    -fx-text-fill: #d3d3d3; /* light gray */
+}
+
+.inventory-name-label {
+    -fx-text-fill: white;
+}
+
+.inventory-email-label {
+    -fx-text-fill: #a0b0c8;
+}
+
+/* ---------- List cell reset ---------- */
+.inventory-list-cell {
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+}
+
+/* ---------- Stock badges ---------- */
+.stock-badge {
+    -fx-background-radius: 12;
+    -fx-padding: 4 12 4 12;
+    -fx-text-fill: white;
+}
+
+.stock-badge-low {
+    -fx-background-color: #e55d5d;
+}
+
+.stock-badge-normal {
+    -fx-background-color: #4bac80;
+}
