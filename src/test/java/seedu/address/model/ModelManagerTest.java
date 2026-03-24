@@ -31,6 +31,7 @@ import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.NameContainsKeywordsScoredPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
+import seedu.address.model.product.ProductNameContainsKeywordsScoredPredicate;
 import seedu.address.model.product.exceptions.DuplicateProductException;
 import seedu.address.model.product.exceptions.ProductNotFoundException;
 import seedu.address.testutil.AddressBookBuilder;
@@ -304,6 +305,37 @@ public class ModelManagerTest {
 
         assertEquals(1, modelManager.getFilteredProductList().size());
         assertEquals(OIL, modelManager.getFilteredProductList().get(0));
+    }
+
+    @Test
+    public void updateFilteredProductList_scoredPredicate_sortsByRelevance() {
+        Product substring = new ProductBuilder().withIdentifier("SKU-SUB").withName("Tali Watch").build();
+        Product prefix = new ProductBuilder().withIdentifier("SKU-PRE").withName("Aliphatic Cake").build();
+        Product exact = new ProductBuilder().withIdentifier("SKU-EXA").withName("Ali").build();
+
+        modelManager.addProduct(substring);
+        modelManager.addProduct(prefix);
+        modelManager.addProduct(exact);
+
+        modelManager.updateFilteredProductList(new ProductNameContainsKeywordsScoredPredicate(List.of("ali")));
+        assertEquals(List.of(exact, prefix, substring), modelManager.getFilteredProductList());
+    }
+
+    @Test
+    public void updateFilteredProductList_afterScoredPredicate_resetsToUnderlyingOrder() {
+        Product substring = new ProductBuilder().withIdentifier("SKU-SUB2").withName("Tali Watch").build();
+        Product prefix = new ProductBuilder().withIdentifier("SKU-PRE2").withName("Aliphatic Cake").build();
+        Product exact = new ProductBuilder().withIdentifier("SKU-EXA2").withName("Ali").build();
+
+        modelManager.addProduct(substring);
+        modelManager.addProduct(prefix);
+        modelManager.addProduct(exact);
+
+        modelManager.updateFilteredProductList(new ProductNameContainsKeywordsScoredPredicate(List.of("ali")));
+        assertEquals(List.of(exact, prefix, substring), modelManager.getFilteredProductList());
+
+        modelManager.updateFilteredProductList(PREDICATE_SHOW_ALL_PRODUCTS);
+        assertEquals(List.of(substring, prefix, exact), modelManager.getFilteredProductList());
     }
 
     @Test
