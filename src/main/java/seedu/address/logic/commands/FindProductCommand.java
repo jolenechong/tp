@@ -18,8 +18,8 @@ public class FindProductCommand extends Command {
     public static final String COMMAND_USAGE = COMMAND_WORD + " KEYWORD [MORE_KEYWORDS]...";
     public static final String COMMAND_DESCRIPTION = "Lists all products matching KEYWORD.";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds all products whose names contain any of "
-            + "the specified keywords (case-insensitive) and displays them as a list with index numbers.\n"
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds all products with names containing any of "
+            + "the specified keywords.\n"
             + "Parameters: KEYWORD [MORE_KEYWORDS]...\n"
             + "Example: " + COMMAND_WORD + " motherboard ssd";
 
