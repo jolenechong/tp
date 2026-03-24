@@ -22,22 +22,34 @@ Class JsonAdaptedPerson
 Class JsonAdaptedTag
 }
 
+package "Inventory Storage" #F4F6F6{
+Class "<<interface>>\nInventoryStorage" as InventoryStorage
+Class JsonInventoryStorage
+Class JsonSerializableInventory
+Class JsonAdaptedProduct
 }
 
 Class HiddenOutside #FFFFFF
 HiddenOutside ..> Storage
 
 StorageManager .up.|> Storage
-StorageManager -up-> "1" UserPrefsStorage
-StorageManager -up-> "1" AddressBookStorage
+StorageManager -down-> "1" UserPrefsStorage
+StorageManager -down-> "1" AddressBookStorage
+StorageManager -down-> "1" InventoryStorage
 
-Storage -left-|> UserPrefsStorage
-Storage -right-|> AddressBookStorage
+Storage -down-|> UserPrefsStorage
+Storage -down-|> AddressBookStorage
+Storage -down-|> InventoryStorage
 
 JsonUserPrefsStorage .up.|> UserPrefsStorage
+
 JsonAddressBookStorage .up.|> AddressBookStorage
 JsonAddressBookStorage ..> JsonSerializableAddressBook
 JsonSerializableAddressBook --> "*" JsonAdaptedPerson
 JsonAdaptedPerson --> "*" JsonAdaptedTag
+
+JsonInventoryStorage .up.|> InventoryStorage
+JsonInventoryStorage ..> JsonSerializableInventory
+JsonSerializableInventory --> "*" JsonAdaptedProduct
 
 @enduml
