@@ -1,10 +1,8 @@
-/* ── Stats strip container ───────────────────────────────────────────── */
 .stats-strip {
     -fx-background-color: transparent;
     -fx-padding: 0 0 10 0;
 }
 
-/* ── Stat cards (contacts / products) ───────────────────────────────── */
 .stat-card {
     -fx-background-color: #2f323c;
     -fx-background-radius: 8;
@@ -21,6 +19,7 @@
     -fx-font-size: 26px;
     -fx-font-weight: bold;
     -fx-text-fill: #ffffff;
+    -fx-wrap-text: false;
 }
 
 .stat-card-total {
@@ -29,7 +28,6 @@
     -fx-padding: 0 0 4 0;
 }
 
-/* ── Donut chart card ────────────────────────────────────────────────── */
 .donut-card {
     -fx-background-color: #2f323c;
     -fx-background-radius: 8;
@@ -37,8 +35,9 @@
 }
 
 .donut-card-title {
-    -fx-font-size: 11px;
-    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
 }
 
 .donut-centre-count {
@@ -55,9 +54,9 @@
 .donut-legend-label {
     -fx-font-size: 12px;
     -fx-text-fill: #ffffff;
+    -fx-wrap-text: true;
 }
 
-/* ── Remove white stroke from ALL PieChart slices ────────────────────── */
 .chart-pie {
     -fx-border-color: transparent;
     -fx-stroke: transparent;
@@ -76,10 +75,36 @@
     -fx-background-color: transparent;
 }
 
-.chart-pie-label-line {
-    -fx-stroke: transparent;
-}
-
 .chart-plot-background {
     -fx-background-color: transparent;
+}
+
+/* ── Mini donut ───────────────────────── */
+.mini-donut-bg {
+    -fx-stroke: #555968;
+}
+
+.mini-donut-active {
+    -fx-stroke: #4bac80;
+}
+
+/* ── Main donut ───────────────────────── */
+.donut-in {
+    -fx-fill: #4bac80;
+}
+
+.donut-low {
+    -fx-fill: #e55d5d;
+}
+
+.donut-bg {
+    -fx-fill: #2f323c;
+}
+
+.chart-slice-in {
+    -fx-pie-color: #4bac80;
+}
+
+.chart-slice-low {
+    -fx-pie-color: #e55d5d;
 }

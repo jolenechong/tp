@@ -27,12 +27,10 @@
         <!-- Active Contacts card -->
         <VBox styleClass="stat-card" maxWidth="Infinity" VBox.vgrow="ALWAYS">
             <HBox alignment="CENTER_LEFT" spacing="12">
-                <!-- Mini arc donut -->
                 <Pane fx:id="contactMiniChart"
                       prefWidth="48" prefHeight="48"
                       minWidth="48" minHeight="48"
                       maxWidth="48" maxHeight="48"/>
-                <!-- Title + value/total -->
                 <VBox alignment="CENTER_LEFT" spacing="2">
                     <Label fx:id="contactTitle" text="Active Contacts" styleClass="stat-card-title"/>
                     <HBox alignment="BOTTOM_LEFT" spacing="6">
@@ -76,23 +74,36 @@
                           prefWidth="130" prefHeight="130"
                           minWidth="130" minHeight="130"
                           maxWidth="130" maxHeight="130"/>
-                <Circle fx:id="donutHole" radius="36"/>
+
+                <!-- Donut hole (styled via CSS now) -->
+                <Circle fx:id="donutHole"
+                        radius="36"
+                        styleClass="donut-bg"/>
+
                 <VBox fx:id="centreBox" alignment="CENTER">
                     <Label fx:id="countLabel" styleClass="donut-centre-count"/>
                     <Label text="low stock" styleClass="donut-centre-sub"/>
                 </VBox>
             </StackPane>
 
+            <!-- Legend -->
             <VBox fx:id="legendBox" spacing="8" alignment="CENTER_LEFT">
                 <padding><Insets left="12"/></padding>
+
                 <HBox spacing="6" alignment="CENTER_LEFT">
-                    <Circle fx:id="dotIn" radius="5"/>
+                    <Circle fx:id="dotIn"
+                            radius="5"
+                            styleClass="donut-in"/>
                     <Label fx:id="legendInLabel" styleClass="donut-legend-label"/>
                 </HBox>
+
                 <HBox spacing="6" alignment="CENTER_LEFT">
-                    <Circle fx:id="dotLow" radius="5"/>
+                    <Circle fx:id="dotLow"
+                            radius="5"
+                            styleClass="donut-low"/>
                     <Label fx:id="legendLowLabel" styleClass="donut-legend-label"/>
                 </HBox>
+
             </VBox>
 
         </HBox>

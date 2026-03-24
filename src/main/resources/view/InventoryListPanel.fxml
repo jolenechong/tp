@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -14,35 +13,13 @@
     </top>
 
     <center>
-        <VBox>
-            <HBox spacing="20"
-                  alignment="CENTER_LEFT"
-                  style="-fx-padding: 10 20 10 20; -fx-border-color: #444; -fx-border-width: 0 0 1 0;">
-
-                <Label text="ID"
-                       prefWidth="80"
-                       minWidth="80"
-                       maxWidth="80"
-                       style="-fx-text-fill: white;" />
-
-                <Label text="PRODUCT"
-                       prefWidth="80"
-                       minWidth="80"
-                       maxWidth="1.7976931348623157E308"
-                       HBox.hgrow="ALWAYS"
-                       style="-fx-text-fill: white;" />
-
-                <Label text="QUANTITY"
-                       prefWidth="100"
-                       minWidth="100"
-                       maxWidth="100"
-                       alignment="CENTER_LEFT"
-                       style="-fx-text-fill: white;" />
-
-            </HBox>
+        <VBox VBox.vgrow="ALWAYS">
+            <!-- No padding/spacing here — Java sets them to match cells exactly -->
+            <HBox fx:id="headerRow"
+                  style="-fx-border-color: #444; -fx-border-width: 0 0 1 0;"/>
 
             <ListView fx:id="inventoryListView"
-                      VBox.vgrow="ALWAYS" />
+                      VBox.vgrow="ALWAYS"/>
         </VBox>
     </center>
 
