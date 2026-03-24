@@ -23,6 +23,9 @@ public class StringUtil {
     private static final String ERROR_SENTENCE_WORD_SINGLE = "Sentence word parameter should be a single word";
     private static final String ERROR_WORD_SINGLE = "Word parameter should be a single word";
 
+    private static final int DP_OFFSET = 1;
+    private static final int NO_MATCH = 0;
+
     /**
      * Returns true if the {@code sentence} contains the {@code word}.
      *   Ignores case, but a full word match is required.
@@ -128,4 +131,39 @@ public class StringUtil {
             return false;
         }
     }
+
+    /**
+     * Returns the length of the longest contiguous substring common to both strings,
+     * ignoring case differences.
+     *
+     * @param a The first string to compare.
+     * @param b The second string to compare.
+     * @return The length of the longest common contiguous substring.
+     */
+    public static int longestContiguousMatch(String a, String b) {
+        String normalizedA = a.toLowerCase();
+        String normalizedB = b.toLowerCase();
+
+        // Two rows is enough because each cell depends only on the row above,
+        int[] previousRow = new int[normalizedB.length() + DP_OFFSET];
+        int[] currentRow = new int[normalizedB.length() + DP_OFFSET];
+
+        int longestMatch = NO_MATCH;
+
+        for (int i = DP_OFFSET; i <= normalizedA.length(); i++) {
+            for (int j = DP_OFFSET; j <= normalizedB.length(); j++) {
+                boolean charsMatch = normalizedA.charAt(i - DP_OFFSET) == normalizedB.charAt(j - DP_OFFSET);
+                currentRow[j] = charsMatch ? previousRow[j - DP_OFFSET] + DP_OFFSET : NO_MATCH;
+                longestMatch = Math.max(longestMatch, currentRow[j]);
+            }
+
+            int[] temp = previousRow;
+            previousRow = currentRow;
+            currentRow = temp;
+            Arrays.fill(currentRow, NO_MATCH);
+        }
+
+        return longestMatch;
+    }
+
 }

@@ -173,6 +173,19 @@ public class InventoryTest {
     }
 
     @Test
+    public void findSimilarNameMatch_multipleMatches_returnsBestContiguousMatch() {
+        Product candidate = new ProductBuilder().withIdentifier("C1").withName("alpha beta gear").build();
+        Product weakerMatch = new ProductBuilder().withIdentifier("W1").withName("alpha tools").build();
+        Product strongerMatch = new ProductBuilder().withIdentifier("S1").withName("alpha beta").build();
+
+        inventory.addProduct(weakerMatch);
+        inventory.addProduct(strongerMatch);
+
+        Optional<Product> result = inventory.findSimilarNameMatch(candidate, null);
+        assertEquals(Optional.of(strongerMatch), result);
+    }
+
+    @Test
     public void getProductList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, () -> inventory.getProductList().remove(0));
     }
