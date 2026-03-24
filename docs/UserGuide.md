@@ -183,7 +183,8 @@ add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​
 Examples:
 
 * `add n/Adafruit Industries p/64601234 e/support@adafruit.com a/151 Varick St, New York, NY 10013, USA`
-* `add n/Cytron Technologies Pte. Ltd. p/65480668 (Office), 91234567 (Sales) e/sg.sales@cytron.io a/09 Collyer Quay t/electronics t/technology`
+* `add n/Cytron Technologies Pte. Ltd. p/65480668 (Office), 91234567 (Sales) e/sg.sales@cytron.io a/09 Collyer Quay 
+t/electronics t/wholesale`
 
 <box type="tip" seamless>
 
@@ -272,8 +273,6 @@ The same rules for multiple phone numbers and duplicates that apply to `add` als
 #### Locating contacts: `find` (coming soon)
 
 **This feature is currently in progress** and will be available in a future release. `find` will allow you to view a contact details in **full**.
-
-</box>
 
 <div style="height: 30px;"></div>
 
@@ -446,8 +445,8 @@ editproduct IDENTIFIER [id/NEW_IDENTIFIER] [n/NAME] [q/QUANTITY] [th/RESTOCK_THR
 
 Examples:
 
-* `editproduct SKU-1003 id/SKU-1002 n/Arduino Uno R4 q/50`
-* `editproduct SKU-1003 e/support@adafruit.com`
+* `editproduct SKU-288 id/SKU-299 n/HP LaserJet (M140w) q/35`
+* `editproduct DE/5 e/hello@synapse.sg`
 
 <box type="info" seamless>
 
@@ -490,8 +489,7 @@ archiveproduct IDENTIFIER
 
 Examples:
 
-* `archiveproduct SKU-1003`
-* `archiveproduct SKU-2048`
+* `archiveproduct DE/5`
 
 <box type="info" seamless>
 
@@ -529,7 +527,7 @@ restoreproduct IDENTIFIER
 Examples:
 
 * `restoreproduct`: shows all archived products.
-* `restoreproduct SKU-1003`
+* `restoreproduct DE/5`
 
 <box type="info" seamless>
 
@@ -558,7 +556,7 @@ deleteproduct PRODUCT_IDENTIFIER
 
 Examples:
 
-* `deleteproduct SKU-1003`
+* `deleteproduct DE/5`
 
 <box type="info" seamless>
 
@@ -687,7 +685,7 @@ exit
 | Action              | Command                                                                                                    | Example                                                                     | What it does                                                            |
 |---------------------|------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|-------------------------------------------------------------------------|
 | **Add Product**     | `addproduct id/IDENTIFIER n/NAME [q/QUANTITY] [th/RESTOCK_THRESHOLD] [e/VENDOR_EMAIL]`                     | `addproduct id/SKU-1003 n/Arduino Uno R4 q/50 th/10 e/sales@techsource.com` | Adds a product                                                          |
-| **Edit Product**    | `editproduct IDENTIFIER [id/NEW_IDENTIFIER] [n/NAME] [q/QUANTITY] [th/RESTOCK_THRESHOLD] [e/VENDOR_EMAIL]` | `editproduct SKU-1003 n/Arduino Uno R4 q/50`                                | Edits a product's details                                               |
+| **Edit Product**    | `editproduct IDENTIFIER [id/NEW_IDENTIFIER] [n/NAME] [q/QUANTITY] [th/RESTOCK_THRESHOLD] [e/VENDOR_EMAIL]` | `editproduct SKU-1003 n/Arduino Mega q/35`                                  | Edits a product's details                                               |
 | **Delete Product**  | `deleteproduct PRODUCT_IDENTIFIER`                                                                         | `deleteproduct SKU-1003`                                                    | Deletes a product                                                       |
 | **List Products**   | `listproduct`                                                                                              | &nbsp;                                                                      | Lists active products                                                   |
 | **Find Products**   | `findproduct` _(coming soon)_                                                                              | &nbsp;                                                                      | &nbsp;                                                                  |
