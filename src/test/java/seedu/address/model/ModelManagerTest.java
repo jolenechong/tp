@@ -27,11 +27,14 @@ import seedu.address.logic.commands.ListCommand;
 import seedu.address.model.alias.Alias;
 import seedu.address.model.alias.exceptions.DuplicateAliasException;
 import seedu.address.model.alias.exceptions.NoAliasFoundInAliasListException;
+import seedu.address.model.person.NameContainsKeywordsScoredPredicate;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
+import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
 import seedu.address.model.product.exceptions.DuplicateProductException;
 import seedu.address.model.product.exceptions.ProductNotFoundException;
 import seedu.address.testutil.AddressBookBuilder;
+import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.ProductBuilder;
 
 public class ModelManagerTest {
@@ -160,6 +163,37 @@ public class ModelManagerTest {
     @Test
     public void getFilteredPersonList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, () -> modelManager.getFilteredPersonList().remove(0));
+    }
+
+    @Test
+    public void updateFilteredPersonList_scoredPredicate_sortsByRelevance() {
+        Person substring = new PersonBuilder().withName("Mali Ong").withEmail("substring@example.com").build();
+        Person prefix = new PersonBuilder().withName("Alice Wong").withEmail("prefix@example.com").build();
+        Person exact = new PersonBuilder().withName("Ali Tan").withEmail("exact@example.com").build();
+
+        modelManager.addPerson(substring);
+        modelManager.addPerson(prefix);
+        modelManager.addPerson(exact);
+
+        modelManager.updateFilteredPersonList(new NameContainsKeywordsScoredPredicate(List.of("ali")));
+        assertEquals(List.of(exact, prefix, substring), modelManager.getFilteredPersonList());
+    }
+
+    @Test
+    public void updateFilteredPersonList_afterScoredPredicate_resetsToUnderlyingOrder() {
+        Person substring = new PersonBuilder().withName("Mali Ong").withEmail("substring@example.com").build();
+        Person prefix = new PersonBuilder().withName("Alice Wong").withEmail("prefix@example.com").build();
+        Person exact = new PersonBuilder().withName("Ali Tan").withEmail("exact@example.com").build();
+
+        modelManager.addPerson(substring);
+        modelManager.addPerson(prefix);
+        modelManager.addPerson(exact);
+
+        modelManager.updateFilteredPersonList(new NameContainsKeywordsScoredPredicate(List.of("ali")));
+        assertEquals(List.of(exact, prefix, substring), modelManager.getFilteredPersonList());
+
+        modelManager.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        assertEquals(List.of(substring, prefix, exact), modelManager.getFilteredPersonList());
     }
 
     @Test
