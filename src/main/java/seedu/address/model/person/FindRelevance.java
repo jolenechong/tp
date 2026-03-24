@@ -39,6 +39,8 @@ public final class FindRelevance {
         }
     }
 
+    private static final String MESSAGE_UNMATCHED_CHARS_NEGATIVE = "unmatchedChars must be non-negative";
+
     /**
      * Immutable relevance score.
      */
@@ -51,7 +53,7 @@ public final class FindRelevance {
             requireNonNull(tier);
             requireNonNull(fullName);
             if (unmatchedChars < 0) {
-                throw new IllegalArgumentException("unmatchedChars must be non-negative");
+                throw new IllegalArgumentException(MESSAGE_UNMATCHED_CHARS_NEGATIVE);
             }
         }
     }
