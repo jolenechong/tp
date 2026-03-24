@@ -1,5 +1,9 @@
 package seedu.address.ui;
 
+import static seedu.address.logic.commands.ContactCommand.getContactCommands;
+import static seedu.address.logic.commands.GeneralCommand.getGeneralCommands;
+import static seedu.address.logic.commands.InventoryCommand.getInventoryCommands;
+
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -15,6 +19,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.logic.commands.CommandWord;
 
 /**
  * Controller for a help page
@@ -37,6 +42,8 @@ public class HelpWindow extends UiPart<Stage> {
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
     private static final String FXML = "HelpWindow.fxml";
+
+    private static final int nameLabelSpacing = 90;
 
     @FXML
     private Button copyButton;
@@ -91,23 +98,11 @@ public class HelpWindow extends UiPart<Stage> {
     public void populateCommandsToCommandListContainer() {
         commandListContainer.getChildren().addAll(
                 createSectionHeadingLabel(DISPLAY_CONTACT_COMMANDS),
-                createCommandGroup(List.of(
-                        new String[]{"Command 1", "command 1 example", "description"},
-                        new String[]{"Command 2", "command 2 example", "description"},
-                        new String[]{"Command 3", "command 3 example", "description"}
-                )),
+                createCommandGroup(getContactCommands()),
                 createSectionHeadingLabel(DISPLAY_INVENTORY_COMMANDS),
-                createCommandGroup(List.of(
-                        new String[]{"Command 4", "command 4 example", "description"},
-                        new String[]{"Command 5", "command 5 example", "description"},
-                        new String[]{"Command 6", "command 6 example", "description"},
-                        new String[]{"Command 7", "command 7 example", "description"}
-                )),
+                createCommandGroup(getInventoryCommands()),
                 createSectionHeadingLabel(DISPLAY_GENERAL_COMMANDS),
-                createCommandGroup(List.of(
-                        new String[]{"Command 8", "command 8 example", "description"},
-                        new String[]{"Command 9", "command 9 example", "description"}
-                )));
+                createCommandGroup(getGeneralCommands()));
     }
 
     private Label createSectionHeadingLabel(String text) {
@@ -116,13 +111,14 @@ public class HelpWindow extends UiPart<Stage> {
         return label;
     }
 
-    private VBox createCommandGroup(List<String[]> commands) {
+    private VBox createCommandGroup(List<CommandWord> commands) {
         VBox group = new VBox(0);
         group.getStyleClass().add(COMMAND_GROUP_CLASS);
 
         for (int i = 0; i < commands.size(); i++) {
-            String[] cmd = commands.get(i);
-            group.getChildren().add(createCommandBox(cmd[0], cmd[1], cmd[2]));
+            CommandWord cmd = commands.get(i);
+            group.getChildren().add(
+                    createCommandBox(cmd.getCommandWord(), cmd.getCommandUsage(), cmd.getCommandDescription()));
             if (i < commands.size() - 1) {
                 group.getChildren().add(createSeparator());
             }
@@ -140,6 +136,8 @@ public class HelpWindow extends UiPart<Stage> {
     private HBox createCommandBox(String name, String commandEg, String description) {
         Label nameLabel = new Label(name);
         nameLabel.getStyleClass().add(COMMAND_NAME_CLASS);
+        nameLabel.setMinWidth(nameLabelSpacing);
+        nameLabel.setMaxWidth(nameLabelSpacing);
 
         Label commandEgLabel = new Label(commandEg);
         commandEgLabel.getStyleClass().add(COMMAND_EXAMPLE_CLASS);

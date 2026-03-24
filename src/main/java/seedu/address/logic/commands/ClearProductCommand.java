@@ -20,6 +20,8 @@ public class ClearProductCommand extends Command {
 
     /** Command word used to trigger this command. */
     public static final String COMMAND_WORD = "clearproduct";
+    public static final String COMMAND_USAGE = COMMAND_WORD;
+    public static final String COMMAND_DESCRIPTION = "Clears all products.";
 
     /** Message shown when asking the user for confirmation. */
     public static final String MESSAGE_CONFIRMATION =

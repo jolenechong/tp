@@ -20,6 +20,8 @@ import seedu.address.model.person.Person;
 public class ArchiveCommand extends Command {
 
     public static final String COMMAND_WORD = "archive";
+    public static final String COMMAND_USAGE = COMMAND_WORD + " EMAIL";
+    public static final String COMMAND_DESCRIPTION = "Archives a contact.";
 
     public static final String MESSAGE_USAGE =
             COMMAND_WORD + " EMAIL\n"

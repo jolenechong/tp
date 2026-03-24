@@ -17,6 +17,8 @@ import seedu.address.model.product.Product;
 public class ArchiveProductCommand extends Command {
 
     public static final String COMMAND_WORD = "archiveproduct";
+    public static final String COMMAND_USAGE = COMMAND_WORD + " IDENTIFIER";
+    public static final String COMMAND_DESCRIPTION = "Archives a product.";
 
     public static final String MESSAGE_USAGE =
             COMMAND_WORD + " IDENTIFIER\n"

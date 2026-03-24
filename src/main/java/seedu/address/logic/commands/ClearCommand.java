@@ -13,6 +13,9 @@ import seedu.address.model.Model;
 public class ClearCommand extends Command {
 
     public static final String COMMAND_WORD = "clear";
+    public static final String COMMAND_USAGE = COMMAND_WORD;
+    public static final String COMMAND_DESCRIPTION = "Clears all contacts.";
+
     public static final String MESSAGE_SUCCESS = "All vendor contacts cleared!";
     public static final String CONFIRMATION_CLEAR_MESSAGE =
             "Confirm (y) you want to clear ALL vendor contacts (use `undo` to revert):";

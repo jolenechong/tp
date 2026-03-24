@@ -17,6 +17,9 @@ import seedu.address.model.product.Product;
 public class RestoreProductCommand extends Command {
 
     public static final String COMMAND_WORD = "restoreproduct";
+    public static final String COMMAND_USAGE = COMMAND_WORD + " [IDENTIFIER]";
+    public static final String COMMAND_DESCRIPTION =
+            "Restores an archived product; lists all archived if no identifier given";
 
     public static final String MESSAGE_USAGE =
             COMMAND_WORD + " IDENTIFIER\n"
