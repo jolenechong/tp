@@ -59,7 +59,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.NameContainsKeywordsScoredPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
-import seedu.address.model.product.ProductNameContainsKeywordsPredicate;
+import seedu.address.model.product.ProductNameContainsKeywordsScoredPredicate;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.PersonUtil;
@@ -198,7 +198,7 @@ public class AddressBookParserTest {
                 FindProductCommand.COMMAND_WORD + " " + keywords.stream().collect(Collectors.joining(" ")),
                 new PendingConfirmation(),
                 new ModelManager());
-        assertEquals(new FindProductCommand(new ProductNameContainsKeywordsPredicate(keywords)), command);
+        assertEquals(new FindProductCommand(new ProductNameContainsKeywordsScoredPredicate(keywords)), command);
     }
 
     @Test
