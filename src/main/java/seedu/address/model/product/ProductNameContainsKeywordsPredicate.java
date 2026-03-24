@@ -12,8 +12,12 @@ import seedu.address.commons.util.ToStringBuilder;
 public class ProductNameContainsKeywordsPredicate implements Predicate<Product> {
     private final List<String> keywords;
 
+    /**
+     * Creates a predicate that matches any full-word keyword in a product name.
+     *
+     */
     public ProductNameContainsKeywordsPredicate(List<String> keywords) {
-        this.keywords = keywords;
+        this.keywords = List.copyOf(keywords);
     }
 
     @Override
