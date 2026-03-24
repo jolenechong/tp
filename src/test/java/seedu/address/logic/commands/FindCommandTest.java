@@ -122,6 +122,36 @@ public class FindCommandTest {
     }
 
     @Test
+    public void execute_partialKeyword_ranksByRelevance() {
+        Person exact = new PersonBuilder().withName("Ali").withPhone("11111")
+                .withEmail("exact@example.com").withAddress("Exact Street").build();
+        Person prefix = new PersonBuilder().withName("Alice").withPhone("22222")
+                .withEmail("prefix@example.com").withAddress("Prefix Street").build();
+        Person substring = new PersonBuilder().withName("Mali").withPhone("33333")
+                .withEmail("substring@example.com").withAddress("Substring Street").build();
+
+        AddressBook addressBook = new AddressBook();
+        addressBook.addPerson(substring);
+        addressBook.addPerson(prefix);
+        addressBook.addPerson(exact);
+
+        Model localModel = new ModelManager(
+                new VendorVault(addressBook, new Inventory()), new UserPrefs(), new Aliases());
+        Model localExpectedModel = new ModelManager(
+                new VendorVault(addressBook, new Inventory()), new UserPrefs(), new Aliases());
+
+        String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW + MESSAGE_DISPLAY_PRODUCTS, 3);
+        NameContainsKeywordsScoredPredicate predicate = preparePredicate("ali");
+        FindCommand command = new FindCommand(predicate);
+
+        localExpectedModel.updateFilteredPersonList(predicate);
+        updateExpectedProductFilter(localExpectedModel);
+
+        assertCommandSuccess(command, localModel, expectedMessage, localExpectedModel);
+        assertEquals(Arrays.asList(exact, prefix, substring), localModel.getFilteredPersonList());
+    }
+
+    @Test
     public void getPendingConfirmation_returnsInactivePendingConfirmation() {
         NameContainsKeywordsScoredPredicate predicate = preparePredicate(" ");
         FindCommand command = new FindCommand(predicate);
