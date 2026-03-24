@@ -24,7 +24,7 @@ public class InventoryCommandTest {
 
     @Test
     public void getGeneralCommands_returnsAllCommands() {
-        List<InventoryCommand> commands = InventoryCommand.getGeneralCommands();
+        List<CommandWord> commands = InventoryCommand.getInventoryCommands();
         assertEquals(InventoryCommand.values().length, commands.size());
     }
 
