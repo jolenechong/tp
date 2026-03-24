@@ -11,12 +11,14 @@ import java.util.logging.Logger;
 
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.alias.Alias;
 import seedu.address.model.alias.exceptions.DuplicateAliasException;
 import seedu.address.model.alias.exceptions.NoAliasFoundInAliasListException;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.NameContainsKeywordsScoredPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
 
@@ -32,6 +34,7 @@ public class ModelManager implements Model {
     private final Aliases aliases;
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
+    private final SortedList<Person> sortedFilteredPersons;
     private final FilteredList<Product> filteredProducts;
     private final VersionedVendorVault versionedVendorVault;
 
@@ -52,6 +55,7 @@ public class ModelManager implements Model {
 
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
         filteredPersons.setPredicate(Model.PREDICATE_SHOW_ACTIVE_PERSONS);
+        sortedFilteredPersons = new SortedList<>(filteredPersons);
         filteredProducts = new FilteredList<>(this.inventory.getProductList());
         filteredProducts.setPredicate(product -> !product.isArchived());
         versionedVendorVault = new VersionedVendorVault(this.vendorVault);
@@ -274,13 +278,21 @@ public class ModelManager implements Model {
      */
     @Override
     public ObservableList<Person> getFilteredPersonList() {
-        return filteredPersons;
+        return sortedFilteredPersons;
     }
 
     @Override
     public void updateFilteredPersonList(Predicate<Person> predicate) {
         requireNonNull(predicate);
+        if (predicate instanceof NameContainsKeywordsScoredPredicate) {
+            NameContainsKeywordsScoredPredicate scoredPredicate = (NameContainsKeywordsScoredPredicate) predicate;
+            filteredPersons.setPredicate(person -> !person.isArchived() && scoredPredicate.test(person));
+            sortedFilteredPersons.setComparator(scoredPredicate.createPersonComparator());
+            return;
+        }
+
         filteredPersons.setPredicate(predicate);
+        sortedFilteredPersons.setComparator(null);
     }
 
     //=========== Filtered Product List Accessors ============================================================
