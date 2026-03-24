@@ -816,28 +816,6 @@ exit
 
 ## FAQ
 
-<panel header="I edited the data file directly and now VendorVault is not working. What should I do?" type="seamless">
-
-If you edited the data file and it caused VendorVault to behave unexpectedly, you can try the following steps:
-
-1. Restore from backup: If you made a backup of the data file before editing, you can restore the original data file by replacing the edited data files in the data folder with the backup.
-2. Start with a new data file: If you do not have a backup, you can delete the existing data file (or move it to a different location for safekeeping) and start VendorVault again. This will create a new, empty data file.
-
-</panel>
-
-<panel header="How do I transfer my data to another computer?" type="seamless">
-
-Follow these steps:
-
-* Install VendorVault on the new computer (see [Quick Start](#quick-start)).
-* On the old computer, open the folder where VendorVault's `.jar` file is located.
-* Look for the `data` folder and copy it to an external/cloud storage.
-* When you launch VendorVault on the new computer, a new `data` folder is created. Replace it with the old
-  computer's folder.
-* Relaunch VendorVault and you should see your data appear exactly as before.
-
-</panel>
-
 <panel header="How do I back up my data?" id="faq-backup-data" type="seamless">
 
 * Open the folder where VendorVault's `.jar` file is located.
@@ -911,6 +889,25 @@ This is the json for aliases:
 ```
 
 </panel>
+
+</panel>
+
+<panel header="I edited the data file directly and now VendorVault is not working. What should I do?" type="seamless">
+
+If you edited the data file and it caused VendorVault to behave unexpectedly, you can try the following steps:
+
+1. Restore from backup: If you made a backup of the data file before editing, you can restore the original data file by replacing the edited data files in the data folder with the backup.
+2. Start with a new data file: If you do not have a backup, you can delete the existing data file (or move it to a different location for safekeeping) and start VendorVault again. This will create a new, empty data file.
+
+</panel>
+
+<panel header="How do I transfer my data to another computer?" type="seamless">
+
+1. [Install VendorVault](#quick-start) on the new computer.
+2. On the old computer, open the folder where VendorVault's `.jar` file is located.
+3. Look for the `data` folder and copy it to an external/cloud storage.
+4. When you launch VendorVault on the new computer, a new `data` folder is created. Replace it with the old computer's version.
+5. Relaunch VendorVault and you should see your data appear exactly as before.
 
 </panel>
 
