@@ -637,14 +637,14 @@ exit
 <div style="height: 30px;"></div>
 
 ### General Commands
-| Action    | Command | What it does               |
-|-----------|---------|----------------------------|
-| **Alias** | `alias [ORIGINAL_COMMAND] [ALIAS] ` | Add a new alias; List all aliases if original command and alias are not given            |
-| **Undo**  | `undo`  | Undoes previous changes    |
-| **Redo**  | `redo`  | Redoes last undone changes |
+| Action    | Command | What it does              |
+|-----------|---------|---------------------------|
+| **Alias** | `alias [ORIGINAL_COMMAND] [ALIAS] ` | Add a new alias; List all aliases if original command and alias are not given          |
+| **Undo**  | `undo`  | Undoes previous change    |
+| **Redo**  | `redo`  | Redoes last undone change |
 | **List All** | `listall` | Lists all active contacts and products |
-| **Help**  | `help`  | Shows help message         |
-| **Exit**  | `exit`  | Exits VendorVault          |
+| **Help**  | `help`  | Shows help message        |
+| **Exit**  | `exit`  | Exits VendorVault         |
 
 --------------------------------------------------------------------------------------------------------------------
 
