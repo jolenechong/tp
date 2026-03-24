@@ -17,3 +17,62 @@
 #helpMessageContainer {
     -fx-background-color: derive(#1d1d1d, 20%);
 }
+
+.label-help-header {
+    -fx-font-size: 13pt;
+    -fx-font-family: "__VV_FONT_UI_SEMIBOLD__";
+    -fx-text-fill: #E8A020;
+    -fx-padding: 14 0 8 5;
+}
+
+.scroll-pane {
+    -fx-background-color: #282A36;
+    -fx-background: #282A36;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: #282A36;
+}
+
+.command-name {
+    -fx-font-family: "__VV_FONT_UI_SEMIBOLD__";
+    -fx-font-size: 10pt;
+    -fx-text-fill: #E1E1E1;
+}
+
+.command-group {
+    -fx-background-color: #2f323c;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #3e3f4e;
+    -fx-border-width: 1;
+    -fx-padding: 5 5 5 5;
+}
+
+.command-example {
+    -fx-font-family: "__VV_FONT_MONO__";
+    -fx-font-size: 10pt;
+    -fx-text-fill: #E8527A;
+}
+
+.command-desc {
+    -fx-font-family: "__VV_FONT_UI__";
+    -fx-font-size: 10pt;
+    -fx-text-fill: #9a9aaa;
+}
+
+.command-row {
+    -fx-background-color: #363846;
+    -fx-background-color: transparent;
+}
+
+.command-row:hover {
+    -fx-background-color: #363846;
+}
+
+.command-separator {
+    -fx-background-color: #3e3f4e;
+    -fx-pref-height: 1;
+    -fx-max-height: 1;
+    -fx-min-height: 1;
+}

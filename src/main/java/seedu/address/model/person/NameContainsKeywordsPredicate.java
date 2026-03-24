@@ -2,6 +2,7 @@ package seedu.address.model.person;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -12,6 +13,8 @@ import seedu.address.commons.util.ToStringBuilder;
  * Tests that a {@code Person}'s {@code Name} matches any of the full-word keywords given.
  */
 public class NameContainsKeywordsPredicate implements Predicate<Person> {
+    private static final String WHITESPACE_REGEX = "\\s+";
+
     private final List<String> keywords;
 
     /**
@@ -26,8 +29,10 @@ public class NameContainsKeywordsPredicate implements Predicate<Person> {
 
     @Override
     public boolean test(Person person) {
-        return keywords.stream()
-                .anyMatch(keyword -> StringUtil.containsWordIgnoreCase(person.getName().fullName, keyword));
+        String[] nameTokens = person.getName().fullName.trim().split(WHITESPACE_REGEX);
+
+        return keywords.stream().anyMatch(keyword -> Arrays.stream(nameTokens).anyMatch(token ->
+                StringUtil.getWordPartialMatchScoreIgnoreCase(token, keyword) > StringUtil.WORD_MATCH_SCORE_NO_MATCH));
     }
 
     @Override

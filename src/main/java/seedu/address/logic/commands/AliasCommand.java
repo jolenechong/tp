@@ -17,6 +17,9 @@ import seedu.address.model.alias.exceptions.DuplicateAliasException;
 public class AliasCommand extends Command {
 
     public static final String COMMAND_WORD = "alias";
+    public static final String COMMAND_USAGE = COMMAND_WORD + " [ORIGINAL_COMMAND] [ALIAS]";
+    public static final String COMMAND_DESCRIPTION =
+            "Add a new alias; List all aliases if original command and alias are not given.";
 
     public static final String MESSAGE_ADD_ALIAS_SUCCESS = "Added Alias: %1$s";
 

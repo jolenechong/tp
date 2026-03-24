@@ -18,6 +18,8 @@ import seedu.address.model.Model;
 public class ListAllCommand extends Command {
 
     public static final String COMMAND_WORD = "listall";
+    public static final String COMMAND_USAGE = COMMAND_WORD;
+    public static final String COMMAND_DESCRIPTION = "Lists all active contacts and products.";
 
     public static final String MESSAGE_SUCCESS =
             "Showing all active contacts and products!";

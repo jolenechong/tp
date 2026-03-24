@@ -143,7 +143,7 @@ The `Model` component
 
 **API** : [`Storage.java`](https://github.com/AY2526S2-CS2103T-W08-2/tp/blob/master/src/main/java/seedu/address/storage/Storage.java)
 
-<puml src="diagrams/StorageClassDiagram.puml" width="550" />
+<puml src="diagrams/StorageClassDiagram.puml" width="650" />
 
 The `Storage` component
 * saves contact, inventory, alias and user preference data in JSON format, and reads them back into corresponding objects.

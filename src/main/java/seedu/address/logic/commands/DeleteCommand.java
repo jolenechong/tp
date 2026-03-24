@@ -23,6 +23,8 @@ import seedu.address.model.product.Product;
 public class DeleteCommand extends Command {
 
     public static final String COMMAND_WORD = "delete";
+    public static final String COMMAND_USAGE = COMMAND_WORD + " EMAIL";
+    public static final String COMMAND_DESCRIPTION = "Deletes a contact.";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Deletes the contact identified by email used in the displayed contact list.\n"

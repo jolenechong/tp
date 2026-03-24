@@ -62,8 +62,10 @@
 
                 <HBox VBox.vgrow="ALWAYS">
 
+                    <!-- LEFT: contacts — grows equally, protected by minWidth -->
                     <VBox HBox.hgrow="ALWAYS"
-                          prefWidth="320">
+                          prefWidth="400"
+                          minWidth="350">
 
                         <StackPane fx:id="commandBoxPlaceholder"
                                    styleClass="pane-with-border">
@@ -96,7 +98,10 @@
 
                     </VBox>
 
+                    <!-- RIGHT: inventory — grows equally, protected by minWidth -->
                     <VBox HBox.hgrow="ALWAYS"
+                          prefWidth="400"
+                          minWidth="350"
                           styleClass="pane-with-border">
 
                         <padding>

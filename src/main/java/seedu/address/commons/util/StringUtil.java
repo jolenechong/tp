@@ -18,6 +18,11 @@ public class StringUtil {
     public static final int WORD_MATCH_SCORE_PREFIX = 2;
     public static final int WORD_MATCH_SCORE_EXACT = 3;
 
+    private static final String ERROR_SENTENCE_WORD_EMPTY = "Sentence word parameter cannot be empty";
+    private static final String ERROR_WORD_EMPTY = "Word parameter cannot be empty";
+    private static final String ERROR_SENTENCE_WORD_SINGLE = "Sentence word parameter should be a single word";
+    private static final String ERROR_WORD_SINGLE = "Word parameter should be a single word";
+
     /**
      * Returns true if the {@code sentence} contains the {@code word}.
      *   Ignores case, but a full word match is required.
@@ -45,23 +50,15 @@ public class StringUtil {
     }
 
     /**
-     * Returns a token-level partial match score between {@code sentenceWord} and {@code word}, ignoring case.
+     * Returns a token-level partial match score between {@code sentenceWord} and {@code word}. Ignores case.
      *
      * @param sentenceWord cannot be null, cannot be empty, must be a single word
      * @param word cannot be null, cannot be empty, must be a single word
      */
     public static int getWordPartialMatchScoreIgnoreCase(String sentenceWord, String word) {
-        requireNonNull(sentenceWord);
-        requireNonNull(word);
-
-        String preppedSentenceWord = sentenceWord.trim();
-        String preppedWord = word.trim();
-        checkArgument(!preppedSentenceWord.isEmpty(), "Sentence word parameter cannot be empty");
-        checkArgument(!preppedWord.isEmpty(), "Word parameter cannot be empty");
-        checkArgument(preppedSentenceWord.split("\\s+").length == 1,
-                "Sentence word parameter should be a single word");
-        checkArgument(preppedWord.split("\\s+").length == 1,
-                "Word parameter should be a single word");
+        String preppedSentenceWord = normalizeSingleWord(sentenceWord, ERROR_SENTENCE_WORD_EMPTY,
+                ERROR_SENTENCE_WORD_SINGLE);
+        String preppedWord = normalizeSingleWord(word, ERROR_WORD_EMPTY, ERROR_WORD_SINGLE);
 
         String sentenceWordLower = preppedSentenceWord.toLowerCase(Locale.ROOT);
         String wordLower = preppedWord.toLowerCase(Locale.ROOT);
@@ -76,6 +73,16 @@ public class StringUtil {
             return WORD_MATCH_SCORE_SUBSTRING;
         }
         return WORD_MATCH_SCORE_NO_MATCH;
+    }
+
+    private static String normalizeSingleWord(String value, String emptyMessage, String singleWordMessage) {
+        requireNonNull(value);
+
+        String preppedValue = value.trim();
+        checkArgument(!preppedValue.isEmpty(), emptyMessage);
+        checkArgument(preppedValue.split("\\s+").length == 1, singleWordMessage);
+
+        return preppedValue;
     }
 
     /**

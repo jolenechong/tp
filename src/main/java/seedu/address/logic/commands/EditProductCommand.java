@@ -1,6 +1,10 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_QUANTITY;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_THRESHOLD;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -35,6 +39,12 @@ import seedu.address.model.product.RestockThreshold;
 public class EditProductCommand extends Command {
 
     public static final String COMMAND_WORD = "editproduct";
+    public static final String COMMAND_USAGE = COMMAND_WORD + " IDENTIFIER"
+            + "[" + PREFIX_NAME + "NAME] "
+            + "[" + PREFIX_QUANTITY + "QUANTITY] "
+            + "[" + PREFIX_THRESHOLD + "THRESHOLD] "
+            + "[" + PREFIX_EMAIL + "EMAIL] ";
+    public static final String COMMAND_DESCRIPTION = "Edits a product's details.";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Edits the details of the product identified by its identifier.\n"
