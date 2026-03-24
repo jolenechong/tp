@@ -5,29 +5,33 @@ import static java.util.Objects.requireNonNull;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.model.Model;
-import seedu.address.model.person.NameContainsKeywordsPredicate;
+import seedu.address.model.person.NameContainsKeywordsScoredPredicate;
 import seedu.address.model.product.VendorEmailMatchesContactsPredicate;
 
 /**
  * Finds and lists all persons in address book whose name contains any of the argument keywords
  * and updates product list to show products associated with the listed contacts.
- * Keyword matching is case insensitive.
+ * Case-insensitive, token-level partial matching is used. Matches are ranked by relevance.
  */
 public class FindCommand extends Command {
 
     public static final String COMMAND_WORD = "find";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds all contacts whose names contain any of "
-            + "the specified keywords (case-insensitive) and displays them as a list with index numbers.\n"
+            + "the specified keywords.\n"
             + "Parameters: KEYWORD [MORE_KEYWORDS]...\n"
             + "Example: " + COMMAND_WORD + " adafruit cytron";
 
     public static final String MESSAGE_DISPLAY_PRODUCTS = " Products associated with these contacts listed on "
             + "the right!";
 
-    private final NameContainsKeywordsPredicate predicate;
+    private final NameContainsKeywordsScoredPredicate predicate;
 
-    public FindCommand(NameContainsKeywordsPredicate predicate) {
+    /**
+     * Creates a find command with the given name-matching predicate.
+     */
+    public FindCommand(NameContainsKeywordsScoredPredicate predicate) {
+        requireNonNull(predicate);
         this.predicate = predicate;
     }
 
