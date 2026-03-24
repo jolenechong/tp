@@ -15,6 +15,15 @@ import java.util.Locale;
  * then fewer unmatched characters, then alphabetical by full name.
  */
 public final class FindRelevance {
+    /**
+     * Comparator for descending relevance with tie-breakers.
+     */
+    public static final Comparator<Score> SCORE_COMPARATOR =
+            Comparator.comparingInt((Score score) -> score.tier().getWeight()).reversed()
+                    .thenComparingInt(Score::unmatchedChars)
+                    .thenComparing(score -> score.fullName().toLowerCase(Locale.ROOT));
+
+    private static final String MESSAGE_UNMATCHED_CHARS_NEGATIVE = "unmatchedChars must be non-negative";
 
     /**
      * Match tier for one keyword against one name token.
@@ -39,8 +48,6 @@ public final class FindRelevance {
         }
     }
 
-    private static final String MESSAGE_UNMATCHED_CHARS_NEGATIVE = "unmatchedChars must be non-negative";
-
     /**
      * Immutable relevance score.
      */
@@ -57,14 +64,6 @@ public final class FindRelevance {
             }
         }
     }
-
-    /**
-     * Comparator for descending relevance with tie-breakers.
-     */
-    public static final Comparator<Score> SCORE_COMPARATOR =
-            Comparator.comparingInt((Score score) -> score.tier().getWeight()).reversed()
-                    .thenComparingInt(Score::unmatchedChars)
-                    .thenComparing(score -> score.fullName().toLowerCase(Locale.ROOT));
 
     /**
      * Utility class.
