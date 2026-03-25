@@ -575,7 +575,7 @@ Examples:
 
 <box type="tip" seamless>
 
-**Tip:** Tip: Archive a product you no longer have, but may bring back in future. To permanently delete a product, use `deleteproduct`.
+**Tip:** Archive a product you no longer have, but may bring back in future. To permanently delete a product, use `deleteproduct`.
 
 </box>
 
@@ -677,13 +677,13 @@ help
 
 <div style="height: 30px;"></div>
 
-#### Add a command alias : `alias`
+#### Adding a command alias : `alias`
 
 Creates a shortcut to an existing command (excluding `alias`).
 
 Format:
 ```
-alias ORIGINAL_COMMAND ALIAS
+alias [ORIGINAL_COMMAND] [ALIAS]
 ```
 
 Example:
@@ -694,6 +694,27 @@ Example:
 
 **Expected output:**<br>
 ![alias](images/v1.4/alias.png =600x)
+
+</box>
+
+<div style="height: 30px;"></div>
+
+#### Deleting a command alias : `deletealias`
+
+Removes an existing shortcut.
+
+Format:
+```
+deletealias ALIAS
+```
+
+Example:
+* `deletealias ls` removes `ls` as an alias
+
+<box type="info" seamless>
+
+**Expected output:**
+Removes alias given.
 
 </box>
 
@@ -797,14 +818,15 @@ exit
 
 ### General Commands
 
-| <div style="width:100px">Action</div>| <div style="width:200px">Command</div>| <div style="width:200px">Example</div>| What it does|
-|--------------|--------------------------------------------------|---------------------------------|-----------------------------------------------------------|
-| **Alias**           | `alias [ORIGINAL_COMMAND] [ALIAS]`                  | `alias list ls` | Adds a new alias; lists all aliases if no arguments given |
-| **Undo**            | `undo`                             | &nbsp;          | Undoes previous change                                    |
-| **Redo**     | `redo`                             | &nbsp;          | Redoes last undone change                                 |
-| **List All** | `listall`                          | &nbsp;          | Lists all active contacts and products                    |
-| **Help**     | `help`                             | &nbsp;          | Shows help message                                        |
-| **Exit**     | `exit`                             | &nbsp;          | Exits VendorVault                                         |
+| <div style="width:100px">Action</div> | <div style="width:200px">Command</div> | <div style="width:200px">Example</div> | What it does                                              |
+|---------------------------------------|----------------------------------------|---------------------------------------|-----------------------------------------------------------|
+| **Alias**                             | `alias [ORIGINAL_COMMAND] [ALIAS]`     | `alias list ls`                       | Adds a new alias; lists all aliases if no arguments given |
+| **Delete Alias**                      | `deletealias [ALIAS]`                  | `deletealias ls`                      | Deletes an existing alias                                 |
+| **Undo**                              | `undo`                                 | &nbsp;                                | Undoes previous change                                    |
+| **Redo**                              | `redo`                                 | &nbsp;                                | Redoes last undone change                                 |
+| **List All**                          | `listall`                              | &nbsp;                                | Lists all active contacts and products                    |
+| **Help**                              | `help`                                 | &nbsp;                                | Shows a summary of commands                               |
+| **Exit**                              | `exit`                                 | &nbsp;                                | Exits VendorVault                                         |
 
 --------------------------------------------------------------------------------------------------------------------
 
