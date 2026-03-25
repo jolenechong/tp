@@ -384,7 +384,8 @@ Model#restoreProduct(Product product)
 
 The `ModelManager` implementations call `addressBook.setPerson()` and `inventory.setProduct()` respectively to swap the old record for the newly created immutable copy.
 
-#### Usage Scenario — Vendor Archiving
+#### Usage Scenario
+##### Vendor Archiving
 
 Given below is an example of the vendor archive/restore lifecycle.
 
@@ -400,7 +401,13 @@ Given below is an example of the vendor archive/restore lifecycle.
 
 <puml src="diagrams/ArchiveState2.puml" />
 
-#### Command Flow
+<br>
+
+<box type="info" seamless>
+
+`archiveproduct` / `restoreproduct` follow the same lifecycle as described above, operating on `Product` objects in the `Inventory` instead of `Person` objects in the `AddressBook`.
+</box>
+
 
 The sequence diagram below shows the interactions within the `Logic` component when `archive support@adafruit.com` is executed:
 
@@ -422,6 +429,14 @@ The sequence diagram below shows the interactions for `restore support@adafruit.
 
 </box>
 
+Similarly, how an `archive` operation goes through the `Model` component is shown below:
+
+<puml src="diagrams/ArchiveSequenceDiagram-Model.puml" alt="ArchiveSequenceDiagram-Model" />
+
+Similarly, how a `restore` operation goes through the `Model` component is shown below:
+
+<puml src="diagrams/RestoreSequenceDiagram-Model.puml" alt="RestoreSequenceDiagram-Model" />
+
 In full, the steps for `archive support@adafruit.com` are:
 
 1. `AddressBookParser` identifies the command word `archive`.
@@ -435,7 +450,10 @@ In full, the steps for `archive support@adafruit.com` are:
 
 The `restore EMAIL` command follows a similar flow: it searches only the archived subset of persons, calls `Model#restorePerson()`, then commits. If no email is provided (or the email is not found), the filtered list is switched to show only archived vendors as a convenience.
 
+<box type="info" seamless>
+
 `archiveproduct IDENTIFIER` and `restoreproduct IDENTIFIER` mirror this flow against the `Inventory`, using `Model#archiveProduct()` / `Model#restoreProduct()`.
+</box>
 
 The model also maintains two constant predicates:
 
