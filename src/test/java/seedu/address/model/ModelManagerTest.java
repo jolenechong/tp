@@ -488,6 +488,7 @@ public class ModelManagerTest {
         inventory.addProduct(archived);
 
         ModelManager model = new ModelManager(new VendorVault(new AddressBook(), inventory),
+                new UserPrefs(), new Aliases());
         assertEquals(active, model.getFilteredProductList().get(0));
     }
 
