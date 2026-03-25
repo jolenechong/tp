@@ -364,8 +364,8 @@ The archive feature allows both vendor contacts and products to be hidden from t
 
 The feature introduces four commands:
 ```
-archive EMAIL           — archives a vendor contact
-restore [EMAIL]         — restores an archived vendor; lists all archived vendors if no email given
+archive EMAIL                 — archives a vendor contact
+restore [EMAIL]               — restores an archived vendor; lists all archived vendors if no email given
 archiveproduct IDENTIFIER     — archives a product
 restoreproduct [IDENTIFIER]   — restores an archived product; lists all archived products if no identifier given
 ```
@@ -400,20 +400,6 @@ Given below is an example of the vendor archive/restore lifecycle.
 
 <puml src="diagrams/ArchiveState2.puml" />
 
-#### Usage Scenario — Product Archiving
-
-**Step 1.** The inventory contains two active products, p1 (Widget) and p2 (Gadget).
-
-<puml src="diagrams/ArchiveProductState0.puml" />
-
-**Step 2.** The user executes `archiveproduct p1`. The Widget's `isArchived` field is set to `true`. It disappears from the active product list.
-
-<puml src="diagrams/ArchiveProductState1.puml" />
-
-**Step 3.** The user executes `restoreproduct p1`. The `isArchived` field is set back to `false` and the Widget reappears.
-
-<puml src="diagrams/ArchiveProductState2.puml" />
-
 #### Command Flow
 
 The sequence diagram below shows the interactions within the `Logic` component when `archive support@adafruit.com` is executed:
@@ -436,10 +422,6 @@ The sequence diagram below shows the interactions for `restore support@adafruit.
 
 </box>
 
-The `archiveproduct` command follows the same structural pattern against the `Inventory`:
-
-<puml src="diagrams/ArchiveProductSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the archiveproduct command" />
-
 In full, the steps for `archive support@adafruit.com` are:
 
 1. `AddressBookParser` identifies the command word `archive`.
@@ -455,9 +437,7 @@ The `restore EMAIL` command follows a similar flow: it searches only the archive
 
 `archiveproduct IDENTIFIER` and `restoreproduct IDENTIFIER` mirror this flow against the `Inventory`, using `Model#archiveProduct()` / `Model#restoreProduct()`.
 
-#### Filtering Behaviour
-
-The model maintains two constant predicates:
+The model also maintains two constant predicates:
 
 ```java
 PREDICATE_SHOW_ACTIVE_PERSONS  = person  -> !person.isArchived()
@@ -465,12 +445,6 @@ PREDICATE_SHOW_ACTIVE_PRODUCTS = product -> !product.isArchived()
 ```
 
 These are applied by default so that archived records are hidden from the main display. When `restore` (without an argument) or `restoreproduct` (without an identifier or with an unknown identifier) is executed, `updateFilteredPersonList(Person::isArchived)` or `updateFilteredProductList(Product::isArchived)` is called temporarily to surface the archived records as a guide to the user.
-
-#### Error Handling
-
-* If the supplied email does not match any vendor in the full list, a `CommandException` is thrown with a descriptive message.
-* If `restore` is called without an email, or with an email that matches no archived vendor, the archived vendor list is shown and a `CommandException` is thrown prompting the user to provide a valid email.
-* Product commands follow the same pattern using the product identifier.
 
 #### Design Considerations
 
@@ -522,61 +496,6 @@ To be added.
 #### Implementation
 #### Usage Scenario
 #### Design Considerations
-
-<div style="height: 10px;"></div>
-
----
-
-<div style="height: 10px;"></div>
-
-### Inventory Statistics Panel
-
-#### Implementation
-
-The `InventoryStatsPanel` is a UI component that displays a live summary of vendor and product data alongside the main lists. It is constructed by `MainWindow` and receives four `ObservableList` references from `Logic`:
-
-| Parameter | Contents |
-|---|---|
-| `filteredProducts` | Currently displayed (filtered) products |
-| `activePersons` | Currently displayed (filtered) persons |
-| `allPersons` | Full person list from `AddressBook` (for totals) |
-| `allProducts` | Full product list from `Inventory` (for totals) |
-
-The panel contains three visual regions:
-
-**Stat cards with mini donut charts** — two cards on the left show the count of active (non-archived) vendors and active products respectively. Each card includes a compact donut chart drawn manually using JavaFX `Arc` and `Circle` nodes (rather than `PieChart`, which is too large for the compact layout). The arc sweep angle is proportional to `active / total`.
-
-**Main stock-status donut chart** — a `PieChart` on the right shows the split between in-stock and low-stock active products. A product is considered low-stock when `quantity ≤ restockThreshold`. The number of low-stock products is displayed in the centre of the donut hole via an overlaid `Label`.
-
-**Reactive updates** — all three regions are bound to their respective `ObservableList` via `ListChangeListener`. When any list changes (add, edit, delete, archive, restore), the relevant stat card and chart are recomputed automatically with no explicit refresh call needed from other components.
-
-**Font scaling** — title and value labels inside the stat cards are bound to the card container width using `Bindings.createObjectBinding`, so they resize fluidly instead of truncating.
-
-#### Design Considerations
-
-**Aspect: How mini donut charts are rendered**
-
-* **Option 1 (current choice):** Manual `Arc` + `Circle` nodes.
-    * Pros: Precise control over size, stroke width, and styling; no overhead from `PieChart`'s legend, title, and animation machinery.
-    * Cons: More boilerplate compared to reusing `PieChart`.
-
-* **Option 2:** Reuse `PieChart` with a scaled-down style.
-    * Pros: Less code.
-    * Cons: `PieChart` imposes minimum size constraints and always renders a legend and title unless explicitly suppressed; difficult to make truly compact.
-
-Option 1 was chosen because the mini charts are small (≈48px) and need pixel-level control over stroke width and fill.
-
-**Aspect: Which list the stats panel observes**
-
-* **Option 1 (current choice):** Observe the full `allProducts` / `allPersons` lists (i.e., the unfiltered lists from `AddressBook` and `Inventory`).
-    * Pros: Stats always reflect the true state of the data regardless of any active search filter, so totals are consistent.
-    * Cons: The panel must manually filter out archived records when computing active counts.
-
-* **Option 2:** Observe only the filtered lists.
-    * Pros: Simpler — no need to filter in the panel.
-    * Cons: Totals change whenever a search filter is applied, making the stats misleading (e.g., "3 / 3" instead of "3 / 50" when a find filter is active).
-
-Option 1 was chosen to keep stats meaningful regardless of the current search state.
 
 <div style="height: 10px;"></div>
 

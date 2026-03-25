@@ -134,7 +134,7 @@ Some example commands you can try:
 
 VendorVault keeps your data in one of three states:
 
-| <div style="width:200px">State</div>| <div style="width:300px">What it means</div>| <div style="width:300px">Related commands</div>                                           |
+| <div style="width:200px">State</div>| <div style="width:250px">What it means</div>| <div style="width:250px">Related commands</div>                                           |
 |--------------|------------------------------------------------|-----------------------------------------------------------|
 | **Active**   | Visible on the home page        | `listall`                    |
 | **Archived** | Hidden but recoverable           | `archive` / `archiveproduct`                              |
@@ -183,7 +183,7 @@ add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​
 Examples:
 
 * `add n/Adafruit Industries p/64601234 e/support@adafruit.com a/151 Varick St, New York, NY 10013, USA`
-* `add n/Cytron Technologies Pte. Ltd. p/65480668 (Office), 91234567 (Sales) e/sg.sales@cytron.io a/09 Collyer Quay 
+* `add n/Cytron Technologies Pte. Ltd. p/65480668 (Office), 91234567 (Sales) e/sg.sales@cytron.io a/09 Collyer Quay
 t/electronics t/wholesale`
 
 <box type="info" seamless>
@@ -401,7 +401,7 @@ Examples:
 
 </box>
 
-For more details on possible warnings and errors, refer to the [troubleshooting guide](#troubleshooting-delete-contact) 
+For more details on possible warnings and errors, refer to the [troubleshooting guide](#troubleshooting-delete-contact)
 below.
 
 <div style="height: 30px;"></div>
@@ -640,7 +640,7 @@ Examples:
 
 </box>
 
-For more details on possible warnings and errors, refer to the [troubleshooting guide](#troubleshooting-deleteproduct) 
+For more details on possible warnings and errors, refer to the [troubleshooting guide](#troubleshooting-deleteproduct)
 below.
 
 <div style="height: 30px;"></div>
