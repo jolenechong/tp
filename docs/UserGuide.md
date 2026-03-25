@@ -724,11 +724,7 @@ redo
 <box type="info" seamless>
 
 **Expected output:**<br>
-![undo](images/v1.4/undo.png =500x)
-
-<br>
-
-![redo](images/v1.4/redo.png =500x)
+![undo](images/v1.4/undo.png =445x) ![redo](images/v1.4/redo.png =445x)
 
 </box>
 
