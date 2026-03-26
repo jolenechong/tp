@@ -527,6 +527,10 @@ is implemented through a match predicate and shared ranking contract:
    * `Score(MatchTier tier, int unmatchedChars, String sortKey)` represents how relevant a match is.
    * `SCORE_COMPARATOR` implements score comparison.
 
+This diagram shows the structure and dependency of Better Search classes:
+
+<puml src="diagrams/BetterSearchClass.puml" width="500"/>
+
 #### Usage Scenario
 #### Design Considerations
 
