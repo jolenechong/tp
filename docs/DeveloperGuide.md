@@ -385,7 +385,6 @@ Model#restoreProduct(Product product)
 The `ModelManager` implementations call `addressBook.setPerson()` and `inventory.setProduct()` respectively to swap the old record for the newly created immutable copy.
 
 #### Usage Scenario
-##### Vendor Archiving
 
 Given below is an example of the vendor archive/restore lifecycle.
 
