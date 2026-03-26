@@ -1,0 +1,23 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+
+start
+:Execute command;
+
+card Filter contacts by scored predicate {
+:Compute score for each keyword-token pair;
+:Get best score among all keyword-token pairs;
+    if () then ([score.tier == NO_MATCH])
+        :Exclude contact;
+    else ([else])
+        :Include contact;
+    endif
+}
+
+:Rank contacts;
+:Filter products by association predicate;
+
+stop
+@enduml

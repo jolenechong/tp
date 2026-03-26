@@ -556,6 +556,12 @@ This diagram shows how Better Search fits in the execution pipeline:
 
 **Step 8.** The updates trigger `UI` to refresh both contact and product display.
 
+This diagram summarises the decision flow of `find`:
+
+<puml src="diagrams/BetterSearchActivity.puml" width="400"/>
+
+The usage scenario for `findproduct` is analogous.
+
 #### Design Considerations
 
 <div style="height: 10px;"></div>
