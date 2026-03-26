@@ -13,6 +13,8 @@ import seedu.address.model.alias.exceptions.NoAliasFoundInAliasListException;
 public class DeleteAliasCommand extends Command {
 
     public static final String COMMAND_WORD = "deletealias";
+    public static final String COMMAND_USAGE = COMMAND_WORD + " [ALIAS]";
+    public static final String COMMAND_DESCRIPTION = "Deletes an existing alias";
 
     public static final String MESSAGE_DELETE_ALIAS_SUCCESS = "Removed Alias: %1$s";
 
