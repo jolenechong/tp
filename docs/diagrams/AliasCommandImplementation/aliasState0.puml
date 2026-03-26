@@ -1,0 +1,12 @@
+@startuml
+!include ../style.puml
+skinparam ClassBorderColor MODEL_COLOR
+skinparam ClassBackgroundColor MODEL_COLOR_T1
+skinparam ArrowColor MODEL_COLOR
+
+title Initialize Aliases
+
+object "aliasList: aliasList" as list {
+}
+
+@enduml

@@ -507,7 +507,7 @@ The core data structures are:
 * `AliasList`  — Stores a list of `Alias` objects, enforces uniqueness of alias string, and exposes **lookup, add and remove** operations.
 * `Aliases`  — The top level model object that wraps `AliasList`. It implements `ReadOnlyAliases`.
 
-These operations are exposed in `ModelManager` as `ModelManager#addAlias()`, `ModelManager#findAlias()`, `ModelManager#removeAlias()`.
+These operations are exposed in `Model` interface as `Model#addAlias()`, `Model#findAlias()`, `Model#removeAlias()`.
 
 **Alias Resolution** is handled in `AddressBookParser`. 
 Before converting any command to its specific parser, the parser checks if the `command word` entered by the user matches any stored `alias`.
@@ -515,6 +515,40 @@ If a match is found, the alias is substituted with its original command word, an
 Otherwise, the input is used as it is.
 
 #### Usage Scenario
+
+Given below is an example usage scenario and how the alias feature behaves an each step.
+
+Step 1. The user launches the application. The `Aliases` object is initialised and loaded from `aliases.json` via `AliasStorage`
+
+<box type="info" seamless>
+
+**Note:** If the file does not exist, an empty `AliasList` is used
+
+</box>
+
+Step 2. The user executes `alias list ls`. An `AliasCommand` is created with `originalCommand = "list"` and `alias = "ls"`.
+The new `Alias` is stored in `Aliases` and persisted to `aliases.json`
+
+<box type="info" seamless>
+
+**Note:** If the alias string `"ls"` already existed in `AliasList`, a `DuplicateAliasException` is thrown and the command fails with an error message.
+
+</box>
+
+Step 3. The user types `ls`. The `AddressBookParser` checks the command word `"ls"` against the stored aliases and finds a match. `"ls"` is mapped to `"list"`.
+The command word is substituted, and the rest of execution proceeds identically to if the user had typed `"list"` directly.
+
+Step 4. The user types `ls args`. The same substitution occurs, only the command word `"ls"` is replaced with `"list"`, and `"args"` is passed through unchanged to the underlying parser.
+
+Step 5. The user executes `deletealias ls`. A `DeleteAliasCommand` is created and removes `"ls"` from `Aliases`.
+The updated alias list is persisted to `aliases.json`.
+
+<box type="info" seamless>
+
+**Note:** If `"ls"` does not exists in `AliasList`, a `NoAliasFoundInAliasListException` is thrown and the command fails with an error message.
+
+</box>
+
 #### Design Considerations
 
 <div style="height: 10px;"></div>
