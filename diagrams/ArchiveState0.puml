@@ -1,0 +1,26 @@
+@startuml
+!include style.puml
+skinparam ClassBorderColor MODEL_COLOR
+skinparam ClassBackgroundColor MODEL_COLOR_T1
+skinparam ArrowColor MODEL_COLOR
+
+title Before archive
+
+object "vendorList : UniquePersonList" as list {
+}
+
+object "alice : Person" as alice {
+  name = "Alice"
+  email = "alice@example.com"
+  tags = []
+}
+
+object "bob : Person" as bob {
+  name = "Bob"
+  email = "bob@example.com"
+  tags = []
+}
+
+list --> alice
+list --> bob
+@enduml

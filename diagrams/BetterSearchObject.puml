@@ -1,0 +1,60 @@
+@startuml
+!include style.puml
+skinparam ClassBorderColor MODEL_COLOR
+skinparam ClassBackgroundColor MODEL_COLOR_T1
+skinparam ArrowColor MODEL_COLOR
+show members
+hide empty members
+
+object "__pred : NameContainsKeywordsScoredPredicate__" as pred {
+  keywords = ["adafruit"]
+}
+
+object "__scoreExact : Score__" as scoreExact {
+  tier = EXACT_TOKEN
+  unmatchedChars = 0
+  sortKey = "Adafruit"
+}
+
+object "__scorePrefix : Score__" as scorePrefix {
+  tier = PREFIX_TOKEN
+  unmatchedChars = 1
+  sortKey = "Adafruity"
+}
+
+object "__scoreSubstring : Score__" as scoreSubstring {
+  tier = SUBSTRING_TOKEN
+  unmatchedChars = 1
+  sortKey = "Tadafruit"
+}
+
+object "__scoreNoMatch : Score__" as scoreNoMatch {
+  tier = NO_MATCH
+  unmatchedChars = 6
+  sortKey = "Cytron"
+}
+
+object "__sortedFilteredPersons : SortedList<Person>__" as ranked {
+}
+
+object "__SCORE_COMPARATOR : Comparator<Score>__" as scoreComp {
+}
+
+pred --> scoreExact
+pred --> scorePrefix
+pred --> scoreSubstring
+pred --> scoreNoMatch
+pred -up-> scoreComp
+
+ranked -down-> scoreComp
+
+note right of scoreComp
+Compares scores in this order:
+1) tier
+2) unmatchedChars
+3) alphabetical sortKey
+
+Ranking: Adafruit, Adafruity, Tadafruit, Cytron
+end note
+
+@enduml

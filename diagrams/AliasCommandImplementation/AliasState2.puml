@@ -1,0 +1,21 @@
+@startuml
+!include ../style.puml
+skinparam ClassBorderColor MODEL_COLOR
+skinparam ClassBackgroundColor MODEL_COLOR_T1
+skinparam ArrowColor MODEL_COLOR
+
+title After removing alias ls
+
+object "aliasList: AliasList" as list {
+}
+
+object "ap : Alias" as addproduct {
+}
+
+object "lp : Alias" as listproduct {
+}
+
+list --> addproduct
+list --> listproduct
+
+@enduml

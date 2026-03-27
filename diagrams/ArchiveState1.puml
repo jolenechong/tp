@@ -1,0 +1,28 @@
+@startuml
+!include style.puml
+skinparam ClassBorderColor MODEL_COLOR
+skinparam ClassBackgroundColor MODEL_COLOR_T1
+skinparam ArrowColor MODEL_COLOR
+
+title After archive alice@example.com
+
+object "vendorList : UniquePersonList" as list {
+}
+
+object "alice : Person" as alice #FFCCCC {
+  name = "Alice"
+  email = "alice@example.com"
+  tags = [archived]
+}
+
+object "bob : Person" as bob {
+  name = "Bob"
+  email = "bob@example.com"
+  tags = []
+}
+
+note bottom of alice : Hidden from default list\n(isArchived() == true)
+
+list --> alice
+list --> bob
+@enduml

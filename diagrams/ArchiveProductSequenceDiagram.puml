@@ -1,0 +1,80 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":ArchiveProductCommandParser" as ArchiveProductCommandParser LOGIC_COLOR
+participant "a:ArchiveProductCommand" as ArchiveProductCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("archiveproduct p1")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("archiveproduct p1")
+activate AddressBookParser
+
+create ArchiveProductCommandParser
+AddressBookParser -> ArchiveProductCommandParser
+activate ArchiveProductCommandParser
+ArchiveProductCommandParser --> AddressBookParser
+deactivate ArchiveProductCommandParser
+
+AddressBookParser -> ArchiveProductCommandParser : parse("p1")
+activate ArchiveProductCommandParser
+
+create ArchiveProductCommand
+ArchiveProductCommandParser -> ArchiveProductCommand
+activate ArchiveProductCommand
+ArchiveProductCommand --> ArchiveProductCommandParser
+deactivate ArchiveProductCommand
+
+ArchiveProductCommandParser --> AddressBookParser : a
+deactivate ArchiveProductCommandParser
+ArchiveProductCommandParser -[hidden]-> AddressBookParser
+destroy ArchiveProductCommandParser
+
+AddressBookParser --> LogicManager : a
+deactivate AddressBookParser
+
+LogicManager -> ArchiveProductCommand : execute(m)
+activate ArchiveProductCommand
+
+ArchiveProductCommand -> Model : getInventory().getProductList()
+activate Model
+Model --> ArchiveProductCommand : productList
+deactivate Model
+
+note right of ArchiveProductCommand
+  Finds product with
+  identifier == "p1"
+end note
+
+ArchiveProductCommand -> Model : archiveProduct(productToArchive)
+activate Model
+Model --> ArchiveProductCommand
+deactivate Model
+
+ArchiveProductCommand -> Model : commitVendorVault()
+activate Model
+Model --> ArchiveProductCommand
+deactivate Model
+
+create CommandResult
+ArchiveProductCommand -> CommandResult
+activate CommandResult
+CommandResult --> ArchiveProductCommand
+deactivate CommandResult
+
+ArchiveProductCommand --> LogicManager : r
+deactivate ArchiveProductCommand
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml
