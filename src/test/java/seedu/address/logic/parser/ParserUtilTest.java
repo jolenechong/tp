@@ -32,7 +32,7 @@ public class ParserUtilTest {
     private static final String INVALID_EMAIL_TOO_LONG = "a".repeat(Email.MAX_LENGTH - "@example.com".length() + 1)
             + "@example.com";
     private static final String INVALID_BLANK_EMAIL = " ";
-    private static final String INVALID_TAG = "#friend";
+    private static final String INVALID_TAG = " ";
 
     private static final String INVALID_SHORT_PHONE = "12 ";
     private static final String INVALID_LONG_NAME = "This name is way too long and exceeds the "

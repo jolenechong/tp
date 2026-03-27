@@ -973,7 +973,8 @@ Use this section when `add` fails or returns a warning.
 | Email is too long                                              | `Email should be at most 320 characters.`                                 | Shorten the email.                                                           |
 | Address is blank                                               | `Address can take any values, and it should not be blank`                 | Provide a non-empty address after `a/`.                                      |
 | Address is too long                                            | `Address should be at most 500 characters.`                               | Shorten the address.                                                         |
-| Tag contains non-alphanumeric characters                       | `Tag names should be alphanumeric`                                        | Use letters/numbers only for each `t/` value.                                |
+| Tag is blank                                                   | `Tag names should not be blank`                                           | Provide a non-empty tag name after each`t/`                                  |
+| Tag is too long                                                | `Tag names should be at most 50 characters`                               | Shorten the tags that are too long.                                          |
 | Contact duplicates an existing contact by same email.          | `This vendor contact already exists with the same email.`                 | Change the email address, or edit the existing contact instead.              |
 
 Common `add` warnings:
@@ -1013,7 +1014,7 @@ Use this section when `edit` fails or returns a warning.
 
 <box type="info" seamless>
 
-Many errors that occur in `add` also apply to `edit`, specifically, all except the first three errors listed in the add contact section above also apply. Similarly, all warnings from `add` apply to `edit` as well. For these shared errors, refer to the [Troubleshooting add contact](#troubleshooting-add-contact) guide, as they behave the same way in edit contact commands.
+Most errors and warnings in `add` also occur in `edit`, except the first three errors and `Tag is blank` error. For these shared errors, refer to the [troubleshooting add contact](#troubleshooting-add-contact) guide.
 
 </box>
 
@@ -1026,7 +1027,7 @@ Many errors that occur in `add` also apply to `edit`, specifically, all except t
 
 <box type="tip" seamless>
 
-Tip: Unlike `add`, edit command warnings only appear for **fields you are actually editing**. For example, if you edit only the phone number and there's a similar name in the database, you won't see a name warning. This prevents unnecessary alerts for unchanged fields.
+Tip: Unlike `add`, edit command warnings only appear for **fields you are actually editing**. For example, if you edit only the phone number and there's a similar name in the database, you won't see a name warning.
 
 </box>
 

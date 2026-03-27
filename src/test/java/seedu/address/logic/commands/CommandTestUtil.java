@@ -75,7 +75,9 @@ public class CommandTestUtil {
     public static final String INVALID_PHONE_DESC = " " + PREFIX_PHONE + "12"; // phone less than 3 characters
     public static final String INVALID_EMAIL_DESC = " " + PREFIX_EMAIL + "bob!yahoo"; // missing '@' symbol
     public static final String INVALID_ADDRESS_DESC = " " + PREFIX_ADDRESS; // empty string not allowed for addresses
-    public static final String INVALID_TAG_DESC = " " + PREFIX_TAG + "hubby*"; // '*' not allowed in tags
+    public static final String INVALID_TAG_DESC = " " + PREFIX_TAG; // empty tags nt allowed during add
+    public static final String INVALID_TAG_DESC_LONG = " " + PREFIX_TAG
+            + "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxs"; // tags over 50 characters not allowed
 
     public static final String INVALID_IDENTIFIER_DESC = " " + PREFIX_IDENTIFIER; // empty identifier not allowed
     public static final String INVALID_PRODUCT_NAME_DESC = " " + PREFIX_NAME; // empty product name not allowed
