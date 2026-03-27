@@ -563,15 +563,86 @@ The updated alias list is persisted to `aliases.json`.
 <div style="height: 10px;"></div>
 
 ### Better Search Feature
-To be added.
-
 #### Implementation
+This feature upgrades contact and product search to use partial matching and return results ranked by relevance. It 
+is implemented through a match predicate and shared ranking contract:
+
+1. `NameContainsKeywordsScoredPredicate` tests if a contact's name matches any keyword using partial matching. The name is split and processed as tokens.
+   * `toScore(String token, String keyword, String fullName)` checks each keyword against each token in the name to determine a score.
+   * `computeScore(Person person)` returns the best score among all keyword-token pairs using `SCORE_COMPARATOR`.
+   * `createPersonComparator()` returns a comparator that ranks contacts by their score.
+
+2. The same applies for `ProductNameContainsKeywordsScoredPredicate`.
+
+3. `FindRelevance` defines the ranking contract.
+   * Keyword-token matches are tiered: `EXACT_TOKEN` > `PREFIX_TOKEN` > `SUBSTRING_TOKEN` > `NO_MATCH`. 
+   * `Score(MatchTier tier, int unmatchedChars, String sortKey)` represents how relevant a match is.
+   * `SCORE_COMPARATOR` implements score comparison.
+
+This diagram shows the structure and dependency of Better Search classes:
+
+<puml src="diagrams/BetterSearchClass.puml" width="500"/>
+
+This diagram shows an example of scoring state when the given keyword is `"adafruit"`:
+
+<puml src="diagrams/BetterSearchObject.puml" width="1000"/>
+
 #### Usage Scenario
+This diagram shows how Better Search fits in the execution pipeline:
+
+<puml src="diagrams/BetterSearchSequence.puml" width="2000"/>
+
+**Step 1.** User executes `find adafruit`.
+
+**Step 2.** `LogicManager` calls `AddressBookParser#parseCommand`.
+
+**Step 3.** `AddressBookParser#parseCommand` creates a `FindCommandParser` that calls `parse("adafruit")`.
+
+**Step 4.** `FindCommandParser#parse` creates a `FindCommand` with a `NameContainsKeywordsScoredPredicate`.
+
+**Step 5.** `LogicManager` calls `FindCommand#execute` on a `ModelManager`.
+
+**Step 6.** `FindCommand` executes and calls `ModelManager#updateFilteredPersonList`.
+
+**Step 7.** `FindCommand` then creates a `VendorEmailMatchesContactsPredicate` and calls `ModelManager#updateFilteredProductList`.
+
+**Step 8.** The updates trigger `UI` to refresh both contact and product display.
+
+This diagram summarises the decision flow of `find`:
+
+<puml src="diagrams/BetterSearchActivity.puml" width="400"/>
+
+The usage scenario for `findproduct` is analogous.
+
 #### Design Considerations
 
 <div style="height: 10px;"></div>
 
----
+**Aspect: Matching strategy**
+
+* **Option 1 (current choice):** Partial matching 
+  * Pros: Tolerant of incomplete keywords, hence more user-friendly.
+  * Cons: Broader set of results.
+
+* **Option 2:** Exact matching
+  * Pros: Simpler design; Stricter set of results.
+  * Cons: Low usability as users have to remember exact words.
+
+Option 1 was chosen to ensure discoverability and improve user experience.
+
+**Aspect: Ranking strategy**
+TODO
+
+**Aspect: Ranking implementation**
+* **Option 1 (current choice):** Shared contract between contact and product entity.
+  * Pros: Consistent behavior across commands; Reusable implementation.
+  * Cons: Careful abstraction required.
+
+* **Option 2:** Independent logic per entity.
+  * Pros: Each entity can customise the logic. 
+  * Cons: Duplicated logic; Higher risk of behavior drift.
+
+Option 1 was chosen for consistency and maintainability.
 
 <div style="height: 10px;"></div>
 

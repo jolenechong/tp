@@ -7,6 +7,8 @@ import java.util.List;
  */
 public enum GeneralCommand implements CommandWord {
     ALIAS(AliasCommand.COMMAND_WORD, AliasCommand.COMMAND_USAGE, AliasCommand.COMMAND_DESCRIPTION),
+    DELETEALIAS(
+            DeleteAliasCommand.COMMAND_WORD, DeleteAliasCommand.COMMAND_USAGE, DeleteAliasCommand.COMMAND_DESCRIPTION),
     EXIT(ExitCommand.COMMAND_WORD, ExitCommand.COMMAND_USAGE, ExitCommand.COMMAND_DESCRIPTION),
     HELP(HelpCommand.COMMAND_WORD, HelpCommand.COMMAND_USAGE, HelpCommand.COMMAND_DESCRIPTION),
     LISTALL(ListAllCommand.COMMAND_WORD, ListAllCommand.COMMAND_USAGE, ListAllCommand.COMMAND_DESCRIPTION),

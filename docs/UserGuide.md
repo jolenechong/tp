@@ -39,7 +39,7 @@ Follow these steps to get VendorVault up and running:
     * Specifically, choose to download the `.jar` file.
     * If necessary, move the file to a folder you want to use as the _home folder_ for VendorVault.
 <br><br>
-3. Open a terminal for your OS and launch VendorVault:
+3. Open a terminal for your Operating System (OS) and launch VendorVault:
 
 <tabs>
   <tab header="Windows">

@@ -1,0 +1,71 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":FindCommandParser" as FindCommandParser LOGIC_COLOR
+participant "f:FindCommand" as FindCommand LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:ModelManager" as ModelManager MODEL_COLOR
+participant "scoredPred:NameContainsKeywordsScoredPredicate" as cPredicate MODEL_COLOR
+participant "prodPred:VendorEmailMatchesContactsPredicate" as pPredicate MODEL_COLOR
+end box
+
+create FindCommandParser
+-> FindCommandParser
+activate FindCommandParser
+<-- FindCommandParser
+deactivate FindCommandParser
+
+-> FindCommandParser : parse("adafruit")
+activate FindCommandParser
+
+create cPredicate
+FindCommandParser -> cPredicate : NameContainsKeywordsScoredPredicate("adafruit")
+activate cPredicate
+cPredicate --> FindCommandParser : scoredPred
+deactivate cPredicate
+
+create FindCommand
+FindCommandParser -> FindCommand : FindCommand(scoredPred)
+activate FindCommand
+FindCommand --> FindCommandParser : f
+deactivate FindCommand
+
+<-- FindCommandParser : f
+deactivate FindCommandParser
+<-[hidden]- FindCommandParser
+destroy FindCommandParser
+
+-> FindCommand : execute(m)
+activate FindCommand
+
+FindCommand -> ModelManager : updateFilteredPersonList(scoredPred)
+activate ModelManager
+note right of ModelManager
+Ranking is applied here using
+FindRelevance.SCORE_COMPARATOR.
+end note
+ModelManager --> FindCommand
+deactivate ModelManager
+
+FindCommand -> ModelManager : getFilteredPersonList()
+ModelManager --> FindCommand : rankedFilteredPersons
+
+create pPredicate
+FindCommand -> pPredicate : VendorEmailMatchesContactsPredicate(rankedFilteredPersons)
+activate pPredicate
+pPredicate --> FindCommand : prodPred
+deactivate pPredicate
+
+FindCommand -> ModelManager : updateFilteredProductList(prodPred)
+activate ModelManager
+ModelManager --> FindCommand
+deactivate ModelManager
+
+<-- FindCommand : CommandResult
+deactivate FindCommand
+
+@enduml
