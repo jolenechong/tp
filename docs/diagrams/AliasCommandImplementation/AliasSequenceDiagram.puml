@@ -1,6 +1,5 @@
 @startuml
 !include ../style.puml
-skinparam ArrowFontStyle plain
 
 box "Logic" LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
@@ -9,14 +8,15 @@ participant ":ListCommand" as ListCommand LOGIC_COLOR
 end box
 
 box "Model" MODEL_COLOR_T1
-participant ":Model" as Model MODEL_COLOR
+participant ":ModelManager" as ModelManager MODEL_COLOR
+participant ":Aliases" as Aliases MODEL_COLOR
+participant ":AliasList" as AliasList MODEL_COLOR
 end box
-
 
 [-> LogicManager : execute("ls")
 activate LogicManager
 
-LogicManager -> AddressBookParser : parseCommand("ls")
+LogicManager -> AddressBookParser : parseCommand("ls", pendingConfirmation, model)
 activate AddressBookParser
 
 note right of AddressBookParser
@@ -24,19 +24,32 @@ note right of AddressBookParser
     from user input
 end note
 
-AddressBookParser -> Model : findAlias("ls")
-activate Model
-Model --> AddressBookParser : alias
-deactivate Model
+AddressBookParser -> ModelManager : findAlias("ls")
+activate ModelManager
+
+ModelManager -> Aliases : findAlias("ls")
+activate Aliases
+
+Aliases -> AliasList : findAlias("ls")
+activate AliasList
+AliasList --> Aliases : alias
+deactivate AliasList
+
+Aliases --> ModelManager : alias
+deactivate Aliases
+
+
+ModelManager --> AddressBookParser : alias
+deactivate ModelManager
 
 note right of AddressBookParser
     alias.getOriginalCommand()
     returns "list"
 end note
 
+AddressBookParser --> LogicManager : listCommand
 create ListCommand
 AddressBookParser -> ListCommand : new ListCommand()
-AddressBookParser --> LogicManager : listCommand
 deactivate AddressBookParser
 
 LogicManager -> ListCommand : execute(model)

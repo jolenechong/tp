@@ -560,6 +560,26 @@ The following sequence diagram shows how the user input `ls` is resolved through
 
 #### Design Considerations
 
+**Aspect: Where alias resolution happens**
+* **Alternative 1 (current choice)**: Resolves aliases in `AddressBookParser` before dispatching.
+  * Pros: Centralised, as all commands automatically benefit from aliasing without any per-command changes
+  * Cons: The parser needs access to the `Model`
+* **Alternative 2**: Resolve aliases in `LogicManager` before passing the input to the parser.
+  * Pros: Keeps parser free of `Model` dependencies.
+  * Cons: Require `LogicManager` to be aware of alias resolution logic, making the code more complex.
+
+Alternative 1 is preferred as it keeps all parsing logic in one place.
+
+**Aspect: Persistence strategy**
+* **Alternative 1 (current choice)**: Store aliases in a separate `aliases.json` file via `AliasStorage`.
+  * Pros: Clean separation from contact and product data. Easy to back up or reset independently
+  * Cons: Adds another file the user must manage when transferring data.
+* **Alternative 2**: Embed alias data inside `addressbook.json`.
+  * Pros: Use the same code to embed data as contacts.
+  * Cons: Couples unrelated data, making the file harder to read and maintain.
+
+Alternative 1 aligns with the existing storage pattern used by contacts and inventory.
+
 <div style="height: 10px;"></div>
 
 ---
