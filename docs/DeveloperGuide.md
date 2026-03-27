@@ -554,6 +554,10 @@ The updated alias list is persisted to `aliases.json`.
 
 </box>
 
+The following sequence diagram shows how the user input `ls` is resolved through `AddressBookParser` and `Aliases`:
+
+<puml src="diagrams/AliasCommandImplementation/AliasSequenceDiagram.puml" />
+
 #### Design Considerations
 
 <div style="height: 10px;"></div>
