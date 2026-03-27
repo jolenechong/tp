@@ -182,8 +182,8 @@ add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​
 
 Examples:
 
-* `add n/Adafruit Industries p/64601234 e/support@adafruit.com a/151 Varick St, New York, NY 10013, USA`
-* `add n/Cytron Technologies Pte. Ltd. p/65480668 (Office), 91234567 (Sales) e/sg.sales@cytron.io a/09 Collyer Quay
+* `add n/Adafruit Industries p/67349021 e/support@adafruit.com a/151 Varick St, New York, NY 10013, USA`
+* `add n/Cytron Technologies Pte. Ltd. p/65480668 (Office), 91846607 (Sales) e/sg.sales@cytron.io a/09 Collyer Quay
 t/electronics t/wholesale`
 
 <box type="info" seamless>
@@ -203,9 +203,9 @@ t/electronics t/wholesale`
 
 To include multiple phone numbers for a contact, you can **separate them with commas** in the `p/` parameter.
 
-For example, the following command adds a contact with two phone numbers: `61234567` and `87654321`:
+For example, the following command adds a contact with two phone numbers: `68913345` and `85124419`:
 
-`add n/DigiKey Singapore p/61234567, 87654321 e/sg.sales@digikey.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951`
+`add n/DigiKey Singapore p/68913345, 85124419 e/sg.sales@digikey.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951`
 
 </panel>
 
@@ -213,8 +213,8 @@ For example, the following command adds a contact with two phone numbers: `61234
 
 A contact is considered a duplicate if it has the **same email as an existing contact**. For example:<br>
 
-* `add n/DigiKey Singapore p/61234567 e/contact@company.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951`
-* `add n/DigiKey Singapore p/61234567, 12345678 e/contact@company.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951`
+* `add n/DigiKey Singapore p/68913345 e/contact@company.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951`
+* `add n/DigiKey Singapore p/68913345, 85124419 e/contact@company.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951`
 
 </panel>
 
