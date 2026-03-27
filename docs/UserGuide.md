@@ -54,7 +54,7 @@ java -jar vendorvault.jar
 For example, if you placed the `.jar` file in your Downloads folder:
 
 ```bash
-cd C:\Users\John\Downloads
+cd C:\Users\YOUR_USERNAME\Downloads
 java -jar vendorvault.jar
 ```
 
