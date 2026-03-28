@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import seedu.address.commons.core.LogsCenter;
@@ -20,6 +21,7 @@ public class VersionedVendorVault {
     private static final Logger logger = LogsCenter.getLogger(VersionedVendorVault.class);
 
     private final List<VendorVault> vendorVaultStateList; // list elements mutability is intended
+    private final List<Optional<String>> stateActionSummaryList;
     private int currentStatePointer;
 
     /**
@@ -32,20 +34,29 @@ public class VersionedVendorVault {
 
         this.vendorVaultStateList = new ArrayList<>();
         this.vendorVaultStateList.add(new VendorVault(vendorVault));
+        this.stateActionSummaryList = new ArrayList<>();
+        this.stateActionSummaryList.add(Optional.empty());
         this.currentStatePointer = INITIAL_STATE;
 
         checkInvariant();
     }
 
     /**
-     * Saves a copy of the current VendorVault state to the history.
+     * Saves a copy of the current VendorVault state to the history with an action summary.
      */
-    public void commit(VendorVault currentState) {
+    public void commit(VendorVault currentState, String actionSummary) {
+        commit(currentState, Optional.ofNullable(actionSummary));
+    }
+
+    private void commit(VendorVault currentState, Optional<String> actionSummary) {
         requireNonNull(currentState);
+        requireNonNull(actionSummary);
 
         // to discard all irrelevant states
         vendorVaultStateList.subList(currentStatePointer + HISTORY_STEP, vendorVaultStateList.size()).clear();
+        stateActionSummaryList.subList(currentStatePointer + HISTORY_STEP, stateActionSummaryList.size()).clear();
         vendorVaultStateList.add(new VendorVault(currentState));
+        stateActionSummaryList.add(actionSummary);
 
         currentStatePointer++;
 
@@ -54,25 +65,27 @@ public class VersionedVendorVault {
     }
 
     /**
-     * Restores the previous VendorVault state.
+     * Restores the previous VendorVault state and returns the summary of what was undone.
      */
-    public void undo(VendorVault currentState) {
+    public Optional<String> undo(VendorVault currentState) {
         requireNonNull(currentState);
 
         if (!canUndo()) {
             throw new IllegalStateException(UndoCommand.MESSAGE_FAILURE);
         }
+        Optional<String> undoneActionSummary = stateActionSummaryList.get(currentStatePointer);
         currentStatePointer--;
         currentState.resetData(vendorVaultStateList.get(currentStatePointer));
 
         logger.info("Undo performed. Current state pointer: " + currentStatePointer);
         checkInvariant();
+        return undoneActionSummary;
     }
 
     /**
-     * Restores the next VendorVault state after an undo.
+     * Restores the next VendorVault state after an undo and returns the summary of what was redone.
      */
-    public void redo(VendorVault currentState) {
+    public Optional<String> redo(VendorVault currentState) {
         requireNonNull(currentState);
 
         if (!canRedo()) {
@@ -83,6 +96,7 @@ public class VersionedVendorVault {
 
         logger.info("Redo performed. Current state pointer: " + currentStatePointer);
         checkInvariant();
+        return stateActionSummaryList.get(currentStatePointer);
     }
 
     public boolean canUndo() {
@@ -99,6 +113,9 @@ public class VersionedVendorVault {
     private void checkInvariant() {
         assert !vendorVaultStateList.isEmpty()
                 : "History must never be empty";
+
+        assert vendorVaultStateList.size() == stateActionSummaryList.size()
+                : "State history and summary history must stay aligned";
 
         assert currentStatePointer >= INITIAL_STATE
                 && currentStatePointer < vendorVaultStateList.size()

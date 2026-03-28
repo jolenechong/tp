@@ -552,12 +552,12 @@ public class AddCommandTest {
         }
 
         @Override
-        public void commitVendorVault() {
+        public void commitVendorVault(String actionSummary) {
             // stub method
         }
 
         @Override
-        public void undoVendorVault() {
+        public Optional<String> undoVendorVault() {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -567,7 +567,7 @@ public class AddCommandTest {
         }
 
         @Override
-        public void redoVendorVault() {
+        public Optional<String> redoVendorVault() {
             throw new AssertionError("This method should not be called.");
         }
 

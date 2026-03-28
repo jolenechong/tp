@@ -64,12 +64,16 @@ public class ArchiveCommand extends Command {
                         new CommandException("No vendor found with email: " + email));
 
         model.archivePerson(vendorToArchive);
-        model.commitVendorVault();
+        model.commitVendorVault(formatSuccessPart(vendorToArchive));
 
         return new CommandResult(
             String.format(MESSAGE_ARCHIVE_SUCCESS, vendorToArchive.getName()),
             CommandResult.FEEDBACK_TYPE_WARN
         );
+    }
+
+    private String formatSuccessPart(Person vendorToArchive) {
+        return String.format(MESSAGE_ARCHIVE_SUCCESS, vendorToArchive.getName());
     }
 
     @Override

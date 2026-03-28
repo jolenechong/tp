@@ -426,7 +426,7 @@ public class EditCommandTest {
                 .archive();
         model.addProduct(linkedActive);
         model.addProduct(linkedArchived);
-        model.commitVendorVault();
+        model.commitVendorVault("Setup for undo test");
 
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withEmail(newEmailValue).build();
         new EditCommand(oldEmail, descriptor).execute(model);

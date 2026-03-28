@@ -346,13 +346,14 @@ public class ModelManager implements Model {
     // =========== VendorVaultVersionControl ===================================================================
 
     @Override
-    public void commitVendorVault() {
-        versionedVendorVault.commit(vendorVault);
+    public void commitVendorVault(String actionSummary) {
+        versionedVendorVault.commit(vendorVault, actionSummary);
     }
 
+
     @Override
-    public void undoVendorVault() {
-        versionedVendorVault.undo(vendorVault);
+    public Optional<String> undoVendorVault() {
+        return versionedVendorVault.undo(vendorVault);
     }
 
     @Override
@@ -361,8 +362,8 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public void redoVendorVault() {
-        versionedVendorVault.redo(vendorVault);
+    public Optional<String> redoVendorVault() {
+        return versionedVendorVault.redo(vendorVault);
     }
 
     @Override

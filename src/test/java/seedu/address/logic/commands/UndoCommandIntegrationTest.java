@@ -9,6 +9,7 @@ import static seedu.address.testutil.TypicalProducts.getTypicalInventory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Aliases;
 import seedu.address.model.Model;
@@ -44,10 +45,14 @@ public class UndoCommandIntegrationTest {
                 new ModelManager(new VendorVault(getTypicalAddressBook(), getTypicalInventory()),
                         new UserPrefs(), new Aliases());
 
+        String addSuccessSummary = String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(person));
+        String expectedUndoMessage = UndoCommand.MESSAGE_SUCCESS
+                + String.format(UndoCommand.MESSAGE_UNDID_ACTION, addSuccessSummary);
+
         assertCommandSuccess(
                 new UndoCommand(),
                 model,
-                UndoCommand.MESSAGE_SUCCESS,
+                expectedUndoMessage,
                 expectedModel
         );
     }

@@ -57,7 +57,7 @@ public class ArchiveProductCommand extends Command {
                         new CommandException(String.format(MESSAGE_PRODUCT_NOT_FOUND, identifier)));
 
         model.archiveProduct(productToArchive);
-        model.commitVendorVault();
+        model.commitVendorVault(formatSuccessPart(productToArchive));
 
         String message = String.format(
                 MESSAGE_ARCHIVE_SUCCESS + SEPARATOR_NEW_LINE + MESSAGE_ARCHIVE_WARNING,
@@ -66,6 +66,14 @@ public class ArchiveProductCommand extends Command {
         );
 
         return new CommandResult(message, CommandResult.FEEDBACK_TYPE_WARN);
+    }
+
+    private String formatSuccessPart(Product productToArchive) {
+        return String.format(
+                MESSAGE_ARCHIVE_SUCCESS + SEPARATOR_NEW_LINE,
+                productToArchive,
+                productToArchive.getIdentifier().value
+        );
     }
 
     @Override

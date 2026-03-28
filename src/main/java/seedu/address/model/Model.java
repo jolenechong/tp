@@ -229,15 +229,15 @@ public interface Model {
 
     // =========== VendorVaultVersioning ========================================================================
     /**
-     * Commits the current state of vendor vault. This should be called after any operation
+     * Commits the current state of vendor vault with a summary. This should be called after any operation
      * that modifies vendor vault, such as adding, deleting, or editing a person (same as vendor).
      */
-    void commitVendorVault();
+    void commitVendorVault(String actionSummary);
 
     /**
      * Undoes the last committed state in vendor vault, reverting to the previous state.
      */
-    void undoVendorVault();
+    Optional<String> undoVendorVault();
 
     /**
      * Returns true if there are states in vendor vault that can be undone.
@@ -247,7 +247,7 @@ public interface Model {
     /**
      * Redoes the last undone state in the vendor vault, restoring the vendor vault to the state before the undo.
      */
-    void redoVendorVault();
+    Optional<String> redoVendorVault();
 
     /**
      * Returns true if there are states in the vendor vault that can be redone.

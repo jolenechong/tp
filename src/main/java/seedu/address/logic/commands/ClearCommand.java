@@ -57,7 +57,7 @@ public class ClearCommand extends Command {
      */
     private CommandResult doClear(Model model) {
         model.setAddressBook(new AddressBook());
-        model.commitVendorVault();
+        model.commitVendorVault(MESSAGE_SUCCESS);
         return new CommandResult(MESSAGE_SUCCESS);
     }
 

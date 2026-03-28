@@ -60,7 +60,8 @@ public class EditProductCommandTest {
         expectedModel.setVendorVault(model.getVendorVault());
         expectedModel.setProduct(firstProduct, editedProduct);
         expectedModel.updateFilteredProductList(Model.PREDICATE_SHOW_ACTIVE_PRODUCTS);
-        expectedModel.commitVendorVault();
+        String successMessage = String.format(EditProductCommand.MESSAGE_EDIT_PRODUCT_SUCCESS, editedProduct);
+        expectedModel.commitVendorVault(successMessage);
 
         CommandResult result;
         try {
@@ -186,15 +187,8 @@ public class EditProductCommandTest {
         expectedModel.setVendorVault(model.getVendorVault());
         expectedModel.setProduct(firstProduct, editedProduct);
         expectedModel.updateFilteredProductList(Model.PREDICATE_SHOW_ACTIVE_PRODUCTS);
-        expectedModel.commitVendorVault();
-
-        // CommandResult result = command.execute(model);
-
-        // assertTrue(result.getFeedbackToUser().contains(
-        //         String.format(EditProductCommand.MESSAGE_EDIT_PRODUCT_SUCCESS, editedProduct)
-        // ));
-
-        // assertEquals(expectedModel, model);
+        String successMessage = String.format(EditProductCommand.MESSAGE_EDIT_PRODUCT_SUCCESS, editedProduct);
+        expectedModel.commitVendorVault(successMessage);
     }
 
     @Test
@@ -226,7 +220,8 @@ public class EditProductCommandTest {
         expectedModel.setVendorVault(model.getVendorVault());
         expectedModel.setProduct(productWithVendor, editedProduct);
         expectedModel.updateFilteredProductList(Model.PREDICATE_SHOW_ACTIVE_PRODUCTS);
-        expectedModel.commitVendorVault();
+        String successMessage = String.format(EditProductCommand.MESSAGE_EDIT_PRODUCT_SUCCESS, editedProduct);
+        expectedModel.commitVendorVault(successMessage);
 
         assertCommandSuccess(command, model,
                 String.format(EditProductCommand.MESSAGE_EDIT_PRODUCT_SUCCESS,
@@ -325,7 +320,8 @@ public class EditProductCommandTest {
         expectedModel.setVendorVault(model.getVendorVault());
         expectedModel.setProduct(product, editedProduct);
         expectedModel.updateFilteredProductList(Model.PREDICATE_SHOW_ACTIVE_PRODUCTS);
-        expectedModel.commitVendorVault();
+        String successMessage = String.format(EditProductCommand.MESSAGE_EDIT_PRODUCT_SUCCESS, editedProduct);
+        expectedModel.commitVendorVault(successMessage);
 
         assertCommandSuccess(command, model,
                 String.format(EditProductCommand.MESSAGE_EDIT_PRODUCT_SUCCESS,

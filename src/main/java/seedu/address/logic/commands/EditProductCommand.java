@@ -130,12 +130,13 @@ public class EditProductCommand extends Command {
 
         model.setProduct(productToEdit, editedProduct);
         model.updateFilteredProductList(Model.PREDICATE_SHOW_ACTIVE_PRODUCTS);
-        model.commitVendorVault();
 
         String successMessage = String.format(
                 MESSAGE_EDIT_PRODUCT_SUCCESS,
                 editedProduct
         );
+
+        model.commitVendorVault(successMessage);
 
         String formattedWarnings = warnings.length() == 0
                 ? ""
@@ -162,8 +163,8 @@ public class EditProductCommand extends Command {
      * Creates the edited product based on descriptor values.
      */
     private static Product createEditedProduct(Product productToEdit,
-                                            EditProductDescriptor descriptor,
-                                            Model model)
+                                               EditProductDescriptor descriptor,
+                                               Model model)
             throws CommandException {
 
 

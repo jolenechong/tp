@@ -99,7 +99,8 @@ public class DeleteProductCommand extends Command {
      */
     private CommandResult deleteProduct(Model model, Product productToDelete) {
         model.deleteProduct(productToDelete);
-        model.commitVendorVault();
+        String successPart = String.format(MESSAGE_DELETE_PRODUCT_SUCCESS, productToDelete);
+        model.commitVendorVault(successPart);
         model.updateFilteredProductList(PREDICATE_SHOW_ACTIVE_PRODUCTS);
 
         return new CommandResult(

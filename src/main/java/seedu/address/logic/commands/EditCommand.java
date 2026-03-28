@@ -155,7 +155,7 @@ public class EditCommand extends Command {
                 : CommandResult.FEEDBACK_TYPE_WARN;
 
         return new CommandResult(
-                String.format(MESSAGE_EDIT_PERSON_SUCCESS + formattedWarnings, Messages.format(editedPerson)),
+                formatSuccessPart(editedPerson) + formattedWarnings,
                 feedbackType);
     }
 
@@ -224,7 +224,11 @@ public class EditCommand extends Command {
         }
 
         model.updateFilteredPersonList(PREDICATE_SHOW_ACTIVE_PERSONS);
-        model.commitVendorVault();
+        model.commitVendorVault(formatSuccessPart(editedPerson));
+    }
+
+    private String formatSuccessPart(Person editedPerson) {
+        return String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
     }
 
     @Override

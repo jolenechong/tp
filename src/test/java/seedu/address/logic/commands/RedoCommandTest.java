@@ -9,6 +9,7 @@ import static seedu.address.testutil.TypicalProducts.getTypicalInventory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Aliases;
 import seedu.address.model.Model;
@@ -49,10 +50,14 @@ public class RedoCommandTest {
                                 new UserPrefs(), new Aliases());
         new AddCommand(person).execute(expectedModel);
 
+        String addSuccessSummary = String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(person));
+        String expectedRedoMessage = RedoCommand.MESSAGE_SUCCESS
+                + String.format(RedoCommand.MESSAGE_REDID_ACTION, addSuccessSummary);
+
         assertCommandSuccess(
                 new RedoCommand(),
                 model,
-                RedoCommand.MESSAGE_SUCCESS,
+                expectedRedoMessage,
                 expectedModel
         );
     }

@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +25,7 @@ public class VersionedVendorVaultTest {
     @Test
     public void commit_addNewState_pointerMovesForward() {
         VendorVault newState = new VendorVault();
-        versionedVendorVault.commit(newState);
+        versionedVendorVault.commit(newState, "");
 
         assertTrue(versionedVendorVault.canUndo()); // should now be able to undo
     }
@@ -33,12 +35,12 @@ public class VersionedVendorVaultTest {
         // initial commit
         VendorVault state1 = new VendorVault();
         state1.getAddressBook().addPerson(new PersonBuilder().build());
-        versionedVendorVault.commit(state1);
+        versionedVendorVault.commit(state1, "");
 
         // commit second state
         VendorVault state2 = new VendorVault();
         state2.getAddressBook().addPerson(new PersonBuilder().withName("John").build());
-        versionedVendorVault.commit(state2);
+        versionedVendorVault.commit(state2, "");
 
         // undo to previous state
         versionedVendorVault.undo(state2);
@@ -49,16 +51,26 @@ public class VersionedVendorVaultTest {
     }
 
     @Test
+    public void undoWithSummary_afterSummaryCommit_returnsCommittedSummary() {
+        VendorVault state = new VendorVault();
+        String actionSummary = "New contact added: Alice Pauline";
+
+        versionedVendorVault.commit(state, actionSummary);
+
+        assertEquals(actionSummary, versionedVendorVault.undo(state).orElseThrow());
+    }
+
+    @Test
     public void redo_afterUndo_restoresNextState() {
         // initial commit
         VendorVault state1 = new VendorVault();
         state1.getAddressBook().addPerson(new PersonBuilder().build());
-        versionedVendorVault.commit(state1);
+        versionedVendorVault.commit(state1, "");
 
         // commit second state
         VendorVault state2 = new VendorVault();
         state2.getAddressBook().addPerson(new PersonBuilder().withName("John").build());
-        versionedVendorVault.commit(state2);
+        versionedVendorVault.commit(state2, "");
         VendorVault expectedStateAfterRedo = new VendorVault(state2);
 
         // undo
@@ -68,6 +80,17 @@ public class VersionedVendorVaultTest {
         versionedVendorVault.redo(state2);
 
         assertEquals(expectedStateAfterRedo, state2);
+    }
+
+    @Test
+    public void redoWithSummary_afterUndo_returnsSummaryOfRedoneState() {
+        VendorVault state = new VendorVault();
+        String actionSummary = "New contact added: Alice Pauline";
+
+        versionedVendorVault.commit(state, actionSummary);
+        versionedVendorVault.undo(state);
+
+        assertEquals(actionSummary, versionedVendorVault.redo(state).orElseThrow());
     }
 
     @Test

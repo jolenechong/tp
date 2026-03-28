@@ -85,7 +85,7 @@ public class ClearProductCommand extends Command {
      */
     private CommandResult clearProducts(Model model) {
         model.setInventory(new Inventory());
-        model.commitVendorVault();
+        model.commitVendorVault(MESSAGE_SUCCESS);
         model.updateFilteredProductList(PREDICATE_SHOW_ACTIVE_PRODUCTS);
 
         return new CommandResult(MESSAGE_SUCCESS);

@@ -88,15 +88,21 @@ public class AddProductCommand extends Command {
         String allWarnings = buildWarnings(model, warnings);
 
         model.addProduct(toAdd);
-        model.commitVendorVault();
 
         String formattedWarnings = allWarnings.isEmpty() ? "" : SEPARATOR_NEW_LINE + allWarnings;
         String feedbackType = allWarnings.isEmpty()
                 ? CommandResult.FEEDBACK_TYPE_SUCCESS
                 : CommandResult.FEEDBACK_TYPE_WARN;
 
+        String successPart = formatSuccessPart();
+        model.commitVendorVault(successPart);
+
         return new CommandResult(String.format(MESSAGE_SUCCESS + formattedWarnings, Messages.formatProduct(toAdd)),
                 feedbackType);
+    }
+
+    private String formatSuccessPart() {
+        return String.format(MESSAGE_SUCCESS, Messages.formatProduct(toAdd));
     }
 
     private String buildWarnings(Model model, String originalWarnings) {

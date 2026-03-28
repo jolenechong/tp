@@ -77,12 +77,10 @@ public class RestoreProductCommand extends Command {
         }
 
         model.restoreProduct(productToRestore);
-        model.commitVendorVault();
+        String successPart = String.format(MESSAGE_RESTORE_SUCCESS, productToRestore);
+        model.commitVendorVault(successPart);
 
-        return new CommandResult(
-                String.format(MESSAGE_RESTORE_SUCCESS, productToRestore),
-                CommandResult.FEEDBACK_TYPE_SUCCESS
-        );
+        return new CommandResult(successPart, CommandResult.FEEDBACK_TYPE_SUCCESS);
     }
 
     @Override

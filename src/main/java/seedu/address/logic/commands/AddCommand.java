@@ -75,19 +75,24 @@ public class AddCommand extends Command {
         validateNoDuplicate(model);
 
         String allWarnings = buildWarnings(model, initialWarnings);
+        String successPart = formatSuccessPart();
 
         model.addPerson(toAdd);
-        model.commitVendorVault();
+        model.commitVendorVault(successPart);
 
-        return buildCommandResult(allWarnings);
+        return buildCommandResult(allWarnings, successPart);
     }
 
-    private CommandResult buildCommandResult(String allWarnings) {
+    private String formatSuccessPart() {
+        return String.format(MESSAGE_SUCCESS, Messages.format(toAdd));
+    }
+
+    private CommandResult buildCommandResult(String allWarnings, String successPart) {
         boolean hasWarnings = !allWarnings.isEmpty();
 
         String message = hasWarnings
-                ? String.format(MESSAGE_SUCCESS + SEPARATOR_NEW_LINE + allWarnings, Messages.format(toAdd))
-                : String.format(MESSAGE_SUCCESS, Messages.format(toAdd));
+                ? successPart + SEPARATOR_NEW_LINE + allWarnings
+                : successPart;
 
         String feedbackType = hasWarnings
                 ? CommandResult.FEEDBACK_TYPE_WARN

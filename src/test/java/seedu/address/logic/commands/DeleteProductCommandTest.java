@@ -37,13 +37,11 @@ public class DeleteProductCommandTest {
         ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), getTypicalAliases());
 
         expectedModel.deleteProduct(productToDelete);
-        expectedModel.commitVendorVault();
+        String successPart = String.format(MESSAGE_DELETE_PRODUCT_SUCCESS, productToDelete);
+        expectedModel.commitVendorVault(successPart);
         expectedModel.updateFilteredProductList(PREDICATE_SHOW_ACTIVE_PRODUCTS);
 
-        String expectedMessage =
-                String.format(MESSAGE_DELETE_PRODUCT_SUCCESS, productToDelete);
-
-        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+        assertCommandSuccess(command, model, successPart, expectedModel);
     }
 
     @Test
@@ -86,13 +84,11 @@ public class DeleteProductCommandTest {
         Model expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), getTypicalAliases());
 
         expectedModel.deleteProduct(productToDelete);
-        expectedModel.commitVendorVault();
+        String successPart = String.format(MESSAGE_DELETE_PRODUCT_SUCCESS, productToDelete);
+        expectedModel.commitVendorVault(successPart);
         expectedModel.updateFilteredProductList(PREDICATE_SHOW_ACTIVE_PRODUCTS);
 
-        String expectedMessage =
-                String.format(MESSAGE_DELETE_PRODUCT_SUCCESS, productToDelete);
-
-        assertCommandSuccess(confirmCommand, model, expectedMessage, expectedModel);
+        assertCommandSuccess(confirmCommand, model, successPart, expectedModel);
     }
 
     @Test
