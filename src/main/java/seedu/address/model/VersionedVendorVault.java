@@ -13,7 +13,7 @@ import seedu.address.logic.commands.UndoCommand;
 /**
  * Represents the version history of whole of VendorVault.
  */
-public class VersionedVendorVault {
+public class VersionedVendorVault extends VendorVault {
 
     private static final int INITIAL_STATE = 0;
     private static final int HISTORY_STEP = 1;

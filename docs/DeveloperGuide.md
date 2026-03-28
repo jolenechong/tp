@@ -174,45 +174,48 @@ This section describes some noteworthy details on how certain features are imple
 
 The undo/redo mechanism is facilitated by `VersionedVendorVault`. It extends `VendorVault` with an undo/redo history, stored internally as an `vendorVaultStateList` and `currentStatePointer`. Additionally, it implements the following operations:
 
-`VendorVault` is the main data structure that holds the current state of the address book and inventory data. If only the address book data is modified, the inventory data will still be saved in the `VendorVault` state. This allows us to have a single undo/redo mechanism for both address book and inventory data.
-
 * `VersionedVendorVault#commit()` — Saves the current VendorVault state in its history.
 * `VersionedVendorVault#undo()` — Restores the previous VendorVault state from its history.
 * `VersionedVendorVault#redo()` — Restores a previously undone VendorVault state from its history.
 * `VersionedVendorVault#canUndo()` and `VersionedVendorVault#canRedo()` — Checks if undo/redo operations are possible based on the current state of the history.
 
-These operations are exposed in the `Model` interface as `Model#commitVendorVault()`, `Model#undoVendorVault()`, `Model#redoVendorVault()`, `Model#canUndoVendorVault` and `Model#canRedoVendorVault` respectively.
+<box type="info" seamless>
+
+**Note:** `VendorVault` stores both address book and inventory data as a single state. Even if only one is modified, the entire `VendorVault` state is saved, enabling a single undo/redo mechanism.
+
+</box>
+
+These operations are exposed in the `Model` interface as `Model#commitVendorVault()`, `Model#undoVendorVault()`, `Model#redoVendorVault()`, `Model#canUndoVendorVault()` and `Model#canRedoVendorVault()` respectively.
 
 #### Usage Scenario
-Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
+Given below is an example showing how the undo/redo mechanism behaves at each step.
 
-**Step 1.** The user launches the application for the first time. The `VersionedVendorVault` will be initialized with the initial VendorVault (which includes the address book and inventory internally) state, and the `currentStatePointer` pointing to that single VendorVault state.
+**Step 1.** The user launches the application for the first time. `VersionedVendorVault` is initialized with the initial VendorVault state (which includes the address book and inventory internally), and the `currentStatePointer` points to that state.
 
 <puml src="diagrams/UndoRedoState0.puml" alt="UndoRedoState0" />
 
-**Step 2.** The user executes `delete support@adafruit.com` command to delete the corresponding vendor contact in VendorVault. The `delete` command calls `Model#commitVendorVault()`, causing the modified state of the VendorVault after the `delete support@adafruit.com` command executes to be saved in the `vendorVaultStateList`, and the `currentStatePointer` is shifted to the newly inserted VendorVault state.
+**Step 2.** The user executes `delete support@adafruit.com` command. The `delete` command calls `Model#commitVendorVault()`, saving the modified `VendorVault` state to `vendorVaultStateList` and moving the `currentStatePointer` to point to the newly inserted state. 
 
 <puml src="diagrams/UndoRedoState1.puml" alt="UndoRedoState1" />
 
-**Step 3.** The user executes `add n/Adafruit …​` to add a new vendor contact. The `add` command also calls `Model#commitVendorVault()`, causing another modified VendorVault state to be saved into the `vendorVaultStateList`.
+**Step 3.** The user executes `add n/Adafruit …​` to add a new vendor contact. The `add` command also calls `Model#commitVendorVault()`, saving another modified `VendorVault` state the `vendorVaultStateList`.
 
 <puml src="diagrams/UndoRedoState2.puml" alt="UndoRedoState2" />
 
 <box type="info" seamless>
 
-**Note:** If a command fails its execution, it will not call `Model#commitVendorVault()`, so the VendorVault state will not be saved into the `vendorVaultStateList`.
+**Note:** If a command fails its execution, it will not call `Model#commitVendorVault()`, so the state will not be saved into the `vendorVaultStateList`.
 
 </box>
 
-**Step 4.** The user now decides that adding the contact was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoVendorVault()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous VendorVault state, and restores the VendorVault to that state.
+**Step 4.** The user now decides that adding the contact was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoVendorVault()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous state, and restores `VendorVault`'s data to that state.
 
 <puml src="diagrams/UndoRedoState3.puml" alt="UndoRedoState3" />
 
 
 <box type="info" seamless>
 
-**Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no previous AddressBook states to restore. The `undo` command uses `Model#canundoVendorVault()` to check if this is the case. If so, it will return an error to the user rather
-than attempting to perform the undo.
+**Note:** If the `currentStatePointer` is at index 0 (the initial state), there is no previous state to restore. The `undo` command checks this using `Model#canundoVendorVault()` and returns an error if `undo` is not possible.
 
 </box>
 
@@ -234,11 +237,11 @@ The `redo` command does the opposite — it calls `Model#redoVendorVault()`,
 
 <box type="info" seamless>
 
-**Note:** If the `currentStatePointer` is at index `vendorVaultStateList.size() - 1`, pointing to the latest VendorVault state, then there are no undone VendorVault states to restore. The `redo` command uses `Model#canRedoVendorVault()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
+**Note:** If the `currentStatePointer` is at index `vendorVaultStateList.size() - 1` (the latest state), there is no undone states to redo. The `redo` command checks this using `Model#canRedoVendorVault()` and returns an error if `redo` is not possible.
 
 </box>
 
-**Step 5.** The user then decides to execute the command `list`. Commands that do not modify the VendorVault, such as `list`, will usually not call `Model#commitVendorVault()`, `Model#undoVendorVault()` or `Model#redoVendorVault()`. Thus, the `vendorVaultStateList` remains unchanged.
+**Step 5.** The user then executes the `list` command. Commands that do not modify state,such as `list`, will not call `Model#commitVendorVault()`, `Model#undoVendorVault()` or `Model#redoVendorVault()`. Thus, the `vendorVaultStateList` remains unchanged.
 
 <puml src="diagrams/UndoRedoState4.puml" alt="UndoRedoState4" />
 
@@ -248,46 +251,46 @@ The `redo` command does the opposite — it calls `Model#redoVendorVault()`,
 
 The following activity diagram summarizes what happens when a user executes a new command:
 
-<puml src="diagrams/CommitActivityDiagram.puml" width="250" />
+<puml src="diagrams/CommitActivityDiagram.puml" width="300" />
 
 #### Design considerations:
 
 **Aspect: How undo & redo executes:**
 
-* **Alternative 1 (current choice):** Saves the entire VendorVault.
-  * Pros: Easy to implement and support for future commands.
+* **Alternative 1 (current choice):** Saves the entire current state.
+  * Pros: Easy to implement and supports future commands.
   * Cons: May have performance issues in terms of memory usage.
 
-* **Alternative 2:** Individual command knows how to undo/redo by
+* **Alternative 2:** Individual command knows how to undo/redo.
   itself.
   * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
   * Cons: We must ensure that the implementation of each individual command and future commands are correct.
 
-Given that VendorVault’s data size is expected to remain relatively small (e.g. around 1,000 contacts and 5,000 products) and undoable actions are typically performed in small batches during regular use by small business owners, so the memory overhead of storing snapshots is acceptable.
+Given that VendorVault’s data size is expected to remain relatively small (e.g. about 1,000 contacts and 5,000 products) and undoable actions are typicallyoccur in small batches, the memory overhead of storing snapshots is acceptable.
 
 **Aspect: Granularity of undo/redo scope:**
 
 * **Alternative 1 (current choice):** Single unified VendorVault snapshot per commit.
-    * Pros: One consistent state per commit makes it simple to reason about as one undo always undoes exactly one user action regardless of whether it touched contacts, products, or both.
-    * Cons: Even if only contacts are modified, the full inventory snapshot is stored too, wasting memory.
+    * Pros: Simple and consistent, where each undo reverses exactly one user action, whether it affects contacts, products, or both.
+    * Cons: Stores the full inventory even when only contacts change, increasing memory usage.
 
 * **Alternative 2:** Separate versioned histories for AddressBook and Inventory.
-    * Pros: More fine-grained memory usage.
-    * Cons: Significantly increases complexity. A single user action that touches both (e.g. clear) would need to commit to both histories atomically, and undo would need to roll back both in sync, increasing the risk of histories becoming desynchronised.
+    * Pros: More memory-efficient with finer-grained snapshots.
+    * Cons: Much more complex. Actions affecting both must commit atomically, and undo must keep both histories synchronised, increasing desynchronisation risk.
 
-Since VendorVault’s data size is expected to be small and the number of undoable actions per session is unlikely to be large, the additional memory usage from storing full snapshots of both internally is acceptable, to get more consistent undo behaviour.
+Similarly, the extra memory cost is acceptable in exchange for simpler, more reliable undo behaviour.
 
 **Aspect: Where the commit is triggered:**
 
-* **Alternative 1 (current choice):** Each command calls Model#commitVendorVault() itself.
-    * Pros: Gives each command full control, so commands that should not create a snapshot (e.g. list, find) simply don't call commit.
+* **Alternative 1 (current choice):** Each command calls `Model#commitVendorVault()` itself.
+    * Pros: Commands have full control; read-only commands (e.g., list, find) can skip committing.
     * Cons: Future command implementors must remember to call commit.
 
-* **Alternative 2:** LogicManager automatically commits after every successful command execution.
-    * Pros: Centralises the responsibility in one place.
-    * Cons: Read-only commands (e.g. list, find) would create unnecessary snapshots unless they are explicitly excluded, requiring a marker interface or flag on the Command class.
+* **Alternative 2:** `LogicManager` commits automatically after every successful command.
+    * Pros: Centralises commit logic.
+    * Cons: Read-only commands would create unnecessary snapshots unless explicitly excluded, requiring extra flags or interfaces.
 
-Given that only certain commands should create undoable states, we chose Alternative 1 as it gives each command explicit control over when a snapshot is created. This avoids unnecessary snapshots for read-only commands and keeps the undo history meaningful.
+We chose Alternative 1 to give commands explicit control, avoid unnecessary snapshots, and keep the undo history meaningful.
 
 <div style="height: 10px;"></div>
 
