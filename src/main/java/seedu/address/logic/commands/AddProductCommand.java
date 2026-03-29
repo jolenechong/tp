@@ -30,10 +30,9 @@ public class AddProductCommand extends Command {
             + "[" + PREFIX_QUANTITY + "QUANTITY] "
             + "[" + PREFIX_THRESHOLD + "THRESHOLD] "
             + "[" + PREFIX_EMAIL + "VENDOR_EMAIL]";
-    public static final String COMMAND_DESCRIPTION = "Adds a product.";
+    public static final String COMMAND_DESCRIPTION = "Adds a product to the inventory.";
 
-
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a product to the inventory. "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": " + COMMAND_DESCRIPTION + " "
             + "Parameters: "
             + PREFIX_IDENTIFIER + "IDENTIFIER "
             + PREFIX_NAME + "NAME "
@@ -45,11 +44,10 @@ public class AddProductCommand extends Command {
             + PREFIX_NAME + "iPad 11 Pro "
             + PREFIX_QUANTITY + "20 "
             + PREFIX_THRESHOLD + "5 "
-            + PREFIX_EMAIL + "johnd@example.com";
+            + PREFIX_EMAIL + "sg.sales@cytron.io";
 
     public static final String MESSAGE_SUCCESS = "New product added: %1$s";
-    public static final String MESSAGE_VENDOR_DOES_NOT_EXIST =
-            "Vendor email %1$s does not match any existing contact.";
+    public static final String MESSAGE_VENDOR_DOES_NOT_EXIST = "Vendor email %1$s does not match any existing contact.";
 
     private final Product toAdd;
     private String warnings = "";
