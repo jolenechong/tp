@@ -28,6 +28,7 @@ public enum ValidCommand {
     REDO(RedoCommand.COMMAND_WORD),
     RESTORE(RestoreCommand.COMMAND_WORD),
     RESTOREPRODUCT(RestoreProductCommand.COMMAND_WORD),
+    SETTHRESHOLD(SetThresholdCommand.COMMAND_WORD),
     UNDO(UndoCommand.COMMAND_WORD);
 
     public final String commandWord;
