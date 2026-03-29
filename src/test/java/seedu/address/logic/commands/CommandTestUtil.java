@@ -99,7 +99,7 @@ public class CommandTestUtil {
     public static final String INVALID_IDENTIFIER_DESC_WARN = " " + PREFIX_IDENTIFIER + INVALID_IDENTIFIER_WARN;
     public static final String INVALID_PRODUCT_NAME_DESC_WARN = " " + PREFIX_NAME + INVALID_PRODUCT_NAME_WARN;
 
-    public static final String PREAMBLE_WHITESPACE = "\t  \r  \n";
+    public static final String PREAMBLE_WHITESPACE = "\t  \r  \n"; // tab, return, newline
     public static final String PREAMBLE_NON_EMPTY = "NonEmptyPreamble";
 
     public static final EditCommand.EditPersonDescriptor DESC_AMY;
