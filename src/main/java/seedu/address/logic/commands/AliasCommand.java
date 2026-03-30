@@ -79,9 +79,7 @@ public class AliasCommand extends Command {
             Alias currAlias = aliasList.get(i - 1);
             stringBuilder.append(i)
                     .append(") ")
-                    .append(currAlias.getOriginalCommand())
-                    .append(" -> ")
-                    .append(currAlias.getAlias())
+                    .append(currAlias.toString())
                     .append("\n");
         }
         return new CommandResult(stringBuilder.toString());

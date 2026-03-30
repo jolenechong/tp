@@ -42,4 +42,9 @@ public class Alias {
         return alias.equals(otherAlias.alias)
                 && originalCommand.equals(otherAlias.originalCommand);
     }
+
+    @Override
+    public String toString() {
+        return originalCommand + " -> " + alias;
+    }
 }
