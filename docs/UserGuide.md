@@ -980,6 +980,26 @@ Use this section when `add` fails or returns a warning.
 | Tag is too long                                                | `Tag names should be at most 50 characters`                               | Shorten the tags that are too long.                                          |
 | Contact duplicates an existing contact by same email.          | `This vendor contact already exists with the same email.`                 | Change the email address, or edit the existing contact instead.              |
 
+<box type="tip" seamless>
+
+**Tip:** If duplicate tags that differ only by case are provided for the same contact, only the first will be kept.
+
+</box>
+
+<panel header="What's considered a valid Contact Email?" type="seamless" id="contact-email-format">
+
+Email should be of the format local-part@domain and adhere to the following constraints:
+* The local-part should only contain alphanumeric characters and these special characters, excluding the parentheses, (`+_.-`). The local-part may not start or end with any special characters.
+* This is followed by a `@` and then a domain name. The domain name is made up of domain labels separated by periods.
+  The domain name must:
+    - End with a domain label at least 2 characters long
+    - Have each domain label start and end with alphanumeric characters
+    - Have each domain label consist of alphanumeric characters, separated only by hyphens, if any.
+
+</panel>
+
+<div style="height: 30px;"></div>
+
 Common `add` warnings:
 
 | Warning trigger                             | Warning shown                                                                                                                         | What it means                                                                                                                                                                            |
@@ -993,21 +1013,9 @@ Common `add` warnings:
 
 <box type="tip" seamless>
 
-Tip: If multiple warnings apply, VendorVault shows each type of them (one per line) together with the success message.
+**Tip:** If multiple warnings apply, VendorVault shows each type of them (one per line) together with the success message.
 
 </box>
-
-<panel header="What's considered a valid Contact Email?" type="seamless" id="contact-email-format">
-
-Email should be of the format local-part@domain and adhere to the following constraints:
-* The local-part should only contain alphanumeric characters and these special characters, excluding the parentheses, (`+_.-`). The local-part may not start or end with any special characters.
-* This is followed by a `@` and then a domain name. The domain name is made up of domain labels separated by periods.
-   The domain name must:
-    - End with a domain label at least 2 characters long
-    - Have each domain label start and end with alphanumeric characters
-    - Have each domain label consist of alphanumeric characters, separated only by hyphens, if any.
-
-</panel>
 
 <div style="height: 30px;"></div>
 
@@ -1030,7 +1038,7 @@ Most errors and warnings in `add` also occur in `edit`, except the first three e
 
 <box type="tip" seamless>
 
-Tip: Unlike `add`, edit command warnings only appear for **fields you are actually editing**. For example, if you edit only the phone number and there's a similar name in the database, you won't see a name warning.
+**Tip:** Unlike `add`, edit command warnings only appear for **fields you are actually editing**. For example, if you edit only the phone number and there's a similar name in the database, you won't see a name warning.
 
 </box>
 
@@ -1138,13 +1146,13 @@ Common `editproduct` warnings:
 
 <box type="tip" seamless>
 
-Tip: Warnings only appear for **fields you are actually editing**. For example, if you edit only the vendor email and the quantity is already below threshold, you will not see a stock warning. This prevents unnecessary alerts for unchanged fields.
+**Tip:** Warnings only appear for **fields you are actually editing**. For example, if you edit only the vendor email and the quantity is already below threshold, you will not see a stock warning. This prevents unnecessary alerts for unchanged fields.
 
 </box>
 
 <box type="tip" seamless>
 
-Tip: If multiple warnings apply, VendorVault shows all of them (one per line) together with the success message.
+**Tip:** If multiple warnings apply, VendorVault shows all of them (one per line) together with the success message.
 
 </box>
 
