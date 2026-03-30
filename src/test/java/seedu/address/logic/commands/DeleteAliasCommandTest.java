@@ -37,7 +37,7 @@ public class DeleteAliasCommandTest {
 
         CommandResult result = new DeleteAliasCommand("ls").execute(modelStub);
 
-        assertEquals(String.format(DeleteAliasCommand.MESSAGE_DELETE_ALIAS_SUCCESS, "ls"),
+        assertEquals(String.format(DeleteAliasCommand.MESSAGE_DELETE_ALIAS_SUCCESS, "list -> ls"),
                 result.getFeedbackToUser());
     }
 
@@ -61,12 +61,24 @@ public class DeleteAliasCommandTest {
 
     private class ModelStubAcceptingRemoveAlias extends ModelStub {
         @Override
+        public Alias findAlias(String aliasStr) throws NoAliasFoundInAliasListException {
+            // Return a real Alias whose toString() produces "list -> ls"
+            return new Alias("ls", "list");
+        }
+
+        @Override
         public void removeAlias(String aliasStr) {
             // accepts without throwing
         }
     }
 
     private class ModelStubThrowingNoAliasFoundException extends ModelStub {
+
+        @Override
+        public Alias findAlias(String aliasStr) throws NoAliasFoundInAliasListException {
+            throw new NoAliasFoundInAliasListException();
+        }
+
         @Override
         public void removeAlias(String aliasStr) throws NoAliasFoundInAliasListException {
             throw new NoAliasFoundInAliasListException();
