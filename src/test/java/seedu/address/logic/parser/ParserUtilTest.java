@@ -55,6 +55,14 @@ public class ParserUtilTest {
     private static final String VALID_EMAIL = "rachel@example.com";
     private static final String VALID_TAG_1 = "friend";
     private static final String VALID_TAG_2 = "neighbour";
+    private static final String VALID_TAG_MIXED_CASE = "Hi";
+    private static final String VALID_TAG_LOWER_DUPLICATE = "hi"; // case-insensitive duplicate of VALID_TAG_MIXED_CASE
+    private static final String VALID_TAG_3 = "electronics";
+
+    private static final String WARN_PHONE_MULTIPLE_TRAILING_EMPTY = "61234567,";
+    private static final String WARN_PHONE_MULTIPLE_MIDDLE_EMPTY = "12345678,,12345679";
+    private static final String INVALID_PHONE_MULTIPLE_ONE_SHORT = "61234567, 12";
+    private static final String INVALID_NAME_NEWLINE = "Alice\nBob";
 
     private static final String VALID_IDENTIFIER = "SKU-1001";
     private static final String VALID_PRODUCT_NAME = "Brown Rice 5kg";
@@ -119,8 +127,9 @@ public class ParserUtilTest {
 
     @Test
     public void parseName_nonBlankInvalidPattern_throwsParseExceptionWithConstraintsMessage() {
+        // EP: non-blank but contains newline
         assertThrows(ParseException.class, Name.MESSAGE_CONSTRAINTS, ()
-                -> ParserUtil.parseName("Alice\nBob"));
+                -> ParserUtil.parseName(INVALID_NAME_NEWLINE));
     }
 
     @Test
@@ -138,6 +147,7 @@ public class ParserUtilTest {
 
     @Test
     public void parseName_invalidLongName_throwsParseException() {
+        // EP: exceeds max length
         assertThrows(ParseException.class, () -> ParserUtil.parseName(INVALID_LONG_NAME));
     }
 
@@ -166,30 +176,23 @@ public class ParserUtilTest {
 
     @Test
     public void parsePhone_invalidShortPhone_throwsParseException() {
+        // EP: below minimum length
         assertThrows(ParseException.class, () -> ParserUtil.parsePhone(INVALID_SHORT_PHONE));
     }
 
     @Test
-    public void parsePhone_multiplePhonesWithTrailingEmpty_returnsPhoneWithWarning() throws Exception {
-        String multiplePhones = "61234567,";
-        ParseResult<Phone> result = ParserUtil.parsePhone(multiplePhones);
-        assertEquals(new Phone(multiplePhones), result.getValue());
-        assertFalse(result.getWarning().isEmpty());
-    }
+    public void parsePhone_multiplePhonesWithWarning_returnsPhoneWithWarning() throws Exception {
+        // EP: trailing empty segment between commas -> warning
+        assertPhoneHasWarning(WARN_PHONE_MULTIPLE_TRAILING_EMPTY);
 
-    @Test
-    public void parsePhone_multiplePhonesWithMiddleEmpty_returnsPhoneWithWarning() throws Exception {
-        String multiplePhones = "12345678,,12345679";
-        ParseResult<Phone> result = ParserUtil.parsePhone(multiplePhones);
-        assertEquals(new Phone(multiplePhones), result.getValue());
-        assertFalse(result.getWarning().isEmpty());
+        // EP: empty segment in middle -> warning
+        assertPhoneHasWarning(WARN_PHONE_MULTIPLE_MIDDLE_EMPTY);
     }
 
     @Test
     public void parsePhone_oneTooShort_throwsParseException() {
-        // test for multiple phones, one short
-        String multiplePhones = "61234567, 12";
-        assertThrows(ParseException.class, () -> ParserUtil.parsePhone(multiplePhones));
+        // EP: multiple phones where one is below minimum length
+        assertThrows(ParseException.class, () -> ParserUtil.parsePhone(INVALID_PHONE_MULTIPLE_ONE_SHORT));
     }
 
     @Test
@@ -216,23 +219,29 @@ public class ParserUtilTest {
     }
 
     @Test
-    public void parseAddress_blankAddress_throwsParseException() {
+    public void parseAddress_blank_throwsParseException() {
+        // EP: blank or empty string -> invalid
         assertThrows(ParseException.class, () -> ParserUtil.parseAddress("   "));
-    }
-
-    @Test
-    public void parseAddress_emptyString_throwsParseException() {
         assertThrows(ParseException.class, () -> ParserUtil.parseAddress(""));
     }
 
     @Test
     public void parseAddress_invalidLongAddress_throwsParseException() {
+        // EP: exceeds max length
         assertThrows(ParseException.class, () -> ParserUtil.parseAddress(INVALID_LONG_ADDRESS));
     }
 
     @Test
     public void parseEmail_blankEmail_throwsParseException() {
+        // EP: blank string -> invalid
         assertThrows(ParseException.class, () -> ParserUtil.parseEmail(INVALID_BLANK_EMAIL));
+    }
+
+    @Test
+    public void parseEmail_tooLong_throwsParseExceptionWithLengthMessage() {
+        // EP: exceeds max length -> specific length constraint message
+        assertThrows(ParseException.class, Email.MESSAGE_LENGTH_CONSTRAINTS, ()
+                -> ParserUtil.parseEmail(INVALID_EMAIL_TOO_LONG));
     }
 
     @Test
@@ -243,12 +252,6 @@ public class ParserUtilTest {
     @Test
     public void parseEmail_invalidValue_throwsParseException() {
         assertThrows(ParseException.class, () -> ParserUtil.parseEmail(INVALID_EMAIL));
-    }
-
-    @Test
-    public void parseEmail_tooLong_throwsParseExceptionWithLengthMessage() {
-        assertThrows(ParseException.class, Email.MESSAGE_LENGTH_CONSTRAINTS, ()
-                -> ParserUtil.parseEmail(INVALID_EMAIL_TOO_LONG));
     }
 
     @Test
@@ -308,6 +311,18 @@ public class ParserUtilTest {
         Set<Tag> expectedTagSet = new HashSet<Tag>(Arrays.asList(new Tag(VALID_TAG_1), new Tag(VALID_TAG_2)));
 
         assertEquals(expectedTagSet, actualTagSet);
+    }
+
+    @Test
+    public void parseTags_collectionWithCaseInsensitiveDuplicates_keepsFirstOccurrence() throws Exception {
+        // EP: duplicate tag differing only in case -> first occurrence kept, second discarded
+        Set<Tag> actualTagSet = ParserUtil.parseTags(
+                Arrays.asList(VALID_TAG_MIXED_CASE, VALID_TAG_3, VALID_TAG_LOWER_DUPLICATE));
+
+        assertEquals(2, actualTagSet.size());
+        assertTrue(actualTagSet.contains(new Tag(VALID_TAG_MIXED_CASE)));
+        assertTrue(actualTagSet.contains(new Tag(VALID_TAG_3)));
+        assertFalse(actualTagSet.contains(new Tag(VALID_TAG_LOWER_DUPLICATE)));
     }
 
     @Test
@@ -444,5 +459,11 @@ public class ParserUtilTest {
     @Test
     public void parseThreshold_validValue_returnsNoWarnings() throws Exception {
         assertTrue(ParserUtil.parseThreshold(VALID_THRESHOLD).getWarning().isEmpty());
+    }
+
+    private void assertPhoneHasWarning(String input) throws Exception {
+        ParseResult<Phone> result = ParserUtil.parsePhone(input);
+        assertEquals(new Phone(input), result.getValue());
+        assertFalse(result.getWarning().isEmpty());
     }
 }

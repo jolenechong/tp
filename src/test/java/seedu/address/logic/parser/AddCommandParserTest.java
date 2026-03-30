@@ -1,6 +1,5 @@
 package seedu.address.logic.parser;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static seedu.address.logic.Messages.MESSAGE_ALL_PREFIXES_MISSING;
 import static seedu.address.logic.Messages.MESSAGE_MISSING_FIELD_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_MISSING_PREFIX;
@@ -12,13 +11,10 @@ import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_ADDRESS_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_EMAIL_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_EMAIL_DESC_WARN;
-import static seedu.address.logic.commands.CommandTestUtil.INVALID_EMAIL_WARN;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_NAME_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_NAME_DESC_WARN;
-import static seedu.address.logic.commands.CommandTestUtil.INVALID_NAME_WARN;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_PHONE_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_PHONE_DESC_WARN;
-import static seedu.address.logic.commands.CommandTestUtil.INVALID_PHONE_WARN;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_TAG_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_BOB;
@@ -38,8 +34,10 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccessWithWarning;
 import static seedu.address.logic.parser.ParserUtil.FIELD_ADDRESS;
 import static seedu.address.logic.parser.ParserUtil.FIELD_EMAIL;
 import static seedu.address.logic.parser.ParserUtil.FIELD_NAME;
@@ -52,10 +50,8 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.AddCommand;
-import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.ModelManager;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -157,6 +153,20 @@ public class AddCommandParserTest {
     }
 
     @Test
+    public void parse_caseInsensitiveDuplicateTags_keepFirstOccurrence() {
+        // EP: duplicate tags in same contact, first occurrence is kept
+        String hiTag = " " + PREFIX_TAG + "Hi";
+        String lowerHiTag = " " + PREFIX_TAG + "hi";
+        String electronicsTag = " " + PREFIX_TAG + "electronics";
+
+        Person expectedPerson = new PersonBuilder(BOB).withTags("Hi", "electronics").build();
+        assertParseSuccess(parser,
+                NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
+                        + hiTag + electronicsTag + lowerHiTag,
+                new AddCommand(expectedPerson));
+    }
+
+    @Test
     public void parse_compulsoryFieldMissing_failure() {
         String expectedMessage = AddCommand.MESSAGE_USAGE;
 
@@ -220,36 +230,25 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_softValidationWarnings_success() throws ParseException, CommandException {
-        // invalid name, phone and email that trigger warnings but are still accepted by the parser
-        Person expectedPerson = new PersonBuilder()
-                .withName(INVALID_NAME_WARN)
-                .withPhone(INVALID_PHONE_WARN)
-                .withEmail(INVALID_EMAIL_WARN)
-                .withAddress(VALID_ADDRESS_BOB)
-                .build();
+        // EP: only name triggers a warning
+        assertParseSuccessWithWarning(parser,
+                INVALID_NAME_DESC_WARN + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB,
+                Name.MESSAGE_WARN);
 
-        AddCommand expectedCommand = new AddCommand(expectedPerson);
+        // EP: only phone triggers a warning
+        assertParseSuccessWithWarning(parser,
+                NAME_DESC_BOB + INVALID_PHONE_DESC_WARN + EMAIL_DESC_BOB + ADDRESS_DESC_BOB,
+                Phone.MESSAGE_WARN);
 
-        String input = INVALID_NAME_DESC_WARN
-                + INVALID_PHONE_DESC_WARN
-                + INVALID_EMAIL_DESC_WARN
-                + ADDRESS_DESC_BOB;
+        // EP: only email triggers a warning
+        assertParseSuccessWithWarning(parser,
+                NAME_DESC_BOB + PHONE_DESC_BOB + INVALID_EMAIL_DESC_WARN + ADDRESS_DESC_BOB,
+                Email.MESSAGE_WARN);
 
-        AddCommand result = parser.parse(input);
-
-        assertEquals(expectedCommand, result);
-
-        String expectedWarnings =
-                Name.MESSAGE_WARN + SEPARATOR_NEW_LINE
-                        + Email.MESSAGE_WARN + SEPARATOR_NEW_LINE
-                        + Phone.MESSAGE_WARN;
-
-        CommandResult commandResult = result.execute(new ModelManager());
-        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, commandResult.getFeedbackType());
-        assertEquals(
-                String.format(AddCommand.MESSAGE_SUCCESS + SEPARATOR_NEW_LINE
-                        + expectedWarnings, Messages.format(expectedPerson)),
-                commandResult.getFeedbackToUser());
-
+        // EP: all three warn fields present
+        assertParseSuccessWithWarning(parser,
+                INVALID_NAME_DESC_WARN + INVALID_PHONE_DESC_WARN + INVALID_EMAIL_DESC_WARN + ADDRESS_DESC_BOB,
+                Name.MESSAGE_WARN + SEPARATOR_NEW_LINE + Email.MESSAGE_WARN + SEPARATOR_NEW_LINE + Phone.MESSAGE_WARN);
     }
+
 }

@@ -1,7 +1,5 @@
 package seedu.address.logic.parser;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_BOB;
@@ -39,22 +37,14 @@ import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSucces
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.Messages;
-import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
-import seedu.address.model.Model;
-import seedu.address.model.ModelManager;
-import seedu.address.model.UserPrefs;
-import seedu.address.model.VendorVault;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
-import seedu.address.testutil.TypicalAliases;
-import seedu.address.testutil.TypicalPersons;
-import seedu.address.testutil.TypicalProducts;
 
 public class EditCommandParserTest {
 
@@ -93,12 +83,21 @@ public class EditCommandParserTest {
 
     @Test
     public void parse_invalidValue_failure() {
-        assertParseFailure(parser, TARGET_EMAIL + INVALID_NAME_DESC, Name.MESSAGE_CONSTRAINTS); // invalid name
-        assertParseFailure(parser, TARGET_EMAIL + INVALID_PHONE_DESC, Phone.MESSAGE_CONSTRAINTS); // invalid phone
-        assertParseFailure(parser, TARGET_EMAIL + INVALID_EMAIL_DESC, Email.MESSAGE_CONSTRAINTS); // invalid email
-        assertParseFailure(parser, TARGET_EMAIL + INVALID_ADDRESS_DESC, Address.MESSAGE_CONSTRAINTS); // invalid address
+        // EP: invalid name
+        assertParseFailure(parser, TARGET_EMAIL + INVALID_NAME_DESC, Name.MESSAGE_CONSTRAINTS);
+
+        // EP: invalid phone
+        assertParseFailure(parser, TARGET_EMAIL + INVALID_PHONE_DESC, Phone.MESSAGE_CONSTRAINTS);
+
+        // EP: invalid email
+        assertParseFailure(parser, TARGET_EMAIL + INVALID_EMAIL_DESC, Email.MESSAGE_CONSTRAINTS);
+
+        // EP: invalid address
+        assertParseFailure(parser, TARGET_EMAIL + INVALID_ADDRESS_DESC, Address.MESSAGE_CONSTRAINTS);
+
+        // EP: invalid tag
         assertParseFailure(parser, TARGET_EMAIL + INVALID_TAG_DESC_LONG,
-                Tag.MESSAGE_LENGTH_CONSTRAINTS); // invalid tag
+                Tag.MESSAGE_LENGTH_CONSTRAINTS);
 
         // invalid phone followed by valid email
         assertParseFailure(parser, TARGET_EMAIL + INVALID_PHONE_DESC + EMAIL_DESC_AMY, Phone.MESSAGE_CONSTRAINTS);
@@ -217,54 +216,55 @@ public class EditCommandParserTest {
     }
 
     @Test
-    public void parse_nameWithWarning_returnsEditCommandWithWarnings() {
-        // "James-Doe" contains a hyphen so it triggers Name.MESSAGE_WARN.
-        String userInput = TARGET_EMAIL + INVALID_NAME_DESC_WARN;
+    public void parse_caseInsensitiveDuplicateTags_keepFirstOccurrence() {
+        // EP: duplicate tag differing only in case -> first occurrence kept
+        String userInput = TARGET_EMAIL + " " + PREFIX_TAG + "Hi"
+                + " " + PREFIX_TAG + "electronics"
+                + " " + PREFIX_TAG + "hi";
 
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
-                .withName(INVALID_NAME_WARN)
+                .withTags("Hi", "electronics")
                 .build();
-        EditCommand expectedCommand = new EditCommand(TARGET_EMAIL_OBJ, descriptor);
 
-        assertParseSuccess(parser, userInput, expectedCommand);
+        assertParseSuccess(parser, userInput, new EditCommand(TARGET_EMAIL_OBJ, descriptor));
     }
 
     @Test
-    public void parse_multipleFieldsWithWarnings_joinsWithNewline() {
-        // Both "James-Doe" (name) and INVALID_PHONE_WARN (phone) should trigger warnings.
-        String userInput = TARGET_EMAIL + INVALID_NAME_DESC_WARN + INVALID_PHONE_DESC_WARN;
+    public void parse_fieldsWithWarnings_success() {
+        // EP: only name triggers a warning
+        assertParseSuccess(parser, TARGET_EMAIL + INVALID_NAME_DESC_WARN,
+                new EditCommand(TARGET_EMAIL_OBJ,
+                        new EditPersonDescriptorBuilder().withName(INVALID_NAME_WARN).build()));
 
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
-                .withName(INVALID_NAME_WARN)
-                .withPhone(INVALID_PHONE_WARN)
-                .build();
-        EditCommand expectedCommand = new EditCommand(TARGET_EMAIL_OBJ, descriptor);
+        // EP: only phone triggers a warning
+        assertParseSuccess(parser, TARGET_EMAIL + INVALID_PHONE_DESC_WARN,
+                new EditCommand(TARGET_EMAIL_OBJ,
+                        new EditPersonDescriptorBuilder().withPhone(INVALID_PHONE_WARN).build()));
 
-        assertParseSuccess(parser, userInput, expectedCommand);
+        // EP: both name and phone trigger warnings -> joined with newline
+        assertParseSuccess(parser, TARGET_EMAIL + INVALID_NAME_DESC_WARN + INVALID_PHONE_DESC_WARN,
+                new EditCommand(TARGET_EMAIL_OBJ,
+                        new EditPersonDescriptorBuilder()
+                                .withName(INVALID_NAME_WARN)
+                                .withPhone(INVALID_PHONE_WARN).build()));
     }
 
     @Test
     public void parse_wronglyFormedFlagAttached_failure() {
-        assertParseFailure(parser, "-y" + TARGET_EMAIL + TAG_EMPTY, EditCommandParser.MESSAGE_WRONGLY_FORMED_FLAG);
-        assertParseFailure(parser,
-                TARGET_EMAIL + " -yabc" + TAG_EMPTY,
+        // EP: flag before target email
+        assertParseFailure(parser, "-y" + TARGET_EMAIL + TAG_EMPTY,
+                EditCommandParser.MESSAGE_WRONGLY_FORMED_FLAG);
+
+        // EP: flag attached mid-input with trailing characters
+        assertParseFailure(parser, TARGET_EMAIL + " -yabc" + TAG_EMPTY,
                 EditCommandParser.MESSAGE_WRONGLY_FORMED_FLAG);
     }
 
     @Test
-    public void parse_resetTagsWithSkipFlag_skipsConfirmationPrompt() throws Exception {
-        Model model = new ModelManager(
-                new VendorVault(
-                        TypicalPersons.getTypicalAddressBook(),
-                        TypicalProducts.getTypicalInventory()),
-                new UserPrefs(),
-                TypicalAliases.getTypicalAliases());
-        Email targetEmail = model.getFilteredPersonList().get(0).getEmail();
-
-        EditCommand command = parser.parse("-y " + targetEmail + TAG_EMPTY);
-        CommandResult result = command.execute(model);
-
-        assertNotEquals(EditCommand.CONFIRMATION_CLEAR_TAGS_MESSAGE, result.getFeedbackToUser());
-        assertTrue(model.findByEmail(targetEmail).orElseThrow().getTags().isEmpty());
+    public void parse_resetTagsWithSkipFlag_skipsConfirmationPrompt() {
+        // EP: -y flag present -> skips confirmation, tags cleared directly
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withTags().build();
+        assertParseSuccess(parser, "-y " + TARGET_EMAIL + TAG_EMPTY,
+                new EditCommand(TARGET_EMAIL_OBJ, descriptor, true));
     }
 }

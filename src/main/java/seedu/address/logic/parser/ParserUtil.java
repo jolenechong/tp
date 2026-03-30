@@ -5,6 +5,7 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
@@ -148,12 +149,18 @@ public class ParserUtil {
 
     /**
      * Parses {@code Collection<String> tags} into a {@code Set<Tag>}.
+     * If there are duplicates such as t/Friend and t/friend, only first occurrence is kept.
      */
     public static Set<Tag> parseTags(Collection<String> tags) throws ParseException {
         requireNonNull(tags);
         final Set<Tag> tagSet = new HashSet<>();
+        final Set<String> lowerCaseTagNames = new HashSet<>();
         for (String tagName : tags) {
-            tagSet.add(parseTag(tagName));
+            Tag parsedTag = parseTag(tagName);
+            String lowerCaseTagName = parsedTag.tagName.toLowerCase(Locale.ROOT);
+            if (lowerCaseTagNames.add(lowerCaseTagName)) {
+                tagSet.add(parsedTag);
+            }
         }
         return tagSet;
     }
