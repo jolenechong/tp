@@ -1,0 +1,42 @@
+@startuml
+!include ../style.puml
+
+left to right direction
+skinparam classAttributeIconSize 0
+skinparam stereotypeFontStyle plain
+
+package "UI" as UI <<Rectangle>> UI_COLOR_T1 {
+    class CommandBox UI_COLOR {
+        - commandExecutor
+        - previousCommandHistoryNavigator
+        - nextCommandHistoryNavigator
+    }
+}
+
+package "Logic" as LogicPkg <<Rectangle>> LOGIC_COLOR_T1 {
+    class Logic <<interface>> LOGIC_COLOR {
+        + addCommandHistory(commandText)
+        + getPrevCommandHistory(currentInput)
+        + getNextCommandHistory(currentInput)
+    }
+
+    class LogicManager LOGIC_COLOR {
+        - commandHistory : CommandHistory
+        + addCommandHistory(commandText)
+        + getPrevCommandHistory(currentInput)
+        + getNextCommandHistory(currentInput)
+    }
+
+    class CommandHistory LOGIC_COLOR {
+        + add(commandText)
+        + getPrevious(currentInput)
+        + getNext(currentInput)
+        + resetNavigation()
+    }
+}
+
+CommandBox ..> Logic
+Logic <|.. LogicManager
+LogicManager --> CommandHistory
+@enduml
+

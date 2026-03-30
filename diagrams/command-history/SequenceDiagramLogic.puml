@@ -1,0 +1,24 @@
+@startuml
+!include ../style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":Logic" as LM LOGIC_COLOR
+participant ":CommandHistory" as H LOGIC_COLOR
+end box
+
+-> LM : getPrevCommandHistory("")
+activate LM
+
+LM -> H : getPrevious("")
+activate H
+H --> LM : "delete support@adafruit.com"
+deactivate H
+
+return "delete support@adafruit.com"
+deactivate LM
+
+@enduml
+
+
+

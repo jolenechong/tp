@@ -9,13 +9,13 @@ participant ":CommandBox" as CB UI_COLOR
 end box
 
 box Logic LOGIC_COLOR_T1
-participant "commandHistory:CommandHistory" as CH LOGIC_COLOR
+participant ":Logic" as CH LOGIC_COLOR
 end box
 
 User -> CB : handleHistoryNavigation(KeyCode.UP)
 activate CB
 
-CB -> CH : getPrevious("")
+CB -> CH : getPrevCommandHistory("")
 activate CH
 
 CH --> CB : "delete support@adafruit.com"

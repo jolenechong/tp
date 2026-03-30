@@ -18,7 +18,7 @@ LogicManager -> AddressBookParser : parseCommand(undo)
 activate AddressBookParser
 
 create UndoCommand
-AddressBookParser -> UndoCommand
+AddressBookParser -> UndoCommand : UndoCommand()
 activate UndoCommand
 
 UndoCommand --> AddressBookParser
