@@ -16,6 +16,7 @@ public class GeneralCommandTest {
         assertEquals(ExitCommand.COMMAND_WORD, GeneralCommand.EXIT.getCommandWord());
         assertEquals(HelpCommand.COMMAND_WORD, GeneralCommand.HELP.getCommandWord());
         assertEquals(RedoCommand.COMMAND_WORD, GeneralCommand.REDO.getCommandWord());
+        assertEquals(SetThresholdCommand.COMMAND_WORD, GeneralCommand.SETTHRESHOLD.getCommandWord());
         assertEquals(UndoCommand.COMMAND_WORD, GeneralCommand.UNDO.getCommandWord());
     }
 

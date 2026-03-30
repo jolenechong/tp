@@ -20,8 +20,6 @@ public enum InventoryCommand implements CommandWord {
             FindProductCommand.COMMAND_USAGE, FindProductCommand.COMMAND_DESCRIPTION),
     LISTPRODUCT(ListProductsCommand.COMMAND_WORD,
             ListProductsCommand.COMMAND_USAGE, ListProductsCommand.COMMAND_DESCRIPTION),
-    SETTHRESHOLD(SetThresholdCommand.COMMAND_WORD,
-            SetThresholdCommand.COMMAND_USAGE, SetThresholdCommand.COMMAND_DESCRIPTION),
     RESTOREPRODUCT(RestoreProductCommand.COMMAND_WORD,
             RestoreProductCommand.COMMAND_USAGE, RestoreProductCommand.COMMAND_DESCRIPTION);
 
