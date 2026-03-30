@@ -1176,6 +1176,25 @@ Use this section when `deleteproduct` fails.
 
 <div style="height: 30px;"></div>
 
+### Managing general commands
+<div style="height: 30px;"></div>
+
+#### Troubleshooting `alias`
+
+Use this section when `alias` fails.
+
+| Scenario                         | Message shown                                                  | How to fix                                                             |
+|----------------------------------|----------------------------------------------------------------|------------------------------------------------------------------------|
+| No new alias provided            | `Message is formatted wrongly. ...`                            | Provide the new alias: `alias ORIGINAL_COMMAND NEW_ALIAS`              |
+| Original Command does not exists | `The original command (ORIGINAL COMMAND) does not exists. ...` | Ensure the original command is in the `help` page.                     |
+| Alias has been used              | `This alias already exists. ...`                               | Provide a new alias, or use `deletealias` to delete the current alias. |
+
+
+
+
+
+<div style="height: 30px;"></div>
+
 ### Why am I seeing warnings?
 
 Warnings are shown when the command succeeds, but the provided information does not meet the recommended format. This is to help you catch possible mistakes or unintended data formats. You can choose to ignore the warning if the data is correct as intended.
