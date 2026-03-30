@@ -222,6 +222,8 @@ A contact is considered a duplicate if it has the **same email as an existing co
 * `add n/DigiKey Singapore p/61234567 e/contact@company.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951`
 * `add n/DigiKey Singapore p/61234567, 12345678 e/contact@company.com a/71 Ayer Rajah Crescent, #05-18, Singapore 139951`
 
+For more information about warnings related to duplicate, refer to the [warning guide](#duplicate-warnings) below
+
 </panel>
 
 <br>
@@ -401,12 +403,6 @@ Examples:
 
 * `delete support@adafruit.com`
 
-<box type="info" seamless>
-
-**Expected output:** Once confirmed, the contact is permanently removed from the list.
-
-</box>
-
 For more details on possible warnings and errors, refer to the [troubleshooting guide](#troubleshooting-delete-contact)
 below.
 
@@ -557,12 +553,6 @@ Examples:
 
 </box>
 
-<box type="info" seamless>
-
-Matching is partial and case-insensitive. The order of the keywords does not matter.
-
-</box>
-
 <div style="height: 30px;"></div>
 
 #### Archiving a product : `archiveproduct`
@@ -646,12 +636,6 @@ Examples:
 
 * `deleteproduct DE/5`
 
-<box type="info" seamless>
-
-**Expected output:** Once confirmed, the product is permanently removed from the list.
-
-</box>
-
 For more details on possible warnings and errors, refer to the [troubleshooting guide](#troubleshooting-deleteproduct)
 below.
 
@@ -689,7 +673,7 @@ help
 
 <div style="height: 30px;"></div>
 
-#### Adding a command alias : `alias`
+#### Adding a command shortcut : `alias`
 
 Creates a shortcut to an existing command (excluding `alias`).
 
@@ -711,7 +695,7 @@ Example:
 
 <div style="height: 30px;"></div>
 
-#### Deleting a command alias : `deletealias`
+#### Deleting a command shortcut : `deletealias`
 
 Removes an existing shortcut.
 
@@ -723,12 +707,6 @@ deletealias ALIAS
 Example:
 * `deletealias ls` removes `ls` as an alias
 
-<box type="info" seamless>
-
-**Expected output:**
-Removes alias given.
-
-</box>
 
 <div style="height: 30px;"></div>
 
@@ -872,9 +850,6 @@ exit
 
 * Open the folder where VendorVault's `.jar` file is located.
 * Inside, locate the `data` folder, which contains `.json` files.
-  * `addressbook.json`: stores contact details
-  * `inventory.json`: stores product details
-  * `aliases.json`: stores alias details
 * Copy the `data` folder to a secure location of your choice
 
 </panel>
@@ -892,8 +867,6 @@ Please follow this format carefully. Files that do not adhere to the required fo
 
 <panel header="`addressbook.json`: stores contact details" type="seamless">
 
-This is the json for address book:
-
 ```json
 {
   "persons" : [ {
@@ -909,8 +882,6 @@ This is the json for address book:
 </panel>
 
 <panel header="`inventory.json`: stores product details" type="seamless">
-
-This is the json for inventory:
 
 ```json
 {
@@ -929,8 +900,6 @@ This is the json for inventory:
 
 <panel header="`aliases.json`: stores alias details" type="seamless">
 
-This is the json for aliases:
-
 ```json
 {
   "aliasList" : [ {
@@ -946,10 +915,10 @@ This is the json for aliases:
 
 <panel header="I edited the data file directly and now VendorVault is not working. What should I do?" type="seamless">
 
-If you edited the data file and it caused VendorVault to behave unexpectedly, you can try the following steps:
+You can try the following steps:
 
 1. Restore from backup: If you made a backup of the data file before editing, you can restore the original data file by replacing the edited data files in the data folder with the backup.
-2. Start with a new data file: If you do not have a backup, you can delete the existing data file (or move it to a different location for safekeeping) and start VendorVault again. This will create a new, empty data file.
+2. Start with a new data file: If you do not have a backup, you can delete the existing data file (or move it to a different location for safekeeping) and start VendorVault again. After entering a valid command, this will create a new, sample data file.
 
 </panel>
 
@@ -1204,6 +1173,25 @@ Use this section when `deleteproduct` fails.
 |---------------------------------------|---------------------------------------------------|---------------------------------------------------------------------------|
 | No identifier provided                | `Invalid command format! ...`                     | Provide the product identifier: `deleteproduct IDENTIFIER`.               |
 | Identifier does not match any product | `No product found with the specified identifier.` | Ensure the product exists in the active list. Use `listproduct` to check. |
+
+<div style="height: 30px;"></div>
+
+### Managing general commands
+<div style="height: 30px;"></div>
+
+#### Troubleshooting `alias`
+
+Use this section when `alias` fails.
+
+| Scenario                         | Message shown                                                  | How to fix                                                             |
+|----------------------------------|----------------------------------------------------------------|------------------------------------------------------------------------|
+| No new alias provided            | `Message is formatted wrongly. ...`                            | Provide the new alias: `alias ORIGINAL_COMMAND NEW_ALIAS`              |
+| Original Command does not exists | `The original command (ORIGINAL COMMAND) does not exists. ...` | Ensure the original command is in the `help` page.                     |
+| Alias has been used              | `This alias already exists. ...`                               | Provide a new alias, or use `deletealias` to delete the current alias. |
+
+
+
+
 
 <div style="height: 30px;"></div>
 
