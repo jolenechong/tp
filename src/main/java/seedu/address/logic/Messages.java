@@ -27,7 +27,7 @@ public class Messages {
     public static final String MESSAGE_DUPLICATE_FIELDS =
                 "Multiple values specified for the following single-valued field(s): ";
     public static final String MESSAGE_DUPLICATE_PERSON = "This vendor contact already exists "
-            + "with the same email. ";
+            + "with the same email (name: %s, email: %s).";
     public static final String MESSAGE_DUPLICATE_PRODUCT = "This product already exists "
             + "with the same identifier. ";
     public static final String MESSAGE_DUPLICATE_ALIAS = "This alias already exists "

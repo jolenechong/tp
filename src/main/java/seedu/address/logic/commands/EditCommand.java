@@ -169,7 +169,6 @@ public class EditCommand extends Command {
         model.updateFilteredPersonList(predicate);
         return new CommandResult(CONFIRMATION_CLEAR_TAGS_MESSAGE);
     }
-
     private String buildWarnings(Person editedPerson, Person personToEdit, Model model, String originalWarnings) {
         StringBuilder warningsBuilder = new StringBuilder(originalWarnings);
         appendSimilarContactWarnings(editedPerson, personToEdit, model, warningsBuilder, editPersonDescriptor);
@@ -182,7 +181,8 @@ public class EditCommand extends Command {
                 continue;
             }
             if (editedPerson.isSamePerson(existingPerson)) {
-                throw new CommandException(MESSAGE_DUPLICATE_PERSON);
+                throw new CommandException(
+                        String.format(MESSAGE_DUPLICATE_PERSON, existingPerson.getName(), existingPerson.getEmail()));
             }
         }
     }

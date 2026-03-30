@@ -110,7 +110,7 @@ public class AddCommand extends Command {
 
     private void validateNoDuplicate(Model model) throws CommandException {
         if (model.hasPerson(toAdd)) {
-            throw new CommandException(MESSAGE_DUPLICATE_PERSON);
+            throw new CommandException(String.format(MESSAGE_DUPLICATE_PERSON, toAdd.getName(), toAdd.getEmail()));
         }
     }
 

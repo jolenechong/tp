@@ -178,7 +178,7 @@ When in doubt, **archive, don't delete.**
 
 #### Adding a contact: `add`
 
-Adds a vendor contact.
+Adds a vendor contact. Emails are automatically converted to lowercase to avoid duplicates.
 
 Format:
 
