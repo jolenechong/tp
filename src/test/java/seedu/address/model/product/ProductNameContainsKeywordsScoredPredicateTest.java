@@ -114,6 +114,21 @@ class ProductNameContainsKeywordsScoredPredicateTest {
     }
 
     @Test
+    void createProductComparator_multiKeywordRanking_prefersHigherTierThenQuality() {
+        ProductNameContainsKeywordsScoredPredicate predicate =
+                new ProductNameContainsKeywordsScoredPredicate(Arrays.asList("ali", "cake"));
+
+        Product exact = new ProductBuilder().withIdentifier("SKU-EXACT").withName("Cake Mix").build();
+        Product prefix = new ProductBuilder().withIdentifier("SKU-PREFIX").withName("Alice Crackers").build();
+        Product substring = new ProductBuilder().withIdentifier("SKU-SUB").withName("Tali Watch").build();
+
+        List<Product> products = new ArrayList<>(Arrays.asList(substring, prefix, exact));
+        products.sort(predicate.createProductComparator());
+
+        assertEquals(Arrays.asList(exact, prefix, substring), products);
+    }
+
+    @Test
     void toStringMethod() {
         List<String> keywords = List.of("keyword1", "keyword2");
         ProductNameContainsKeywordsScoredPredicate predicate = new ProductNameContainsKeywordsScoredPredicate(keywords);
