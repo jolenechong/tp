@@ -22,6 +22,7 @@ public enum CommandType {
     HELP(HelpCommand.COMMAND_WORD),
     LIST(ListCommand.COMMAND_WORD),
     LISTPRODUCT(ListProductsCommand.COMMAND_WORD),
+    LISTALL(ListAllCommand.COMMAND_WORD),
     REDO(RedoCommand.COMMAND_WORD),
     RESTORE(RestoreCommand.COMMAND_WORD),
     RESTOREPRODUCT(RestoreProductCommand.COMMAND_WORD),
