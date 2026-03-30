@@ -20,7 +20,6 @@ public class InventoryCommandTest {
         assertEquals(FindProductCommand.COMMAND_WORD, InventoryCommand.FINDPRODUCT.getCommandWord());
         assertEquals(ListProductsCommand.COMMAND_WORD, InventoryCommand.LISTPRODUCT.getCommandWord());
         assertEquals(RestoreProductCommand.COMMAND_WORD, InventoryCommand.RESTOREPRODUCT.getCommandWord());
-        assertEquals(SetThresholdCommand.COMMAND_WORD, InventoryCommand.SETTHRESHOLD.getCommandWord());
     }
 
     @Test

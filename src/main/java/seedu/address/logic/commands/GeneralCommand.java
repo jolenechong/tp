@@ -13,6 +13,8 @@ public enum GeneralCommand implements CommandWord {
     HELP(HelpCommand.COMMAND_WORD, HelpCommand.COMMAND_USAGE, HelpCommand.COMMAND_DESCRIPTION),
     LISTALL(ListAllCommand.COMMAND_WORD, ListAllCommand.COMMAND_USAGE, ListAllCommand.COMMAND_DESCRIPTION),
     REDO(RedoCommand.COMMAND_WORD, RedoCommand.COMMAND_USAGE, RedoCommand.COMMAND_DESCRIPTION),
+    SETTHRESHOLD(SetThresholdCommand.COMMAND_WORD,
+            SetThresholdCommand.COMMAND_USAGE, SetThresholdCommand.COMMAND_DESCRIPTION),
     UNDO(UndoCommand.COMMAND_WORD, UndoCommand.COMMAND_USAGE, UndoCommand.COMMAND_DESCRIPTION);
 
     private final String commandWord;

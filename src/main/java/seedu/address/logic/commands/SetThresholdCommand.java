@@ -14,7 +14,7 @@ public class SetThresholdCommand extends Command {
 
     public static final String COMMAND_WORD = "threshold";
     public static final String COMMAND_USAGE = COMMAND_WORD + " THRESHOLD";
-    public static final String COMMAND_DESCRIPTION = "Sets the default restock threshold.";
+    public static final String COMMAND_DESCRIPTION = "Changes the default restock threshold.";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": " + COMMAND_DESCRIPTION + "\n"

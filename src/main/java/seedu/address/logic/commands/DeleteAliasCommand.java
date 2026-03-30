@@ -5,6 +5,7 @@ import static seedu.address.logic.Messages.MESSAGE_ALIAS_IS_NOT_FOUND;
 
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.alias.Alias;
 import seedu.address.model.alias.exceptions.NoAliasFoundInAliasListException;
 
 /**
@@ -30,13 +31,15 @@ public class DeleteAliasCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+        Alias deletingAlias;
         try {
+            deletingAlias = model.findAlias(aliasStr);
             model.removeAlias(aliasStr);
         } catch (NoAliasFoundInAliasListException e) {
             throw new CommandException(MESSAGE_ALIAS_IS_NOT_FOUND + "\n" + MESSAGE_FIND_EXISTING_ALIAS);
         }
 
-        return new CommandResult(String.format(MESSAGE_DELETE_ALIAS_SUCCESS, aliasStr));
+        return new CommandResult(String.format(MESSAGE_DELETE_ALIAS_SUCCESS, deletingAlias));
     }
 
     @Override

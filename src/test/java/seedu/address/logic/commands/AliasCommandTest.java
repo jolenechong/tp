@@ -84,7 +84,7 @@ public class AliasCommandTest {
         CommandResult result = new AliasCommand().execute(modelStub);
 
         String expected = AliasCommand.MESSAGE_DISPLAY_ALIAS_LIST
-                + "1)" + ListCommand.COMMAND_WORD + "->" + "ls" + "\n";
+                + "1) " + ListCommand.COMMAND_WORD + " -> " + "ls" + "\n";
         assertEquals(expected, result.getFeedbackToUser());
     }
 
