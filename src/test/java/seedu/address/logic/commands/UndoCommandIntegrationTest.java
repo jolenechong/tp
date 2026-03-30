@@ -45,9 +45,8 @@ public class UndoCommandIntegrationTest {
                 new ModelManager(new VendorVault(getTypicalAddressBook(), getTypicalInventory()),
                         new UserPrefs(), new Aliases());
 
-        String addSuccessSummary = String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(person));
-        String expectedUndoMessage = UndoCommand.MESSAGE_SUCCESS
-                + String.format(UndoCommand.MESSAGE_UNDID_ACTION, addSuccessSummary);
+        String addActionSummary = String.format(AddCommand.MESSAGE_ACTION_SUMMARY, Messages.format(person));
+        String expectedUndoMessage = UndoCommand.MESSAGE_SUCCESS + addActionSummary;
 
         assertCommandSuccess(
                 new UndoCommand(),

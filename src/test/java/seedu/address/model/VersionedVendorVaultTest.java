@@ -55,7 +55,7 @@ public class VersionedVendorVaultTest {
 
         versionedVendorVault.commit(state, actionSummary);
 
-        assertEquals(actionSummary, versionedVendorVault.undo(state).orElseThrow());
+        assertEquals(actionSummary, versionedVendorVault.undo(state));
     }
 
     @Test
@@ -88,7 +88,7 @@ public class VersionedVendorVaultTest {
         versionedVendorVault.commit(state, actionSummary);
         versionedVendorVault.undo(state);
 
-        assertEquals(actionSummary, versionedVendorVault.redo(state).orElseThrow());
+        assertEquals(actionSummary, versionedVendorVault.redo(state));
     }
 
     @Test

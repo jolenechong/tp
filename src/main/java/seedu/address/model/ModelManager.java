@@ -352,7 +352,7 @@ public class ModelManager implements Model {
 
 
     @Override
-    public Optional<String> undoVendorVault() {
+    public String undoVendorVault() {
         return versionedVendorVault.undo(vendorVault);
     }
 
@@ -362,7 +362,7 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public Optional<String> redoVendorVault() {
+    public String redoVendorVault() {
         return versionedVendorVault.redo(vendorVault);
     }
 

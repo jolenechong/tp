@@ -741,6 +741,12 @@ Format:
 undo
 ```
 
+<box type="info" seamless>
+
+You can undo or redo actions like `add`, `edit`, `delete`, `clear`, `archive`, `restore` for vendors and products. Settings changes such as `alias` or `threshold` cannot be undone or redone.
+
+</box>
+
 <div style="height: 30px;"></div>
 
 #### Redoing the previous undone change : `redo`

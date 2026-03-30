@@ -18,8 +18,9 @@ public class ClearCommand extends Command {
 
     public static final String MESSAGE_SUCCESS = "All vendor contacts cleared!";
     public static final String CONFIRMATION_CLEAR_MESSAGE =
-            "Confirm (y) you want to clear ALL vendor contacts (use `undo` to revert):";
+            "Confirm (y) you want to clear ALL vendor contacts:";
     public static final String MESSAGE_CLEAR_FAILURE = "Clear contact operation cancelled";
+    public static final String MESSAGE_ACTION_SUMMARY = "clearing of all products";
 
     private PendingConfirmation pendingConfirmation = new PendingConfirmation();
 
@@ -57,7 +58,7 @@ public class ClearCommand extends Command {
      */
     private CommandResult doClear(Model model) {
         model.setAddressBook(new AddressBook());
-        model.commitVendorVault(MESSAGE_SUCCESS);
+        model.commitVendorVault(MESSAGE_ACTION_SUMMARY);
         return new CommandResult(MESSAGE_SUCCESS);
     }
 

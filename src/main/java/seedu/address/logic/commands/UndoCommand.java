@@ -1,7 +1,5 @@
 package seedu.address.logic.commands;
 
-import java.util.Optional;
-
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 
@@ -13,7 +11,7 @@ public class UndoCommand extends Command {
     public static final String COMMAND_USAGE = COMMAND_WORD;
     public static final String COMMAND_DESCRIPTION = "Undoes previous change.";
 
-    public static final String MESSAGE_SUCCESS = "Undo successful, reverted this previous change";
+    public static final String MESSAGE_SUCCESS = "Undo successful:\nReverted the ";
     public static final String MESSAGE_FAILURE = "Nothing to undo.";
     public static final String MESSAGE_UNDID_ACTION = ": \n%1$s";
 
@@ -22,11 +20,8 @@ public class UndoCommand extends Command {
         if (!model.canUndoVendorVault()) {
             throw new CommandException(MESSAGE_FAILURE);
         }
-        Optional<String> undoneActionSummary = model.undoVendorVault();
-        String message = undoneActionSummary
-                .map(summary -> MESSAGE_SUCCESS + String.format(MESSAGE_UNDID_ACTION, summary))
-                .orElse(MESSAGE_SUCCESS);
-        return new CommandResult(message);
+        String undoneActionSummary = model.undoVendorVault();
+        return new CommandResult(MESSAGE_SUCCESS + undoneActionSummary);
     }
 
     @Override

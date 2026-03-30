@@ -237,7 +237,7 @@ public interface Model {
     /**
      * Undoes the last committed state in vendor vault, reverting to the previous state.
      */
-    Optional<String> undoVendorVault();
+    String undoVendorVault();
 
     /**
      * Returns true if there are states in vendor vault that can be undone.
@@ -247,7 +247,7 @@ public interface Model {
     /**
      * Redoes the last undone state in the vendor vault, restoring the vendor vault to the state before the undo.
      */
-    Optional<String> redoVendorVault();
+    String redoVendorVault();
 
     /**
      * Returns true if there are states in the vendor vault that can be redone.

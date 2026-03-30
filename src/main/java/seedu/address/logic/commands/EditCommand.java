@@ -66,6 +66,7 @@ public class EditCommand extends Command {
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Contact: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
+    public static final String MESSAGE_ACTION_SUMMARY = "edit of contact: %1$s";
 
     /**
      * If tags weren't meant to be cleared, it's likely that they entered the Edit command wrong,
@@ -155,7 +156,7 @@ public class EditCommand extends Command {
                 : CommandResult.FEEDBACK_TYPE_WARN;
 
         return new CommandResult(
-                formatSuccessPart(editedPerson) + formattedWarnings,
+                String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)) + formattedWarnings,
                 feedbackType);
     }
 
@@ -224,11 +225,7 @@ public class EditCommand extends Command {
         }
 
         model.updateFilteredPersonList(PREDICATE_SHOW_ACTIVE_PERSONS);
-        model.commitVendorVault(formatSuccessPart(editedPerson));
-    }
-
-    private String formatSuccessPart(Person editedPerson) {
-        return String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+        model.commitVendorVault(String.format(MESSAGE_ACTION_SUMMARY, Messages.format(editedPerson)));
     }
 
     @Override

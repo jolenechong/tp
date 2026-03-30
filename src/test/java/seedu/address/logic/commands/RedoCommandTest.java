@@ -50,9 +50,8 @@ public class RedoCommandTest {
                                 new UserPrefs(), new Aliases());
         new AddCommand(person).execute(expectedModel);
 
-        String addSuccessSummary = String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(person));
-        String expectedRedoMessage = RedoCommand.MESSAGE_SUCCESS
-                + String.format(RedoCommand.MESSAGE_REDID_ACTION, addSuccessSummary);
+        String addActionSummary = String.format(AddCommand.MESSAGE_ACTION_SUMMARY, Messages.format(person));
+        String expectedRedoMessage = RedoCommand.MESSAGE_SUCCESS + addActionSummary;
 
         assertCommandSuccess(
                 new RedoCommand(),

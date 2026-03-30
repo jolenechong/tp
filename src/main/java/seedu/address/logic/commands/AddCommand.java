@@ -47,6 +47,7 @@ public class AddCommand extends Command {
             + PREFIX_TAG + "electronics ";
 
     public static final String MESSAGE_SUCCESS = "New contact added: %1$s";
+    public static final String MESSAGE_ACTION_SUMMARY = "addition of contact: %1$s";
 
     private final Person toAdd;
     private final String initialWarnings;
@@ -75,16 +76,12 @@ public class AddCommand extends Command {
         validateNoDuplicate(model);
 
         String allWarnings = buildWarnings(model, initialWarnings);
-        String successPart = formatSuccessPart();
 
         model.addPerson(toAdd);
-        model.commitVendorVault(successPart);
+        model.commitVendorVault(String.format(MESSAGE_ACTION_SUMMARY, Messages.format(toAdd)));
 
-        return buildCommandResult(allWarnings, successPart);
-    }
-
-    private String formatSuccessPart() {
-        return String.format(MESSAGE_SUCCESS, Messages.format(toAdd));
+        return buildCommandResult(allWarnings,
+                String.format(MESSAGE_SUCCESS, Messages.format(toAdd)));
     }
 
     private CommandResult buildCommandResult(String allWarnings, String successPart) {
