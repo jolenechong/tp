@@ -51,9 +51,9 @@
                             <MenuItem text="Exit" onAction="#handleExit"/>
                         </Menu>
 
-                        <Menu text="Help">
+                        <Menu text="Help" >
                             <MenuItem fx:id="helpMenuItem"
-                                      text="Help"
+                                      text="Command Summary"
                                       onAction="#handleHelp"/>
                         </Menu>
 
