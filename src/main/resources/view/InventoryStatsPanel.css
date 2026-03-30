@@ -85,7 +85,9 @@
 }
 
 .mini-donut-active {
-    -fx-stroke: #4bac80;
+    /* -fx-stroke: #4b8ac8; */
+    /* -fx-stroke: #3f7fbf; */
+    -fx-stroke: #5a9bd4;
 }
 
 /* ── Main donut ───────────────────────── */

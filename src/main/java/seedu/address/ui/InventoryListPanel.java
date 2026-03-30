@@ -21,12 +21,13 @@ import seedu.address.model.product.Product;
 
 /**
  * Displays the inventory list in the right panel.
+ * Supports both filtered and unfiltered views with dynamic layout adjustments.
  */
 public class InventoryListPanel extends UiPart<Region> {
 
     private static final String FXML = "InventoryListPanel.fxml";
 
-    // ── CSS class names (must match InventoryListPanel.css) ───────────────────
+    // ── CSS class names ──────────────────────────────────────────────────────
     private static final String STYLE_HEADER_LABEL = "inventory-header-label";
     private static final String STYLE_ID_LABEL = "inventory-id-label";
     private static final String STYLE_NAME_LABEL = "inventory-name-label";
@@ -36,16 +37,13 @@ public class InventoryListPanel extends UiPart<Region> {
     private static final String STYLE_BADGE_LOW = "stock-badge-low";
     private static final String STYLE_BADGE_NORMAL = "stock-badge-normal";
 
-    // ── Layout constants ──────────────────────────────────────────────────────
+    // ── Layout constants ─────────────────────────────────────────────────────
     private static final double COL_SPACING = 16;
     private static final double ROW_PAD_H = 16;
     private static final double ROW_PAD_V = 10;
-    private static final double ID_WIDTH_UNFILTERED = 90;
-    private static final double ID_WIDTH_FILTERED = 70;
-    private static final double QTY_WIDTH = 80;
-    private static final double PRODUCT_MIN = 100;
-    private static final double PRODUCT_MIN_FILTERED = 160;
-    private static final double EMAIL_MIN = 100;
+    private static final double ID_WIDTH = 45;
+    private static final double QTY_WIDTH = 95;
+    private static final double FLEX_COL_PREF = 120;
     private static final double SCROLLBAR_RESERVE = 18;
 
     private final BooleanProperty isFiltered = new SimpleBooleanProperty(false);
@@ -54,7 +52,6 @@ public class InventoryListPanel extends UiPart<Region> {
     private final Label headerProduct;
     private final Label headerVendorEmail;
     private final Label headerQty;
-    private final Region headerSpacer;
 
     @FXML private ListView<Product> inventoryListView;
     @FXML private VBox statsContainer;
@@ -63,15 +60,15 @@ public class InventoryListPanel extends UiPart<Region> {
     /**
      * Creates an {@code InventoryListPanel}.
      *
-     * @param productList List of currently displayed products
-     * @param activePersonList List of active persons
-     * @param allPersonList List of all persons
-     * @param allProductList List of all products
+     * @param productList The currently displayed (possibly filtered) product list.
+     * @param activePersonList List of active persons.
+     * @param allPersonList Full list of persons.
+     * @param allProductList Full list of products (used to determine filtering state).
      */
     public InventoryListPanel(ObservableList<Product> productList,
-                              ObservableList<Person> activePersonList,
-                              ObservableList<Person> allPersonList,
-                              ObservableList<Product> allProductList) {
+                             ObservableList<Person> activePersonList,
+                             ObservableList<Person> allPersonList,
+                             ObservableList<Product> allProductList) {
         super(FXML);
 
         getRoot().getStylesheets().add(
@@ -82,44 +79,38 @@ public class InventoryListPanel extends UiPart<Region> {
         statsContainer.getChildren().setAll(statsPanel.getRoot());
 
         headerId = makeHeaderLabel("ID");
-        headerId.setMinWidth(ID_WIDTH_UNFILTERED);
-        headerId.setPrefWidth(ID_WIDTH_UNFILTERED);
-        headerId.setMaxWidth(ID_WIDTH_UNFILTERED);
+        applyFixedWidth(headerId, ID_WIDTH);
 
         headerProduct = makeHeaderLabel("PRODUCT");
-        headerProduct.setMinWidth(PRODUCT_MIN);
-
-        headerSpacer = new Region();
-        headerSpacer.setMinWidth(0);
+        applyFlexWidth(headerProduct);
 
         headerVendorEmail = makeHeaderLabel("VENDOR");
-        headerVendorEmail.setMinWidth(EMAIL_MIN);
+        applyFlexWidth(headerVendorEmail);
 
         headerQty = makeHeaderLabel("QUANTITY");
-        headerQty.setMinWidth(QTY_WIDTH);
-        headerQty.setPrefWidth(QTY_WIDTH);
-        headerQty.setMaxWidth(QTY_WIDTH);
+        applyFixedWidth(headerQty, QTY_WIDTH);
         headerQty.setAlignment(Pos.CENTER_LEFT);
 
         headerRow.setSpacing(COL_SPACING);
         headerRow.setAlignment(Pos.CENTER_LEFT);
         headerRow.setPadding(new Insets(ROW_PAD_V, ROW_PAD_H, ROW_PAD_V, ROW_PAD_H));
-        headerRow.getChildren().addAll(
-                headerId, headerProduct, headerSpacer, headerVendorEmail, headerQty);
+        headerRow.getChildren().addAll(headerId, headerProduct, headerVendorEmail, headerQty);
+
+        VBox parentVBox = (VBox) headerRow.getParent();
+        headerRow.prefWidthProperty().bind(
+                parentVBox.widthProperty().subtract(SCROLLBAR_RESERVE));
+        headerRow.maxWidthProperty().bind(
+                parentVBox.widthProperty().subtract(SCROLLBAR_RESERVE));
 
         isFiltered.set(productList.size() < allProductList.size());
-        applyColumnState(isFiltered.get());
 
-        productList.addListener((ListChangeListener<Product>) c ->
-                isFiltered.set(productList.size() < allProductList.size()));
-
-        isFiltered.addListener((obs, was, now) -> {
-            applyColumnState(now);
-            inventoryListView.refresh();
+        productList.addListener((ListChangeListener<Product>) c -> {
+            isFiltered.set(productList.size() < allProductList.size());
         });
 
-        inventoryListView.widthProperty().addListener((obs, old, w) ->
-                syncHeaderWidth(w.doubleValue()));
+        isFiltered.addListener((obs, was, now) -> {
+            inventoryListView.refresh();
+        });
 
         SortedList<Product> sorted =
                 new SortedList<>(productList, this::compareInventoryItems);
@@ -128,54 +119,35 @@ public class InventoryListPanel extends UiPart<Region> {
         inventoryListView.setFocusTraversable(false);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-
-    private void syncHeaderWidth(double listViewWidth) {
-        double w = listViewWidth - SCROLLBAR_RESERVE;
-        headerRow.setPrefWidth(w);
-        headerRow.setMaxWidth(w);
+    /**
+     * Applies fixed width constraints to a label.
+     */
+    private void applyFixedWidth(Label l, double w) {
+        l.setMinWidth(w);
+        l.setPrefWidth(w);
+        l.setMaxWidth(w);
+        HBox.setHgrow(l, Priority.NEVER);
     }
 
-    private void applyColumnState(boolean filtered) {
-        if (filtered) {
-            headerId.setMinWidth(ID_WIDTH_FILTERED);
-            headerId.setPrefWidth(ID_WIDTH_FILTERED);
-            headerId.setMaxWidth(ID_WIDTH_FILTERED);
-
-            headerSpacer.setVisible(false);
-            headerSpacer.setManaged(false);
-            HBox.setHgrow(headerSpacer, null);
-
-            headerVendorEmail.setVisible(true);
-            headerVendorEmail.setManaged(true);
-            HBox.setHgrow(headerVendorEmail, Priority.ALWAYS);
-            headerVendorEmail.setMaxWidth(Double.MAX_VALUE);
-
-            HBox.setHgrow(headerProduct, Priority.NEVER);
-            headerProduct.setPrefWidth(PRODUCT_MIN_FILTERED);
-            headerProduct.setMaxWidth(PRODUCT_MIN_FILTERED * 2);
-        } else {
-            headerId.setMinWidth(ID_WIDTH_UNFILTERED);
-            headerId.setPrefWidth(ID_WIDTH_UNFILTERED);
-            headerId.setMaxWidth(ID_WIDTH_UNFILTERED);
-
-            headerSpacer.setVisible(true);
-            headerSpacer.setManaged(true);
-            HBox.setHgrow(headerSpacer, Priority.ALWAYS);
-
-            headerVendorEmail.setVisible(false);
-            headerVendorEmail.setManaged(false);
-            HBox.setHgrow(headerVendorEmail, null);
-
-            HBox.setHgrow(headerProduct, Priority.NEVER);
-            headerProduct.setPrefWidth(PRODUCT_MIN);
-            headerProduct.setMaxWidth(Double.MAX_VALUE);
-        }
+    /**
+     * Applies flexible width constraints to a label.
+     */
+    private void applyFlexWidth(Label l) {
+        l.setMinWidth(0);
+        l.setPrefWidth(FLEX_COL_PREF);
+        l.setMaxWidth(Double.MAX_VALUE);
+        l.setWrapText(false);
+        l.setTextOverrun(OverrunStyle.ELLIPSIS);
+        HBox.setHgrow(l, Priority.ALWAYS);
     }
 
+    /**
+     * Comparator that prioritizes low-stock items, then sorts by quantity.
+     */
     private int compareInventoryItems(Product a, Product b) {
         boolean lowA = a.getQuantity().value <= a.getRestockThreshold().value;
         boolean lowB = b.getQuantity().value <= b.getRestockThreshold().value;
+
         if (lowA && !lowB) {
             return -1;
         }
@@ -185,8 +157,9 @@ public class InventoryListPanel extends UiPart<Region> {
         return Integer.compare(a.getQuantity().value, b.getQuantity().value);
     }
 
-    // ── Cell factory ──────────────────────────────────────────────────────────
-
+    /**
+     * Creates a custom ListCell for rendering products.
+     */
     private ListCell<Product> createInventoryCell() {
         return new ListCell<>() {
             {
@@ -208,8 +181,7 @@ public class InventoryListPanel extends UiPart<Region> {
                     return;
                 }
 
-                boolean filtered = isFiltered.get();
-                HBox row = buildRow(item, filtered);
+                HBox row = buildRow(item, isFiltered.get());
                 row.prefWidthProperty().bind(
                         getListView().widthProperty().subtract(SCROLLBAR_RESERVE));
                 row.maxWidthProperty().bind(
@@ -221,82 +193,100 @@ public class InventoryListPanel extends UiPart<Region> {
         };
     }
 
-    // ── Row builders ──────────────────────────────────────────────────────────
-
+    /**
+     * Builds a row representing a single product.
+     */
     private HBox buildRow(Product item, boolean filtered) {
-        Label idLabel = buildIdLabel(item, filtered);
-        Label nameLabel = buildNameLabel(item, filtered);
-        HBox qtyBox = buildQtyBox(item, filtered);
-
-        HBox row;
-        if (filtered) {
-            row = new HBox(idLabel, nameLabel, buildEmailLabel(item), qtyBox);
-        } else {
-            Region spacer = new Region();
-            spacer.setMinWidth(0);
-            HBox.setHgrow(spacer, Priority.ALWAYS);
-            row = new HBox(idLabel, nameLabel, spacer, qtyBox);
-        }
-
+        HBox row = new HBox(
+                buildIdLabel(item, filtered),
+                buildNameLabel(item, filtered),
+                buildEmailLabel(item, filtered),
+                buildQtyBox(item, filtered)
+        );
         row.setSpacing(COL_SPACING);
         row.setAlignment(Pos.CENTER_LEFT);
         row.setPadding(new Insets(ROW_PAD_V, ROW_PAD_H, ROW_PAD_V, ROW_PAD_H));
         return row;
     }
 
+    /**
+     * Builds ID label.
+     */
     private Label buildIdLabel(Product item, boolean filtered) {
-        double idW = filtered ? ID_WIDTH_FILTERED : ID_WIDTH_UNFILTERED;
         Label label = new Label(item.getIdentifier().toString());
-        label.setMinWidth(idW);
-        label.setPrefWidth(idW);
-        label.setMaxWidth(idW);
         label.getStyleClass().add(STYLE_ID_LABEL);
-        if (filtered) {
-            label.setWrapText(true);
-        } else {
-            label.setTextOverrun(OverrunStyle.ELLIPSIS);
-        }
+        label.setMinWidth(ID_WIDTH);
+        label.setPrefWidth(ID_WIDTH);
+        label.setMaxWidth(ID_WIDTH);
+        HBox.setHgrow(label, Priority.NEVER);
+        label.setWrapText(true);
         return label;
     }
 
+    /**
+     * Builds product name label with wrapping/ellipsis behavior.
+     */
     private Label buildNameLabel(Product item, boolean filtered) {
         Label label = new Label(item.getName().toString());
-        label.setMinWidth(PRODUCT_MIN);
         label.getStyleClass().add(STYLE_NAME_LABEL);
+        label.setMinWidth(0);
+        label.setPrefWidth(FLEX_COL_PREF);
+        label.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(label, Priority.ALWAYS);
+
         if (filtered) {
             label.setWrapText(true);
-            label.setPrefWidth(PRODUCT_MIN_FILTERED);
-            label.setMaxWidth(PRODUCT_MIN_FILTERED);
-            HBox.setHgrow(label, Priority.NEVER);
+            label.setTextOverrun(OverrunStyle.CLIP);
         } else {
             label.setWrapText(false);
             label.setTextOverrun(OverrunStyle.ELLIPSIS);
-            label.setMaxWidth(Double.MAX_VALUE);
-            HBox.setHgrow(label, Priority.NEVER);
         }
+
         return label;
     }
 
-    private Label buildEmailLabel(Product item) {
-        Label label = new Label(item.getVendorEmail().map(Object::toString).orElse("\u2014"));
-        label.setMinWidth(EMAIL_MIN);
-        label.setMaxWidth(Double.MAX_VALUE);
-        label.setWrapText(true);
+    /**
+     * Builds vendor email label.
+     */
+    private Label buildEmailLabel(Product item, boolean filtered) {
+        Label label = new Label(item.getVendorEmail()
+                .map(Object::toString)
+                .orElse("\u2014"));
+
         label.getStyleClass().add(STYLE_EMAIL_LABEL);
+        label.setMinWidth(0);
+        label.setPrefWidth(FLEX_COL_PREF);
+        label.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(label, Priority.ALWAYS);
+
+        if (filtered) {
+            label.setWrapText(true);
+            label.setTextOverrun(OverrunStyle.CLIP);
+        } else {
+            label.setWrapText(false);
+            label.setTextOverrun(OverrunStyle.ELLIPSIS);
+        }
+
         return label;
     }
 
+    /**
+     * Builds quantity badge box.
+     */
     private HBox buildQtyBox(Product item, boolean filtered) {
         int qty = item.getQuantity().value;
         int threshold = item.getRestockThreshold().value;
+
         String qtyText = filtered
                 ? qty + " (" + threshold + ")"
                 : String.valueOf(qty);
 
         Label badge = new Label(qtyText);
-        badge.getStyleClass().addAll(STYLE_BADGE,
-                qty <= threshold ? STYLE_BADGE_LOW : STYLE_BADGE_NORMAL);
+        badge.getStyleClass().addAll(
+                STYLE_BADGE,
+                qty <= threshold ? STYLE_BADGE_LOW : STYLE_BADGE_NORMAL
+        );
+        badge.setMinWidth(Region.USE_PREF_SIZE);
 
         HBox box = new HBox(badge);
         box.setMinWidth(QTY_WIDTH);
@@ -304,11 +294,13 @@ public class InventoryListPanel extends UiPart<Region> {
         box.setMaxWidth(QTY_WIDTH);
         box.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(box, Priority.NEVER);
+
         return box;
     }
 
-    // ── Utilities ─────────────────────────────────────────────────────────────
-
+    /**
+     * Creates a styled header label.
+     */
     private Label makeHeaderLabel(String text) {
         Label l = new Label(text);
         l.getStyleClass().add(STYLE_HEADER_LABEL);
