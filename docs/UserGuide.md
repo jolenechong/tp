@@ -717,12 +717,6 @@ deletealias ALIAS
 Example:
 * `deletealias ls` removes `ls` as an alias
 
-<box type="info" seamless>
-
-**Expected output:**
-Removes alias given.
-
-</box>
 
 <div style="height: 30px;"></div>
 
