@@ -8,10 +8,13 @@ import static seedu.address.logic.commands.CommandTestUtil.INVALID_EMAIL_WARN;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_NAME_WARN;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_PHONE_WARN;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.assertExactlyOneWarning;
+import static seedu.address.logic.commands.CommandTestUtil.assertSimilarAddressWarning;
+import static seedu.address.logic.commands.CommandTestUtil.assertSimilarNameWarning;
+import static seedu.address.logic.commands.CommandTestUtil.assertSimilarPhoneWarning;
 import static seedu.address.logic.commands.CommandUtil.SEPARATOR_NEW_LINE;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_ADDRESS;
 import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_NAME;
-import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_PHONE;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 
@@ -46,6 +49,66 @@ import seedu.address.testutil.PersonBuilder;
 
 public class AddCommandTest {
 
+    // -------------------------------------------------------------------------
+    // Person field constants — similar-name tests
+    // -------------------------------------------------------------------------
+    private static final String NAME_JOHN_DOE = "John Doe";
+    private static final String NAME_JOHN_DOE_LOWER_SPACED = "john  doe";
+    private static final String NAME_JOHN_DOE_UPPER_SPACED = "John  Doe";
+    private static final String NAME_JOHN_DOE_LOWER = "john doe";
+    private static final String NAME_JOHN_DOE_SMITH = "John Doe Smith";
+    private static final String NAME_JOHN = "James Doe";
+    private static final String EMAIL_JOHN_1 = "john1@example.com";
+    private static final String EMAIL_JOHN_2 = "john2@example.com";
+    private static final String EMAIL_JOHN_NEW = "newjohn@example.com";
+    private static final String EMAIL_DIFFERENT = "different@example.com";
+    private static final String PHONE_JOHN_1 = "11111111";
+    private static final String PHONE_JOHN_2 = "22222222";
+    private static final String PHONE_JOHN_NEW = "33333333";
+    private static final String PHONE_UNIQUE = "99999999";
+
+    // -------------------------------------------------------------------------
+    // Person field constants — similar-address tests
+    // -------------------------------------------------------------------------
+    private static final String NAME_ALICE_ADDR = "Alice";
+    private static final String NAME_DIFFERENT = "Different Name";
+    private static final String NAME_BOB_ADDR = "Bob";
+    private static final String NAME_CHARLIE = "Charlie";
+    private static final String ADDRESS_MAIN_STREET_FULL = "123 Main Street Block A";
+    private static final String ADDRESS_MAIN_STREET = "123 Main Street";
+    private static final String EMAIL_ALICE_1 = "alice1@example.com";
+    private static final String EMAIL_BOB_ADDR = "bob@example.com";
+    private static final String EMAIL_CHARLIE = "charlie@example.com";
+    private static final String PHONE_ALICE_1 = "11111111";
+    private static final String PHONE_BOB_ADDR = "22222222";
+    private static final String PHONE_CHARLIE = "33333333";
+
+    // -------------------------------------------------------------------------
+    // Person field constants — similar-phone tests
+    // -------------------------------------------------------------------------
+    private static final String NAME_ALICE_SUPPLIES = "Alice Supplies";
+    private static final String NAME_BOB_TRADERS = "Bob Traders";
+    private static final String EMAIL_ALICE_SUPPLIES = "alice@example.com";
+    private static final String EMAIL_BOB_TRADERS = "bob@example.com";
+    private static final String PHONE_ALICE_SUPPLIES = "91234567";
+    private static final String PHONE_BOB_TRADERS = "00123456"; // shares suffix with PHONE_ALICE_SUPPLIES
+    private static final String ADDRESS_ALPHA_STREET = "1 Alpha Street";
+    private static final String ADDRESS_BETA_AVENUE = "99 Beta Avenue";
+
+    // -------------------------------------------------------------------------
+    // Person field constants — combined-warnings test
+    // -------------------------------------------------------------------------
+    private static final String NAME_JOHN_DOE_COMBINED = "John Doe";
+    private static final String NAME_MARY_JANE = "Mary Jane";
+    private static final String ADDRESS_OLD_STREET = "1 Old Street";
+    private static final String ADDRESS_CLEMENTI_ROAD = "123 Clementi Road";
+    private static final String EMAIL_JOHN_DOE_COMBINED = "john.doe@example.com";
+    private static final String EMAIL_MARY_JANE = "mary.jane@example.com";
+    private static final String EMAIL_JOHN_NEW_COMBINED = "john.new@example.com";
+    private static final String PHONE_JOHN_DOE_COMBINED = "11111111";
+    private static final String PHONE_MARY_JANE = "22222222";
+    private static final String PHONE_JOHN_NEW_COMBINED = "33333333";
+
     @Test
     public void constructor_nullPerson_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new AddCommand(null));
@@ -76,7 +139,8 @@ public class AddCommandTest {
     }
 
     @Test
-    public void execute_withWarnings_success() throws Exception {
+    public void execute_withFieldFormatWarnings_warningFeedbackReturned() throws Exception {
+        // EP: person with invalid name and email format — both warnings should appear in feedback
         ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
 
         Person validPersonWithWarnings = new PersonBuilder()
@@ -86,9 +150,7 @@ public class AddCommandTest {
                 .withAddress(VALID_ADDRESS_BOB)
                 .build();
 
-        String warnings =
-                Name.MESSAGE_WARN + SEPARATOR_NEW_LINE
-                        + Email.MESSAGE_WARN;
+        String warnings = Name.MESSAGE_WARN + SEPARATOR_NEW_LINE + Email.MESSAGE_WARN;
         AddCommand addCommand = new AddCommand(validPersonWithWarnings, warnings);
 
         CommandResult result = addCommand.execute(modelStub);
@@ -101,217 +163,156 @@ public class AddCommandTest {
         assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
     }
 
+    // -------------------------------------------------------------------------
+    // Similar-name warnings
+    // -------------------------------------------------------------------------
+
     @Test
     public void execute_similarName_warningShown() throws Exception {
+        // EP: exact same words, different casing/spacing → similar name
         ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
-
-        // Add a person first
-        Person existingPerson = new PersonBuilder().withName("John Doe").build();
+        Person existingPerson = new PersonBuilder().withName(NAME_JOHN_DOE).build();
         modelStub.addPerson(existingPerson);
 
-        // Try to add a person with similar name (different case/spacing)
         Person newPerson = new PersonBuilder()
-                .withName("john  doe")
-                .withEmail("different@example.com")
-                .withPhone("99999999")
+                .withName(NAME_JOHN_DOE_LOWER_SPACED)
+                .withEmail(EMAIL_DIFFERENT)
+                .withPhone(PHONE_UNIQUE)
                 .build();
-        AddCommand addCommand = new AddCommand(newPerson);
 
-        CommandResult result = addCommand.execute(modelStub);
-
-        assertTrue(result.getFeedbackToUser().contains(String.format(MESSAGE_SIMILAR_NAME, existingPerson.getName())));
-        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+        assertSimilarNameWarning(new AddCommand(newPerson).execute(modelStub), existingPerson);
     }
 
     @Test
     public void execute_partialNameMatch_warningShown() throws Exception {
+        // EP: new name shares words in existing name → similar name
         ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
-
-        // Add a person first
-        Person existingPerson = new PersonBuilder().withName("John Doe Smith").build();
+        Person existingPerson = new PersonBuilder().withName(NAME_JOHN_DOE_SMITH).build();
         modelStub.addPerson(existingPerson);
 
-        // Try to add a person with partial name match
         Person newPerson = new PersonBuilder()
-                .withName("John Doe")
-                .withEmail("different@example.com")
-                .withPhone("99999999")
+                .withName(NAME_JOHN_DOE)
+                .withEmail(EMAIL_DIFFERENT)
+                .withPhone(PHONE_UNIQUE)
                 .build();
-        AddCommand addCommand = new AddCommand(newPerson);
 
-        CommandResult result = addCommand.execute(modelStub);
-
-        assertTrue(result.getFeedbackToUser().contains(String.format(MESSAGE_SIMILAR_NAME, existingPerson.getName())));
-        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+        assertSimilarNameWarning(new AddCommand(newPerson).execute(modelStub), existingPerson);
     }
 
     @Test
-    public void execute_withSimilarNameAndAddressWarnings_success() throws Exception {
-        ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
-        String duplicateWarnName = "John Doe";
-        String duplicateWarnAddressName = "Mary Jane";
-        String duplicateWarnAddress = "123 Clementi Road";
-
-        // Existing contact for similar-name warning
-        modelStub.addPerson(new PersonBuilder()
-                .withName(duplicateWarnName)
-                .withPhone("11111111")
-                .withEmail("john.doe@example.com")
-                .withAddress("1 Old Street")
-                .build());
-
-        // Existing contact for similar-address warning
-        modelStub.addPerson(new PersonBuilder()
-                .withName(duplicateWarnAddressName)
-                .withPhone("22222222")
-                .withEmail("mary.jane@example.com")
-                .withAddress(duplicateWarnAddress)
-                .build());
-
-        Person toAdd = new PersonBuilder()
-                .withName("John")
-                .withPhone("33333333")
-                .withEmail("john.new@example.com")
-                .withAddress("123 Clementi Road")
-                .build();
-
-        CommandResult result = new AddCommand(toAdd).execute(modelStub);
-
-        assertTrue(result.getFeedbackToUser().contains(String.format(MESSAGE_SIMILAR_NAME, duplicateWarnName)));
-        assertTrue(result.getFeedbackToUser().contains(
-                String.format(MESSAGE_SIMILAR_ADDRESS, duplicateWarnAddressName, duplicateWarnAddress)));
-        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
-    }
-
-    @Test
-    public void execute_multipleSimilarName_onlyOneWarningAppended() throws Exception {
+    public void execute_multipleSimilarNames_onlyOneWarningAppended() throws Exception {
+        // EP: multiple existing contacts match — warning should appear exactly once
         ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
 
-        // Existing contacts
         Person existing1 = new PersonBuilder()
-                .withName("John Doe")
-                .withEmail("john1@example.com")
-                .withPhone("11111111")
-                .build();
+                .withName(NAME_JOHN_DOE).withEmail(EMAIL_JOHN_1).withPhone(PHONE_JOHN_1).build();
         Person existing2 = new PersonBuilder()
-                .withName("john doe") // same name, different casing
-                .withEmail("john2@example.com")
-                .withPhone("22222222")
-                .build();
+                .withName(NAME_JOHN_DOE_LOWER).withEmail(EMAIL_JOHN_2).withPhone(PHONE_JOHN_2).build();
         modelStub.addPerson(existing1);
         modelStub.addPerson(existing2);
 
-        // New person with different email and phone
         Person newPerson = new PersonBuilder()
-                .withName("John  Doe") // similar name
-                .withEmail("newjohn@example.com") // different
-                .withPhone("33333333") // different
-                .build();
+                .withName(NAME_JOHN_DOE_UPPER_SPACED).withEmail(EMAIL_JOHN_NEW).withPhone(PHONE_JOHN_NEW).build();
 
-        AddCommand addCommand = new AddCommand(newPerson);
-        CommandResult result = addCommand.execute(modelStub);
-
-        String feedback = result.getFeedbackToUser();
-
-        // Warning should appear only once
-        assertTrue(feedback.contains(String.format(MESSAGE_SIMILAR_NAME, existing1.getName()))
-                || feedback.contains(String.format(MESSAGE_SIMILAR_NAME, existing2.getName())));
+        CommandResult result = new AddCommand(newPerson).execute(modelStub);
+        assertExactlyOneWarning(result.getFeedbackToUser(),
+                String.format(MESSAGE_SIMILAR_NAME, existing1.getName()),
+                String.format(MESSAGE_SIMILAR_NAME, existing2.getName()));
         assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
     }
 
-    @Test
-    public void execute_multipleSimilarAddress_onlyOneWarningAppended() throws Exception {
-        ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
-
-        // Existing contacts with similar addresses
-        Person existing1 = new PersonBuilder()
-                .withName("Alice")
-                .withAddress("123 Main Street Block A")
-                .withEmail("alice1@example.com")
-                .withPhone("11111111")
-                .build();
-        Person existing2 = new PersonBuilder()
-                .withName("Bob")
-                .withAddress("123 Main Street") // partial match
-                .withEmail("bob@example.com")
-                .withPhone("22222222")
-                .build();
-        modelStub.addPerson(existing1);
-        modelStub.addPerson(existing2);
-
-        // New person with different email and phone
-        Person newPerson = new PersonBuilder()
-                .withName("Charlie")
-                .withAddress("123 Main Street") // similar address
-                .withEmail("charlie@example.com") // different
-                .withPhone("33333333") // different
-                .build();
-
-        AddCommand addCommand = new AddCommand(newPerson);
-        CommandResult result = addCommand.execute(modelStub);
-
-        String feedback = result.getFeedbackToUser();
-
-        // Warning should appear only once
-        assertTrue(
-                feedback.contains(
-                        String.format(MESSAGE_SIMILAR_ADDRESS, existing1.getName(), existing1.getAddress()))
-                || feedback.contains(
-                        String.format(MESSAGE_SIMILAR_ADDRESS, existing2.getName(), existing2.getAddress())));
-
-        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
-    }
+    // -------------------------------------------------------------------------
+    // Similar-address warnings
+    // -------------------------------------------------------------------------
 
     @Test
     public void execute_similarAddress_warningShown() throws Exception {
+        // EP: new address is a substring of existing address → similar address
         ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
-
         Person existingPerson = new PersonBuilder()
-                .withName("Alice")
-                .withAddress("123 Main Street Block A")
-                .build();
+                .withName(NAME_ALICE_ADDR).withAddress(ADDRESS_MAIN_STREET_FULL).build();
         modelStub.addPerson(existingPerson);
 
-        // Try to add a person with similar address (partial match)
         Person newPerson = new PersonBuilder()
-                .withName("Different Name")
-                .withEmail("different@example.com")
-                .withPhone("99999999")
-                .withAddress("123 Main Street")
-                .build();
-        AddCommand addCommand = new AddCommand(newPerson);
+                .withName(NAME_DIFFERENT).withEmail(EMAIL_DIFFERENT)
+                .withPhone(PHONE_UNIQUE).withAddress(ADDRESS_MAIN_STREET).build();
 
-        CommandResult result = addCommand.execute(modelStub);
-
-        assertTrue(result.getFeedbackToUser().contains(String.format(
-                MESSAGE_SIMILAR_ADDRESS, existingPerson.getName(), existingPerson.getAddress())));
-        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+        assertSimilarAddressWarning(new AddCommand(newPerson).execute(modelStub), existingPerson);
     }
 
     @Test
-    public void execute_similarPhone_warningShown() throws Exception {
+    public void execute_multipleSimilarAddresses_onlyOneWarningAppended() throws Exception {
+        // EP: multiple existing contacts match on address — warning should appear exactly once
         ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
 
+        Person existing1 = new PersonBuilder()
+                .withName(NAME_ALICE_ADDR).withAddress(ADDRESS_MAIN_STREET_FULL)
+                .withEmail(EMAIL_ALICE_1).withPhone(PHONE_ALICE_1).build();
+        Person existing2 = new PersonBuilder()
+                .withName(NAME_BOB_ADDR).withAddress(ADDRESS_MAIN_STREET)
+                .withEmail(EMAIL_BOB_ADDR).withPhone(PHONE_BOB_ADDR).build();
+        modelStub.addPerson(existing1);
+        modelStub.addPerson(existing2);
+
+        Person newPerson = new PersonBuilder()
+                .withName(NAME_CHARLIE).withAddress(ADDRESS_MAIN_STREET)
+                .withEmail(EMAIL_CHARLIE).withPhone(PHONE_CHARLIE).build();
+
+        CommandResult result = new AddCommand(newPerson).execute(modelStub);
+        assertExactlyOneWarning(result.getFeedbackToUser(),
+                String.format(MESSAGE_SIMILAR_ADDRESS, existing1.getName(), existing1.getAddress()),
+                String.format(MESSAGE_SIMILAR_ADDRESS, existing2.getName(), existing2.getAddress()));
+        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+    }
+
+    // -------------------------------------------------------------------------
+    // Similar-phone warnings
+    // -------------------------------------------------------------------------
+
+    @Test
+    public void execute_similarPhone_warningShown() throws Exception {
+        // EP: phones share at least 3 consecutive digits → similar phone
+        ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
         Person existingPerson = new PersonBuilder()
-                .withName("Alice Supplies")
-                .withEmail("alice@example.com")
-                .withPhone("91234567")
-                .withAddress("1 Alpha Street")
-                .build();
+                .withName(NAME_ALICE_SUPPLIES).withEmail(EMAIL_ALICE_SUPPLIES)
+                .withPhone(PHONE_ALICE_SUPPLIES).withAddress(ADDRESS_ALPHA_STREET).build();
         modelStub.addPerson(existingPerson);
 
         Person newPerson = new PersonBuilder()
-                .withName("Bob Traders")
-                .withEmail("bob@example.com")
-                .withPhone("00123456")
-                .withAddress("99 Beta Avenue")
+                .withName(NAME_BOB_TRADERS).withEmail(EMAIL_BOB_TRADERS)
+                .withPhone(PHONE_BOB_TRADERS).withAddress(ADDRESS_BETA_AVENUE).build();
+
+        assertSimilarPhoneWarning(new AddCommand(newPerson).execute(modelStub), existingPerson);
+    }
+
+    // -------------------------------------------------------------------------
+    // Multiple warning types combined
+    // -------------------------------------------------------------------------
+
+    @Test
+    public void execute_withSimilarNameAndAddressWarnings_bothWarningsPresent() throws Exception {
+        // EP: new person triggers both a similar-name and a similar-address warning simultaneously
+        ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
+
+        Person nameMatch = new PersonBuilder()
+                .withName(NAME_JOHN_DOE_COMBINED).withPhone(PHONE_JOHN_DOE_COMBINED)
+                .withEmail(EMAIL_JOHN_DOE_COMBINED).withAddress(ADDRESS_OLD_STREET).build();
+        Person addressMatch = new PersonBuilder()
+                .withName(NAME_MARY_JANE).withPhone(PHONE_MARY_JANE)
+                .withEmail(EMAIL_MARY_JANE).withAddress(ADDRESS_CLEMENTI_ROAD).build();
+        modelStub.addPerson(nameMatch);
+        modelStub.addPerson(addressMatch);
+
+        Person toAdd = new PersonBuilder()
+                .withName(NAME_JOHN) // partial match → nameMatch
+                .withPhone(PHONE_JOHN_NEW_COMBINED)
+                .withEmail(EMAIL_JOHN_NEW_COMBINED)
+                .withAddress(ADDRESS_CLEMENTI_ROAD) // exact match → addressMatch
                 .build();
 
-        CommandResult result = new AddCommand(newPerson).execute(modelStub);
-
-        assertTrue(result.getFeedbackToUser().contains(String.format(
-                MESSAGE_SIMILAR_PHONE, existingPerson.getName(), existingPerson.getPhone())));
-        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+        CommandResult result = new AddCommand(toAdd).execute(modelStub);
+        assertSimilarNameWarning(result, nameMatch);
+        assertSimilarAddressWarning(result, addressMatch);
     }
 
     @Test
@@ -460,22 +461,22 @@ public class AddCommandTest {
 
         @Override
         public Optional<Person> findSimilarNameMatch(Person candidate, Person exclude) {
-            return Optional.empty();
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
         public Optional<Product> findSimilarNameMatch(Product candidate, Product exclude) {
-            return Optional.empty();
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
         public Optional<Person> findSimilarPhoneMatch(Person candidate, Person exclude) {
-            return Optional.empty();
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
         public Optional<Person> findSimilarAddressMatch(Person candidate, Person exclude) {
-            return Optional.empty();
+            throw new AssertionError("This method should not be called.");
         }
 
         @Override
@@ -555,7 +556,7 @@ public class AddCommandTest {
 
         @Override
         public void commitVendorVault(String actionSummary) {
-            // stub method
+            // allow commit in tests
         }
 
         @Override

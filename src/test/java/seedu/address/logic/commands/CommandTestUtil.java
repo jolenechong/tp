@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
@@ -10,6 +11,9 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_QUANTITY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_THRESHOLD;
+import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_ADDRESS;
+import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_NAME;
+import static seedu.address.model.person.warnings.DuplicatePersonWarning.MESSAGE_SIMILAR_PHONE;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import java.util.ArrayList;
@@ -175,6 +179,64 @@ public class CommandTestUtil {
         model.updateFilteredPersonList(new NameContainsKeywordsPredicate(Arrays.asList(splitName[0])));
 
         assertEquals(1, model.getFilteredPersonList().size());
+    }
+
+    // =========================================================================
+    // Warning / feedback assertion helpers
+    // =========================================================================
+
+    /**
+     * Asserts that {@code result} has {@code FEEDBACK_TYPE_WARN} and its feedback contains
+     * {@code warningFragment}.
+     */
+    public static void assertWarnFeedback(CommandResult result, String warningFragment) {
+        assertTrue(result.getFeedbackToUser().contains(warningFragment),
+                "Expected feedback to contain: " + warningFragment);
+        assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+    }
+
+    /**
+     * Asserts that {@code result} has {@code FEEDBACK_TYPE_SUCCESS} and its feedback does NOT
+     * contain {@code absentFragment}.
+     */
+    public static void assertSuccessFeedbackWithout(CommandResult result, String absentFragment) {
+        assertFalse(result.getFeedbackToUser().contains(absentFragment),
+                "Expected feedback NOT to contain: " + absentFragment);
+        assertEquals(CommandResult.FEEDBACK_TYPE_SUCCESS, result.getFeedbackType());
+    }
+
+    /**
+     * Asserts that {@code feedback} contains exactly one of {@code warningA} or {@code warningB},
+     * but not both. Use this to verify deduplication when multiple contacts match a similarity check.
+     */
+    public static void assertExactlyOneWarning(String feedback, String warningA, String warningB) {
+        assertTrue(feedback.contains(warningA) || feedback.contains(warningB),
+                "Expected at least one of the two warnings to appear.");
+        assertFalse(feedback.contains(warningA) && feedback.contains(warningB),
+                "Expected at most one warning, but both appeared.");
+    }
+
+    /**
+     * Asserts that {@code result} warns about a name similar to {@code existingPerson}'s name.
+     */
+    public static void assertSimilarNameWarning(CommandResult result, Person existingPerson) {
+        assertWarnFeedback(result, String.format(MESSAGE_SIMILAR_NAME, existingPerson.getName()));
+    }
+
+    /**
+     * Asserts that {@code result} warns about an address similar to {@code existingPerson}'s address.
+     */
+    public static void assertSimilarAddressWarning(CommandResult result, Person existingPerson) {
+        assertWarnFeedback(result,
+                String.format(MESSAGE_SIMILAR_ADDRESS, existingPerson.getName(), existingPerson.getAddress()));
+    }
+
+    /**
+     * Asserts that {@code result} warns about a phone similar to {@code existingPerson}'s phone.
+     */
+    public static void assertSimilarPhoneWarning(CommandResult result, Person existingPerson) {
+        assertWarnFeedback(result,
+                String.format(MESSAGE_SIMILAR_PHONE, existingPerson.getName(), existingPerson.getPhone()));
     }
 
 }
