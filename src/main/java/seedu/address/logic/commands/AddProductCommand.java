@@ -49,6 +49,8 @@ public class AddProductCommand extends Command {
     public static final String MESSAGE_SUCCESS = "New product added: %1$s";
     public static final String MESSAGE_VENDOR_DOES_NOT_EXIST = "Vendor email %1$s does not match any existing contact.";
 
+    public static final String MESSAGE_ACTION_SUMMARY = "addition of product: %1$s";
+
     private final Product toAdd;
     private String warnings = "";
 
@@ -86,21 +88,25 @@ public class AddProductCommand extends Command {
         String allWarnings = buildWarnings(model, warnings);
 
         model.addProduct(toAdd);
+        model.commitVendorVault(String.format(MESSAGE_ACTION_SUMMARY, Messages.formatProduct(toAdd)));
 
-        String formattedWarnings = allWarnings.isEmpty() ? "" : SEPARATOR_NEW_LINE + allWarnings;
-        String feedbackType = allWarnings.isEmpty()
-                ? CommandResult.FEEDBACK_TYPE_SUCCESS
-                : CommandResult.FEEDBACK_TYPE_WARN;
-
-        String successPart = formatSuccessPart();
-        model.commitVendorVault(successPart);
-
-        return new CommandResult(String.format(MESSAGE_SUCCESS + formattedWarnings, Messages.formatProduct(toAdd)),
-                feedbackType);
+        return buildCommandResult(allWarnings,
+                String.format(MESSAGE_SUCCESS, Messages.formatProduct(toAdd)));
     }
 
-    private String formatSuccessPart() {
-        return String.format(MESSAGE_SUCCESS, Messages.formatProduct(toAdd));
+    private CommandResult buildCommandResult(String allWarnings, String successPart) {
+        boolean hasWarnings = !allWarnings.isEmpty();
+
+        String message = hasWarnings
+                ? successPart + SEPARATOR_NEW_LINE + allWarnings
+                : successPart;
+
+        String feedbackType = hasWarnings
+                ? CommandResult.FEEDBACK_TYPE_WARN
+                : CommandResult.FEEDBACK_TYPE_SUCCESS;
+
+        return new CommandResult(message, false, false, feedbackType, true);
+
     }
 
     private String buildWarnings(Model model, String originalWarnings) {
