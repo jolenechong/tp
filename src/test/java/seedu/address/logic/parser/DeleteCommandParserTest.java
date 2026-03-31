@@ -4,6 +4,7 @@ import static seedu.address.logic.Messages.MESSAGE_INVALID_CONFIRMATION_FLAG;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.address.logic.parser.DeleteCommandParser.MESSAGE_NO_EMAIL_PROVIDED;
 
 import org.junit.jupiter.api.Test;
 
@@ -42,5 +43,10 @@ public class DeleteCommandParserTest {
     public void parse_wronglyFormedFlagAttachedToIndex_throwsParseException() {
         assertParseFailure(parser, "-y" + VALID_EMAIL_AMY, MESSAGE_INVALID_CONFIRMATION_FLAG);
         assertParseFailure(parser, "-y1" + VALID_EMAIL_AMY, MESSAGE_INVALID_CONFIRMATION_FLAG);
+    }
+
+    @Test
+    public void parse_emptyArgs_throwsParseException() {
+        assertParseFailure(parser, "", MESSAGE_NO_EMAIL_PROVIDED);
     }
 }
