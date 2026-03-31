@@ -49,13 +49,19 @@ import seedu.address.testutil.ProductBuilder;
 public class EditCommandTest {
 
     private static final Email NON_EXISTENT_EMAIL = new Email("missing.person@example.com");
+    private static final String NAME_TAG_KEEPER = "Tag Keeper";
+    private static final String PHONE_TAG_KEEPER = "90000011";
+    private static final String EMAIL_TAG_KEEPER = "tag.keeper@example.com";
+    private static final String ADDRESS_TAG_KEEPER = "11 Tag Street";
+    private static final String TAG_VIP = "vip";
+    private static final String EDITED_CONTACT_PREFIX = "Edited Contact:";
 
     private Model model = new ModelManager(new VendorVault(
             getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases());
 
     @Test
     public void execute_allFieldsSpecifiedUnfilteredList_success() {
-        Person editedPerson = new PersonBuilder().withTags("vip").build();
+        Person editedPerson = new PersonBuilder().withTags(TAG_VIP).build();
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(editedPerson).build();
         Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         EditCommand editCommand = new EditCommand(firstPerson.getEmail(), descriptor);
@@ -175,18 +181,15 @@ public class EditCommandTest {
         assertFalse(pendingConfirmation.getNeedConfirmation());
     }
 
+    // =========================================================================
+    // Clear-tags confirmation tests
+    // =========================================================================
+
     @Test
     public void execute_clearTags_requiresConfirmation() throws Exception {
-        // check confirmation is shown
-        Person personWithTag = new PersonBuilder()
-                .withName("Tag Keeper")
-                .withPhone("90000011")
-                .withEmail("tag.keeper@example.com")
-                .withAddress("11 Tag Street")
-                .withTags("vip")
-                .build();
-        model.addPerson(personWithTag);
-        int expectedSizeAfterReset = model.getFilteredPersonList().size();
+        // EP: t/ should require confirmation
+        Person personWithTag = buildPersonWithTagAndAdd(
+                NAME_TAG_KEEPER, PHONE_TAG_KEEPER, EMAIL_TAG_KEEPER, ADDRESS_TAG_KEEPER);
 
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withTags().build();
         EditCommand editCommand = new EditCommand(personWithTag.getEmail(), descriptor);
@@ -197,25 +200,14 @@ public class EditCommandTest {
         assertTrue(editCommand.getPendingConfirmation().getNeedConfirmation());
         assertEquals(1, model.getFilteredPersonList().size());
         assertEquals(personWithTag.getEmail(), model.getFilteredPersonList().get(0).getEmail());
-        assertTrue(model.findByEmail(personWithTag.getEmail()).orElseThrow().getTags().contains(new Tag("vip")));
-
-        // sanity check: cancelling should restore the list
-        new CancelCommand(editCommand.getPendingConfirmation().getOnCancel()).execute(model);
-        assertEquals(expectedSizeAfterReset, model.getFilteredPersonList().size());
+        assertTrue(model.findByEmail(personWithTag.getEmail()).orElseThrow().getTags().contains(new Tag(TAG_VIP)));
     }
 
     @Test
     public void execute_clearTagsConfirm_tagsAreCleared() throws Exception {
-        // check confirmation is shown and confirming clears the tags
-        Person personWithTag = new PersonBuilder()
-                .withName("Tag Confirm")
-                .withPhone("90000012")
-                .withEmail("tag.confirm@example.com")
-                .withAddress("12 Tag Street")
-                .withTags("vip")
-                .build();
-        model.addPerson(personWithTag);
-        int expectedSizeAfterReset = model.getFilteredPersonList().size();
+        Person personWithTag = buildPersonWithTagAndAdd(
+                NAME_TAG_KEEPER, PHONE_TAG_KEEPER, EMAIL_TAG_KEEPER, ADDRESS_TAG_KEEPER);
+        int expectedSize = model.getFilteredPersonList().size();
 
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withTags().build();
         EditCommand editCommand = new EditCommand(personWithTag.getEmail(), descriptor);
@@ -225,23 +217,16 @@ public class EditCommandTest {
         PendingConfirmation pendingConfirmation = editCommand.getPendingConfirmation();
         CommandResult confirmResult = new ConfirmCommand(pendingConfirmation.getOnConfirm()).execute(model);
 
-        assertTrue(confirmResult.getFeedbackToUser().startsWith("Edited Contact:"));
+        assertTrue(confirmResult.getFeedbackToUser().startsWith(EDITED_CONTACT_PREFIX));
         assertTrue(model.findByEmail(personWithTag.getEmail()).orElseThrow().getTags().isEmpty());
-        assertEquals(expectedSizeAfterReset, model.getFilteredPersonList().size());
+        assertEquals(expectedSize, model.getFilteredPersonList().size());
     }
 
     @Test
     public void execute_clearTagsCancel_tagsUnchanged() throws Exception {
-        // check cancelling confirmation leaves tags unchanged
-        Person personWithTag = new PersonBuilder()
-                .withName("Tag Cancel")
-                .withPhone("90000013")
-                .withEmail("tag.cancel@example.com")
-                .withAddress("13 Tag Street")
-                .withTags("vip")
-                .build();
-        model.addPerson(personWithTag);
-        int expectedSizeAfterReset = model.getFilteredPersonList().size();
+        Person personWithTag = buildPersonWithTagAndAdd(
+                NAME_TAG_KEEPER, PHONE_TAG_KEEPER, EMAIL_TAG_KEEPER, ADDRESS_TAG_KEEPER);
+        int expectedSize = model.getFilteredPersonList().size();
 
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withTags().build();
         EditCommand editCommand = new EditCommand(personWithTag.getEmail(), descriptor);
@@ -252,28 +237,21 @@ public class EditCommandTest {
         CommandResult cancelResult = new CancelCommand(pendingConfirmation.getOnCancel()).execute(model);
 
         assertEquals(EditCommand.MESSAGE_CLEAR_TAGS_CANCELLED, cancelResult.getFeedbackToUser());
-        assertTrue(model.findByEmail(personWithTag.getEmail()).orElseThrow().getTags().contains(new Tag("vip")));
-        assertEquals(expectedSizeAfterReset, model.getFilteredPersonList().size());
+        assertTrue(model.findByEmail(personWithTag.getEmail()).orElseThrow().getTags().contains(new Tag(TAG_VIP)));
+        assertEquals(expectedSize, model.getFilteredPersonList().size());
     }
 
     @Test
     public void execute_clearTagsSkipConfirmation_tagsClearedImmediately() throws Exception {
-        // check skip confirmation
-        Person personWithTag = new PersonBuilder()
-                .withName("Tag Skip")
-                .withPhone("90000014")
-                .withEmail("tag.skip@example.com")
-                .withAddress("14 Tag Street")
-                .withTags("vip")
-                .build();
-        model.addPerson(personWithTag);
+        Person personWithTag = buildPersonWithTagAndAdd(
+                NAME_TAG_KEEPER, PHONE_TAG_KEEPER, EMAIL_TAG_KEEPER, ADDRESS_TAG_KEEPER);
 
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withTags().build();
         EditCommand editCommand = new EditCommand(personWithTag.getEmail(), descriptor, false);
 
         CommandResult result = editCommand.execute(model);
 
-        assertTrue(result.getFeedbackToUser().startsWith("Edited Contact:"));
+        assertTrue(result.getFeedbackToUser().startsWith(EDITED_CONTACT_PREFIX));
         assertFalse(editCommand.getPendingConfirmation().getNeedConfirmation());
         assertTrue(model.findByEmail(personWithTag.getEmail()).orElseThrow().getTags().isEmpty());
     }
@@ -707,6 +685,18 @@ public class EditCommandTest {
                 && feedback.contains(String.format(MESSAGE_SIMILAR_ADDRESS,
                         anotherJurong.getName(), anotherJurong.getAddress())));
         assertEquals(CommandResult.FEEDBACK_TYPE_WARN, result.getFeedbackType());
+    }
+
+    /**
+     * Builds a person with one {@value TAG_VIP} tag, adds them to the model, and returns the built person.
+     * Used by the clear-tags confirmation tests to avoid repeating the same PersonBuilder block.
+     */
+    private Person buildPersonWithTagAndAdd(String name, String phone, String email, String address) {
+        Person person = new PersonBuilder()
+                .withName(name).withPhone(phone).withEmail(email).withAddress(address)
+                .withTags(TAG_VIP).build();
+        model.addPerson(person);
+        return person;
     }
 
 }
