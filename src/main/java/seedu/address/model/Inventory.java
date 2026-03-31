@@ -71,6 +71,14 @@ public class Inventory implements ReadOnlyInventory {
     }
 
     /**
+     * Returns Product if email is found.
+     */
+    public Optional<Product> findById(String id) {
+        requireNonNull(id);
+        return products.findByIdentifier(id);
+    }
+
+    /**
      * Adds a product to the inventory.
      * The product must not already exist in the inventory.
      */
