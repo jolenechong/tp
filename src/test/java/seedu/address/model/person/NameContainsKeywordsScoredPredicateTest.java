@@ -81,7 +81,7 @@ class NameContainsKeywordsScoredPredicateTest {
         Score score = predicate.computeScore(person);
 
         assertEquals(MatchTier.EXACT_TOKEN, score.tier());
-        assertEquals(0, score.unmatchedChars());
+        assertEquals(0, score.unmatchedCharCount());
         assertEquals("Alice Bob", score.sortKey());
     }
 
@@ -110,7 +110,7 @@ class NameContainsKeywordsScoredPredicateTest {
         Score score = predicate.computeScore(person);
 
         assertEquals(MatchTier.EXACT_TOKEN, score.tier());
-        assertEquals(0, score.unmatchedChars());
+        assertEquals(0, score.unmatchedCharCount());
     }
 
     @Test

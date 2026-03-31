@@ -81,7 +81,7 @@ class ProductNameContainsKeywordsScoredPredicateTest {
         Score score = predicate.computeScore(product);
 
         assertEquals(MatchTier.EXACT_TOKEN, score.tier());
-        assertEquals(0, score.unmatchedChars());
+        assertEquals(0, score.unmatchedCharCount());
         assertEquals("SSD 2TB", score.sortKey());
     }
 
@@ -110,7 +110,7 @@ class ProductNameContainsKeywordsScoredPredicateTest {
         Score score = predicate.computeScore(product);
 
         assertEquals(MatchTier.EXACT_TOKEN, score.tier());
-        assertEquals(0, score.unmatchedChars());
+        assertEquals(0, score.unmatchedCharCount());
     }
 
     @Test

@@ -75,8 +75,8 @@ public class NameContainsKeywordsScoredPredicate implements RankedPersonPredicat
             return new Score(MatchTier.NO_MATCH, Integer.MAX_VALUE, fullName);
         }
 
-        int unmatchedChars = token.trim().length() - keyword.trim().length();
-        return new Score(tier, unmatchedChars, fullName);
+        int unmatchedCharCount = token.trim().length() - keyword.trim().length();
+        return new Score(tier, unmatchedCharCount, fullName);
     }
 
     private static MatchTier toMatchTier(int score) {

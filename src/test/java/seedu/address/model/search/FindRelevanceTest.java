@@ -37,7 +37,7 @@ class FindRelevanceTest {
     }
 
     @Test
-    void scoreConstructor_negativeUnmatchedChars_throwsIllegalArgumentException() {
+    void scoreConstructor_negativeUnmatchedCharCount_throwsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, ()
                 -> new Score(PREFIX_TOKEN, -1, "Alice"));
     }

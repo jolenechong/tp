@@ -20,10 +20,10 @@ public final class FindRelevance {
      */
     public static final Comparator<Score> SCORE_COMPARATOR =
             Comparator.comparingInt((Score score) -> score.tier().getWeight()).reversed()
-                    .thenComparingInt(Score::unmatchedChars)
+                    .thenComparingInt(Score::unmatchedCharCount)
                     .thenComparing(score -> score.sortKey().toLowerCase(Locale.ROOT));
 
-    private static final String MESSAGE_UNMATCHED_CHARS_NEGATIVE = "unmatchedChars must be non-negative";
+    private static final String MESSAGE_UNMATCHED_CHARS_NEGATIVE = "unmatchedCharCount must be non-negative";
 
     /**
      * Match tier for one keyword against one name token.
@@ -51,7 +51,7 @@ public final class FindRelevance {
     /**
      * Immutable relevance score.
      */
-    public record Score(MatchTier tier, int unmatchedChars, String sortKey) {
+    public record Score(MatchTier tier, int unmatchedCharCount, String sortKey) {
 
         /**
          * Creates a relevance score tuple.
@@ -59,7 +59,7 @@ public final class FindRelevance {
         public Score {
             requireNonNull(tier);
             requireNonNull(sortKey);
-            if (unmatchedChars < 0) {
+            if (unmatchedCharCount < 0) {
                 throw new IllegalArgumentException(MESSAGE_UNMATCHED_CHARS_NEGATIVE);
             }
         }

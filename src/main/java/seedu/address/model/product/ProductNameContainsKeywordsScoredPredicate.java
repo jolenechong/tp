@@ -75,8 +75,8 @@ public class ProductNameContainsKeywordsScoredPredicate implements RankedProduct
             return new Score(MatchTier.NO_MATCH, Integer.MAX_VALUE, productName);
         }
 
-        int unmatchedChars = token.trim().length() - keyword.trim().length();
-        return new Score(tier, unmatchedChars, productName);
+        int unmatchedCharCount = token.trim().length() - keyword.trim().length();
+        return new Score(tier, unmatchedCharCount, productName);
     }
 
     private static MatchTier toMatchTier(int score) {
