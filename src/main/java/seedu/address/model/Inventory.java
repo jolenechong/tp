@@ -9,6 +9,7 @@ import java.util.Optional;
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Product;
 import seedu.address.model.product.UniqueProductList;
 
@@ -73,7 +74,7 @@ public class Inventory implements ReadOnlyInventory {
     /**
      * Returns Product if email is found.
      */
-    public Optional<Product> findById(String id) {
+    public Optional<Product> findById(Identifier id) {
         requireNonNull(id);
         return products.findByIdentifier(id);
     }

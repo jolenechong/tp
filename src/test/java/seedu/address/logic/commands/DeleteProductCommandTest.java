@@ -19,6 +19,7 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.VendorVault;
+import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Product;
 
 public class DeleteProductCommandTest {
@@ -32,7 +33,7 @@ public class DeleteProductCommandTest {
         Product productToDelete = model.getFilteredProductList().get(0);
 
         DeleteProductCommand command =
-                new DeleteProductCommand(productToDelete.getIdentifier().toString(), false);
+                new DeleteProductCommand(productToDelete.getIdentifier(), false);
 
         ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), getTypicalAliases());
 
@@ -49,12 +50,12 @@ public class DeleteProductCommandTest {
         Product productToDelete = model.getFilteredProductList().get(0);
 
         DeleteProductCommand command =
-                new DeleteProductCommand(productToDelete.getIdentifier().toString(), true);
+                new DeleteProductCommand(productToDelete.getIdentifier(), true);
 
         ModelManager expectedModel = new ModelManager(model.getVendorVault(), new UserPrefs(), getTypicalAliases());
 
         expectedModel.updateFilteredProductList(
-                p -> p.getIdentifier().toString().equals(productToDelete.getIdentifier().toString())
+                p -> p.getIdentifier().equals(productToDelete.getIdentifier())
         );
 
         assertCommandSuccess(command, model,
@@ -67,7 +68,7 @@ public class DeleteProductCommandTest {
         Product productToDelete = model.getFilteredProductList().get(0);
 
         DeleteProductCommand command =
-                new DeleteProductCommand(productToDelete.getIdentifier().toString(), true);
+                new DeleteProductCommand(productToDelete.getIdentifier(), true);
 
         PendingConfirmation pending;
 
@@ -97,7 +98,7 @@ public class DeleteProductCommandTest {
         Product productToDelete = model.getFilteredProductList().get(0);
 
         DeleteProductCommand command =
-                new DeleteProductCommand(productToDelete.getIdentifier().toString(), true);
+                new DeleteProductCommand(productToDelete.getIdentifier(), true);
 
         PendingConfirmation pending;
 
@@ -126,7 +127,7 @@ public class DeleteProductCommandTest {
         Product productToDelete = model.getFilteredProductList().get(0);
 
         DeleteProductCommand command =
-                new DeleteProductCommand(productToDelete.getIdentifier().toString(), false);
+                new DeleteProductCommand(productToDelete.getIdentifier(), false);
 
         CommandResult result;
 
@@ -150,7 +151,7 @@ public class DeleteProductCommandTest {
         Product productToDelete = model.getFilteredProductList().get(0);
 
         DeleteProductCommand command =
-                new DeleteProductCommand(productToDelete.getIdentifier().toString(), true);
+                new DeleteProductCommand(productToDelete.getIdentifier(), true);
 
         CommandResult result;
 
@@ -168,13 +169,13 @@ public class DeleteProductCommandTest {
     public void equals() {
 
         DeleteProductCommand first =
-                new DeleteProductCommand("P001", true);
+                new DeleteProductCommand(new Identifier("P001"), true);
 
         DeleteProductCommand second =
-                new DeleteProductCommand("P002", true);
+                new DeleteProductCommand(new Identifier("P002"), true);
 
         DeleteProductCommand firstCopy =
-                new DeleteProductCommand("P001", true);
+                new DeleteProductCommand(new Identifier("P001"), true);
 
         assertTrue(first.equals(first));
         assertTrue(first.equals(firstCopy));
@@ -185,7 +186,7 @@ public class DeleteProductCommandTest {
 
     @Test
     public void toString_containsIdentifier() {
-        DeleteProductCommand command = new DeleteProductCommand("P001", true);
+        DeleteProductCommand command = new DeleteProductCommand(new Identifier("P001"), true);
 
         String str = command.toString();
 
@@ -198,7 +199,7 @@ public class DeleteProductCommandTest {
                 new VendorVault(getTypicalAddressBook(), getTypicalInventory()),
                 new UserPrefs(), getTypicalAliases());
 
-        DeleteProductCommand command = new DeleteProductCommand("INVALID_ID", false);
+        DeleteProductCommand command = new DeleteProductCommand(new Identifier("INVALID_ID"), false);
 
         assertThrows(CommandException.class, () -> command.execute(model));
     }

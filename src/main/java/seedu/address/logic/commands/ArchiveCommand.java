@@ -4,16 +4,17 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
 
 /**
  * Archives a vendor in the address book.
- * The vendor is identified using the index from the currently displayed vendor list.
+ * The vendor is identified using their email address.
  *
- * Usage: archive vendor email
- * Example: archive vendor abc@123.com
+ * Usage: {@code archive EMAIL}
+ * Example: {@code archive sg.sales@cytron.io}
  *
  * Note: Internally vendors are represented as {@code Person}.
  */
@@ -26,30 +27,44 @@ public class ArchiveCommand extends Command {
     public static final String MESSAGE_USAGE =
             COMMAND_WORD + " EMAIL\n"
             + "Archives the vendor identified by the email in the displayed vendor list.\n"
-            + "Example: " + COMMAND_WORD + " 1";
+            + "Example: " + COMMAND_WORD + " sg.sales@cytron.io";
 
     public static final String MESSAGE_ARCHIVE_SUCCESS =
-            "Archived Vendor: %1$s"
-            + "\n⚠ Warning: Vendor being archived. Use 'restore EMAIL' to restore the vendor.";
+            "Archived Vendor: %1$s";
+
+    public static final String MESSAGE_ACTION_SUMMARY =
+            "archiving of contact: %1$s";
+
+    public static final String MESSAGE_VENDOR_NOT_FOUND =
+            "No vendor found with email.";
+
+    public static final String MESSAGE_ALREADY_ARCHIVED =
+            "This vendor is already archived. Did you want to restore it?";
 
     private final String email;
 
     /**
-     * Creates an ArchiveCommand to archive the vendor at the specified {@code Index}.
+     * Creates an ArchiveCommand to archive the vendor with the specified {@code email}.
      *
-     * @param email Email of the vendor in the filtered vendor list.
+     * @param email Email of the vendor to archive. Must not be null.
      */
     public ArchiveCommand(String email) {
         requireNonNull(email);
-        this.email = email;
+        this.email = email.toLowerCase();
     }
 
     /**
      * Executes the archive command.
      *
-     * @param model {@code Model} which the command should operate on.
-     * @return CommandResult indicating the result of the command execution.
-     * @throws CommandException if the index is invalid.
+     * Searches the full vendor list for a vendor matching the given email.
+     * If the vendor is already archived, an informative error is shown suggesting restore.
+     * If no vendor is found, an error message is shown.
+     * Otherwise, the vendor is archived and a success message is returned.
+     *
+     * @param model {@code Model} which the command should operate on. Must not be null.
+     * @return {@code CommandResult} indicating the result of the command execution.
+     * @throws CommandException if no vendor is found with the given email,
+     *                          or if the vendor is already archived.
      */
     @Override
     public CommandResult execute(Model model) throws CommandException {
@@ -60,22 +75,26 @@ public class ArchiveCommand extends Command {
         Person vendorToArchive = fullList.stream()
                 .filter(person -> person.getEmail().value.equals(email))
                 .findFirst()
-                .orElseThrow(() ->
-                        new CommandException("No vendor found with email: " + email));
+                .orElseThrow(() -> new CommandException(MESSAGE_VENDOR_NOT_FOUND));
+
+        if (vendorToArchive.isArchived()) {
+            throw new CommandException(MESSAGE_ALREADY_ARCHIVED);
+        }
 
         model.archivePerson(vendorToArchive);
-        model.commitVendorVault(formatSuccessPart(vendorToArchive));
 
-        return new CommandResult(
-            String.format(MESSAGE_ARCHIVE_SUCCESS, vendorToArchive.getName()),
-            CommandResult.FEEDBACK_TYPE_WARN
-        );
+        String actionSummary = String.format(MESSAGE_ACTION_SUMMARY, Messages.format(vendorToArchive));
+        model.commitVendorVault(actionSummary);
+
+        String successMessage = String.format(MESSAGE_ARCHIVE_SUCCESS, Messages.format(vendorToArchive));
+        return new CommandResult(successMessage, CommandResult.FEEDBACK_TYPE_SUCCESS);
     }
 
-    private String formatSuccessPart(Person vendorToArchive) {
-        return String.format(MESSAGE_ARCHIVE_SUCCESS, vendorToArchive.getName());
-    }
-
+    /**
+     * Returns the pending confirmation state for this command.
+     *
+     * @return a new {@code PendingConfirmation} instance.
+     */
     @Override
     public PendingConfirmation getPendingConfirmation() {
         return new PendingConfirmation();

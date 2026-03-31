@@ -20,6 +20,7 @@ import seedu.address.model.alias.exceptions.NoAliasFoundInAliasListException;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.RankedPersonPredicate;
+import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Product;
 import seedu.address.model.product.RankedProductPredicate;
 
@@ -239,7 +240,7 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public Optional<Product> findById(String id) {
+    public Optional<Product> findById(Identifier id) {
         requireNonNull(id);
         return inventory.findById(id);
     }

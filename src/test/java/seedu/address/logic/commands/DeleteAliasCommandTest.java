@@ -27,6 +27,7 @@ import seedu.address.model.alias.exceptions.DuplicateAliasException;
 import seedu.address.model.alias.exceptions.NoAliasFoundInAliasListException;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Person;
+import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Product;
 
 public class DeleteAliasCommandTest {
@@ -215,7 +216,7 @@ public class DeleteAliasCommandTest {
         }
 
         @Override
-        public Optional<Product> findById(String id) {
+        public Optional<Product> findById(Identifier id) {
             throw new AssertionError("This method should not be called.");
         }
 

@@ -8,6 +8,7 @@ import static seedu.address.logic.parser.DeleteProductCommandParser.MESSAGE_INVA
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.DeleteProductCommand;
+import seedu.address.model.product.Identifier;
 
 /**
  * Tests for {@link DeleteProductCommandParser}.
@@ -25,12 +26,12 @@ public class DeleteProductCommandParserTest {
 
     @Test
     public void parse_validArgsWithConfirmationFlag_returnsDeleteCommand() {
-        assertParseSuccess(parser, "-y " + VALID_ID, new DeleteProductCommand(VALID_ID, false));
+        assertParseSuccess(parser, "-y " + VALID_ID, new DeleteProductCommand(new Identifier(VALID_ID), false));
     }
 
     @Test
     public void parse_validArgsWithConfirmationFlagAfterIndex_returnsDeleteCommand() {
-        assertParseSuccess(parser, VALID_ID + " -y", new DeleteProductCommand(VALID_ID, false));
+        assertParseSuccess(parser, VALID_ID + " -y", new DeleteProductCommand(new Identifier(VALID_ID), false));
     }
 
     @Test

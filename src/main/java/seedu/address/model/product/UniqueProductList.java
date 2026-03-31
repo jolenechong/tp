@@ -43,10 +43,10 @@ public class UniqueProductList implements Iterable<Product> {
      * @param id to check existence for.
      * @return Product if the list contains a product with this identifier, an empty optional otherwise.
      */
-    public Optional<Product> findByIdentifier(String id) {
+    public Optional<Product> findByIdentifier(Identifier id) {
         requireNonNull(id);
         return internalList.stream()
-                .filter(product -> product.getIdentifier().toString().equals(id))
+                .filter(product -> product.getIdentifier().equals(id))
                 .findFirst();
     }
 

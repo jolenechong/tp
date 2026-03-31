@@ -12,6 +12,7 @@ import seedu.address.model.alias.exceptions.DuplicateAliasException;
 import seedu.address.model.alias.exceptions.NoAliasFoundInAliasListException;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Person;
+import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Product;
 
 /**
@@ -185,7 +186,7 @@ public interface Model {
     /**
      * Returns Product if a product with the same id exists in the inventory.
      */
-    Optional<Product> findById(String id);
+    Optional<Product> findById(Identifier id);
 
     /**
      * Deletes the given product.

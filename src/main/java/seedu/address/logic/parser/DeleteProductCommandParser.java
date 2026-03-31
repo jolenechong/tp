@@ -7,6 +7,7 @@ import static seedu.address.logic.parser.ConfirmationFlagIndicator.removeConfirm
 
 import seedu.address.logic.commands.DeleteProductCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.product.Identifier;
 
 /**
  * Parses input arguments and creates a DeleteProductCommand.
@@ -34,6 +35,8 @@ public class DeleteProductCommandParser implements Parser<DeleteProductCommand> 
             throw new ParseException(MESSAGE_INVALID_FORMAT);
         }
 
-        return new DeleteProductCommand(argsNoConfirmation, needsConfirmation);
+        ParseResult<Identifier> identifier = ParserUtil.parseIdentifier(argsNoConfirmation);
+
+        return new DeleteProductCommand(identifier.getValue(), needsConfirmation);
     }
 }

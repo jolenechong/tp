@@ -1203,7 +1203,15 @@ Use this section when `alias` fails.
 | Original Command does not exists | `The original command (ORIGINAL COMMAND) does not exists. ...` | Ensure the original command is in the `help` page.                     |
 | Alias has been used              | `This alias already exists. ...`                               | Provide a new alias, or use `deletealias` to delete the current alias. |
 
+<div style="height: 30px;"></div>
 
+#### Troubleshooting `deletealias`
+
+Use this section when `deletealias` fails.
+
+| Scenario                     | Message shown                       | How to fix                                                        |
+|------------------------------|-------------------------------------|-------------------------------------------------------------------|
+| No alias given in alias list | `No alias found in alias list. ...` | Find the correct alias using `alias` then use `deletealias ALIAS` |
 
 
 

@@ -8,6 +8,7 @@ import java.util.Optional;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Product;
 
 /**
@@ -27,7 +28,7 @@ public class DeleteProductCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Deletes the product identified by its product identifier.\n"
             + "Parameters: PRODUCT_IDENTIFIER\n"
-            + "Example: " + COMMAND_WORD + " P001";
+            + "Example: " + COMMAND_WORD + " SKU-1003";
 
     public static final String MESSAGE_DELETE_PRODUCT_SUCCESS = "Deleted Product: %1$s";
 
@@ -38,9 +39,11 @@ public class DeleteProductCommand extends Command {
 
     public static final String MESSAGE_INVALID_PRODUCT_ID = "No product found with the specified identifier.";
 
+    public static final String MESSAGE_ACTION_SUMMARY = "deletion of product: %1$s";
+
     private PendingConfirmation pendingConfirmation = new PendingConfirmation();
 
-    private final String targetProductId;
+    private final Identifier targetProductId;
 
     private final boolean needsConfirmation;
 
@@ -50,7 +53,7 @@ public class DeleteProductCommand extends Command {
      * @param targetProductId ID of the product to delete.
      * @param needsConfirmation whether the command should ask the user for confirmation.
      */
-    public DeleteProductCommand(String targetProductId, boolean needsConfirmation) {
+    public DeleteProductCommand(Identifier targetProductId, boolean needsConfirmation) {
         this.targetProductId = targetProductId;
         this.needsConfirmation = needsConfirmation;
     }
@@ -71,7 +74,7 @@ public class DeleteProductCommand extends Command {
 
         Product productToDelete = model.findById(targetProductId)
             .orElseThrow(() ->
-                    new CommandException(MESSAGE_INVALID_PRODUCT_ID));
+                    new CommandException(MESSAGE_INVALID_PRODUCT_ID + "\n" + MESSAGE_USAGE));
 
         if (!this.needsConfirmation) {
             return this.deleteProduct(model, productToDelete);
@@ -83,7 +86,7 @@ public class DeleteProductCommand extends Command {
         );
 
         model.updateFilteredProductList(p ->
-            p.getIdentifier().toString().equals(targetProductId));
+            p.getIdentifier().equals(targetProductId));
 
         return new CommandResult(CONFIRMATION_DELETE_PRODUCT_MESSAGE);
     }
@@ -97,7 +100,7 @@ public class DeleteProductCommand extends Command {
      */
     private CommandResult deleteProduct(Model model, Product productToDelete) {
         model.deleteProduct(productToDelete);
-        String successPart = String.format(MESSAGE_DELETE_PRODUCT_SUCCESS, productToDelete);
+        String successPart = String.format(MESSAGE_ACTION_SUMMARY, productToDelete);
         model.commitVendorVault(successPart);
         model.updateFilteredProductList(PREDICATE_SHOW_ACTIVE_PRODUCTS);
 

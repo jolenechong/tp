@@ -59,6 +59,7 @@ import seedu.address.model.alias.exceptions.NoAliasFoundInAliasListException;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.NameContainsKeywordsScoredPredicate;
 import seedu.address.model.person.Person;
+import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Product;
 import seedu.address.model.product.ProductNameContainsKeywordsScoredPredicate;
 import seedu.address.model.product.RestockThreshold;
@@ -141,8 +142,8 @@ public class AddressBookParserTest {
                 DeleteCommand.COMMAND_WORD + " " + person.getEmail().toString(),
                 new PendingConfirmation(),
                 new ModelManager());
-        assertEquals(new DeleteCommand(person.getEmail().toString(), true), command);
-        assertEquals(new DeleteCommand(person.getEmail().toString(), false), command);
+        assertEquals(new DeleteCommand(person.getEmail(), true), command);
+        assertEquals(new DeleteCommand(person.getEmail(), false), command);
     }
 
     @Test
@@ -501,7 +502,7 @@ public class AddressBookParserTest {
         }
 
         @Override
-        public Optional<Product> findById(String id) {
+        public Optional<Product> findById(Identifier id) {
             throw new AssertionError("This method should not be called.");
         }
 
