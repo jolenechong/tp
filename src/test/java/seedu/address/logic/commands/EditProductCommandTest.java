@@ -12,6 +12,9 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_QUANTITY_IPHONE
 import static seedu.address.logic.commands.CommandTestUtil.VALID_THRESHOLD_AIRPODS;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
+import static seedu.address.logic.commands.CommandTestUtil.showProductAtIndex;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PRODUCT;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PRODUCT;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalProducts.getTypicalInventory;
 
@@ -345,7 +348,8 @@ public class EditProductCommandTest {
         EditProductCommand command =
                 new EditProductCommand(first.getIdentifier().value, descriptor);
 
-        assertCommandFailure(command, model, Messages.MESSAGE_DUPLICATE_PRODUCT);
+        assertCommandFailure(command, model, String.format(
+                Messages.MESSAGE_DUPLICATE_PRODUCT, second.getIdentifier(), second.getName()));
     }
 
     @Test
