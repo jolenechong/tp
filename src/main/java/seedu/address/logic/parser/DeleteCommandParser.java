@@ -6,6 +6,7 @@ import static seedu.address.logic.parser.ConfirmationFlagIndicator.removeConfirm
 
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Email;
 
 /**
  * Parses input arguments and creates a new DeleteCommand object
@@ -13,10 +14,6 @@ import seedu.address.logic.parser.exceptions.ParseException;
 public class DeleteCommandParser implements Parser<DeleteCommand> {
 
     public static final String CONFIRMATION_INDICATOR = "-y";
-
-    public static final String MESSAGE_NO_EMAIL_PROVIDED =
-            "Email must be provided.\n"
-            + "Example: " + DeleteCommand.COMMAND_WORD + "sales@techsource.ocm";
 
     /**
      * Parses the given {@code String} of arguments in the context of the DeleteCommand
@@ -33,12 +30,14 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
         String[] tokens = argsTrimmed.split("\\s+");
         boolean needsConfirmation = !containsConfirmationFlag(
                 tokens, CONFIRMATION_INDICATOR, MESSAGE_INVALID_CONFIRMATION_FLAG);
-        String email = removeConfirmationFlag(tokens, CONFIRMATION_INDICATOR);
-
-        if (email.isEmpty()) {
-            throw new ParseException(MESSAGE_NO_EMAIL_PROVIDED);
+        String emailBeforeParsed = removeConfirmationFlag(tokens, CONFIRMATION_INDICATOR);
+        ParseResult<Email> email;
+        try {
+            email = ParserUtil.parseEmail(emailBeforeParsed);
+        } catch (ParseException e) {
+            throw new ParseException(e.getMessage() + "\n" + DeleteCommand.MESSAGE_USAGE);
         }
 
-        return new DeleteCommand(email, needsConfirmation);
+        return new DeleteCommand(email.getValue(), needsConfirmation);
     }
 }

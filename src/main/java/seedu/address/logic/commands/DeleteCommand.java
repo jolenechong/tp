@@ -10,9 +10,6 @@ import java.util.stream.Collectors;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
-import seedu.address.logic.parser.ParseResult;
-import seedu.address.logic.parser.ParserUtil;
-import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.NameEqualsKeywordsPredicate;
@@ -32,7 +29,7 @@ public class DeleteCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Deletes the contact identified by email used in the displayed contact list.\n"
             + "Parameters: Email \n"
-            + "Example: " + COMMAND_WORD + " irfam@example.com";
+            + "Example: " + COMMAND_WORD + " sales@techsource.com";
 
     public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Contact: %1$s";
     public static final String MESSAGE_PRODUCTS_DELINKED =
@@ -46,17 +43,18 @@ public class DeleteCommand extends Command {
     public static final String MESSAGE_INVALID_FORMAT =
             "Invalid command format!\n" + MESSAGE_USAGE;
 
+    public static final String MESSAGE_ACTION_SUMMARY = "deletion of contact: %1$s";
+
     private PendingConfirmation pendingConfirmation = new PendingConfirmation();
 
-    private final String targetEmail;
+    private final Email targetEmail;
     private final boolean needsConfirmation;
 
     /**
      * Creates a DeleteCommand to delete the person at the specified {@code targetIndexString}.
      *
      */
-    public DeleteCommand(String targetEmail, boolean needsConfirmation) {
-        requireNonNull(targetEmail);
+    public DeleteCommand(Email targetEmail, boolean needsConfirmation) {
         this.targetEmail = targetEmail;
         this.needsConfirmation = needsConfirmation;
     }
@@ -65,8 +63,6 @@ public class DeleteCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         List<Person> lastShownList = model.getFilteredPersonList();
-
-        Email targetEmail = getEmailFromString();
 
         Person personToDelete = model.findByEmail(targetEmail)
                 .orElseThrow(() ->
@@ -82,15 +78,6 @@ public class DeleteCommand extends Command {
         NameEqualsKeywordsPredicate predicate = new NameEqualsKeywordsPredicate(personToDelete);
         model.updateFilteredPersonList(predicate);
         return new CommandResult(CONFIRMATION_DELETE_PERSON_MESSAGE);
-    }
-
-    public Email getEmailFromString() throws CommandException {
-        try {
-            ParseResult<Email> email = ParserUtil.parseEmail(targetEmail);
-            return email.getValue();
-        } catch (ParseException e) {
-            throw new CommandException(e.getMessage());
-        }
     }
 
     /**
@@ -109,11 +96,13 @@ public class DeleteCommand extends Command {
 
         model.updateFilteredPersonList(PREDICATE_SHOW_ACTIVE_PERSONS);
 
-        String successMessage = String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete));
+        String successMessage = String.format(MESSAGE_ACTION_SUMMARY, Messages.format(personToDelete));
         model.commitVendorVault(successMessage);
 
+        String commandResultMessage = String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete));
+
         if (linkedProducts.isEmpty()) {
-            return new CommandResult(successMessage);
+            return new CommandResult(commandResultMessage);
         }
 
         String linkedProductIds = linkedProducts.stream()
@@ -122,7 +111,8 @@ public class DeleteCommand extends Command {
                 .collect(Collectors.joining(", "));
         String warning = String.format(MESSAGE_PRODUCTS_DELINKED, linkedProducts.size(), linkedProductIds);
 
-        return new CommandResult(successMessage + "\n" + warning, CommandResult.FEEDBACK_TYPE_WARN);
+
+        return new CommandResult(commandResultMessage + "\n" + warning, CommandResult.FEEDBACK_TYPE_WARN);
     }
 
     /**

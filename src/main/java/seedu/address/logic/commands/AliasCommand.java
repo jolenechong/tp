@@ -21,6 +21,12 @@ public class AliasCommand extends Command {
     public static final String COMMAND_DESCRIPTION =
             "Add a new alias; List all aliases if original command and alias are not given.";
 
+    public static final String MESSAGE_USAGE = COMMAND_WORD
+            + ": Adds a new alias; lists all aliases if no arguments given.\n"
+            + "Parameters: Original Command, Alias \n"
+            + "Example: " + COMMAND_WORD + " list ls";
+
+
     public static final String MESSAGE_ADD_ALIAS_SUCCESS = "Added Alias: %1$s";
 
     public static final String MESSAGE_EMPTY_ALIAS_LIST = "No alias added yet. Add alias using the alias command.";
@@ -31,12 +37,13 @@ public class AliasCommand extends Command {
             "The original command (%s) does not exists or is not supported.\n"
                     + "For the list of commands visit the User Guide.";
 
-    public static final String MESSAGE_ALIAS_CANNOT_BE_EMPTY = "The alias should not be empty";
+    public static final String MESSAGE_ALIAS_CANNOT_BE_EMPTY = "The alias should not be empty\n" + MESSAGE_USAGE;
 
-    public static final String MESSAGE_ALIAS_CONTAINS_SPACE = "The alias should not contain any spaces.";
+    public static final String MESSAGE_ALIAS_CONTAINS_SPACE = "The alias should not contain any spaces.\n"
+            + MESSAGE_USAGE;
 
     public static final String MESSAGE_ALIAS_FORMATTED_WRONGLY =
-            "Message is formatted wrongly.\nThe correct format is alias <ORIGINAL_COMMAND> <NEW_ALIAS>";
+            "Message is formatted wrongly.\n" + MESSAGE_USAGE;
 
     public static final String MESSAGE_ALIAS_IS_A_PREDEFINED_COMMAND =
             "%s is a predefined command, please choose another alias.";

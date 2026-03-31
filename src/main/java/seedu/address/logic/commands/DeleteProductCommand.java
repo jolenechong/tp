@@ -28,7 +28,7 @@ public class DeleteProductCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Deletes the product identified by its product identifier.\n"
             + "Parameters: PRODUCT_IDENTIFIER\n"
-            + "Example: " + COMMAND_WORD + " P001";
+            + "Example: " + COMMAND_WORD + " SKU-1003";
 
     public static final String MESSAGE_DELETE_PRODUCT_SUCCESS = "Deleted Product: %1$s";
 
@@ -38,6 +38,8 @@ public class DeleteProductCommand extends Command {
     public static final String MESSAGE_DELETE_FAILURE = "Did not delete product";
 
     public static final String MESSAGE_INVALID_PRODUCT_ID = "No product found with the specified identifier.";
+
+    public static final String MESSAGE_ACTION_SUMMARY = "deletion of product: %1$s";
 
     private PendingConfirmation pendingConfirmation = new PendingConfirmation();
 
@@ -72,7 +74,7 @@ public class DeleteProductCommand extends Command {
 
         Product productToDelete = model.findById(targetProductId)
             .orElseThrow(() ->
-                    new CommandException(MESSAGE_INVALID_PRODUCT_ID));
+                    new CommandException(MESSAGE_INVALID_PRODUCT_ID + "\n" + MESSAGE_USAGE));
 
         if (!this.needsConfirmation) {
             return this.deleteProduct(model, productToDelete);
@@ -98,7 +100,7 @@ public class DeleteProductCommand extends Command {
      */
     private CommandResult deleteProduct(Model model, Product productToDelete) {
         model.deleteProduct(productToDelete);
-        String successPart = String.format(MESSAGE_DELETE_PRODUCT_SUCCESS, productToDelete);
+        String successPart = String.format(MESSAGE_ACTION_SUMMARY, productToDelete);
         model.commitVendorVault(successPart);
         model.updateFilteredProductList(PREDICATE_SHOW_ACTIVE_PRODUCTS);
 
