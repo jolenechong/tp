@@ -52,37 +52,25 @@ import seedu.address.testutil.ProductBuilder;
 public class EditCommandTest {
 
     private static final Email NON_EXISTENT_EMAIL = new Email("missing.person@example.com");
-    private static final String NAME_TAG_KEEPER = "Tag Keeper";
+    private static final String NAME_TAG_KEEPER = "Tag Test Name";
     private static final String PHONE_TAG_KEEPER = "90000011";
     private static final String EMAIL_TAG_KEEPER = "tag.keeper@example.com";
     private static final String ADDRESS_TAG_KEEPER = "11 Tag Street";
     private static final String TAG_VIP = "vip";
     private static final String EDITED_CONTACT_PREFIX = "Edited Contact:";
 
-    // warning related
+    // -------------------------------------------------------------------------
+    // Person field constants for warning tests
+    // -------------------------------------------------------------------------
     private static final String PHONE_UNIQUE_A = "66666666";
     private static final String PHONE_UNIQUE_B = "66666667";
-    private static final String PHONE_JOHN_1 = "55555561";
-    private static final String PHONE_JOHN_2 = "55555562";
-    private static final String PHONE_NAME_SIMILAR = "55555570";
-    private static final String PHONE_ADDR_SIMILAR = "55555581";
-    private static final String PHONE_ALICE_SIMILAR = "55555555";
-
-    private static final String EMAIL_ALICE_SIMILAR = "alice.brown@example.com";
-    private static final String EMAIL_UNIQUE_XYZ = "unique.xyz@example.com";
-    private static final String EMAIL_JOHN_1 = "john.doe.extra@example.com";
-    private static final String EMAIL_JOHN_2 = "john.smith.extra@example.com";
-    private static final String EMAIL_JOHNDOE_EXTRA = "johndoe.extra@example.com";
-    private static final String EMAIL_ANOTHER_JURONG = "another.jurong@example.com";
-
-    private static final String NAME_ALICE_SIMILAR = "Alice Brown";
-    private static final String NAME_UNIQUE_XYZ = "Unique XYZ Person";
+    private static final String EMAIL_ALICE = "alice.brown@example.com";
+    private static final String EMAIL_JOHN = "john.doe@example.com";
+    private static final String NAME_ALICE = "Alice Brown";
     private static final String NAME_JOHN_1 = "John Doe";
     private static final String NAME_JOHN_2 = "John Smith";
     private static final String NAME_JOHN_EDIT_TARGET = "John Kurz";
     private static final String NAME_ALICE_EDIT_TARGET = "Alice Kurz";
-    private static final String NAME_ANOTHER_JURONG = "Another Person";
-
     private static final String ADDRESS_JURONG_WEST = "Jurong West";
     private static final String ADDRESS_JURONG_WEST_AVE5 = "Jurong West Ave 5";
     private static final String ADDRESS_NOWHERE = "99 Nowhere Street";
@@ -566,9 +554,9 @@ public class EditCommandTest {
         // EP: name field absent from descriptor (nameChanged = false) → no name warning,
         //     even when the existing name shares a token with another contact
         Person aliceSimilar = new PersonBuilder()
-                .withName(NAME_ALICE_SIMILAR)
-                .withPhone(PHONE_ALICE_SIMILAR)
-                .withEmail(EMAIL_ALICE_SIMILAR)
+                .withName(NAME_ALICE)
+                .withPhone(PHONE_UNIQUE_A)
+                .withEmail(EMAIL_ALICE)
                 .withAddress(ADDRESS_UNIQUE)
                 .build();
         model.addPerson(aliceSimilar);
@@ -590,9 +578,9 @@ public class EditCommandTest {
         // EP: address field absent from descriptor (addressChanged = false) → no address warning,
         //     even when the existing address is similar to another contact's
         Person personWithSimilarAddress = new PersonBuilder()
-                .withName(NAME_UNIQUE_XYZ)
+                .withName(NAME_ALICE)
                 .withPhone(PHONE_UNIQUE_A)
-                .withEmail(EMAIL_UNIQUE_XYZ)
+                .withEmail(EMAIL_ALICE)
                 .withAddress(ADDRESS_JURONG_WEST)
                 .build();
         model.addPerson(personWithSimilarAddress);
@@ -612,8 +600,8 @@ public class EditCommandTest {
     @Test
     public void execute_editNameToMultipleSimilar_onlyOneWarning() throws Exception {
         // EP: new name matches multiple existing contacts → exactly one name warning (deduplication)
-        Person similar1 = buildPerson(NAME_JOHN_1, PHONE_JOHN_1, EMAIL_JOHN_1, null);
-        Person similar2 = buildPerson(NAME_JOHN_2, PHONE_JOHN_2, EMAIL_JOHN_2, null);
+        Person similar1 = buildPerson(NAME_JOHN_1, PHONE_UNIQUE_A, EMAIL_ALICE, null);
+        Person similar2 = buildPerson(NAME_JOHN_2, PHONE_UNIQUE_B, EMAIL_JOHN, null);
         model.addPerson(similar1);
         model.addPerson(similar2);
 
@@ -634,7 +622,7 @@ public class EditCommandTest {
     public void execute_editNameAndAddress_bothWarningsShown() throws Exception {
         // EP: both name and address fields changed and each matches a different contact
         //     → both name warning and address warning appear in feedback
-        Person nameSimilar = buildPerson(NAME_JOHN_1, PHONE_NAME_SIMILAR, EMAIL_JOHNDOE_EXTRA, ADDRESS_NOWHERE);
+        Person nameSimilar = buildPerson(NAME_JOHN_1, PHONE_UNIQUE_A, EMAIL_JOHN, ADDRESS_NOWHERE);
         model.addPerson(nameSimilar);
 
         Person thirdPerson = model.getFilteredPersonList().get(INDEX_THIRD_PERSON.getZeroBased());
@@ -653,8 +641,8 @@ public class EditCommandTest {
     @Test
     public void execute_editAddressToMultipleSimilar_onlyOneWarning() throws Exception {
         // EP: new address matches multiple existing contacts → exactly one address warning (deduplication)
-        Person anotherJurong = buildPerson(NAME_ANOTHER_JURONG, PHONE_ADDR_SIMILAR,
-                EMAIL_ANOTHER_JURONG, ADDRESS_JURONG_WEST_AVE5);
+        Person anotherJurong = buildPerson(NAME_JOHN_1, PHONE_UNIQUE_A,
+                EMAIL_JOHN, ADDRESS_JURONG_WEST_AVE5);
         model.addPerson(anotherJurong);
 
         Person thirdPerson = model.getFilteredPersonList().get(INDEX_THIRD_PERSON.getZeroBased());
