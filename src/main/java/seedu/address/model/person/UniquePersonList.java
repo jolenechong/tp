@@ -41,7 +41,7 @@ public class UniquePersonList implements Iterable<Person> {
      * Returns Person in the list with this email (if any).
      *
      * @param email to check existence for.
-     * @return Person if the list contains a contact with this email, false otherwise.
+     * @return Person if the list contains a contact with this email, an empty optional otherwise.
      */
     public Optional<Person> findByEmail(Email email) {
         requireNonNull(email);

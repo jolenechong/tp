@@ -5,6 +5,7 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +35,19 @@ public class UniqueProductList implements Iterable<Product> {
     public boolean contains(Product toCheck) {
         requireNonNull(toCheck);
         return internalList.stream().anyMatch(toCheck::isSameProduct);
+    }
+
+    /**
+     * Returns Product in the list with this identifier (if any).
+     *
+     * @param id to check existence for.
+     * @return Product if the list contains a product with this identifier, an empty optional otherwise.
+     */
+    public Optional<Product> findByIdentifier(String id) {
+        requireNonNull(id);
+        return internalList.stream()
+                .filter(product -> product.getIdentifier().toString().equals(id))
+                .findFirst();
     }
 
     /**
