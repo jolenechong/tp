@@ -56,6 +56,7 @@ public class DeleteCommand extends Command {
      *
      */
     public DeleteCommand(String targetEmail, boolean needsConfirmation) {
+        requireNonNull(targetEmail);
         this.targetEmail = targetEmail;
         this.needsConfirmation = needsConfirmation;
     }

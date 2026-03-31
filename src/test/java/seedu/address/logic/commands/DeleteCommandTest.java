@@ -2,6 +2,7 @@ package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_EMAIL;
 import static seedu.address.logic.commands.CommandResult.FEEDBACK_TYPE_WARN;
@@ -252,6 +253,34 @@ public class DeleteCommandTest {
         String expectedWarning = String.format(MESSAGE_PRODUCTS_DELINKED, 1, "SKU-012");
         assertEquals(expectedSuccessMessage + "\n" + expectedWarning, result.getFeedbackToUser());
         assertEquals(FEEDBACK_TYPE_WARN, result.getFeedbackType());
+    }
+
+    @Test
+    public void getEmailFromString_validEmail_returnsEmail() throws CommandException {
+        DeleteCommand deleteCommand = new DeleteCommand(VALID_EMAIL_AMY, false);
+        Email result = deleteCommand.getEmailFromString();
+        assertEquals(new Email(VALID_EMAIL_AMY), result);
+    }
+
+    @Test
+    public void getEmailFromString_invalidEmailNoAtSign_throwsCommandException() {
+        DeleteCommand deleteCommand = new DeleteCommand("invalidemail.com", false);
+        assertThrows(CommandException.class, deleteCommand::getEmailFromString,
+                DeleteCommand.MESSAGE_INVALID_FORMAT);
+    }
+
+    @Test
+    public void getEmailFromString_invalidEmailEmptyString_throwsCommandException() {
+        DeleteCommand deleteCommand = new DeleteCommand("", false);
+        assertThrows(CommandException.class, deleteCommand::getEmailFromString,
+                DeleteCommand.MESSAGE_INVALID_FORMAT);
+    }
+
+    @Test
+    public void getEmailFromString_invalidEmailWithSpaces_throwsCommandException() {
+        DeleteCommand deleteCommand = new DeleteCommand("invalid email@example.com", false);
+        assertThrows(CommandException.class, deleteCommand::getEmailFromString,
+                DeleteCommand.MESSAGE_INVALID_FORMAT);
     }
 
     @Test
