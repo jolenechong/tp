@@ -69,9 +69,7 @@ public class DeleteProductCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
-        Product productToDelete = model.getFilteredProductList().stream()
-            .filter(p -> p.getIdentifier().toString().equals(targetProductId))
-            .findFirst()
+        Product productToDelete = model.findById(targetProductId)
             .orElseThrow(() ->
                     new CommandException(MESSAGE_INVALID_PRODUCT_ID));
 
