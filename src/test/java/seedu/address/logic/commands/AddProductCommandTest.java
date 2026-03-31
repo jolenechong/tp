@@ -553,10 +553,10 @@ public class AddProductCommandTest {
         }
 
         @Override
-        public Optional<Product> findById(String id) {
+        public Optional<Product> findById(Identifier id) {
             requireNonNull(id);
             return productsAdded.stream()
-                    .filter(product -> product.getIdentifier().toString().equals(id))
+                    .filter(product -> product.getIdentifier().equals(id))
                     .findFirst();
         }
 

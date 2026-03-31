@@ -221,7 +221,7 @@ public class EditProductCommand extends Command {
     }
 
     private String buildDuplicateProductMessage(Model model, Product productToEdit, Product editedProduct) {
-        return model.findById(editedProduct.getIdentifier().toString())
+        return model.findById(editedProduct.getIdentifier())
                 .filter(match -> !match.equals(productToEdit))
                 .map(match -> String.format(MESSAGE_DUPLICATE_PRODUCT, match.getIdentifier(), match.getName()))
                 .orElse(MESSAGE_DUPLICATE_PRODUCT);
