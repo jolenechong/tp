@@ -141,8 +141,8 @@ public class AddressBookParserTest {
                 DeleteCommand.COMMAND_WORD + " " + person.getEmail().toString(),
                 new PendingConfirmation(),
                 new ModelManager());
-        assertEquals(new DeleteCommand(person.getEmail().toString(), true), command);
-        assertEquals(new DeleteCommand(person.getEmail().toString(), false), command);
+        assertEquals(new DeleteCommand(person.getEmail(), true), command);
+        assertEquals(new DeleteCommand(person.getEmail(), false), command);
     }
 
     @Test

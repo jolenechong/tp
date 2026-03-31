@@ -10,9 +10,6 @@ import java.util.stream.Collectors;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
-import seedu.address.logic.parser.ParseResult;
-import seedu.address.logic.parser.ParserUtil;
-import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.NameEqualsKeywordsPredicate;
@@ -102,8 +99,10 @@ public class DeleteCommand extends Command {
         String successMessage = String.format(MESSAGE_ACTION_SUMMARY, Messages.format(personToDelete));
         model.commitVendorVault(successMessage);
 
+        String commandResultMessage = String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete));
+
         if (linkedProducts.isEmpty()) {
-            return new CommandResult(String.format(MESSAGE_DELETE_PERSON_SUCCESS, Messages.format(personToDelete)));
+            return new CommandResult(commandResultMessage);
         }
 
         String linkedProductIds = linkedProducts.stream()
@@ -112,7 +111,8 @@ public class DeleteCommand extends Command {
                 .collect(Collectors.joining(", "));
         String warning = String.format(MESSAGE_PRODUCTS_DELINKED, linkedProducts.size(), linkedProductIds);
 
-        return new CommandResult(successMessage + "\n" + warning, CommandResult.FEEDBACK_TYPE_WARN);
+
+        return new CommandResult(commandResultMessage + "\n" + warning, CommandResult.FEEDBACK_TYPE_WARN);
     }
 
     /**
