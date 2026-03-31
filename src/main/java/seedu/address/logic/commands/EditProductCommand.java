@@ -62,6 +62,8 @@ public class EditProductCommand extends Command {
     public static final String MESSAGE_WARN_BELOW_THRESHOLD =
             "⚠ Warning: Product stock is below threshold.";
 
+    public static final String MESSAGE_ACTION_SUMMARY = "edit of contact: %1$s";
+
     private final String targetIdentifier;
     private final EditProductDescriptor editProductDescriptor;
 
@@ -136,7 +138,7 @@ public class EditProductCommand extends Command {
                 editedProduct
         );
 
-        model.commitVendorVault(successMessage);
+        model.commitVendorVault(String.format(MESSAGE_ACTION_SUMMARY, Messages.formatProduct(editedProduct)));
 
         String formattedWarnings = warnings.length() == 0
                 ? ""
