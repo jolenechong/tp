@@ -68,7 +68,7 @@ public class InventoryStatsPanel extends UiPart<Region> {
     private static final double TITLE_SCALE = 0.065;
     private static final double VALUE_SCALE = 0.12;
 
-    private static final double TITLE_MIN = 10;
+    private static final double TITLE_MIN = 12;
     private static final double TITLE_MAX = 14;
 
     private static final double VALUE_MIN = 16;

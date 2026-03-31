@@ -25,15 +25,15 @@
             <Region fx:constant="USE_PREF_SIZE" />
           </minWidth>
         </Label>
-        <Label fx:id="name" text="\$first" styleClass="cell_big_label" />
+        <Label fx:id="name" text="\$first" styleClass="cell_big_label" wrapText="true" />
       </HBox>
       <FlowPane fx:id="tags" />
       <Label fx:id="phone" styleClass="cell_small_label" text="\$phone"
-             maxWidth="Infinity" ellipsisString="..." textOverrun="ELLIPSIS" />
+             maxWidth="Infinity" wrapText="true" />
       <Label fx:id="email" styleClass="cell_small_label" text="\$email"
-             maxWidth="Infinity" ellipsisString="..." textOverrun="ELLIPSIS" />
+             maxWidth="Infinity" wrapText="true" />
       <Label fx:id="address" styleClass="cell_small_label" text="\$address"
-             maxWidth="Infinity" ellipsisString="..." textOverrun="ELLIPSIS" />
+             maxWidth="Infinity" wrapText="true" />
     </VBox>
   </GridPane>
 </HBox>
