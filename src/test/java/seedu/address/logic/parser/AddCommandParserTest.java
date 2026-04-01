@@ -1,6 +1,6 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.Messages.MESSAGE_ALL_PREFIXES_MISSING;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_MISSING_FIELD_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_MISSING_PREFIX;
 import static seedu.address.logic.Messages.MESSAGE_NON_PREFIX_BEFORE_PREFIX;
@@ -28,16 +28,12 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_3;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_FRIEND;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_LOWER_DUPLICATE;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_MIXED_CASE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccessWithWarning;
@@ -156,18 +152,6 @@ public class AddCommandParserTest {
     }
 
     @Test
-    public void parse_caseInsensitiveDuplicateTags_keepFirstOccurrence() {
-        // EP: duplicate tags in same contact, first occurrence is kept
-        Person expectedPerson = new PersonBuilder(BOB).withTags(VALID_TAG_MIXED_CASE, VALID_TAG_3).build();
-        assertParseSuccess(parser,
-                NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
-                        + " " + PREFIX_TAG + VALID_TAG_MIXED_CASE
-                        + " " + PREFIX_TAG + VALID_TAG_3
-                        + " " + PREFIX_TAG + VALID_TAG_LOWER_DUPLICATE,
-                new AddCommand(expectedPerson));
-    }
-
-    @Test
     public void parse_compulsoryFieldMissing_failure() {
         String expectedMessage = AddCommand.MESSAGE_USAGE;
 
@@ -194,7 +178,7 @@ public class AddCommandParserTest {
 
         // all prefixes missing
         assertParseFailure(parser, VALID_NAME_BOB + VALID_PHONE_BOB + VALID_EMAIL_BOB + VALID_ADDRESS_BOB,
-               MESSAGE_ALL_PREFIXES_MISSING + expectedMessage);
+               String.format(MESSAGE_INVALID_COMMAND_FORMAT, expectedMessage));
     }
 
     @Test

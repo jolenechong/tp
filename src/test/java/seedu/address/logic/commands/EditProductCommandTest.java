@@ -345,7 +345,8 @@ public class EditProductCommandTest {
         EditProductCommand command =
                 new EditProductCommand(first.getIdentifier().value, descriptor);
 
-        assertCommandFailure(command, model, Messages.MESSAGE_DUPLICATE_PRODUCT);
+        assertCommandFailure(command, model, String.format(
+                Messages.MESSAGE_DUPLICATE_PRODUCT, second.getIdentifier(), second.getName()));
     }
 
     @Test

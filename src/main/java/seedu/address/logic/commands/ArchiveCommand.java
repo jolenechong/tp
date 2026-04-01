@@ -25,8 +25,8 @@ public class ArchiveCommand extends Command {
     public static final String COMMAND_DESCRIPTION = "Archives a contact.";
 
     public static final String MESSAGE_USAGE =
-            COMMAND_WORD + " EMAIL\n"
-            + "Archives the vendor identified by the email in the displayed vendor list.\n"
+            COMMAND_WORD + ": Archives the vendor identified by the email in the displayed vendor list.\n"
+            + "Parameters: EMAIL\n"
             + "Example: " + COMMAND_WORD + " sg.sales@cytron.io";
 
     public static final String MESSAGE_ARCHIVE_SUCCESS =
@@ -36,7 +36,7 @@ public class ArchiveCommand extends Command {
             "archiving of contact: %1$s";
 
     public static final String MESSAGE_VENDOR_NOT_FOUND =
-            "No vendor found with email.";
+            "No vendor found with specified email.";
 
     public static final String MESSAGE_ALREADY_ARCHIVED =
             "This vendor is already archived. Did you want to restore it?";

@@ -27,15 +27,15 @@ public class RestoreProductCommand extends Command {
             "Restores an archived product; lists all archived if no identifier given";
 
     public static final String MESSAGE_USAGE =
-            COMMAND_WORD + " IDENTIFIER\n"
-                    + "Restores the archived product identified by the identifier.\n"
+            COMMAND_WORD + ": Restores the archived product identified by the identifier.\n"
+                    + "Parameters: IDENTIFIER\n"
                     + "Example: " + COMMAND_WORD + " DE/5";
 
     public static final String MESSAGE_ACTION_SUMMARY =
             "restoring of product: %1$s";
 
     public static final String MESSAGE_LIST_ARCHIVED =
-            "Archived products listed below. Use 'restoreproduct IDENTIFIER' to restore one.";
+            "Archived products listed on the right. Use 'restoreproduct IDENTIFIER' to restore one.";
 
     public static final String MESSAGE_NONE_ARCHIVED =
             "No products are currently archived.\n"

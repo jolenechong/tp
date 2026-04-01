@@ -27,6 +27,7 @@ import seedu.address.model.Model;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.model.product.Product;
+import seedu.address.model.product.ProductNameContainsKeywordsPredicate;
 import seedu.address.model.product.warnings.DuplicateProductWarning;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 
@@ -45,10 +46,6 @@ public class CommandTestUtil {
     public static final String VALID_ADDRESS_BOB = "Block 123, Bobby Street 3";
     public static final String VALID_TAG_HUSBAND = "husband";
     public static final String VALID_TAG_FRIEND = "friend";
-
-    public static final String VALID_TAG_MIXED_CASE = "Hi";
-    public static final String VALID_TAG_LOWER_DUPLICATE = "hi"; // case-insensitive duplicate of VALID_TAG_MIXED_CASE
-    public static final String VALID_TAG_3 = "electronics";
 
     public static final String VALID_IDENTIFIER_IPAD = "TAB-1001";
     public static final String VALID_IDENTIFIER_AIRPODS = "AUD/3301";
@@ -180,6 +177,20 @@ public class CommandTestUtil {
         model.updateFilteredPersonList(new NameContainsKeywordsPredicate(Arrays.asList(splitName[0])));
 
         assertEquals(1, model.getFilteredPersonList().size());
+    }
+
+    /**
+     * Updates {@code model}'s filtered list to show only the product at the given {@code targetIndex} in the
+     * {@code model}'s inventory.
+     */
+    public static void showProductAtIndex(Model model, Index targetIndex) {
+        assertTrue(targetIndex.getZeroBased() < model.getFilteredProductList().size());
+
+        Product product = model.getFilteredProductList().get(targetIndex.getZeroBased());
+        final String[] splitName = product.getName().fullName.split("\\s+");
+        model.updateFilteredProductList(new ProductNameContainsKeywordsPredicate(Arrays.asList(splitName[0])));
+
+        assertEquals(1, model.getFilteredProductList().size());
     }
 
     // =========================================================================

@@ -4,7 +4,6 @@ import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static seedu.address.logic.Messages.MESSAGE_DUPLICATE_PRODUCT;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_IDENTIFIER_WARN;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_PRODUCT_NAME_WARN;
 import static seedu.address.logic.commands.CommandTestUtil.assertExactlyOneProductWarning;
@@ -112,9 +111,11 @@ public class AddProductCommandTest {
 
         AddProductCommand addProductCommand = new AddProductCommand(duplicateProduct);
 
-        assertThrows(CommandException.class, MESSAGE_DUPLICATE_PRODUCT, () ->
-                addProductCommand.execute(modelStub));
+        assertThrows(CommandException.class, String.format(Messages.MESSAGE_DUPLICATE_PRODUCT,
+                existingProduct.getIdentifier(), existingProduct.getName()), ()
+                -> addProductCommand.execute(modelStub));
     }
+
     @Test
     public void execute_similarProductName_warnAndAddSuccessful() throws Exception {
         // EP: one existing product with a shared name token -> soft warn, still added
@@ -499,9 +500,16 @@ public class AddProductCommandTest {
             throw new AssertionError("This method should not be called.");
         }
 
+        /**
+         * Commits the current state of VendorVault.
+         *
+         * This is a stub implementation used in tests where state committing
+         * behaviour is not required. The method is invoked as part of normal
+         * command execution but performs no action in the stub model.
+         */
         @Override
         public void commitVendorVault(String actionSummary) {
-            // stub method
+            // intentionally left blank
         }
 
         @Override
@@ -529,6 +537,12 @@ public class AddProductCommandTest {
         final ArrayList<Product> productsAdded = new ArrayList<>();
 
         @Override
+        public Optional<Person> findByEmail(Email email) {
+            requireNonNull(email);
+            return Optional.empty();
+        }
+
+        @Override
         public boolean hasProduct(Product product) {
             requireNonNull(product);
             return productsAdded.stream().anyMatch(product::isSameProduct);
@@ -546,9 +560,11 @@ public class AddProductCommandTest {
         }
 
         @Override
-        public Optional<Person> findByEmail(Email email) {
-            requireNonNull(email);
-            return Optional.empty();
+        public Optional<Product> findById(Identifier id) {
+            requireNonNull(id);
+            return productsAdded.stream()
+                    .filter(product -> product.getIdentifier().equals(id))
+                    .findFirst();
         }
 
         @Override

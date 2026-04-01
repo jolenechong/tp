@@ -35,6 +35,9 @@ public class ClearProductCommand extends Command {
     public static final String MESSAGE_CANCELLED =
             "Clear product operation cancelled.";
 
+    /* Message shown when the operation is undone or redone */
+    public static final String MESSAGE_ACTION_SUMMARY = "clearing of all products";
+
     /** Stores the pending confirmation for this command. */
     private PendingConfirmation pendingConfirmation = new PendingConfirmation();
 
@@ -85,7 +88,7 @@ public class ClearProductCommand extends Command {
      */
     private CommandResult clearProducts(Model model) {
         model.setInventory(new Inventory());
-        model.commitVendorVault(MESSAGE_SUCCESS);
+        model.commitVendorVault(MESSAGE_ACTION_SUMMARY);
         model.updateFilteredProductList(PREDICATE_SHOW_ACTIVE_PRODUCTS);
 
         return new CommandResult(MESSAGE_SUCCESS);

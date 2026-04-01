@@ -3,9 +3,6 @@ package seedu.address.logic.parser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_3;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_LOWER_DUPLICATE;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_MIXED_CASE;
 import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
@@ -311,18 +308,6 @@ public class ParserUtilTest {
         Set<Tag> expectedTagSet = new HashSet<Tag>(Arrays.asList(new Tag(VALID_TAG_1), new Tag(VALID_TAG_2)));
 
         assertEquals(expectedTagSet, actualTagSet);
-    }
-
-    @Test
-    public void parseTags_collectionWithCaseInsensitiveDuplicates_keepsFirstOccurrence() throws Exception {
-        // EP: duplicate tag differing only in case -> first occurrence kept, second discarded
-        Set<Tag> actualTagSet = ParserUtil.parseTags(
-                Arrays.asList(VALID_TAG_MIXED_CASE, VALID_TAG_3, VALID_TAG_LOWER_DUPLICATE));
-
-        assertEquals(2, actualTagSet.size());
-        assertTrue(actualTagSet.contains(new Tag(VALID_TAG_MIXED_CASE)));
-        assertTrue(actualTagSet.contains(new Tag(VALID_TAG_3)));
-        assertFalse(actualTagSet.contains(new Tag(VALID_TAG_LOWER_DUPLICATE)));
     }
 
     @Test

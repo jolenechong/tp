@@ -20,7 +20,7 @@ public class ClearCommand extends Command {
     public static final String CONFIRMATION_CLEAR_MESSAGE =
             "Confirm (y) you want to clear ALL vendor contacts:";
     public static final String MESSAGE_CLEAR_FAILURE = "Clear contact operation cancelled";
-    public static final String MESSAGE_ACTION_SUMMARY = "clearing of all products";
+    public static final String MESSAGE_ACTION_SUMMARY = "clearing of all contacts";
 
     private PendingConfirmation pendingConfirmation = new PendingConfirmation();
 

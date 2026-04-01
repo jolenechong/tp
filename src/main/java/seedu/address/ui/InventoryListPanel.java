@@ -2,7 +2,6 @@ package seedu.address.ui;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
@@ -102,21 +101,27 @@ public class InventoryListPanel extends UiPart<Region> {
         headerRow.maxWidthProperty().bind(
                 parentVBox.widthProperty().subtract(SCROLLBAR_RESERVE));
 
-        isFiltered.set(productList.size() < allProductList.size());
-
-        productList.addListener((ListChangeListener<Product>) c -> {
-            isFiltered.set(productList.size() < allProductList.size());
-        });
-
-        isFiltered.addListener((obs, was, now) -> {
-            inventoryListView.refresh();
-        });
+        isFiltered.set(false);
 
         SortedList<Product> sorted =
                 new SortedList<>(productList, this::compareInventoryItems);
         inventoryListView.setItems(sorted);
         inventoryListView.setCellFactory(lv -> createInventoryCell());
         inventoryListView.setFocusTraversable(false);
+        inventoryListView.setFixedCellSize(Region.USE_COMPUTED_SIZE);
+
+        isFiltered.addListener((obs, was, now) -> {
+            inventoryListView.setFixedCellSize(Region.USE_COMPUTED_SIZE);
+            inventoryListView.refresh();
+        });
+    }
+
+    /**
+     * Sets whether the inventory list is currently in filtered (find) mode.
+     * In filtered mode, all text is fully visible (wraps). In unfiltered mode, text is clipped with ellipsis.
+     */
+    public void setFiltered(boolean filtered) {
+        isFiltered.set(filtered);
     }
 
     /**
@@ -204,13 +209,17 @@ public class InventoryListPanel extends UiPart<Region> {
                 buildQtyBox(item, filtered)
         );
         row.setSpacing(COL_SPACING);
-        row.setAlignment(Pos.CENTER_LEFT);
+        row.setAlignment(filtered ? Pos.TOP_LEFT : Pos.CENTER_LEFT);
         row.setPadding(new Insets(ROW_PAD_V, ROW_PAD_H, ROW_PAD_V, ROW_PAD_H));
+        if (filtered) {
+            row.setMaxHeight(Double.MAX_VALUE);
+        }
         return row;
     }
 
     /**
      * Builds ID label.
+     * Unfiltered: single line with ellipsis. Filtered (find): full text wraps.
      */
     private Label buildIdLabel(Product item, boolean filtered) {
         Label label = new Label(item.getIdentifier().toString());
@@ -219,12 +228,24 @@ public class InventoryListPanel extends UiPart<Region> {
         label.setPrefWidth(ID_WIDTH);
         label.setMaxWidth(ID_WIDTH);
         HBox.setHgrow(label, Priority.NEVER);
-        label.setWrapText(true);
+
+        if (filtered) {
+            label.setWrapText(true);
+            label.setMaxHeight(Double.MAX_VALUE);
+            VBox.setVgrow(label, Priority.NEVER);
+        } else {
+            label.setWrapText(false);
+            label.setMaxHeight(Region.USE_PREF_SIZE);
+            label.setTextOverrun(OverrunStyle.ELLIPSIS);
+        }
+
         return label;
     }
 
     /**
      * Builds product name label with wrapping/ellipsis behavior.
+     * Unfiltered (normal list view): single line with trailing ellipsis.
+     * Filtered (after find): full text wraps across as many lines as needed.
      */
     private Label buildNameLabel(Product item, boolean filtered) {
         Label label = new Label(item.getName().toString());
@@ -236,9 +257,12 @@ public class InventoryListPanel extends UiPart<Region> {
 
         if (filtered) {
             label.setWrapText(true);
-            label.setTextOverrun(OverrunStyle.CLIP);
+            label.setMinHeight(Region.USE_PREF_SIZE);
+            label.setPrefHeight(Region.USE_COMPUTED_SIZE);
+            label.setMaxHeight(Double.MAX_VALUE);
         } else {
             label.setWrapText(false);
+            label.setMaxHeight(Region.USE_PREF_SIZE);
             label.setTextOverrun(OverrunStyle.ELLIPSIS);
         }
 
@@ -246,7 +270,9 @@ public class InventoryListPanel extends UiPart<Region> {
     }
 
     /**
-     * Builds vendor email label.
+     * Builds vendor email label with wrapping/ellipsis behavior.
+     * Unfiltered: single line with trailing ellipsis.
+     * Filtered (after find): full text wraps across as many lines as needed.
      */
     private Label buildEmailLabel(Product item, boolean filtered) {
         Label label = new Label(item.getVendorEmail()
@@ -261,9 +287,12 @@ public class InventoryListPanel extends UiPart<Region> {
 
         if (filtered) {
             label.setWrapText(true);
-            label.setTextOverrun(OverrunStyle.CLIP);
+            label.setMinHeight(Region.USE_PREF_SIZE);
+            label.setPrefHeight(Region.USE_COMPUTED_SIZE);
+            label.setMaxHeight(Double.MAX_VALUE);
         } else {
             label.setWrapText(false);
+            label.setMaxHeight(Region.USE_PREF_SIZE);
             label.setTextOverrun(OverrunStyle.ELLIPSIS);
         }
 

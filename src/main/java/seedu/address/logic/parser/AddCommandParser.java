@@ -1,6 +1,6 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.Messages.MESSAGE_ALL_PREFIXES_MISSING;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_MISSING_FIELD_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_MISSING_PREFIX;
 import static seedu.address.logic.Messages.MESSAGE_NON_PREFIX_BEFORE_PREFIX;
@@ -116,7 +116,7 @@ public class AddCommandParser implements Parser<AddCommand> {
         }
 
         if (missingFields.size() == requiredFields.length) {
-            throw new ParseException(MESSAGE_ALL_PREFIXES_MISSING + AddCommand.MESSAGE_USAGE);
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
         }
 
         throw new ParseException(MESSAGE_MISSING_PREFIX + formatMissingFields(missingFields));

@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.Messages.MESSAGE_DUPLICATE_PRODUCT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_QUANTITY;
@@ -62,6 +63,8 @@ public class EditProductCommand extends Command {
     public static final String MESSAGE_WARN_BELOW_THRESHOLD =
             "⚠ Warning: Product stock is below threshold.";
 
+    public static final String MESSAGE_ACTION_SUMMARY = "edit of contact: %1$s";
+
     private final String targetIdentifier;
     private final EditProductDescriptor editProductDescriptor;
 
@@ -101,7 +104,7 @@ public class EditProductCommand extends Command {
 
         if (!productToEdit.getIdentifier().equals(editedProduct.getIdentifier())
                 && model.hasProduct(editedProduct)) {
-            throw new CommandException(Messages.MESSAGE_DUPLICATE_PRODUCT);
+            throw new CommandException(buildDuplicateProductMessage(model, productToEdit, editedProduct));
         }
 
         // ================= WARNINGS =================
@@ -136,7 +139,7 @@ public class EditProductCommand extends Command {
                 editedProduct
         );
 
-        model.commitVendorVault(successMessage);
+        model.commitVendorVault(String.format(MESSAGE_ACTION_SUMMARY, Messages.formatProduct(editedProduct)));
 
         String formattedWarnings = warnings.length() == 0
                 ? ""
@@ -215,6 +218,13 @@ public class EditProductCommand extends Command {
         }
 
         return updatedEmail;
+    }
+
+    private String buildDuplicateProductMessage(Model model, Product productToEdit, Product editedProduct) {
+        return model.findById(editedProduct.getIdentifier())
+                .filter(match -> !match.equals(productToEdit))
+                .map(match -> String.format(MESSAGE_DUPLICATE_PRODUCT, match.getIdentifier(), match.getName()))
+                .orElse(MESSAGE_DUPLICATE_PRODUCT);
     }
 
     /**

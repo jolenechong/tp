@@ -28,6 +28,8 @@ public class PersonListPanel extends UiPart<Region> {
     private static final String SCROLL_BAR_CSS_CLASS = ".scroll-bar";
     private final Logger logger = LogsCenter.getLogger(PersonListPanel.class);
 
+    private boolean isFiltered = false;
+
     @FXML
     private ListView<Person> personListView;
 
@@ -38,6 +40,17 @@ public class PersonListPanel extends UiPart<Region> {
         super(FXML);
         personListView.setItems(personList);
         personListView.setCellFactory(listView -> new PersonListViewCell());
+        personListView.setFixedCellSize(Region.USE_COMPUTED_SIZE);
+    }
+
+    /**
+     * Sets whether the contact list is in filtered (find) mode.
+     * In filtered mode, phone/email/address wrap fully. Otherwise they ellipsis.
+     */
+    public void setFiltered(boolean filtered) {
+        this.isFiltered = filtered;
+        personListView.setFixedCellSize(Region.USE_COMPUTED_SIZE);
+        personListView.refresh();
     }
 
     /**
@@ -94,8 +107,7 @@ public class PersonListPanel extends UiPart<Region> {
                 setGraphic(null);
                 setText(null);
             } else {
-                boolean wrapDetails = personListView.getItems().size() == 1;
-                setGraphic(new PersonCard(person, getIndex() + 1, wrapDetails).getRoot());
+                setGraphic(new PersonCard(person, getIndex() + 1, isFiltered).getRoot());
             }
         }
     }

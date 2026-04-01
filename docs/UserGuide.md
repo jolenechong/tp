@@ -980,12 +980,6 @@ Use this section when `add` fails or returns a warning.
 | Tag is too long                                                | `Tag names should be at most 50 characters`                               | Shorten the tags that are too long.                                          |
 | Contact duplicates an existing contact by same email.          | `This vendor contact already exists with the same email.`                 | Change the email address, or edit the existing contact instead.              |
 
-<box type="tip" seamless>
-
-**Tip:** If duplicate tags that differ only by case are provided for the same contact, only the first will be kept.
-
-</box>
-
 <panel header="What's considered a valid Contact Email?" type="seamless" id="contact-email-format">
 
 Email should be of the format local-part@domain and adhere to the following constraints:

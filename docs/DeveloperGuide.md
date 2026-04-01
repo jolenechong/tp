@@ -719,23 +719,23 @@ By flagging and sorting low-quantity products, owners instantly know what needs 
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …      | I want to …               | So that I can …                                                   |
-|----------|-------------|---------------------------|-------------------------------------------------------------------|
-| `* *`    | new user    | see usage guide           | recap and learn commands                                          |
-| `* * *`  | user        | add a new contact         | add new vendors I work with                                       |
-| `* * *`  | user        | delete a contact          | remove vendors I no longer work with                              |
-| `* * *`  | user        | view contacts             |                                                                   |
-| `* *`    | user        | find a contact by name    | locate their details without having to go through the entire list |
-| `*`      | user        | sort contacts by name     | browse them easily                                                |
-| `* * *`  | user        | add a product             | add new products I sell                                           |
-| `* * *`  | user        | delete a product          | remove products I no longer sell                                  |
-| `* * *`  | user        | view products             |                                                                   |
-| `* *`    | user        | find a product by name    | locate their details without having to go through the entire list |
-| `*`      | user        | sort products by name     | browse them easily                                                |
-| `* *`    | user        | view inventory statistics | understand my product quantity levels                             |
-| `* *`    | expert user | add alias for commands    | create alias for long commands according to my preferences        |
-| `* *`    | expert user | delete alias for commands | remove alias for I no longer want to use                          |
-| `* *`    | expert user | view aliases for commands | view all aliases that I have set                                  |
+| Priority | As a …      | I want to …                      | So that I can …                                                   |
+|----------|-------------|----------------------------------|-------------------------------------------------------------------|
+| `* *`    | new user    | see usage guide                  | recap and learn commands                                          |
+| `* * *`  | user        | add a new contact                | add new vendors I work with                                       |
+| `* * *`  | user        | delete a contact                 | remove vendors I no longer work with                              |
+| `* * *`  | user        | view contacts                    |                                                                   |
+| `* *`    | user        | find a contact by name           | locate their details without having to go through the entire list |
+| `*`      | user        | sort contacts by name            | browse them easily                                                |
+| `* * *`  | user        | add a product                    | add new products I sell                                           |
+| `* * *`  | user        | delete a product                 | remove products I no longer sell                                  |
+| `* * *`  | user        | view products                    |                                                                   |
+| `* *`    | user        | find a product by name           | locate their details without having to go through the entire list |
+| `*`      | user        | sort products by name/identifier | browse them easily                                                |
+| `* *`    | user        | view inventory statistics        | understand my product quantity levels                             |
+| `* *`    | expert user | add alias for commands           | create alias for long commands according to my preferences        |
+| `* *`    | expert user | delete alias for commands        | remove alias for I no longer want to use                          |
+| `* *`    | expert user | view aliases for commands        | view all aliases that I have set                                  |
 
 ### Use cases
 
@@ -786,17 +786,10 @@ Use case ends.
 
 **MSS**
 
-1. User chooses to view vendor contact.
-2. VV shows the contact information for all vendors
+1. User chooses to view all vendor contacts.
+2. VV shows all vendor contacts.
 
 Use case ends.
-
-**Extensions**
-
-* 2a. VV detects there is no contact found.
-  * 2a1. VV will create a new contact file with preloaded information.
-
-  Use case resumes from step 2.
 
 **Use case: UC3 - Delete Vendor Contact**
 
@@ -818,64 +811,75 @@ Use case ends.
 
   Use case ends.
 
-**Use Case: UC4 - Add Product**
+**Use case: UC4 - Find Vendor Contact**
 
-**Preconditions: Application is running, user is on the main screen.**
+**Preconditions: Application is running, user is on the main screen and has added a contact.**
 
 **MSS**
 
-1. User chooses to add a Product.
-2. VV validates that all compulsory fields are present.
-3. VV validates the format of the provided data.
-4. VV checks that the product does not already exist.
-5. VV creates the product.
-6. VV adds the product to the inventory.
-7. VV saves the updated inventory to storage.
-8. VV displays a success message.
+1. User chooses to find a vendor contact by entering one or more keywords.
+2. VV searches vendor contacts using the provided keyword(s).
+3. VV displays the matching vendor contacts.
 
 Use case ends.
 
 **Extensions**
 
-* 3a. VV detects error in provided data (e.g. missing compulsory fields, invalid data format).
-  * 3a1. VV displays an appropriate error message indicating the invalid or missing field.
-  * 3a2. User re-provides the corrected data.
-
-  Steps 3a1–3a2 are repeated until all fields are valid.
-
-  Use case resumes from step 4.
-
-* 4a. VV detects duplicate product.
-  * 4a1. VV displays an error.
-  * 4a2. User re-provides the corrected data.
-
-  Steps 4a1–4a2 are repeated until a unique ID is provided.
-
-  Use case resumes from step 5.
-
-* 7a. Storage file cannot be written or accessed.
-  * 7a1. VV displays a failure message indicating inventory could not be saved.
+* 1a. User provides no keyword.
+  * 1a1. VV displays an error indicating missing keywords.
 
   Use case ends.
 
-**Use Case: UC 5 - View Products**
+**Use Case: UC5 - Add Product**
 
 **Preconditions: Application is running, user is on the main screen.**
 
 **MSS**
-1. User chooses to view products and their quantity.
-2. VV shows the quantity for all products.
+
+1. User enters data to add a Product.
+2. VV validates the input data.
+3. VV checks that the product does not already exist.
+4. VV creates the product.
+5. VV adds the product to the inventory.
+6. VV saves the updated inventory to storage.
+7. VV displays a success message.
 
 Use case ends.
 
 **Extensions**
 
-* 2a. VV detects there are no products found.
-  * 2a1. VV will create a new file with preloaded product information.
+* 2a. VV detects error in provided data (e.g. missing compulsory fields, invalid data format).
+  * 2a1. VV displays an appropriate error message indicating the invalid or missing field.
+  * 2a2. User re-provides the corrected data.
 
-  Use case resumes from step 2.
+  Steps 2a1–2a2 are repeated until all fields are valid.
 
-**Use case: UC6 - Delete Product**
+  Use case resumes from step 4.
+
+* 3a. VV detects duplicate product.
+  * 3a1. VV displays an error.
+  * 3a2. User re-provides the corrected data.
+
+  Steps 3a1–3a2 are repeated until a unique ID is provided.
+
+  Use case resumes from step 5.
+
+* 6a. Storage file cannot be written or accessed.
+  * 6a1. VV displays an error indicating inventory could not be saved.
+
+  Use case ends.
+
+**Use Case: UC6 - View Products**
+
+**Preconditions: Application is running, user is on the main screen.**
+
+**MSS**
+1. User chooses to view all products.
+2. VV shows all products.
+
+Use case ends.
+
+**Use case: UC7 - Delete Product**
 
 **Preconditions: Application is running, user is on the main screen and has added a product.**
 
@@ -895,6 +899,9 @@ Use case ends.
 
   Use case ends.
 
+**Use case: UC8 - Find Product**
+
+Analogous to UC4.
 
 ### Non-Functional Requirements
 
@@ -936,10 +943,12 @@ Accessibility:
 
 ### Glossary
 
-* **Mainstream OS**: Windows, Linux, Unix, MacOS
+* **Mainstream OS**: Windows, Linux, MacOS
 * **Contact/Vendor Contact**: A stored record containing a vendor’s name, phone number, email, address, and optional tags.
-* **Inventory Item/Product**: A product entry tracked by the system, identified by a unique product ID, name, and quantity.
-* **Product ID**: A non-negative integer that uniquely identifies a product in the inventory.
+* **Inventory**: The system that holds a set of products
+* **Product**: An entry to the inventory; contains the product's identifier, name, quantity, restock threshold and 
+  email of associated vendor.
+* **Product Identifier**: A string that uniquely identifies a product
 * **Command**: A user input instruction entered into the CLI to perform an action (e.g. add, delete, list).
 * **Prefix**: A keyword used to identify parameters in a command (e.g. n/, p/, e/, q/).
 
@@ -961,9 +970,7 @@ Accessibility:
 
    - Resize the window as desired. Move the window to a different location. Close the window.
 
-   - Re-launch app.<br> Expected: The most recent window size and location is retained.
-
-3. _{ more test cases …​ }_
+   - Re-launch app. Expected: The most recent window size and location is retained.
 
 ### Deleting a contact
 
@@ -985,15 +992,84 @@ Accessibility:
 
 5. _{ more test cases …​ }_
 
+### Finding a contact
+
+1. Prerequisites: There should be a contact named Adafruit Industries
+
+2. Test case: `find`
+   - Expected: `Invalid command format! …` error
+
+3. Test case: `find ada`
+   - Expected: Contact named Adafruit Industries is listed
+
+### Adding a product
+
+1. Prerequisites: There should be a contact with email support@adafruit.com
+
+2. Test case: `addproduct id/SKU-1003 n/Arduino Uno R4 q/50 th/10 e/support@adafruit.com`
+   - Expected: Product with the above details is added
+
+3. Test case: `addproduct id/SKU-288`
+   - Expected: `Missing required field(s): n/ (product name)` error
+
+4. Test case: `addproduct id/SKU-1003 n/HP LaserJet (M428fdw) q/17 th/15 e/support@adafruit.com`
+   - Expected: `This product already exists with the same identifier.` error
+
+5. Test case: `addproduct id/SKU-1004 n/HP LaserJet (M428fdw) q/17 th/15 e/sg.sales@cytron.io`
+   - Expected: `Vendor email sg.sales@cytron.io does not match any existing contact.` error 
+
+### Finding a product
+
+1. Prerequisites: There should be a product named Arduino Uno R4
+
+2. Test case: `findproduct`
+   - Expected: `Invalid command format! …`
+
+3. Test case: `findproduct uno`
+   - Expected: Product named Arduino Uno R4 is listed
+
+### Changing default threshold
+
+1. Prerequisites: None
+
+2. Test case: `threshold`
+   - Expected: `Invalid command format! …`
+
+3. Test case: `threshold 5`
+   - Expected: `Default restock threshold set to: 5` success
+
+4. Test case: `addproduct id/DE/5 n/PlayStation q/0 e/sg.sales@cytron.io`
+   - Expected: Product added with threshold defaulting to 5
+
 ### Saving data
 
-1. Dealing with missing/corrupted data files
+1. Prerequisites: App is running
 
-   - _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+2. Test case: Run a command that modifies data and restart the app
+   - Expected: The modified data is saved
 
-2. _{ more test cases …​ }_
+3. Test case: Delete `/data/addressbook.json` and restart the app
+   - Expected: App initialises sample contact data 
+
+4. Test case: Enter invalid JSON to `/data/inventory.json` and restart the app
+  - Expected: `WARNING: Error reading from jsonFile` is logged to the terminal and app starts with empty inventory
+
+5. Test case: Enter invalid JSON to `/preferences.json` and restart the app
+   - Expected: `WARNING: Error reading from jsonFile file preferences.json` logged to the console and app starts with default preferences 
 
 ## **Appendix: Effort**
+
+### Difficulty & Challenges
+
+1. While AB3 deals with one entity, our app handles and integrates two distinct entities.
+
+### Effort & Achievements
+
+1. Higher implementation effort required from us due to more complex scope; each member contributed about 6k LoC
+
+2. Deepened existing features and created new features that complement them
+
+3. Overcoming integration challenges to keep code and documentation aligned
 
 ## **Appendix: Planned Enhancements**
 
