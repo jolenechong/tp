@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
@@ -67,10 +66,6 @@ public class ArchiveProductCommandTest {
 
         CommandResult result = new ArchiveProductCommand("p1").execute(model);
 
-        String expectedMessage = String.format(ArchiveProductCommand.MESSAGE_USAGE
-                .split("\n")[0].replace("archiveproduct IDENTIFIER", "Archived Product: %1$s"),
-                Messages.formatProduct(product));
-
         // Check the message starts with "Archived Product:"
         assertTrue(result.getFeedbackToUser().startsWith("Archived Product:"));
     }
@@ -82,7 +77,7 @@ public class ArchiveProductCommandTest {
         ArchiveProductCommand command = new ArchiveProductCommand("invalid");
 
         CommandException exception = assertThrows(CommandException.class, () -> command.execute(model));
-        assertEquals("No product found with identifier.", exception.getMessage());
+        assertEquals(ArchiveProductCommand.MESSAGE_PRODUCT_NOT_FOUND, exception.getMessage());
     }
 
     @Test
