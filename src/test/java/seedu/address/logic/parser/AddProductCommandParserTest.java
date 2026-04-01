@@ -1,7 +1,7 @@
 package seedu.address.logic.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static seedu.address.logic.Messages.MESSAGE_ALL_PREFIXES_MISSING;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_MISSING_FIELD_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_MISSING_PREFIX;
 import static seedu.address.logic.Messages.MESSAGE_NON_PREFIX_BEFORE_PREFIX;
@@ -156,7 +156,7 @@ public class AddProductCommandParserTest {
     @Test
     public void parse_allRequiredPrefixesMissing_failure() {
         String userInput = VALID_IDENTIFIER_IPAD + VALID_PRODUCT_NAME_IPAD;
-        String expectedMessage = MESSAGE_ALL_PREFIXES_MISSING + MESSAGE_USAGE;
+        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, MESSAGE_USAGE);
 
         assertParseFailure(parser, userInput, expectedMessage);
     }
