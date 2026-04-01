@@ -30,9 +30,9 @@ public class AddProductCommand extends Command {
             + "[" + PREFIX_QUANTITY + "QUANTITY] "
             + "[" + PREFIX_THRESHOLD + "THRESHOLD] "
             + "[" + PREFIX_EMAIL + "VENDOR_EMAIL]";
-    public static final String COMMAND_DESCRIPTION = "Adds a product to the inventory.";
+    public static final String COMMAND_DESCRIPTION = "Adds a product";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": " + COMMAND_DESCRIPTION + " "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": " + COMMAND_DESCRIPTION + "\n"
             + "Parameters: "
             + PREFIX_IDENTIFIER + "IDENTIFIER "
             + PREFIX_NAME + "NAME "
@@ -40,11 +40,11 @@ public class AddProductCommand extends Command {
             + "[" + PREFIX_THRESHOLD + "THRESHOLD] "
             + "[" + PREFIX_EMAIL + "VENDOR_EMAIL]\n"
             + "Example: " + COMMAND_WORD + " "
-            + PREFIX_IDENTIFIER + "A1 "
-            + PREFIX_NAME + "iPad 11 Pro "
-            + PREFIX_QUANTITY + "20 "
-            + PREFIX_THRESHOLD + "5 "
-            + PREFIX_EMAIL + "sg.sales@cytron.io";
+            + PREFIX_IDENTIFIER + "SKU-1003 "
+            + PREFIX_NAME + "Arduino Uno R4 "
+            + PREFIX_QUANTITY + "50 "
+            + PREFIX_THRESHOLD + "10 "
+            + PREFIX_EMAIL + "e/sales@techsource.com";
 
     public static final String MESSAGE_SUCCESS = "New product added: %1$s";
     public static final String MESSAGE_VENDOR_DOES_NOT_EXIST = "Vendor email %1$s does not match any existing contact.";
