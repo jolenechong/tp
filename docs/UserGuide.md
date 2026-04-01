@@ -1042,10 +1042,12 @@ Most errors and warnings in `add` also occur in `edit`, except the first three e
 
 Use this section when `archive` fails.
 
-| Scenario                           | Message shown                             | How to fix                                                                     |
-|------------------------------------|-------------------------------------------|--------------------------------------------------------------------------------|
-| No email provided                  | `Email must be provided.`                 | Provide the vendor's email: `archive EMAIL`.                                   |
-| Email does not match any contact   | `No vendor found with email: EMAIL`       | Check the email is correct and that the contact exists in the active list.     |
+| Scenario                             | Message shown                                                                      | How to fix                                                                                        |
+|--------------------------------------|------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| No email provided                    | `Invalid command format! archive: Archives the vendor...`                          | Provide the vendor's email: `archive EMAIL`.                                                      |
+| Email format is invalid              | `Email should be a valid format (e.g. user@example.com).`                          | Ensure the email is correctly formatted, e.g. `archive sg.sales@cytron.io`.                       |
+| Email does not match any contact     | `No vendor found with the specified email.`                                        | Check the email is correct and that the contact exists in the active list. Use `list` to verify.  |
+| Contact is already archived          | `This vendor is already archived. Did you want to restore it?`                     | Use `restore EMAIL` instead to bring the contact back to the active list.                         |
 
 <div style="height: 30px;"></div>
 
@@ -1053,9 +1055,11 @@ Use this section when `archive` fails.
 
 Use this section when `restore` fails.
 
-| Scenario                                        | Message shown                                                         | How to fix                                                                         |
-|-------------------------------------------------|-----------------------------------------------------------------------|------------------------------------------------------------------------------------|
-| Email provided but no matching archived contact | `No archived vendor found with email: EMAIL` (archived list is shown) | Check the email is correct. The archived contacts panel will be shown to help you. |
+| Scenario                                        | Message shown                                                                               | How to fix                                                                                            |
+|-------------------------------------------------|---------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| Invalid email format provided                   | `Email should be a valid format (e.g. user@example.com).`                                   | Ensure the email is correctly formatted, e.g. `restore sg.sales@cytron.io`.                           |
+| No archived contacts exist (no email given)     | `No vendors are currently archived. Use 'archive EMAIL' to archive a vendor first.`         | Archive a contact first using `archive EMAIL` before attempting to restore.                           |
+| Email provided but no matching archived contact | `No archived vendor found with the specified email.` (archived list is shown)               | Check the email is correct. The archived contacts panel will be shown to help you find the right one. |
 
 <div style="height: 30px;"></div>
 
@@ -1156,10 +1160,11 @@ Common `editproduct` warnings:
 
 Use this section when `archiveproduct` fails.
 
-| Scenario                              | Message shown                                  | How to fix                                                                      |
-|---------------------------------------|------------------------------------------------|---------------------------------------------------------------------------------|
-| No identifier provided                | `archiveproduct IDENTIFIER ...`                | Provide the product identifier: `archiveproduct IDENTIFIER`.                    |
-| Identifier does not match any product | `No product found with identifier: IDENTIFIER` | Check the identifier is correct and that the product exists in the active list. |
+| Scenario                                 | Message shown                                                                      | How to fix                                                                                              |
+|------------------------------------------|------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| No identifier provided                   | `Invalid command format! archiveproduct: Archives the product...`                  | Provide the product identifier: `archiveproduct IDENTIFIER`.                                            |
+| Identifier does not match any product    | `No product found with the specified identifier.`                                  | Check the identifier is correct and that the product exists in the active list. Use `listproduct`.      |
+| Product is already archived              | `This product is already archived. Did you want to restore it?`                    | Use `restoreproduct IDENTIFIER` instead to bring the product back to the active list.                   |
 
 <div style="height: 30px;"></div>
 
@@ -1167,9 +1172,10 @@ Use this section when `archiveproduct` fails.
 
 Use this section when `restoreproduct` fails.
 
-| Scenario                                             | Message shown                                                                 | How to fix                                                                                            |
-|------------------------------------------------------|-------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
-| Identifier provided but no matching archived product | `No archived product found with identifier: IDENTIFIER` (archived list shown) | Check the identifier is correct. The archived products panel will be shown to help you identify the right one. |
+| Scenario                                             | Message shown                                                                                    | How to fix                                                                                                  |
+|------------------------------------------------------|--------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| No archived products exist (no identifier given)     | `No products are currently archived. Use 'archiveproduct IDENTIFIER' to archive a product first.` | Archive a product first using `archiveproduct IDENTIFIER` before attempting to restore.                    |
+| Identifier provided but no matching archived product | `No archived product found with the specified identifier.` (archived list shown)                 | Check the identifier is correct. The archived products panel will be shown to help you find the right one. |
 
 <div style="height: 30px;"></div>
 
