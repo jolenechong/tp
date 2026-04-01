@@ -17,12 +17,12 @@ public class FindCommand extends Command {
 
     public static final String COMMAND_WORD = "find";
     public static final String COMMAND_USAGE = COMMAND_WORD + " KEYWORD [MORE_KEYWORDS]...";
-    public static final String COMMAND_DESCRIPTION = "Lists all contacts matching KEYWORD.";
+    public static final String COMMAND_DESCRIPTION = "Lists contacts whose names contain any of the given "
+            + "keyword(s)";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds all contacts whose names contain any of "
-            + "the specified keywords.\n"
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": " + COMMAND_DESCRIPTION + "\n"
             + "Parameters: KEYWORD [MORE_KEYWORDS]...\n"
-            + "Example: " + COMMAND_WORD + " adafruit cytron";
+            + "Example: " + COMMAND_WORD + " TechSource";
 
     private final NameContainsKeywordsScoredPredicate predicate;
 
