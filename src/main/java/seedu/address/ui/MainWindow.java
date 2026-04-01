@@ -14,6 +14,8 @@ import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
+import seedu.address.logic.commands.FindCommand;
+import seedu.address.logic.commands.FindProductCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -202,6 +204,12 @@ public class MainWindow extends UiPart<Stage> {
         try {
             CommandResult commandResult = logic.execute(commandText);
             logger.info("Result: " + commandResult.getFeedbackToUser());
+
+            String trimmed = commandText.trim().toLowerCase();
+            boolean isFind = trimmed.startsWith(FindProductCommand.COMMAND_WORD)
+                    || trimmed.startsWith(FindCommand.COMMAND_WORD);
+            inventoryListPanel.setFiltered(isFind);
+            personListPanel.setFiltered(isFind);
 
             handleCommandResultEffects(commandResult);
 

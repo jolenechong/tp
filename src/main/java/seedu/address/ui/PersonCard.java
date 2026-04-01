@@ -64,11 +64,17 @@ public class PersonCard extends UiPart<Region> {
         phone.setText(person.getPhone().value);
         address.setText(person.getAddress().value);
         email.setText(person.getEmail().value);
-        if (wrapDetails) {
-            phone.setWrapText(true);
-            email.setWrapText(true);
-            address.setWrapText(true);
+
+        phone.setWrapText(wrapDetails);
+        email.setWrapText(wrapDetails);
+        address.setWrapText(wrapDetails);
+
+        if (!wrapDetails) {
+            phone.setTextOverrun(javafx.scene.control.OverrunStyle.ELLIPSIS);
+            email.setTextOverrun(javafx.scene.control.OverrunStyle.ELLIPSIS);
+            address.setTextOverrun(javafx.scene.control.OverrunStyle.ELLIPSIS);
         }
+
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
