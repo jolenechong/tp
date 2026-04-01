@@ -592,9 +592,16 @@ public class AddressBookParserTest {
             throw new AssertionError("This method should not be called.");
         }
 
+        /**
+         * Commits the current state of VendorVault.
+         *
+         * This is a stub implementation used in tests where state committing
+         * behaviour is not required. The method is invoked as part of normal
+         * command execution but performs no action in the stub model.
+         */
         @Override
         public void commitVendorVault(String actionSummary) {
-            // stub method
+            // intentionally left blank
         }
 
         @Override
