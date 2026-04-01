@@ -46,10 +46,6 @@ public class CommandTestUtil {
     public static final String VALID_TAG_HUSBAND = "husband";
     public static final String VALID_TAG_FRIEND = "friend";
 
-    public static final String VALID_TAG_MIXED_CASE = "Hi";
-    public static final String VALID_TAG_LOWER_DUPLICATE = "hi"; // case-insensitive duplicate of VALID_TAG_MIXED_CASE
-    public static final String VALID_TAG_3 = "electronics";
-
     public static final String VALID_IDENTIFIER_IPAD = "TAB-1001";
     public static final String VALID_IDENTIFIER_AIRPODS = "AUD/3301";
     public static final String VALID_PRODUCT_NAME_IPAD = "iPad Air 11";
