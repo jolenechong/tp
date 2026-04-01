@@ -535,7 +535,7 @@ The same rules for email that apply to add also apply to edit. For more details 
 
 #### Locating products : `findproduct`
 
-Finds products whose name matches the given keyword(s).
+Finds products whose names contain any of the given keyword(s).
 
 Format:
 
@@ -826,7 +826,7 @@ exit
 | **Edit Product**    | `editproduct IDENTIFIER [id/NEW_IDENTIFIER] [n/NAME] [q/QUANTITY] [th/RESTOCK_THRESHOLD] [e/VENDOR_EMAIL]` | `editproduct SKU-1003 n/Arduino Mega q/35`                                  | Edits a product's details                                               |
 | **Delete Product**  | `deleteproduct PRODUCT_IDENTIFIER`                                                                         | `deleteproduct SKU-1003`                                                    | Deletes a product                                                       |
 | **List Products**   | `listproduct`                                                                                              | &nbsp;                                                                      | Lists active products                                                   |
-| **Find Products**   | `findproduct KEYWORD [MORE_KEYWORDS]`                                                                                             | `findproduct uno`                                                           | Lists products with names containing any of the given keyword(s)                              |
+| **Find Products**   | `findproduct KEYWORD [MORE_KEYWORDS]`                                                                                             | `findproduct uno`                                                           | Lists products whose names contain any of the given keyword(s)          |
 | **Archive Product** | `archiveproduct IDENTIFIER`                                                                                | `archiveproduct SKU-1003`                                                   | Archives a product                                                      |
 | **Restore Product** | `restoreproduct [IDENTIFIER]`                                                                              | `restoreproduct SKU-1003`                                                   | Restores an archived product; lists all archived if no identifier given |
 | **Clear Products**  | `clearproduct`                                                                                             | &nbsp;                                                                      | Clears all products                                                     |
@@ -1248,7 +1248,7 @@ Name is recommended to meet the following guidelines, otherwise you will see a w
 <panel header="Recommended contact phone number format" type="seamless" id="contact-phone-format">
 
 Phone number(s) is recommended to meet the following guidelines, otherwise you will see a warning:
-* It should contain only digits, spaces, '+' or '-' in the number part.
+* It can contain only digits, spaces, '+' or '-' in the number part.
 * Multiple phone numbers should be separated by commas.
 Example: 12345678, 62345678
 
