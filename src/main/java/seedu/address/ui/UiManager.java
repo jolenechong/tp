@@ -64,6 +64,7 @@ public class UiManager implements Ui {
         primaryStage.getIcons().add(getImage(ICON_APPLICATION));
 
         try {
+            logFontCandidateAvailability();
             initBrandFonts();
             resolvedDarkThemeUrl = buildResolvedDarkThemeStylesheetUrl();
 
@@ -108,14 +109,15 @@ public class UiManager implements Ui {
             MONO_FONT_CANDIDATES);
     }
 
-    private void logCandidateGroup(
-            String groupName, Set<String> availableFontNamesLower, String... candidates) {
+    private void logCandidateGroup(String groupName,
+                                   Set<String> availableFontNamesLower,
+                                   String... candidates) {
         List<String> statuses = new ArrayList<>();
         for (String candidate : candidates) {
             boolean isAvailable = availableFontNamesLower.contains(candidate.toLowerCase());
             statuses.add(candidate + "=" + (isAvailable ? "available" : "missing"));
         }
-        logger.info(groupName + ": " + String.join(", ", statuses));
+        logger.fine(groupName + ": " + String.join(", ", statuses));
     }
 
     private String resolveFirstAvailableFontName(String... candidates) {
