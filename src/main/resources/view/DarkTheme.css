@@ -5,14 +5,14 @@
 
 .label {
     -fx-font-size: 11pt;
-    -fx-font-family: "__VV_FONT_UI_SEMIBOLD__";
+    -fx-font-family: "__VV_FONT_UI__";
     -fx-text-fill: #555555;
     -fx-opacity: 0.9;
 }
 
 .label-bright {
     -fx-font-size: 11pt;
-    -fx-font-family: "__VV_FONT_UI_SEMIBOLD__";
+    -fx-font-family: "__VV_FONT_UI__";
     -fx-text-fill: white;
     -fx-opacity: 1;
 }
@@ -26,7 +26,7 @@
 
 .text-field {
     -fx-font-size: 12pt;
-    -fx-font-family: "__VV_FONT_UI_SEMIBOLD__";
+    -fx-font-family: "__VV_FONT_UI__";
 }
 
 .tab-pane {
@@ -121,7 +121,7 @@
 }
 
 .cell_big_label {
-    -fx-font-family: "__VV_FONT_UI_SEMIBOLD__";
+    -fx-font-family: "__VV_FONT_UI__";
     -fx-font-size: 16px;
     -fx-text-fill: #010504;
 }
