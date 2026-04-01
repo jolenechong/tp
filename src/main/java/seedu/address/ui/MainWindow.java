@@ -4,11 +4,13 @@ import java.util.logging.Logger;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
@@ -138,6 +140,16 @@ public class MainWindow extends UiPart<Stage> {
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
     }
 
+    private boolean isWithinScreenBounds(double x, double y, double width, double height) {
+        Rectangle2D windowRectangle = new Rectangle2D(x, y, width, height);
+        for (Screen screen : Screen.getScreens()) {
+            if (screen.getVisualBounds().intersects(windowRectangle)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Sets the default size and minimum size based on {@code guiSettings} and sets
      * to maximized if it is specified in {@code guiSettings}.
@@ -155,8 +167,18 @@ public class MainWindow extends UiPart<Stage> {
         primaryStage.setHeight(guiSettings.getWindowHeight());
         primaryStage.setWidth(guiSettings.getWindowWidth());
         if (guiSettings.getWindowCoordinates() != null) {
-            primaryStage.setX(guiSettings.getWindowCoordinates().getX());
-            primaryStage.setY(guiSettings.getWindowCoordinates().getY());
+
+            double savedX = guiSettings.getWindowCoordinates().getX();
+            double savedY = guiSettings.getWindowCoordinates().getY();
+            double savedW = guiSettings.getWindowWidth();
+            double savedH = guiSettings.getWindowHeight();
+
+            if (isWithinScreenBounds(savedX, savedY, savedW, savedH)) {
+                primaryStage.setX(guiSettings.getWindowCoordinates().getX());
+                primaryStage.setY(guiSettings.getWindowCoordinates().getY());
+            } else {
+                primaryStage.setMaximized(true);
+            }
         }
     }
 
