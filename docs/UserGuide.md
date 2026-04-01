@@ -294,7 +294,7 @@ The same rules for multiple phone numbers and duplicates that apply to `add` als
 
 #### Locating contacts: `find`
 
-Finds contacts whose name matches the given keyword(s).
+Displays contacts whose name contain any of the given keyword(s).
 
 Format:
 
@@ -535,7 +535,7 @@ The same rules for email that apply to add also apply to edit. For more details 
 
 #### Locating products : `findproduct`
 
-Finds products whose name matches the given keyword(s).
+Displays products whose names contain any of the given keyword(s).
 
 Format:
 
@@ -811,7 +811,7 @@ exit
 | **Edit Contact**      | `edit EMAIL [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`  | `edit sales@techsource.com n/TechSource p/61234568`                                                        | Edits a contact's details                                          |
 | **Delete Contact**    | `delete EMAIL`                                                          | `delete sales@techsource.com`                                                                              | Deletes a contact                                                  |
 | **List Contacts**     | `list`                                                                  | &nbsp;                                                                                                     | Lists active contacts                                              |
-| **Find Contacts**     | `find KEYWORD [MORE_KEYWORDS]`                                          | `find TechSource`                                                                                          | Lists contacts whose name matches `KEYWORD`                        |
+| **Find Contacts**     | `find KEYWORD [MORE_KEYWORDS]`                                          | `find TechSource`                                                                                          | Displays contacts whose names contain any of the given keyword(s)  |
 | **Archive Contact**   | `archive EMAIL`                                                         | `archive sales@techsource.com`                                                                             | Archives a contact                                                 |
 | **Restore Contact**   | `restore [EMAIL]`                                                       | `restore sales@techsource.com`                                                                             | Restores an archived contact; lists all archived if no email given |
 | **Clear Contacts**    | `clear`                                                                 | &nbsp;                                                                                                     | Clears all contacts                                                |
@@ -826,7 +826,7 @@ exit
 | **Edit Product**    | `editproduct IDENTIFIER [id/NEW_IDENTIFIER] [n/NAME] [q/QUANTITY] [th/RESTOCK_THRESHOLD] [e/VENDOR_EMAIL]` | `editproduct SKU-1003 n/Arduino Mega q/35`                                  | Edits a product's details                                               |
 | **Delete Product**  | `deleteproduct PRODUCT_IDENTIFIER`                                                                         | `deleteproduct SKU-1003`                                                    | Deletes a product                                                       |
 | **List Products**   | `listproduct`                                                                                              | &nbsp;                                                                      | Lists active products                                                   |
-| **Find Products**   | `findproduct KEYWORD [MORE_KEYWORDS]`                                                                                             | `findproduct uno`                                                           | Lists products whose name matches `KEYWORD`                              |
+| **Find Products**   | `findproduct KEYWORD [MORE_KEYWORDS]`                                                                                             | `findproduct uno`                                                           | Displays products whose names contain any of the given keyword(s)       |
 | **Archive Product** | `archiveproduct IDENTIFIER`                                                                                | `archiveproduct SKU-1003`                                                   | Archives a product                                                      |
 | **Restore Product** | `restoreproduct [IDENTIFIER]`                                                                              | `restoreproduct SKU-1003`                                                   | Restores an archived product; lists all archived if no identifier given |
 | **Clear Products**  | `clearproduct`                                                                                             | &nbsp;                                                                      | Clears all products                                                     |
@@ -839,7 +839,7 @@ exit
 |---------------------------------------|----------------------------------------|----------------------------------------|-----------------------------------------------------------------|
 | **Alias**                             | `alias [ORIGINAL_COMMAND] [ALIAS]`     | `alias list ls`                        | Adds a new alias; lists all aliases if no arguments given       |
 | **Delete Alias**                      | `deletealias [ALIAS]`                  | `deletealias ls`                       | Deletes an existing alias                                       |
-| **Change Default Threshold**          | `threshold DEFAULT_THRESHOLD`          | `threshold 5`                          | Changes the default restock threshold used when adding products |
+| **Change Default Threshold**          | `threshold DEFAULT_THRESHOLD`          | `threshold 5`                          | Changes the default restock threshold |
 | **Undo**                              | `undo`                                 | &nbsp;                                 | Undoes previous change                                          |
 | **Redo**                              | `redo`                                 | &nbsp;                                 | Redoes last undone change                                       |
 | **List All**                          | `listall`                              | &nbsp;                                 | Lists all active contacts and products                          |
@@ -1038,6 +1038,16 @@ Most errors and warnings in `add` also occur in `edit`, except the first three e
 
 <div style="height: 30px;"></div>
 
+#### Troubleshooting `find` contact
+
+Use this section when `find` fails.
+
+| Scenario               | Message shown                 | How to fix          |
+|------------------------|-------------------------------|---------------------|
+| No keyword is provided | `Invalid command format! ...` | Provide keyword(s). |
+
+<div style="height: 30px;"></div>
+
 #### Troubleshooting `archive` contact
 
 Use this section when `archive` fails.
@@ -1086,29 +1096,28 @@ Common `delete` warnings:
 
 Use this section when `addproduct` fails or returns a warning.
 
-| Scenario                                            | Message shown                                                             | How to fix                                                                      |
-|-----------------------------------------------------|---------------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| Missing one or more required prefixes (`id/`, `n/`) | `Missing required field(s): ...`                                          | Include all required prefixed fields in your command.                           |
-| No prefixes at all                                  | `Invalid command format! ...`                                             | Use the full prefixed format, e.g. `addproduct id/... n/...`.                   |
-| Text appears before the first prefix                | `No non-prefix characters before prefix(es) is allowed, ...`              | Remove any text before `id/`.                                                   |
-| Same single-value field repeated (e.g. two `q/`)    | `Multiple values specified for the following single-valued field(s): ...` | Keep only one value for each of `id/`, `n/`, `q/`, `th/`, `e/`.                 |
-| Identifier is blank                                 | `Identifier should not be blank.`                                         | Provide a non-empty identifier after `id/`.                                     |
-| Identifier is too long                              | `Identifier should be at most 120 characters.`                            | Shorten the identifier.                                                         |
-| Name is blank                                       | `Name should not be blank.`                                               | Provide a non-empty name after `n/`.                                            |
-| Name is too long                                    | `Name should be at most 120 characters.`                                  | Shorten the name.                                                               |
-| Quantity is invalid                                 | `Quantity should be a non-negative valid integer.`                        | Ensure it is a whole number between 0 and 2,147,483,647.                        |
-| Threshold is invalid                                | `Restock threshold should be a non-negative valid integer.`               | Ensure it is a whole number between 0 and 2,147,483,647.                        |
-| Product is a duplicate                              | `This product already exists with the same identifier.`                   | Change the identifier, or edit the existing product instead.                    |
-| Product's vendor does not exist                     | `Vendor email ... does not match any existing contact.`                   | Check that the email matches an existing contact's email, or add a new contact. |
+| Scenario                                             | Message shown                                                             | How to fix                                                                      |
+|------------------------------------------------------|---------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| Missing one or more required prefixes (`id/`, `n/`)  | `Missing required prefix(es): ...`                                        | Include the missing prefixed fields.                                            |
+| No prefixes at all                                   | `Invalid command format! ...`                                             | Include all required prefixed fields.                                           |
+| Same single-value field(s) repeated (e.g. two `q/`)  | `Multiple values specified for the following single-valued field(s): ...` | Keep only one value for each field.                                             |
+| Identifier is blank                                  | `Identifier should not be blank.`                                         | Provide a non-empty identifier after `id/`.                                     |
+| Identifier is too long                               | `Identifier should be at most 120 characters.`                            | Shorten the identifier.                                                         |
+| Name is blank                                        | `Name should not be blank.`                                               | Provide a non-empty name after `n/`.                                            |
+| Name is too long                                     | `Name should be at most 120 characters.`                                  | Shorten the name.                                                               |
+| Quantity is invalid                                  | `Quantity should be a non-negative valid integer.`                        | Ensure quantity is a whole number between 0 and 2,147,483,647.                  |
+| Threshold is invalid                                 | `Restock threshold should be a non-negative valid integer.`               | Ensure threshold is a whole number between 0 and 2,147,483,647.                 |
+| Product duplicates an existing product by identifier | `This product already exists with the same identifier.`                   | Change the identifier, or edit the existing product instead.                    |
+| Product's vendor does not exist                      | `Vendor email ... does not match any existing contact.`                   | Check that the email matches an existing contact's email, or add a new contact. |
 
 <br>
 
 Common `addproduct` warnings:
 
-| Warning trigger                     | Warning shown                                                                                                                                   | What it means                                                                                                                  |
-|-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
-| Identifier/Name has unusual symbols | `⚠ Warning: Identifier contains unusual symbols, is this intentional?`<br><br/>`⚠ Warning: Name contains unusual symbols, is this intentional?` | Identifier/Name is accepted, but [looks unusual](#product-name-format). You can verify if you entered it correctly.            |
-| Similar name to an existing product | `⚠ Warning: There's a product with a similar name (name: <similar-name>), is this intentional?`                                                 | Possible duplicate by similar name. You can check if the name in the warning message is the same as what you were about to add. |
+| Warning trigger                          | Warning shown                                                                                                                                   | What it means                                                                                                       |
+|------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| Identifier/Name contains unusual symbols | `⚠ Warning: Identifier contains unusual symbols, is this intentional?`<br><br/>`⚠ Warning: Name contains unusual symbols, is this intentional?` | Identifier/Name is accepted, but [looks unusual](#product-name-format). You can verify if you entered it correctly. |
+| Similar name to an existing product      | `⚠ Warning: There's a product with a similar name (id: ..., name: ...), is this intentional?`                                                   | Possible duplicate by name. Check the name and edit as necessary.                                                   |
 
 <div style="height: 30px;"></div>
 
@@ -1152,6 +1161,16 @@ Common `editproduct` warnings:
 
 <div style="height: 30px;"></div>
 
+#### Troubleshooting `findproduct`
+
+Use this section when `find` fails.
+
+| Scenario               | Message shown                 | How to fix          |
+|------------------------|-------------------------------|---------------------|
+| No keyword is provided | `Invalid command format! ...` | Provide keyword(s). |
+
+<div style="height: 30px;"></div>
+
 #### Troubleshooting `archiveproduct`
 
 Use this section when `archiveproduct` fails.
@@ -1184,7 +1203,7 @@ Use this section when `deleteproduct` fails.
 
 <div style="height: 30px;"></div>
 
-### Managing general commands
+### General commands
 <div style="height: 30px;"></div>
 
 #### Troubleshooting `alias`
@@ -1207,7 +1226,16 @@ Use this section when `deletealias` fails.
 |------------------------------|-------------------------------------|-------------------------------------------------------------------|
 | No alias given in alias list | `No alias found in alias list. ...` | Find the correct alias using `alias` then use `deletealias ALIAS` |
 
+<div style="height: 30px;"></div>
 
+#### Troubleshooting `threshold`
+
+Use this section when `threshold` fails.
+
+| Scenario              | Message shown                                               | How to fix                                                      |
+|-----------------------|-------------------------------------------------------------|-----------------------------------------------------------------|
+| No threshold provided | `Invalid command format! ...`                               | Provide a threshold.                                            |
+| Threshold is invalid  | `Restock threshold should be a non-negative valid integer.` | Ensure threshold is a whole number between 0 and 2,147,483,647. |
 
 <div style="height: 30px;"></div>
 
@@ -1225,7 +1253,7 @@ Name is recommended to meet the following guidelines, otherwise you will see a w
 <panel header="Recommended contact phone number format" type="seamless" id="contact-phone-format">
 
 Phone number(s) is recommended to meet the following guidelines, otherwise you will see a warning:
-* It should contain only digits, spaces, '+' or '-' in the number part.
+* It can contain only digits, spaces, '+' or '-' in the number part.
 * Multiple phone numbers should be separated by commas.
 Example: 12345678, 62345678
 
@@ -1234,7 +1262,7 @@ Example: 12345678, 62345678
 <panel header="Recommended product identifier format" type="seamless" id="product-id-format">
 
 Product identifier is recommended to meet the following guidelines, otherwise you will see a warning:
-- It should contain only letters, numbers, spaces, and symbols.
+- It can contain letters, numbers, spaces, and symbols.
 - Symbols include: `/` `-`
 
 </panel>
@@ -1242,7 +1270,7 @@ Product identifier is recommended to meet the following guidelines, otherwise yo
 <panel header="Recommended product name format" type="seamless" id="product-name-format">
 
 Product name is recommended to meet the following guidelines, otherwise you will see a warning:
-- It should contain only letters, numbers, spaces, and symbols.
+- It can contain letters, numbers, spaces, and symbols.
 - Symbols include: `.` `,` `&` `+` `(` `)` `/` `\` `-` `'`
 
 </panel>

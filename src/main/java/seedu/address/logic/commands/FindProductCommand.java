@@ -16,15 +16,12 @@ public class FindProductCommand extends Command {
 
     public static final String COMMAND_WORD = "findproduct";
     public static final String COMMAND_USAGE = COMMAND_WORD + " KEYWORD [MORE_KEYWORDS]...";
-    public static final String COMMAND_DESCRIPTION = "Lists all products matching KEYWORD.";
+    public static final String COMMAND_DESCRIPTION =
+            "Displays products whose names contain any of the given keyword(s)";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds all products with names containing any of "
-            + "the specified keywords.\n"
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": " + COMMAND_DESCRIPTION + "\n"
             + "Parameters: KEYWORD [MORE_KEYWORDS]...\n"
-            + "Example: " + COMMAND_WORD + " motherboard ssd";
-
-    public static final String MESSAGE_DISPLAY_CONTACTS = " Contact(s) associated with these products listed on "
-            + "the left!";
+            + "Example: " + COMMAND_WORD + " uno";
 
     private final ProductNameContainsKeywordsScoredPredicate predicate;
 
@@ -46,7 +43,7 @@ public class FindProductCommand extends Command {
         model.updateFilteredPersonList(personPredicate);
 
         return new CommandResult(
-                String.format(Messages.MESSAGE_PRODUCTS_LISTED_OVERVIEW + MESSAGE_DISPLAY_CONTACTS,
+                String.format(Messages.MESSAGE_PRODUCTS_LISTED_OVERVIEW,
                         model.getFilteredProductList().size()));
     }
 

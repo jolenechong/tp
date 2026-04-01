@@ -1,8 +1,7 @@
 package seedu.address.logic;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import seedu.address.logic.parser.Prefix;
 import seedu.address.model.person.Person;
@@ -15,7 +14,7 @@ public class Messages {
 
     public static final String MESSAGE_UNKNOWN_COMMAND = "Unknown command";
     public static final String MESSAGE_INVALID_COMMAND_FORMAT = "Invalid command format! \n%1$s";
-    public static final String MESSAGE_MISSING_PREFIX = "Missing required field(s): ";
+    public static final String MESSAGE_MISSING_PREFIX = "Missing required prefix(es): ";
     public static final String MESSAGE_NON_PREFIX_BEFORE_PREFIX = "No non-prefix characters before "
             + "prefix(es) is allowed, ";
     public static final String MESSAGE_MISSING_FIELD_FORMAT = "%s (%s)";
@@ -46,8 +45,10 @@ public class Messages {
     public static String getErrorMessageForDuplicatePrefixes(Prefix... duplicatePrefixes) {
         assert duplicatePrefixes.length > 0;
 
-        Set<String> duplicateFields =
-                Stream.of(duplicatePrefixes).map(Prefix::toString).collect(Collectors.toSet());
+        Set<String> duplicateFields = new LinkedHashSet<>();
+        for (Prefix prefix : duplicatePrefixes) {
+            duplicateFields.add(prefix.toString());
+        }
 
         return MESSAGE_DUPLICATE_FIELDS + String.join(" ", duplicateFields);
     }

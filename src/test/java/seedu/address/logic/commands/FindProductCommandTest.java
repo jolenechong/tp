@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_PRODUCTS_LISTED_OVERVIEW;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
-import static seedu.address.logic.commands.FindProductCommand.MESSAGE_DISPLAY_CONTACTS;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalProducts.EGGS;
 import static seedu.address.testutil.TypicalProducts.OIL;
@@ -74,7 +73,7 @@ public class FindProductCommandTest {
 
     @Test
     public void execute_zeroKeywords_noProductFound() {
-        String expectedMessage = String.format(MESSAGE_PRODUCTS_LISTED_OVERVIEW + MESSAGE_DISPLAY_CONTACTS, 0);
+        String expectedMessage = String.format(MESSAGE_PRODUCTS_LISTED_OVERVIEW, 0);
         ProductNameContainsKeywordsScoredPredicate predicate = preparePredicate(" ");
         FindProductCommand command = new FindProductCommand(predicate);
 
@@ -88,7 +87,7 @@ public class FindProductCommandTest {
 
     @Test
     public void execute_multipleKeywords_multiplePersonsFound() {
-        String expectedMessage = String.format(MESSAGE_PRODUCTS_LISTED_OVERVIEW + MESSAGE_DISPLAY_CONTACTS, 3);
+        String expectedMessage = String.format(MESSAGE_PRODUCTS_LISTED_OVERVIEW, 3);
         ProductNameContainsKeywordsScoredPredicate predicate = preparePredicate("Rice Oil Eggs");
         FindProductCommand command = new FindProductCommand(predicate);
 
