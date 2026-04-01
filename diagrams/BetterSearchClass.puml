@@ -2,19 +2,20 @@
 !include style.puml
 skinparam arrowThickness 1.1
 skinparam arrowColor MODEL_COLOR_T4
+skinparam classAttributeIconSize 0
 skinparam classBackgroundColor #ff8a9b
 show members
+hide empty members
 
 class NameContainsKeywordsScoredPredicate {
   - keywords: List<String>
+  - toScore(...): Score
   + computeScore(...): Score
   + createPersonComparator(...): Comparator<Person>
-  - toScore(...): Score
-  - toMatchTier(...): MatchTier
 }
 
 class FindRelevance {
-  + SCORE_COMPARATOR: Comparator<Score>
+  + {static} SCORE_COMPARATOR: Comparator<Score>
 }
 
 enum MatchTier <<enumeration>> {
@@ -26,14 +27,12 @@ enum MatchTier <<enumeration>> {
 
 class Score {
   + tier: MatchTier
-  + unmatchedCharsCount: int
+  + unmatchedCharCount: int
   + sortKey: String
 }
 
 FindRelevance --> MatchTier
-FindRelevance -r-> Score
+FindRelevance --> Score
 NameContainsKeywordsScoredPredicate ..> FindRelevance
-NameContainsKeywordsScoredPredicate ..> Score
-Score --> MatchTier
 
 @enduml
