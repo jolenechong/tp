@@ -786,17 +786,10 @@ Use case ends.
 
 **MSS**
 
-1. User chooses to view vendor contact.
-2. VV shows the contact information for all vendors
+1. User chooses to view all vendor contacts.
+2. VV shows all vendor contacts.
 
 Use case ends.
-
-**Extensions**
-
-* 2a. VV detects there is no contact found.
-  * 2a1. VV will create a new contact file with preloaded information.
-
-  Use case resumes from step 2.
 
 **Use case: UC3 - Delete Vendor Contact**
 
@@ -818,64 +811,75 @@ Use case ends.
 
   Use case ends.
 
-**Use Case: UC4 - Add Product**
+**Use case: UC4 - Find Vendor Contact**
 
-**Preconditions: Application is running, user is on the main screen.**
+**Preconditions: Application is running, user is on the main screen and has added a contact.**
 
 **MSS**
 
-1. User chooses to add a Product.
-2. VV validates that all compulsory fields are present.
-3. VV validates the format of the provided data.
-4. VV checks that the product does not already exist.
-5. VV creates the product.
-6. VV adds the product to the inventory.
-7. VV saves the updated inventory to storage.
-8. VV displays a success message.
+1. User chooses to find a vendor contact by entering one or more keywords.
+2. VV searches vendor contacts using the provided keyword(s).
+3. VV displays the matching vendor contacts.
 
 Use case ends.
 
 **Extensions**
 
-* 3a. VV detects error in provided data (e.g. missing compulsory fields, invalid data format).
-  * 3a1. VV displays an appropriate error message indicating the invalid or missing field.
-  * 3a2. User re-provides the corrected data.
-
-  Steps 3a1–3a2 are repeated until all fields are valid.
-
-  Use case resumes from step 4.
-
-* 4a. VV detects duplicate product.
-  * 4a1. VV displays an error.
-  * 4a2. User re-provides the corrected data.
-
-  Steps 4a1–4a2 are repeated until a unique ID is provided.
-
-  Use case resumes from step 5.
-
-* 7a. Storage file cannot be written or accessed.
-  * 7a1. VV displays a failure message indicating inventory could not be saved.
+* 1a. User provides no keyword.
+  * 1a1. VV displays an error indicating missing keywords.
 
   Use case ends.
 
-**Use Case: UC 5 - View Products**
+**Use Case: UC5 - Add Product**
 
 **Preconditions: Application is running, user is on the main screen.**
 
 **MSS**
-1. User chooses to view products and their quantity.
-2. VV shows the quantity for all products.
+
+1. User enters data to add a Product.
+2. VV validates the input data.
+3. VV checks that the product does not already exist.
+4. VV creates the product.
+5. VV adds the product to the inventory.
+6. VV saves the updated inventory to storage.
+7. VV displays a success message.
 
 Use case ends.
 
 **Extensions**
 
-* 2a. VV detects there are no products found.
-  * 2a1. VV will create a new file with preloaded product information.
+* 2a. VV detects error in provided data (e.g. missing compulsory fields, invalid data format).
+  * 2a1. VV displays an appropriate error message indicating the invalid or missing field.
+  * 2a2. User re-provides the corrected data.
 
-  Use case resumes from step 2.
+  Steps 2a1–2a2 are repeated until all fields are valid.
 
-**Use case: UC6 - Delete Product**
+  Use case resumes from step 4.
+
+* 3a. VV detects duplicate product.
+  * 3a1. VV displays an error.
+  * 3a2. User re-provides the corrected data.
+
+  Steps 3a1–3a2 are repeated until a unique ID is provided.
+
+  Use case resumes from step 5.
+
+* 6a. Storage file cannot be written or accessed.
+  * 6a1. VV displays an error indicating inventory could not be saved.
+
+  Use case ends.
+
+**Use Case: UC6 - View Products**
+
+**Preconditions: Application is running, user is on the main screen.**
+
+**MSS**
+1. User chooses to view all products.
+2. VV shows all products.
+
+Use case ends.
+
+**Use case: UC7 - Delete Product**
 
 **Preconditions: Application is running, user is on the main screen and has added a product.**
 
@@ -895,6 +899,9 @@ Use case ends.
 
   Use case ends.
 
+**Use case: UC8 - Find Product**
+
+Analogous to UC4.
 
 ### Non-Functional Requirements
 
