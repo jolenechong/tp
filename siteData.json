@@ -64,9 +64,18 @@
         "glossary": "Glossary",
         "appendix-instructions-for-manual-testing": "Appendix: Instructions for manual testing",
         "launch-and-shutdown": "Launch and shutdown",
+        "adding-a-contact": "Adding a contact",
+        "editing-a-contact": "Editing a contact",
         "deleting-a-contact": "Deleting a contact",
+        "finding-a-contact": "Finding a contact",
+        "adding-a-product": "Adding a product",
+        "finding-a-product": "Finding a product",
+        "changing-default-threshold": "Changing default threshold",
+        "undoing-and-redoing-commands": "Undoing and Redoing Commands",
         "saving-data": "Saving data",
         "appendix-effort": "Appendix: Effort",
+        "difficulty-and-amp-challenges": "Difficulty &amp; Challenges",
+        "effort-and-amp-achievements": "Effort &amp; Achievements",
         "appendix-planned-enhancements": "Appendix: Planned Enhancements"
       },
       "headingKeywords": {}
@@ -126,7 +135,7 @@
         "troubleshooting": "Troubleshooting",
         "managing-contacts": "Managing contacts",
         "managing-inventory-2": "Managing inventory",
-        "managing-general-commands": "Managing general commands",
+        "general-commands-2": "General commands",
         "why-am-i-seeing-warnings": "Why am I seeing warnings?"
       },
       "headingKeywords": {}
