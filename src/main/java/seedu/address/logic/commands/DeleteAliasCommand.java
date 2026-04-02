@@ -17,6 +17,11 @@ public class DeleteAliasCommand extends Command {
     public static final String COMMAND_USAGE = COMMAND_WORD + " ALIAS";
     public static final String COMMAND_DESCRIPTION = "Deletes an existing alias";
 
+    public static final String MESSAGE_USAGE = COMMAND_WORD
+            + ": Deletes an existing alias.\n"
+            + "Parameters: Alias\n"
+            + "Example: " + COMMAND_WORD + " ls";
+
     public static final String MESSAGE_DELETE_ALIAS_SUCCESS = "Removed Alias: %1$s";
 
     public static final String MESSAGE_FIND_EXISTING_ALIAS =

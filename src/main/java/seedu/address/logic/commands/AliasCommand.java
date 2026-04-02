@@ -2,6 +2,7 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_DUPLICATE_ALIAS;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +44,7 @@ public class AliasCommand extends Command {
             + MESSAGE_USAGE;
 
     public static final String MESSAGE_ALIAS_FORMATTED_WRONGLY =
-            "Message is formatted wrongly.\n" + MESSAGE_USAGE;
+            String.format(MESSAGE_INVALID_COMMAND_FORMAT, MESSAGE_USAGE);
 
     public static final String MESSAGE_ALIAS_IS_A_PREDEFINED_COMMAND =
             "%s is a predefined command, please choose another alias.";

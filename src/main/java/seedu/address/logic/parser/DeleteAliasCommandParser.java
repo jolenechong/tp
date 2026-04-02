@@ -1,5 +1,7 @@
 package seedu.address.logic.parser;
 
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+
 import seedu.address.logic.commands.DeleteAliasCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -23,7 +25,8 @@ public class DeleteAliasCommandParser {
         String argsTrimmed = args.trim();
 
         if (argsTrimmed.isEmpty()) {
-            throw new ParseException(MESSAGE_NO_ARGUMENTS + CORRECT_FORMAT);
+            throw new ParseException(
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteAliasCommand.MESSAGE_USAGE));
         }
 
         String[] tokens = argsTrimmed.split(" ", 2);

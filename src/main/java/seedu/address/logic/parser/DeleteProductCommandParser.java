@@ -1,6 +1,7 @@
 package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_CONFIRMATION_FLAG;
 import static seedu.address.logic.parser.ConfirmationFlagIndicator.containsConfirmationFlag;
 import static seedu.address.logic.parser.ConfirmationFlagIndicator.removeConfirmationFlag;
@@ -32,7 +33,8 @@ public class DeleteProductCommandParser implements Parser<DeleteProductCommand> 
         String argsNoConfirmation = removeConfirmationFlag(tokens, CONFIRMATION_INDICATOR);
 
         if (argsNoConfirmation.isEmpty()) {
-            throw new ParseException(MESSAGE_INVALID_FORMAT);
+            throw new ParseException(
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteProductCommand.MESSAGE_USAGE));
         }
 
         ParseResult<Identifier> identifier = ParserUtil.parseIdentifier(argsNoConfirmation);
