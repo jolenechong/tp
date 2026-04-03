@@ -1213,6 +1213,34 @@ Accessibility:
 4. Test case: `addproduct id/DE/5 n/PlayStation q/0 e/sg.sales@cytron.io`
    - Expected: Product added with threshold defaulting to 5
 
+### Alias and Delete Alias Commands
+
+<box type="info" seamless>
+
+**Note:** Perform these test cases in order within the same app session.
+
+</box>
+
+1. prerequisites: `ls` is not a valid alias.
+
+2. Test case: `alias`
+   - Expected: If no aliases exist, a message prompts the user to add aliases. If aliases exist, a list of all aliases is shown.
+
+3. Test case: `alias list ls`
+   - Expected: A new alias `ls` is created that maps to the `list` command. The alias can now be used instead of `list`.
+
+4. Test case: `deletealias ls`
+   - Expected: The alias `ls` will be removed.
+
+5. Test case: `alias command cmd`
+   - Expected: `Command does not exists or is not supported` error.
+
+6. Test case: `alias list`
+   - Expected: `Invalid Command Format..` error.
+
+7. Test case: `deletealias`
+   - Expected: `Invalid Command Format..` error.
+
 ### Undoing and Redoing Commands
 
 <box type="info" seamless>
