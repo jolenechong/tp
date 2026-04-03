@@ -761,7 +761,7 @@ Use case ends.
 
 **Extensions**
 
-* 1a. VV detects invalid command format (eg. missing prefixes, incorrect structure)
+* 1a. VV detects invalid command format
     * 1a1. VV rejects the command and displays an error message indicating the correct format with an example.
     * 1a2. User re-enters the corrected command.
     
@@ -769,7 +769,7 @@ Use case ends.
 
     Use case resumes from step 1.
 
-* 1b. VV detects error in fields provided (eg. invalid email, blank name)
+* 1b. VV detects error in fields provided
     * 1b1. VV rejects the command and displays validation error message.
     * 1b2. User re-enters the corrected fields.
 
@@ -777,7 +777,7 @@ Use case ends.
 
       Use case resumes from step 1.
 
-* 1c. VV detects duplicate contact (eg. same email contact exists)
+* 1c. VV detects duplicate contact
     * 1c1. VV rejects the command and displays a duplicate contact error message.
     * 1c2. User re-enters the corrected fields.
   
@@ -785,12 +785,12 @@ Use case ends.
 
       Use case resumes from step 1.
 
-* 1d. VV detects potential duplicate contact (eg. contact with similar name exists)
+* 1d. VV detects potential duplicate contact
     * 1d1. VV accepts the command and displays a warning with details of the similar contact.
 
       Use case resumes from step 2.
 
-* 1e. VV detects potential input mistake (eg. name has unusual symbols, email unusually long)
+* 1e. VV detects potential input mistake
     * 1e1. VV accepts the command displays a warning indicating the input may be unintended.
 
       Use case resumes from step 2.
@@ -964,7 +964,7 @@ Use case ends.
   
     Use case ends.
 
-* 2b. User performs a new undoable action (e.g. adds a contact) after undoing a previous action.
+* 2b. User performs a new undoable action after undoing a previous action.
     * 2b1. VV clears the redo history.
     * 2b2. The new action becomes the latest undoable action.
 
