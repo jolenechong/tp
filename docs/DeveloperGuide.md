@@ -524,7 +524,7 @@ The core data structures are:
 
 These operations are exposed in `Model` interface as `Model#addAlias()`, `Model#findAlias()`, `Model#removeAlias()`.
 
-**Alias Resolution** is handled in `AddressBookParser`. 
+**Alias Resolution** is handled in `AddressBookParser`.
 Before converting any command to its specific parser, the parser checks if the `command word` entered by the user matches any stored `alias`.
 If a match is found, the alias is substituted with its original command word, and parsing continues as normal.
 Otherwise, the input is used as it is.
@@ -608,7 +608,7 @@ Alternative 1 aligns with the existing storage pattern used by contacts and inve
 
 ### Better Search Feature
 #### Implementation
-This feature upgrades contact/product search to use partial matching and show matches by relevance. It 
+This feature upgrades contact/product search to use partial matching and show matches by relevance. It
 is implemented through a match predicate and shared ranking contract:
 
 1. `NameContainsKeywordsScoredPredicate` tests if a contact's name matches any keyword using partial matching. The name is split and processed as tokens.
@@ -619,7 +619,7 @@ is implemented through a match predicate and shared ranking contract:
 2. The same applies for `ProductNameContainsKeywordsScoredPredicate`.
 
 3. `RelevanceRank` defines the ranking contract.
-   * Keyword-token matches are tiered: `EXACT_TOKEN` > `PREFIX_TOKEN` > `SUBSTRING_TOKEN` > `NO_MATCH`. 
+   * Keyword-token matches are tiered: `EXACT_TOKEN` > `PREFIX_TOKEN` > `SUBSTRING_TOKEN` > `NO_MATCH`.
    * `Score(MatchTier tier, int unmatchedCharCount, String sortKey)` represents how relevant a match is.
    * `SCORE_COMPARATOR` implements score comparison.
 
@@ -631,7 +631,7 @@ This diagram shows an example of scoring state when the given keyword is `"adafr
 
 <puml src="diagrams/BetterSearchObject.puml" width="900"/>
 
-`SCORE_COMPARATOR` compares scores in this order: `tier`, `unmatchedCharCount`, `sortKey` (alphabetical). This 
+`SCORE_COMPARATOR` compares scores in this order: `tier`, `unmatchedCharCount`, `sortKey` (alphabetical). This
 gives the ranking: "Adafruit", "Adafruity", "Tadafruit", "Cytron".
 
 #### Usage Scenario
@@ -641,7 +641,7 @@ Here's how Better Search is executed by the `find` command:
 
 **Step 2.** `FindCommand` calls `ModelManager#updateFilteredPersonList` to use the predicate.
 
-**Step 3.** `FindCommand` then creates a `VendorEmailMatchesContactsPredicate`, using it to call 
+**Step 3.** `FindCommand` then creates a `VendorEmailMatchesContactsPredicate`, using it to call
 `ModelManager#updateFilteredProductList`.
 
 These updates trigger `UI` to display matching contacts and their products.
@@ -679,7 +679,7 @@ Alternative 1 was chosen to ensure discoverability and improve user experience.
   * Cons: Careful abstraction required.
 
 * **Alternative 2:** Independent logic per entity.
-  * Pros: Each entity can customise the logic. 
+  * Pros: Each entity can customise the logic.
   * Cons: Duplicated logic; Higher risk of behavior drift.
 
 Alternative 1 was chosen for consistency and maintainability.
@@ -729,6 +729,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* *`    | user        | find a contact by name           | locate their details without having to go through the entire list |
 | `*`      | user        | sort contacts by name            | browse them easily                                                |
 | `* *`    | user        | clear all contacts               | reset my vendor list                                              |
+| `* *`    | user        | archive a contact                | hide vendors I no longer work with without permanently deleting them |
+| `* *`    | user        | restore an archived contact      | bring back a previously archived vendor                           |
 | `* * *`  | user        | add a product                    | add new products I sell                                           |
 | `* *`    | user        | edit an existing product         | keep product information up to date                               |
 | `* * *`  | user        | delete a product                 | remove products I no longer sell                                  |
@@ -736,10 +738,12 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* *`    | user        | find a product by name           | locate their details without having to go through the entire list |
 | `*`      | user        | sort products by name/identifier | browse them easily                                                |
 | `* *`    | user        | clear all products               | reset my inventory                                                |
-| `* *`    | user        | view inventory statistics        | understand my product quantity levels                             |
+| `* *`    | user        | view inventory statistics        | understand my product quantity levels at a glance                 |
 | `* *`    | user        | undo changes I made              | easily revert and correct mistake                                 |
 | `* *`    | user        | redo changes I made              | easily reapply changes I accidentally undid                       |
 | `* *`    | user        | navigate my previous commands    | reuse or correct recent commands without providing them again     |
+| `* *`    | user        | archive a product                | hide products I no longer sell without permanently deleting them  |
+| `* *`    | user        | restore an archived product      | bring back a previously archived product                          |
 | `* *`    | expert user | add alias for commands           | create alias for long commands according to my preferences        |
 | `* *`    | expert user | delete alias for commands        | remove alias for I no longer want to use                          |
 | `* *`    | expert user | view aliases for commands        | view all aliases that I have set                                  |
@@ -764,8 +768,8 @@ Use case ends.
 * 1a. VV detects invalid command format
     * 1a1. VV rejects the command and displays an error message indicating the correct format with an example.
     * 1a2. User re-enters the corrected command.
-    
-    Steps 1a1–1a2 are repeated until the command format is valid. 
+
+    Steps 1a1–1a2 are repeated until the command format is valid.
 
     Use case resumes from step 1.
 
@@ -773,14 +777,14 @@ Use case ends.
     * 1b1. VV rejects the command and displays validation error message.
     * 1b2. User re-enters the corrected fields.
 
-      Steps 1b1–1b2 are repeated until the fields are valid. 
+      Steps 1b1–1b2 are repeated until the fields are valid.
 
       Use case resumes from step 1.
 
 * 1c. VV detects duplicate contact
     * 1c1. VV rejects the command and displays a duplicate contact error message.
     * 1c2. User re-enters the corrected fields.
-  
+
       Steps 1c1–1c2 are repeated until the fields are not a duplicate.
 
       Use case resumes from step 1.
@@ -808,14 +812,14 @@ Use case ends.
 
 **Extensions**
 
-* *a. All extensions that apply to !!UC1: Add a Vendor Contact!! also apply here. 
-  
+* *a. All extensions that apply to !!UC1: Add a Vendor Contact!! also apply here.
+
 * 1f. VV detects that the operation removes all tags.
     * 1f1. VV requests confirmation.
     * 1f2. User confirms the deletion.
 
       Use case resumes from step 2.
-  
+
     * 1f2a. User cancels the deletion instead.
       * 1f2a1. VV aborts the edit operation and displays a cancellation message.
 
@@ -870,6 +874,55 @@ Use case ends.
   * 1a1. VV displays an error indicating missing keywords.
 
   Use case ends.
+**Use case: UC11 - Archive a Vendor Contact**
+
+**Preconditions: Application is running, user is on the main screen and has added a contact.**
+
+**MSS**
+
+1. User chooses to archive a vendor contact by providing their email.
+2. VV validates the email and archives the contact, removing it from the active contact list.
+3. VV adds the vendor contact into the archived contact list.
+
+Use case ends.
+
+**Extensions**
+
+* 1a. VV detects that no contact with the given email exists.
+    * 1a1. VV displays an error indicating no vendor was found with that email.
+
+    Use case ends.
+
+* 1b. VV detects that the contact is already archived.
+    * 1b1. VV displays an error indicating the vendor is already archived and suggests using restore instead.
+
+    Use case ends.
+
+**Use case: UC12 - Restore an Archived Vendor Contact**
+
+**Preconditions: Application is running, user is on the main screen and has at least one archived contact.**
+
+**MSS**
+
+1. User runs `restore` without an argument to view all archived contacts.
+2. VV displays the list of archived contacts.
+3. User runs `restore EMAIL` to restore a specific contact.
+4. VV restores the contact and it reappears in the active contact list.
+5. VV removes the contact from the archived contact list.
+
+Use case ends.
+
+**Extensions**
+
+* 1a. No archived contacts exist.
+    * 1a1. VV displays a message indicating there are no archived contacts.
+
+    Use case ends.
+
+* 3a. VV detects that no archived contact with the given email exists.
+    * 3a1. VV displays the archived contact list and an error indicating no archived vendor was found with that email.
+
+    Use case ends.
 
 **Use Case: UC5 - Add Product**
 
@@ -910,6 +963,34 @@ Use case ends.
 
   Use case ends.
 
+**Use case: UC13 - Edit a Product**
+
+**Preconditions: Application is running, user is on the main screen and has added a product.**
+
+**MSS**
+
+1. User chooses to edit a product and provides the identifier along with fields to update.
+2. VV validates the identifier and fields, then updates the product and displays the updated product details.
+
+Use case ends.
+
+**Extensions**
+
+* 1a. VV detects that no product with the given identifier exists.
+    * 1a1. VV displays an error indicating no product was found with the specified identifier.
+
+    Use case ends.
+
+* 1b. VV detects that no fields to edit are provided.
+    * 1b1. VV displays an error indicating that at least one field must be provided.
+
+    Use case ends.
+
+* 1c. VV detects that the provided vendor email does not match any existing contact.
+    * 1c1. VV displays an error indicating no contact with the specified email was found.
+
+    Use case ends.
+
 **Use Case: UC6 - View Products**
 
 **Preconditions: Application is running, user is on the main screen.**
@@ -944,6 +1025,56 @@ Use case ends.
 
 Analogous to UC4.
 
+**Use case: UC14 - Archive a Product**
+
+**Preconditions: Application is running, user is on the main screen and has added a product.**
+
+**MSS**
+
+1. User chooses to archive a product by providing its identifier.
+2. VV validates the identifier and archives the product, removing it from the active product list.
+3. VV adds the product into the archived product list.
+
+Use case ends.
+
+**Extensions**
+
+* 1a. VV detects that no product with the given identifier exists.
+    * 1a1. VV displays an error indicating no product was found with that identifier.
+
+    Use case ends.
+
+* 1b. VV detects that the product is already archived.
+    * 1b1. VV displays an error indicating the product is already archived.
+
+    Use case ends.
+
+**Use case: UC15 - Restore an Archived Product**
+
+**Preconditions: Application is running, user is on the main screen and has at least one archived product.**
+
+**MSS**
+
+1. User runs `restoreproduct` without an argument to view all archived products.
+2. VV displays the list of archived products.
+3. User runs `restoreproduct IDENTIFIER` to restore a specific product.
+4. VV restores the product and it reappears in the active product list.
+5. VV removes the product from the archived product list.
+
+Use case ends.
+
+**Extensions**
+
+* 1a. No archived products exist.
+    * 1a1. VV displays a message indicating there are no archived products.
+
+    Use case ends.
+
+* 3a. VV detects that no archived product with the given identifier exists.
+    * 3a1. VV displays the archived product list and an error indicating no archived product was found with that identifier.
+
+    Use case ends.
+
 **Use case: UC9 - Undo/Redo a Change**
 
 **Preconditions: Application is running, user is on the main screen, and at least one undoable action has been performed in the current session.**
@@ -959,9 +1090,9 @@ Use case ends.
 
 **Extensions**
 
-* 1a. VV detects that no undoable actions exist in the current session. 
+* 1a. VV detects that no undoable actions exist in the current session.
   * 1a1. VV displays an error message indicating there is nothing to undo.
-  
+
     Use case ends.
 
 * 2b. User performs a new undoable action after undoing a previous action.
@@ -975,7 +1106,7 @@ Use case ends.
 
       Use case ends.
 
-   
+
 **Use case: UC10 - Navigate Command History**
 
 **Preconditions: Application is running, user is on the main screen.**
@@ -998,7 +1129,7 @@ Use case ends.
 
         Use case ends.
 
-* 1a. User is already at the oldest command in the history. 
+* 1a. User is already at the oldest command in the history.
   * 1a1. VV does nothing.
 
     Use case resumes from step 2.
@@ -1052,7 +1183,7 @@ Accessibility:
 * **Mainstream OS**: Windows, Linux, MacOS
 * **Contact/Vendor Contact**: A stored record containing a vendor’s name, phone number, email, address, and optional tags.
 * **Inventory**: The system that holds a set of products
-* **Product**: An entry to the inventory; contains the product's identifier, name, quantity, restock threshold and 
+* **Product**: An entry to the inventory; contains the product's identifier, name, quantity, restock threshold and
   email of associated vendor.
 * **Product Identifier**: A string that uniquely identifies a product
 * **Command**: A user input instruction entered into the CLI to perform an action (e.g. add, delete, list).
@@ -1093,7 +1224,7 @@ Accessibility:
 
 5. Test case `add n/Adafruit p/64601234 e/support@adafruit.com a/USA`
    - Prerequisites: A contact with `support@adafruit.com` has been previously added.
-   - Expected: `This vendor contact already exists with the same email (name: Adafruit Industries, email: support@adafruit.com)`. 
+   - Expected: `This vendor contact already exists with the same email (name: Adafruit Industries, email: support@adafruit.com)`.
 
 ### Editing a contact
 1. Prerequisites: There should be a contact with the email `support@adafruit.com` with an address different from `New York, USA` and no contact with email `sg.sales@cytron.io`.
@@ -1139,13 +1270,43 @@ Accessibility:
 
 ### Clearing all contacts
 
-1. Prerequisites: There should be multiple contacts in the system. (You can verify with `list`) 
+1. Prerequisites: There should be multiple contacts in the system. (You can verify with `list`)
 
 2. Test case: `clear`
    - Expected: A confirmation prompt appears. Enter `y` to confirm and clear all contacts.
 
 3. Test case: `clear -y`
-   - Expected: All contacts are removed from the contact list. 
+   - Expected: All contacts are removed from the contact list.
+
+### Archiving a contact
+
+1. Prerequisites: There should be multiple active contacts. One of them should have email `sg.sales@cytron.io`.
+
+2. Test case: `archive sg.sales@cytron.io`
+   - Expected: Matching contact is archived and removed from the active contact list. Details of the archived contact are shown in the status message.
+
+3. Test case: `archive notfound@example.com`
+   - Prerequisites: There is no contact with email `notfound@example.com`.
+   - Expected: `No vendor found with the specified email` error.
+
+4. Test case: `archive sg.sales@cytron.io` (on an already-archived contact)
+   - Prerequisites: `sg.sales@cytron.io` has already been archived.
+   - Expected: `Vendor is already archived. Use restore to restore it instead` error.
+
+### Restoring an archived contact
+
+1. Prerequisites: Archive at least one contact using `archive EMAIL`. Run `restore` (no argument) to list all archived contacts.
+
+2. Test case: `restore` (no argument)
+   - Expected: All archived contacts are listed. Status message indicates archived vendors are shown and prompts user to use `restore EMAIL` to restore one.
+
+3. Test case: `restore sg.sales@cytron.io`
+   - Prerequisites: `sg.sales@cytron.io` is currently archived.
+   - Expected: Matching archived contact is restored and reappears in the active contact list. Details of the restored contact are shown in the status message.
+
+4. Test case: `restore notfound@example.com`
+   - Prerequisites: There is no archived contact with email `notfound@example.com`.
+   - Expected: Archived contact list is shown. `No archived vendor found with the specified email` error.
 
 ### Adding a product
 
@@ -1179,6 +1340,54 @@ Accessibility:
 
 5. Test case: `deleteproduct`
    - Expected: `Invalid Command Format..` error.
+
+### Editing a product
+
+1. Prerequisites: Run `listproduct` and verify a product with id `SKU-1001` is in the list.
+
+2. Test case: `editproduct SKU-1001 n/Brown Rice 10kg q/5 th/10`
+   - Expected: The product's name, quantity, and threshold are updated. Details of the edited product are shown in the status message.
+
+3. Test case: `editproduct SKU-1001 e/vendor@email.com`
+   - Prerequisites: There is no contact with email `vendor@email.com`.
+   - Expected: `No contact with the specified email was found` error.
+
+4. Test case: `editproduct NOTEXIST n/New Name`
+   - Prerequisites: There is no product with identifier `NOTEXIST`.
+   - Expected: `No product found with the specified identifier` error.
+
+5. Test case: `editproduct SKU-1001`
+   - Expected: `At least one field to edit must be provided` error.
+
+### Archiving a product
+
+1. Prerequisites: There should be multiple active products. One of them should have identifier `SKU-1001`.
+
+2. Test case: `archiveproduct SKU-1001`
+   - Expected: Matching product is archived and removed from the active product list. Details of the archived product are shown in the status message.
+
+3. Test case: `archiveproduct NOTEXIST`
+   - Prerequisites: There is no product with identifier `NOTEXIST`.
+   - Expected: `No product found with the specified identifier` error.
+
+4. Test case: `archiveproduct SKU-1001` (on an already-archived product)
+   - Prerequisites: `SKU-1001` has already been archived.
+   - Expected: `Product is already archived` error.
+
+### Restoring an archived product
+
+1. Prerequisites: Archive at least one product using `archiveproduct IDENTIFIER`. Run `restoreproduct` (no argument) to list all archived products.
+
+2. Test case: `restoreproduct` (no argument)
+   - Expected: All archived products are listed. Status message prompts user to use `restoreproduct IDENTIFIER` to restore one.
+
+3. Test case: `restoreproduct SKU-1001`
+   - Prerequisites: `SKU-1001` is currently archived.
+   - Expected: Matching archived product is restored and reappears in the active product list. Details of the restored product are shown in the status message.
+
+4. Test case: `restoreproduct NOTEXIST`
+   - Prerequisites: There is no archived product with identifier `NOTEXIST`.
+   - Expected: Archived product list is shown. `No archived product found with the specified identifier` error.
 
 ### Finding a product
 
@@ -1249,7 +1458,7 @@ Accessibility:
 
 </box>
 
-1. Prerequisite: `add n/Adafruit Industries p/64601234 e/support@adafruit.com a/151 Varick St, New York, NY 10013, USA` and verify contact appears in contact list. 
+1. Prerequisite: `add n/Adafruit Industries p/64601234 e/support@adafruit.com a/151 Varick St, New York, NY 10013, USA` and verify contact appears in contact list.
 
 2. Test case: `undo` adding a contact
     - Expected:  `Undo successful: Reverted the addition of contact: …` and the contact no longer appears in contact list.
@@ -1275,13 +1484,13 @@ At the end, run `listall` and verify both added contact and product are present 
    - Expected: The modified data is saved
 
 3. Test case: Delete `/data/addressbook.json` and restart the app
-   - Expected: App initialises sample contact data 
+   - Expected: App initialises sample contact data
 
 4. Test case: Enter invalid JSON to `/data/inventory.json` and restart the app
   - Expected: `WARNING: Error reading from jsonFile` is logged to the terminal and app starts with empty inventory
 
 5. Test case: Enter invalid JSON to `/preferences.json` and restart the app
-   - Expected: `WARNING: Error reading from jsonFile file preferences.json` logged to the console and app starts with default preferences 
+   - Expected: `WARNING: Error reading from jsonFile file preferences.json` logged to the console and app starts with default preferences
 
 ## **Appendix: Effort**
 
@@ -1299,6 +1508,11 @@ At the end, run `listall` and verify both added contact and product are present 
 
 6. Consistently ensuring code is tested before merging added overhead to the development workflow.
 
+7. Maintaining consistency across the application — commands had to behave similarly for both contacts and products, including parsing, validation, and user feedback.
+
+8. Integrating everything together — features could not be built in isolation because changes in one system could affect the other, requiring careful coordination of architecture and data flow.
+
+
 
 ### Effort & Achievements
 
@@ -1312,7 +1526,8 @@ At the end, run `listall` and verify both added contact and product are present 
 
 5. Consistently kept up with project progress through regular updates and communication despite competing priorities
 
-## **Appendix: Planned Enhancements**
+6. Thoroughly reviewed each other's pull requests before merging, providing detailed comments to uphold code quality
 
-Team size: 4
+7. Maintained consistent effort both individually and as a team across the entire project timeline
 
+8. Consistently tested each other's code and fixed bugs early before they became larger issues
