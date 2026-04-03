@@ -1137,6 +1137,16 @@ Accessibility:
 3. Test case: `find ada`
    - Expected: Contact named Adafruit Industries is listed
 
+### Clearing all contacts
+
+1. Prerequisites: There should be multiple contacts in the system. (You can verify with `list`) 
+
+2. Test case: `clear`
+   - Expected: A confirmation prompt will be given. Enter `y` to confirm and clear all contacts.
+
+3. Test case: `clear -y`
+   - Expected: All contacts are deleted without the confirmation prompt. 
+
 ### Adding a product
 
 1. Prerequisites: There should be a contact with email `support@adafruit.com`
@@ -1151,7 +1161,7 @@ Accessibility:
    - Expected: `This product already exists with the same identifier.` error
 
 5. Test case: `addproduct id/SKU-1004 n/HP LaserJet (M428fdw) q/17 th/15 e/sg.sales@cytron.io`
-   - Expected: `Vendor email sg.sales@cytron.io does not match any existing contact.` error 
+   - Expected: `Vendor email sg.sales@cytron.io does not match any existing contact.` error
 
 ### Finding a product
 
