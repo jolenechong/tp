@@ -1115,10 +1115,10 @@ Accessibility:
 1. Prerequisites: There should be 2 contacts with the emails `support@adafruit.com` and `sales@techsource.com`.
 
 2. Test case: `delete support@adafruit.com`
-   - Expected: A confirmation prompt will be given. Enter `y` to confirm and delete the matching contact.
+   - Expected: A confirmation prompt appears. Enter `y` to confirm and delete the matching contact.
 
 3. Test case: `delete -y sales@techsource.com`
-   - Expected: Matching contact is deleted without the confirmation prompt.
+   - Expected: Matching contact is deleted without a confirmation prompt.
 
 4. Test case: `delete notfound@example.com`
    - Prerequisites: There is no contact with email `notfound@example.com`.
@@ -1142,10 +1142,10 @@ Accessibility:
 1. Prerequisites: There should be multiple contacts in the system. (You can verify with `list`) 
 
 2. Test case: `clear`
-   - Expected: A confirmation prompt will be given. Enter `y` to confirm and clear all contacts.
+   - Expected: A confirmation prompt appears. Enter `y` to confirm and clear all contacts.
 
 3. Test case: `clear -y`
-   - Expected: All contacts are deleted without the confirmation prompt. 
+   - Expected: All contacts are deleted without a confirmation prompt. 
 
 ### Adding a product
 
@@ -1162,6 +1162,23 @@ Accessibility:
 
 5. Test case: `addproduct id/SKU-1004 n/HP LaserJet (M428fdw) q/17 th/15 e/sg.sales@cytron.io`
    - Expected: `Vendor email sg.sales@cytron.io does not match any existing contact.` error
+
+### Deleting a product
+
+1. Prerequisites: There should be a product with id `SKU-1001` in product list
+
+2. Test case: `deleteproduct SKU-1001`
+    - Expected: A confirmation prompt appears. Enter `y` to confirm and delete the matching product.
+
+3. Test case: `deleteproduct -y SKU-1001`
+   - Expected: Matching product is deleted without a confirmation prompt.
+
+4. Test case: `deleteproduct NoValidIdentifier`
+   - Prerequisites: There is no product with identifier `NoValidIdentifier`.
+   - Expected: `No product found with the specified identifier` error.
+
+5. Test case: `deleteproduct`
+   - Expected: `Invalid Command Format..` error.
 
 ### Finding a product
 
