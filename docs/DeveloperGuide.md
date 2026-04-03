@@ -1112,23 +1112,20 @@ Accessibility:
 
 ### Deleting a contact
 
-1. Deleting a contact while all contacts are being shown
-
-   - Prerequisites: List all contacts using the `list` command. Multiple contacts in the list.
+1. Prerequisites: There should be 2 contacts with the emails `support@adafruit.com` and `sales@techsource.com`.
 
 2. Test case: `delete support@adafruit.com`
+   - Expected: A confirmation prompt will be given. Enter `y` to confirm and delete the matching contact.
 
-   - Expected: Matching contact is deleted from the list. Details of the deleted contact shown in the status message.
+3. Test case: `delete -y sales@techsource.com`
+   - Expected: Matching contact is deleted without the confirmation prompt.
 
-3. Test case: `delete notfound@example.com`
+4. Test case: `delete notfound@example.com`
+   - Prerequisites: There is no contact with email `notfound@example.com`.
+   - Expected: `No contact with the specified email was found` error.
 
-   - Expected: No contact is deleted. Error shown in the status message.
-
-4. Other incorrect delete commands to try: `delete`, `delete invalid-email`
-
-   - Expected: Similar to previous.
-
-5. _{ more test cases …​ }_
+5. Test case: `delete`
+   - Expected: `Invalid Command Format..` error.
 
 ### Finding a contact
 
