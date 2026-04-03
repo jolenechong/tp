@@ -1233,6 +1233,10 @@ At the end, run `listall` and verify both added contact and product are present 
 
 4. Extensive testing needed due to increased system complexity.
 
+5. Linking contacts and products while ensuring consistent behavior across both domains required careful architectural design.
+
+6. Consistently ensuring code is tested before merging added overhead to the development workflow.
+
 
 ### Effort & Achievements
 
