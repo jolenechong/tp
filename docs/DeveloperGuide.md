@@ -1190,6 +1190,16 @@ Accessibility:
 3. Test case: `findproduct uno`
    - Expected: Product named Arduino Uno R4 is listed
 
+### Clearing all products
+
+1. Prerequisites: There should be multiple products in the system. (You can verify with `listproduct`)
+
+2. Test case: `clearproduct`
+    - Expected: A confirmation prompt appears. Enter `y` to confirm and clear all products.
+
+3. Test case: `clearproduct -y`
+    - Expected: All products are deleted without a confirmation prompt.
+
 ### Changing default threshold
 
 1. Prerequisites: None
