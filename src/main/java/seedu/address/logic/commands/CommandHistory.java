@@ -86,11 +86,6 @@ public class CommandHistory {
             return draftCommandText;
         }
 
-        if (commandTexts.isEmpty()) {
-            logger.fine("History empty. Returning current input.");
-            return currentInput;
-        }
-
         moveIndexForward();
 
         logger.fine("Navigated DOWN. Index: " + currentIndex);
@@ -109,10 +104,6 @@ public class CommandHistory {
     }
 
     private void moveIndexForward() {
-        if (atLatestPosition()) {
-            logger.fine("Already at latest draft position.");
-            return; // already at draft
-        }
         if (currentIndex < commandTexts.size() - 1) {
             currentIndex++;
         } else {
