@@ -21,9 +21,14 @@ public class EmailTest {
 
     @Test
     public void isValidEmailWarn() {
-        // length > 256, invalid email (warning only)
+        // null email
+        assertThrows(NullPointerException.class, () -> Email.isValidEmailWarn(null));
+
+        // INVALID EMAIL, WARNING
+        // EP: exceeds warn length (257 characters)
         String longEmail = "a".repeat(257) + "@example.com";
         assertFalse(Email.isValidEmailWarn(longEmail));
+
     }
 
     @Test
@@ -58,6 +63,12 @@ public class EmailTest {
         assertFalse(Email.isValidEmail("peterjack@-example.com")); // domain name starts with a hyphen
         assertFalse(Email.isValidEmail("peterjack@example.com-")); // domain name ends with a hyphen
         assertFalse(Email.isValidEmail("peterjack@example.c")); // top level domain has less than two chars
+        // EP: exceeds max length (321 characters)
+        String longEmail = "a".repeat(64) + "@" + "b".repeat(63) + "." + "c".repeat(63)
+                + "." + "d".repeat(63)
+                + "." + "e".repeat(63)
+                + ".com";
+        assertFalse(Email.isValidEmail(longEmail));
 
         // valid email
         assertTrue(Email.isValidEmail("PeterJack_1190@example.com")); // underscore in local part
@@ -71,13 +82,10 @@ public class EmailTest {
         assertTrue(Email.isValidEmail("peter_jack@very-very-very-long-example.com")); // long domain name
         assertTrue(Email.isValidEmail("if.you.dream.it_you.can.do.it@example.com")); // long local part
         assertTrue(Email.isValidEmail("e1234567@u.nus.edu")); // more than one period in domain
+        // EP: exactly at max length (320 characters)
+        assertTrue(Email.isValidEmail("a".repeat(64) + "@" + "b".repeat(63) + "." + "c".repeat(63)
+                + "." + "d".repeat(63) + ".co"));
 
-        // long > 320 characters email
-        String longEmail = "a".repeat(64) + "@" + "b".repeat(63) + "." + "c".repeat(63)
-                + "." + "d".repeat(63)
-                + "." + "e".repeat(63)
-                + ".com";
-        assertFalse(Email.isValidEmail(longEmail));
     }
 
     @Test

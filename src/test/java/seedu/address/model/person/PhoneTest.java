@@ -20,38 +20,84 @@ public class PhoneTest {
     }
 
     @Test
-    public void isValidPhone() {
-        // null phone number
+    public void isValidPhone_null_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> Phone.isValidPhone(null));
+    }
 
-        // invalid phone numbers
-        assertFalse(Phone.isValidPhoneWarn("")); // empty string
-        assertFalse(Phone.isValidPhoneWarn(" ")); // spaces only
-        assertFalse(Phone.isValidPhoneWarn("91")); // less than 3 numbers
-        assertFalse(Phone.isValidPhoneWarn("phone")); // non-numeric
-        assertFalse(Phone.isValidPhoneWarn("9011p041")); // alphabets within digits
-        assertFalse(Phone.isValidPhoneWarn("61234567 (Mobile), 12345678 (Home)"));
-
-        assertFalse(Phone.isValidPhone("61234567, 12 (Home)")); // one too short
-        assertFalse(Phone.isValidPhone(",,")); // all entries empty
-        assertFalse(Phone.isValidPhone(",")); // all entries empty
-
-        // valid phone numbers
-        assertTrue(Phone.isValidPhoneWarn("911")); // exactly 3 numbers
-        assertTrue(Phone.isValidPhoneWarn("93121534"));
-        assertTrue(Phone.isValidPhoneWarn("124293842033123")); // long phone numbers
-        assertTrue(Phone.isValidPhoneWarn("61234567, 12345678")); // multiple phone numbers separated by comma
-        assertFalse(Phone.isValidPhoneWarn("12345678,,12345679")); // empty middle entry ignored
-        // should warn but not error
-        assertFalse(Phone.isValidPhoneWarn("12345678,")); // trailing empty entry ignored, should warn but not error
-        assertTrue(Phone.isValidPhoneWarn("9312 1534")); // spaces within digits
-        assertTrue(Phone.isValidPhoneWarn("+65 1234-5678")); // spaces + and - are allowed
-
+    @Test
+    public void isValidPhone_returnsTrue() {
+        // EP: labels in parentheses are allowed by isValidPhone but not isValidPhoneWarn
         assertTrue(Phone.isValidPhone("61234567 (Mobile), 12345678 (Home)"));
+
+        // EP: double comma - empty middle entry ignored
         assertTrue(Phone.isValidPhone("12345678,,12345679"));
+
+        // EP: trailing comma ignored
         assertTrue(Phone.isValidPhone("12345678,"));
 
-        // inputs that result in entries being empty after splitting
+        // EP: double trailing comma ignored
+        assertTrue(Phone.isValidPhone("12345678,,"));
+    }
+
+
+    @Test
+    public void isValidPhone_returnsFalse() {
+        // EP: one entry too short
+        assertFalse(Phone.isValidPhone("61234567, 12 (Home)"));
+
+        // EP: all entries empty
+        assertFalse(Phone.isValidPhone(",,"));
+        assertFalse(Phone.isValidPhone(","));
+    }
+
+    @Test
+    public void isValidPhoneWarn_returnsTrue() {
+        // EP: minimum length
+        assertTrue(Phone.isValidPhoneWarn("911"));
+
+        // EP: standard valid phone
+        assertTrue(Phone.isValidPhoneWarn("93121534"));
+
+        // EP: long phone number
+        assertTrue(Phone.isValidPhoneWarn("124293842033123"));
+
+        // EP: spaces allowed
+        assertTrue(Phone.isValidPhoneWarn("9312 1534"));
+
+        // EP: symbols allowed
+        assertTrue(Phone.isValidPhoneWarn("+65 1234-5678"));
+
+        // EP: multiple numbers split by comma
+        assertTrue(Phone.isValidPhoneWarn("61234567, 12345678"));
+    }
+
+    @Test
+    public void isValidPhoneWarn_returnsFalse() {
+        // EP: empty
+        assertFalse(Phone.isValidPhoneWarn(""));
+
+        // EP: spaces only
+        assertFalse(Phone.isValidPhoneWarn(" "));
+
+        // EP: too short
+        assertFalse(Phone.isValidPhoneWarn("91"));
+
+        // EP: non-numeric, no MIN_LENGTH number
+        assertFalse(Phone.isValidPhoneWarn("phone"));
+
+        // EP: alphabets mixed
+        assertFalse(Phone.isValidPhoneWarn("9011p041"));
+
+        // EP: labels trigger warning
+        assertFalse(Phone.isValidPhoneWarn("61234567 (Mobile), 12345678 (Home)"));
+
+        // EP: empty middle entry
+        assertFalse(Phone.isValidPhoneWarn("12345678,,12345679"));
+
+        // EP: trailing comma not allowed
+        assertFalse(Phone.isValidPhoneWarn("12345678,"));
+
+        // EP: empty entries
         assertFalse(Phone.isValidPhoneWarn(","));
         assertFalse(Phone.isValidPhoneWarn(",,,"));
         assertFalse(Phone.isValidPhoneWarn(" , , "));

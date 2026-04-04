@@ -10,6 +10,8 @@ import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalAliases.getTypicalAliases;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.BENSON;
+import static seedu.address.testutil.TypicalPersons.BOB;
+import static seedu.address.testutil.TypicalProducts.EGGS;
 import static seedu.address.testutil.TypicalProducts.OIL;
 import static seedu.address.testutil.TypicalProducts.RICE;
 import static seedu.address.testutil.TypicalProducts.getTypicalInventory;
@@ -44,6 +46,11 @@ import seedu.address.testutil.ProductBuilder;
 
 public class ModelManagerTest {
 
+    private static final String NAME_SIMILAR_PERSON = "Alice Tan";
+    private static final String PHONE_SIMILAR_PERSON = "12351253";
+    private static final String ADDRESS_SIMILAR_PERSON = "123, Jurong West Ave 6";
+    private static final String SKU_OTHER_PRODUCT = "SKU-2001";
+    private static final String NAME_SIMILAR_PRODUCT = "Eggs Large";
     private ModelManager modelManager = new ModelManager();
 
     @Test
@@ -168,6 +175,54 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void findSimilarNameMatch_personMatchExists_returnsMatch() {
+        ModelManager model = createModelWithAliceAndBob();
+        Person candidate = new PersonBuilder(ALICE).withName(NAME_SIMILAR_PERSON).build();
+
+        assertEquals(ALICE, model.findSimilarNameMatch(candidate, null).orElse(null));
+    }
+
+    @Test
+    public void findSimilarNameMatch_personExcludedMatch_returnsEmpty() {
+        ModelManager model = createModelWithAliceAndBob();
+        Person candidate = new PersonBuilder(ALICE).withName(NAME_SIMILAR_PERSON).build();
+
+        assertTrue(model.findSimilarNameMatch(candidate, ALICE).isEmpty());
+    }
+
+    @Test
+    public void findSimilarAddressMatch_personMatchExists_returnsMatch() {
+        ModelManager model = createModelWithAliceAndBob();
+        Person candidate = new PersonBuilder(ALICE).withAddress(ADDRESS_SIMILAR_PERSON).build();
+
+        assertEquals(ALICE, model.findSimilarAddressMatch(candidate, null).orElse(null));
+    }
+
+    @Test
+    public void findSimilarAddressMatch_personExcludedMatch_returnsEmpty() {
+        ModelManager model = createModelWithAliceAndBob();
+        Person candidate = new PersonBuilder(ALICE).withAddress(ADDRESS_SIMILAR_PERSON).build();
+
+        assertTrue(model.findSimilarAddressMatch(candidate, ALICE).isEmpty());
+    }
+
+    @Test
+    public void findSimilarPhoneMatch_personMatchExists_returnsMatch() {
+        ModelManager model = createModelWithAliceAndBob();
+        Person candidate = new PersonBuilder(ALICE).withPhone(PHONE_SIMILAR_PERSON).build();
+
+        assertEquals(ALICE, model.findSimilarPhoneMatch(candidate, null).orElse(null));
+    }
+
+    @Test
+    public void findSimilarPhoneMatch_personExcludedMatch_returnsEmpty() {
+        ModelManager model = createModelWithAliceAndBob();
+        Person candidate = new PersonBuilder(ALICE).withPhone(PHONE_SIMILAR_PERSON).build();
+
+        assertTrue(model.findSimilarPhoneMatch(candidate, ALICE).isEmpty());
+    }
+
+    @Test
     public void getFilteredPersonList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, () -> modelManager.getFilteredPersonList().remove(0));
     }
@@ -262,13 +317,10 @@ public class ModelManagerTest {
 
     @Test
     public void findSimilarNameMatch_productSimilarMatchFound_returnsMatch() {
-        Product existingProduct = new ProductBuilder()
-                .withIdentifier("SKU-1001")
-                .withName("Tray of Eggs")
-                .build();
+        Product existingProduct = new ProductBuilder(EGGS).build();
         Product candidate = new ProductBuilder()
-                .withIdentifier("SKU-2001")
-                .withName("Eggs Large")
+                .withIdentifier(SKU_OTHER_PRODUCT)
+                .withName(NAME_SIMILAR_PRODUCT)
                 .build();
 
         modelManager.addProduct(existingProduct);
@@ -278,13 +330,10 @@ public class ModelManagerTest {
 
     @Test
     public void findSimilarNameMatch_productExcludedMatch_returnsEmpty() {
-        Product existingProduct = new ProductBuilder()
-                .withIdentifier("SKU-1002")
-                .withName("Tray of Eggs")
-                .build();
+        Product existingProduct = new ProductBuilder(EGGS).build();
         Product candidate = new ProductBuilder()
-                .withIdentifier("SKU-2002")
-                .withName("Eggs Large")
+                .withIdentifier(SKU_OTHER_PRODUCT)
+                .withName(NAME_SIMILAR_PRODUCT)
                 .build();
 
         modelManager.addProduct(existingProduct);
@@ -663,6 +712,13 @@ public class ModelManagerTest {
     @Test
     public void removeAlias_noAlias_throwsNoAliasFoundInAliasListException() throws Exception {
         assertThrows(NoAliasFoundInAliasListException.class, () -> modelManager.removeAlias("ls"));
+    }
+
+    private ModelManager createModelWithAliceAndBob() {
+        ModelManager model = new ModelManager();
+        model.addPerson(ALICE);
+        model.addPerson(BOB);
+        return model;
     }
 
     private static class StubRankedPersonPredicate implements RankedPersonPredicate {
