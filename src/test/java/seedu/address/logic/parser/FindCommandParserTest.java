@@ -44,7 +44,7 @@ public class FindCommandParserTest {
         assertParseSuccess(parser, "-t vip priority", expectedFindCommand);
 
         // BV: whitespace around flag and keywords should still parse correctly.
-        assertParseSuccess(parser, " \n -t \t vip", expectedFindCommand);
+        assertParseSuccess(parser, " \n -t \t vip  priority", expectedFindCommand);
     }
 
     @Test
