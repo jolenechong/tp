@@ -834,7 +834,7 @@ Use case ends.
 
 Use case ends.
 
-**Use case: UC3 - Delete Vendor Contact**
+**Use case: UC4 - Delete Vendor Contact**
 
 **Preconditions: Application is running, user is on the main screen and has added a contact.**
 
@@ -854,7 +854,7 @@ Use case ends.
 
   Use case ends.
 
-**Use case: UC4 - Find Vendor Contact**
+**Use case: UC5 - Find Vendor Contact**
 
 **Preconditions: Application is running, user is on the main screen and has added a contact.**
 
@@ -873,7 +873,7 @@ Use case ends.
 
   Use case ends.
 
-**Use case: UC11 - Archive a Vendor Contact**
+**Use case: UC6 - Archive a Vendor Contact**
 
 **Preconditions: Application is running, user is on the main screen and has added a contact.**
 
@@ -896,7 +896,7 @@ Use case ends.
 
     Use case ends.
 
-**Use case: UC12 - Restore an Archived Vendor Contact**
+**Use case: UC7 - Restore an Archived Vendor Contact**
 
 **Preconditions: Application is running, user is on the main screen and has at least one archived contact.**
 
@@ -921,46 +921,10 @@ Use case ends.
 
     Use case ends.
 
-**Use Case: UC5 - Add Product**
+**Use Case: UC8 - Add a Product**
+Analogous to !!UC1 - Add a Vendor Contact!!.
 
-**Preconditions: Application is running, user is on the main screen.**
-
-**MSS**
-
-1. User enters data to add a Product.
-2. VV validates the input data.
-3. VV checks that the product does not already exist.
-4. VV creates the product.
-5. VV adds the product to the inventory.
-6. VV saves the updated inventory to storage.
-7. VV displays a success message.
-
-Use case ends.
-
-**Extensions**
-
-* 2a. VV detects error in provided data (e.g. missing compulsory fields, invalid data format).
-  * 2a1. VV displays an appropriate error message indicating the invalid or missing field.
-  * 2a2. User re-provides the corrected data.
-
-  Steps 2a1–2a2 are repeated until all fields are valid.
-
-  Use case resumes from step 4.
-
-* 3a. VV detects duplicate product.
-  * 3a1. VV displays an error.
-  * 3a2. User re-provides the corrected data.
-
-  Steps 3a1–3a2 are repeated until a unique ID is provided.
-
-  Use case resumes from step 5.
-
-* 6a. Storage file cannot be written or accessed.
-  * 6a1. VV displays an error indicating inventory could not be saved.
-
-  Use case ends.
-
-**Use case: UC13 - Edit a Product**
+**Use case: UC9 - Edit a Product**
 
 **Preconditions: Application is running, user is on the main screen and has added a product.**
 
@@ -1004,7 +968,7 @@ Use case ends.
 
     Use case ends.
 
-**Use Case: UC6 - View Products**
+**Use Case: UC10 - View Products**
 
 **Preconditions: Application is running, user is on the main screen.**
 
@@ -1014,7 +978,7 @@ Use case ends.
 
 Use case ends.
 
-**Use case: UC7 - Delete Product**
+**Use case: UC11 - Delete Product**
 
 **Preconditions: Application is running, user is on the main screen and has added a product.**
 
@@ -1034,19 +998,19 @@ Use case ends.
 
   Use case ends.
 
-**Use case: UC8 - Find Product**
+**Use case: UC12 - Find Product**
 
-Analogous to !!UC4 - Find Vendor Contact!!.
+Analogous to !!UC5 - Find Vendor Contact!!.
 
-**Use case: UC14 - Archive a Product**
+**Use case: UC13 - Archive a Product**
 
-Analogous to UC11, except the product's identifier is used instead of the vendor's email.
+Analogous to UC6, except the product's identifier is used instead of the vendor's email.
 
-**Use case: UC15 - Restore an Archived Product**
+**Use case: UC14 - Restore an Archived Product**
 
-Analogous to UC12, except the product's identifier is used instead of the vendor's email.
+Analogous to UC7, except the product's identifier is used instead of the vendor's email.
 
-**Use case: UC9 - Undo/Redo a Change**
+**Use case: UC15 - Undo/Redo a Change**
 
 **Preconditions: Application is running, user is on the main screen, and at least one undoable action has been performed in the current session.**
 
@@ -1078,7 +1042,7 @@ Use case ends.
       Use case ends.
 
 
-**Use case: UC10 - Navigate Command History**
+**Use case: UC16 - Navigate Command History**
 
 **Preconditions: Application is running, user is on the main screen.**
 
