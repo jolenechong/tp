@@ -4,6 +4,7 @@ import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -15,6 +16,7 @@ import seedu.address.model.person.PersonTagContainsKeywordsPredicate;
  */
 public class FindCommandParser implements Parser<FindCommand> {
     private static final String TAG_MODE_FLAG = "-t";
+    private static final String ESCAPED_TAG_MODE_FLAG = "/-t";
 
     /**
      * Parses the given {@code String} of arguments in the context of the FindCommand
@@ -28,23 +30,34 @@ public class FindCommandParser implements Parser<FindCommand> {
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
         }
 
-        List<String> tokens = Arrays.asList(trimmedArgs.split("\\s+"));
-        boolean isTagMode = TAG_MODE_FLAG.equals(tokens.get(0)); // first token must be -t
-
-        boolean hasNonLeadingTag = !isTagMode && tokens.subList(1, tokens.size()).contains(TAG_MODE_FLAG);
-        if (hasNonLeadingTag) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
-        }
+        List<String> rawTokens = Arrays.asList(trimmedArgs.split("\\s+"));
+        boolean isTagMode = rawTokens.contains(TAG_MODE_FLAG);
 
         if (isTagMode) {
-            if (tokens.size() == 1) {
+            List<String> tagKeywords = rawTokens.stream()
+                    .filter(token -> !TAG_MODE_FLAG.equals(token))
+                    .map(this::toKeyword)
+                    .collect(Collectors.toList());
+
+            if (tagKeywords.isEmpty()) {
                 throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
             }
 
-            return new FindCommand(new PersonTagContainsKeywordsPredicate(tokens.subList(1, tokens.size())));
+            return new FindCommand(new PersonTagContainsKeywordsPredicate(tagKeywords));
         }
 
-        return new FindCommand(new NameContainsKeywordsScoredPredicate(tokens));
+        List<String> nameKeywords = rawTokens.stream()
+                .map(this::toKeyword)
+                .collect(Collectors.toList());
+
+        return new FindCommand(new NameContainsKeywordsScoredPredicate(nameKeywords));
+    }
+
+    private String toKeyword(String token) {
+        if (ESCAPED_TAG_MODE_FLAG.equals(token)) {
+            return TAG_MODE_FLAG;
+        }
+        return token;
     }
 
 }
