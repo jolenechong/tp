@@ -17,6 +17,7 @@ Class InventoryListPanel
 Class ProductCard
 Class StatusBarFooter
 Class CommandBox
+Class InventoryStatsPanel
 }
 
 package Model <<Rectangle>> {
@@ -38,6 +39,7 @@ MainWindow *-down-> "1" PersonListPanel
 MainWindow *-down-> "1" InventoryListPanel
 MainWindow *-down-> "1" StatusBarFooter
 MainWindow --> "0..1" HelpWindow
+MainWindow *-down-> "1" InventoryStatsPanel
 
 PersonListPanel -down-> "*" PersonCard
 InventoryListPanel -down-> "*" ProductCard
@@ -52,6 +54,7 @@ PersonCard --|> UiPart
 ProductCard --|> UiPart
 StatusBarFooter --|> UiPart
 HelpWindow --|> UiPart
+InventoryStatsPanel --|> UiPart
 
 PersonCard ..> Model
 ProductCard ..> Model
@@ -62,5 +65,6 @@ PersonListPanel -[hidden]left- HelpWindow
 HelpWindow -[hidden]left- CommandBox
 CommandBox -[hidden]left- ResultDisplay
 ResultDisplay -[hidden]left- StatusBarFooter
+PersonListPanel -[hidden]left- InventoryStatsPanel
 
 @enduml
