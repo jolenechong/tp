@@ -105,7 +105,7 @@ public class AddProductCommand extends Command {
                 ? CommandResult.FEEDBACK_TYPE_WARN
                 : CommandResult.FEEDBACK_TYPE_SUCCESS;
 
-        return new CommandResult(message, false, false, feedbackType, true);
+        return new CommandResult(message, false, false, feedbackType, false);
 
     }
 
