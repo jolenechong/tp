@@ -11,26 +11,16 @@ import seedu.address.logic.parser.exceptions.ParseException;
 public class ConfirmationFlagIndicator {
 
     /**
-     * Checks whether the given token array contains the specified confirmation flag.
+     * Checks whether the first element in the given token array contains the specified confirmation flag.
      */
     public static boolean containsConfirmationFlag(
-            String[] tokens, String confirmationFlag, String exceptionMessage) throws ParseException {
+            String[] tokens, String confirmationFlag) throws ParseException {
 
         if (tokens.length <= 1) {
             return false;
         }
 
-        boolean hasWronglyFormedFlag = Arrays.stream(tokens)
-                .anyMatch(token -> isMalformedConfirmationFlag(token, confirmationFlag));
-        if (hasWronglyFormedFlag) {
-            throw new ParseException(exceptionMessage);
-        }
-        return Arrays.asList(tokens).contains(confirmationFlag);
-    }
-
-    private static boolean isMalformedConfirmationFlag(String token, String confirmationFlag) {
-        return token.startsWith(confirmationFlag)
-                && !token.equals(confirmationFlag);
+        return tokens[0].equals(confirmationFlag);
     }
 
     /**

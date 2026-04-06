@@ -28,7 +28,7 @@ public class ClearProductCommandParser implements Parser<ClearProductCommand> {
 
         String[] tokens = argsTrimmed.split(ParserUtil.SEPARATOR_SPACE);
         boolean hasConfirmFlag = containsConfirmationFlag(
-                tokens, CLEAR_CONFIRMATION_FLAG, MESSAGE_INVALID_CONFIRMATION_FLAG);
+                tokens, CLEAR_CONFIRMATION_FLAG);
 
         return new ClearProductCommand(!hasConfirmFlag);
     }

@@ -31,7 +31,7 @@ public class ClearCommandParser implements Parser<ClearCommand> {
 
         String[] tokens = argsTrimmed.split(ParserUtil.SEPARATOR_SPACE);
         boolean hasConfirmFlag = containsConfirmationFlag(
-                tokens, CLEAR_CONFIRMATION_FLAG, MESSAGE_INVALID_CONFIRMATION_FLAG);
+                tokens, CLEAR_CONFIRMATION_FLAG);
 
         return new ClearCommand(!hasConfirmFlag);
     }
