@@ -15,6 +15,8 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
 
     public static final String CONFIRMATION_INDICATOR = "-y";
 
+    public static final int TOKEN_MIN_LENGTH = 1;
+
     /**
      * Parses the given {@code String} of arguments in the context of the DeleteCommand
      * and returns a DeleteCommand object for execution.
@@ -29,7 +31,7 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
 
         String[] tokens = argsTrimmed.split("\\s+");
         boolean needsConfirmation = !containsConfirmationFlag(
-                tokens, CONFIRMATION_INDICATOR);
+                tokens, CONFIRMATION_INDICATOR, TOKEN_MIN_LENGTH);
 
         String emailBeforeParsed;
         if (!needsConfirmation) {

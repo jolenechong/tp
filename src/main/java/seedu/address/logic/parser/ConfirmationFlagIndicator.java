@@ -13,9 +13,9 @@ public class ConfirmationFlagIndicator {
      * Checks whether the first element in the given token array contains the specified confirmation flag.
      */
     public static boolean containsConfirmationFlag(
-            String[] tokens, String confirmationFlag) throws ParseException {
+            String[] tokens, String confirmationFlag, int tokenMinLength) throws ParseException {
 
-        if (tokens.length <= 1) {
+        if (tokens.length <= tokenMinLength) {
             return false;
         }
 

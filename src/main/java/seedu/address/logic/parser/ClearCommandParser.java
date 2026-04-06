@@ -5,6 +5,8 @@ import static seedu.address.logic.parser.ConfirmationFlagIndicator.containsConfi
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
+import java.util.Arrays;
+
 /**
  * Parses input arguments and creates a new ClearCommand object.
  */
@@ -13,6 +15,8 @@ public class ClearCommandParser implements Parser<ClearCommand> {
     public static final String CLEAR_CONFIRMATION_FLAG = "-y";
 
     public static final boolean REQUIRE_CONFIRMATION = true;
+
+    public static final int TOKEN_MIN_LENGTH = 0;
 
     /**
      * Parses the given {@code String} of arguments in the context of the ClearCommand
@@ -30,8 +34,7 @@ public class ClearCommandParser implements Parser<ClearCommand> {
 
         String[] tokens = argsTrimmed.split(ParserUtil.SEPARATOR_SPACE);
         boolean hasConfirmFlag = containsConfirmationFlag(
-                tokens, CLEAR_CONFIRMATION_FLAG);
-
+                tokens, CLEAR_CONFIRMATION_FLAG, TOKEN_MIN_LENGTH);
         return new ClearCommand(!hasConfirmFlag);
     }
 

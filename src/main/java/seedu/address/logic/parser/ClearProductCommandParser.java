@@ -16,6 +16,8 @@ public class ClearProductCommandParser implements Parser<ClearProductCommand> {
 
     public static final String CLEAR_CONFIRMATION_FLAG = "-y";
 
+    public static final int TOKEN_MIN_LENGTH = 0;
+
     @Override
     public ClearProductCommand parse(String args) throws ParseException {
         requireNonNull(args);
@@ -27,7 +29,7 @@ public class ClearProductCommandParser implements Parser<ClearProductCommand> {
 
         String[] tokens = argsTrimmed.split(ParserUtil.SEPARATOR_SPACE);
         boolean hasConfirmFlag = containsConfirmationFlag(
-                tokens, CLEAR_CONFIRMATION_FLAG);
+                tokens, CLEAR_CONFIRMATION_FLAG, TOKEN_MIN_LENGTH);
 
         return new ClearProductCommand(!hasConfirmFlag);
     }

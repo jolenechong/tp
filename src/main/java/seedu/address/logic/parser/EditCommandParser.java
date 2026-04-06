@@ -7,6 +7,8 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
+import static seedu.address.logic.parser.ConfirmationFlagIndicator.containsConfirmationFlag;
+import static seedu.address.logic.parser.ConfirmationFlagIndicator.removeConfirmationFlag;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,6 +36,8 @@ public class EditCommandParser implements Parser<EditCommand> {
 
     public static final String CONFIRMATION_INDICATOR = "-y";
 
+    public static final int TOKEN_MIN_LENGTH = 1;
+
     /**
      * Parses the given {@code String} of arguments in the context of the EditCommand
      * and returns an EditCommand object for execution.
@@ -46,8 +50,13 @@ public class EditCommandParser implements Parser<EditCommand> {
 
         Email email;
         String[] preambleTokens = argMultimap.getPreamble().trim().split(ParserUtil.SEPARATOR_SPACE);
-        boolean needsConfirmation = !checkConfirmationIndicator(preambleTokens);
-        String emailBeforeParsed = removeConfirmationIndicator(preambleTokens);
+        boolean needsConfirmation = !containsConfirmationFlag(preambleTokens, CONFIRMATION_INDICATOR, TOKEN_MIN_LENGTH);
+        String emailBeforeParsed;
+        if (!needsConfirmation) {
+            emailBeforeParsed = removeConfirmationFlag(preambleTokens, CONFIRMATION_INDICATOR);
+        } else {
+            emailBeforeParsed = String.join(" ", preambleTokens);
+        }
 
         try {
             email = ParserUtil.parseEmail(emailBeforeParsed).getValue();
@@ -96,21 +105,6 @@ public class EditCommandParser implements Parser<EditCommand> {
         parseTagsForEdit(argMultimap.getAllValues(PREFIX_TAG)).ifPresent(editPersonDescriptor::setTags);
 
         return editPersonDescriptor;
-    }
-
-    private boolean checkConfirmationIndicator(String[] tokens) throws ParseException {
-        boolean hasWronglyFormedFlag = Arrays.stream(tokens)
-                .anyMatch(t -> t.startsWith(CONFIRMATION_INDICATOR) && !t.equals(CONFIRMATION_INDICATOR));
-        if (hasWronglyFormedFlag) {
-            throw new ParseException(MESSAGE_WRONGLY_FORMED_FLAG);
-        }
-        return Arrays.asList(tokens).contains(CONFIRMATION_INDICATOR);
-    }
-
-    private String removeConfirmationIndicator(String[] tokens) {
-        return Arrays.stream(tokens)
-                .filter(t -> !t.equals(CONFIRMATION_INDICATOR))
-                .collect(Collectors.joining(" "));
     }
 
     /**

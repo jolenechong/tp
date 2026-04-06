@@ -20,6 +20,8 @@ public class DeleteProductCommandParser implements Parser<DeleteProductCommand> 
             "Product identifier must be provided.\n"
                     + "Example: " + DeleteProductCommand.COMMAND_WORD + " P001";
 
+    public static final int TOKEN_MIN_LENGTH = 1;
+
     @Override
     public DeleteProductCommand parse(String args) throws ParseException {
         requireNonNull(args);
@@ -28,7 +30,7 @@ public class DeleteProductCommandParser implements Parser<DeleteProductCommand> 
 
         String[] tokens = argsTrimmed.split("\\s+");
         boolean needsConfirmation = !containsConfirmationFlag(
-                tokens, CONFIRMATION_INDICATOR);
+                tokens, CONFIRMATION_INDICATOR, TOKEN_MIN_LENGTH);
 
         String argsNoConfirmation;
         if (!needsConfirmation) {
