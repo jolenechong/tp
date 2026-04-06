@@ -24,6 +24,13 @@ import seedu.address.testutil.ProductBuilder;
 
 public class VendorProductLinkUtilTest {
 
+    private static final String NAME_LINKED_ACTIVE = "Linked Active";
+    public static final String NAME_LINKED_ARCHIVED = "Linked Archived";
+    public static final String NAME_UNLINKED = "Unlinked";
+    public static final String NAME_CLEAR_ACTIVE = "To Clear Active";
+    public static final String NAME_CLEAR_ARCHIVED = "To Clear Archived";
+    private static final String NAME_UPDATE_ACTIVE = "To Update Active";
+
     private static final String SKU_LINKED_ACTIVE = "SKU-801";
     private static final String SKU_LINKED_ARCHIVED = "SKU-802";
     private static final String SKU_UNLINKED = "SKU-803";
@@ -32,9 +39,11 @@ public class VendorProductLinkUtilTest {
     private static final String SKU_CLEAR_UNLINKED = "SKU-806";
     private static final String SKU_UPDATE_ACTIVE = "SKU-807";
     private static final String SKU_UPDATE_ARCHIVED = "SKU-808";
+
     private static final String OTHER_EMAIL = "other@example.com";
     private static final Email UPDATED_EMAIL = new Email("updated.link@example.com");
     private static final Email REPLACEMENT_EMAIL = new Email("x@example.com");
+
 
     @Test
     public void collectLinkedProducts_noLinkedProducts_returnsEmptyList() {
@@ -48,13 +57,13 @@ public class VendorProductLinkUtilTest {
     public void collectLinkedProducts_hasLinkedProducts_returnsMatchingProducts() {
         // EP: linked lookup includes both active and archived products with matching vendor email.
         Model model = createModel();
-        Person person = firstPerson(model);
-        Person anotherPerson = secondPerson(model);
+        Person person = getFirstPerson(model);
+        Person anotherPerson = getSecondPerson(model);
 
-        Product linkedActive = linkedProduct(SKU_LINKED_ACTIVE, "Linked Active", person.getEmail().value);
+        Product linkedActive = buildLinkedProduct(SKU_LINKED_ACTIVE, NAME_LINKED_ACTIVE, person.getEmail().value);
         Product linkedArchived = archivedLinkedProduct(
-                SKU_LINKED_ARCHIVED, "Linked Archived", person.getEmail().value);
-        Product unlinked = linkedProduct(SKU_UNLINKED, "Unlinked", anotherPerson.getEmail().value);
+                SKU_LINKED_ARCHIVED, NAME_LINKED_ARCHIVED, person.getEmail().value);
+        Product unlinked = buildLinkedProduct(SKU_UNLINKED, NAME_UNLINKED, anotherPerson.getEmail().value);
 
         addProducts(model, linkedActive, linkedArchived, unlinked);
 
@@ -67,12 +76,12 @@ public class VendorProductLinkUtilTest {
     @Test
     public void clearVendorEmail_clearsOnlyProvidedProducts() {
         Model model = createModel();
-        Person person = firstPerson(model);
+        Person person = getFirstPerson(model);
 
-        Product linkedActive = linkedProduct(SKU_CLEAR_ACTIVE, "To Clear Active", person.getEmail().value);
+        Product linkedActive = buildLinkedProduct(SKU_CLEAR_ACTIVE, NAME_CLEAR_ACTIVE, person.getEmail().value);
         Product linkedArchived = archivedLinkedProduct(
-                SKU_CLEAR_ARCHIVED, "To Clear Archived", person.getEmail().value);
-        Product unlinked = linkedProduct(SKU_CLEAR_UNLINKED, "Unlinked", OTHER_EMAIL);
+                SKU_CLEAR_ARCHIVED, NAME_CLEAR_ARCHIVED, person.getEmail().value);
+        Product unlinked = buildLinkedProduct(SKU_CLEAR_UNLINKED, NAME_UNLINKED, OTHER_EMAIL);
 
         addProducts(model, linkedActive, linkedArchived, unlinked);
 
@@ -87,9 +96,9 @@ public class VendorProductLinkUtilTest {
     @Test
     public void clearVendorEmail_emptyProducts_noChanges() {
         Model model = createModel();
-        Person person = firstPerson(model);
-        Product linked = linkedProduct(SKU_CLEAR_ACTIVE, "To Clear Active", person.getEmail().value);
-        Product unlinked = linkedProduct(SKU_CLEAR_UNLINKED, "Unlinked", OTHER_EMAIL);
+        Person person = getFirstPerson(model);
+        Product linked = buildLinkedProduct(SKU_CLEAR_ACTIVE, NAME_CLEAR_ACTIVE, person.getEmail().value);
+        Product unlinked = buildLinkedProduct(SKU_CLEAR_UNLINKED, NAME_UNLINKED, OTHER_EMAIL);
         addProducts(model, linked, unlinked);
 
         VendorProductLinkUtil.clearVendorEmail(model, List.of());
@@ -101,11 +110,11 @@ public class VendorProductLinkUtilTest {
     @Test
     public void updateVendorEmail_updatesProvidedProductsAndPreservesArchived() {
         Model model = createModel();
-        Person person = firstPerson(model);
+        Person person = getFirstPerson(model);
 
-        Product linkedActive = linkedProduct(SKU_UPDATE_ACTIVE, "To Update Active", person.getEmail().value);
+        Product linkedActive = buildLinkedProduct(SKU_UPDATE_ACTIVE, NAME_UPDATE_ACTIVE, person.getEmail().value);
         Product linkedArchived = archivedLinkedProduct(
-                SKU_UPDATE_ARCHIVED, "To Update Archived", person.getEmail().value);
+                SKU_UPDATE_ARCHIVED, NAME_UPDATE_ACTIVE, person.getEmail().value);
 
         addProducts(model, linkedActive, linkedArchived);
 
@@ -121,9 +130,9 @@ public class VendorProductLinkUtilTest {
     @Test
     public void updateVendorEmail_emptyProducts_noChanges() {
         Model model = createModel();
-        Person person = firstPerson(model);
-        Product linked = linkedProduct(SKU_UPDATE_ACTIVE, "To Update Active", person.getEmail().value);
-        Product unlinked = linkedProduct(SKU_CLEAR_UNLINKED, "Unlinked", OTHER_EMAIL);
+        Person person = getFirstPerson(model);
+        Product linked = buildLinkedProduct(SKU_UPDATE_ACTIVE, NAME_UPDATE_ACTIVE, person.getEmail().value);
+        Product unlinked = buildLinkedProduct(SKU_CLEAR_UNLINKED, NAME_UNLINKED, OTHER_EMAIL);
         addProducts(model, linked, unlinked);
 
         VendorProductLinkUtil.updateVendorEmail(model, List.of(), UPDATED_EMAIL);
@@ -135,7 +144,7 @@ public class VendorProductLinkUtilTest {
     @Test
     public void collectLinkedProducts_nullArguments_throwsNullPointerException() {
         Model model = createModel();
-        Person person = firstPerson(model);
+        Person person = getFirstPerson(model);
         Email personEmail = person.getEmail();
 
         assertThrows(NullPointerException.class, () ->
@@ -147,7 +156,7 @@ public class VendorProductLinkUtilTest {
     @Test
     public void clearVendorEmail_nullArguments_throwsNullPointerException() {
         Model model = createModel();
-        Person person = firstPerson(model);
+        Person person = getFirstPerson(model);
         List<Product> linkedProducts = collectLinkedProducts(model, person.getEmail());
 
         assertThrows(NullPointerException.class, () ->
@@ -159,7 +168,7 @@ public class VendorProductLinkUtilTest {
     @Test
     public void updateVendorEmail_nullArguments_throwsNullPointerException() {
         Model model = createModel();
-        Person person = firstPerson(model);
+        Person person = getFirstPerson(model);
         List<Product> linkedProducts = collectLinkedProducts(model, person.getEmail());
 
         assertThrows(NullPointerException.class, () ->
@@ -175,15 +184,15 @@ public class VendorProductLinkUtilTest {
                 new UserPrefs(), new Aliases());
     }
 
-    private Person firstPerson(Model model) {
+    private Person getFirstPerson(Model model) {
         return model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
     }
 
-    private Person secondPerson(Model model) {
+    private Person getSecondPerson(Model model) {
         return model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased() + 1);
     }
 
-    private Product linkedProduct(String identifier, String name, String vendorEmail) {
+    private Product buildLinkedProduct(String identifier, String name, String vendorEmail) {
         return new ProductBuilder()
                 .withIdentifier(identifier)
                 .withName(name)
@@ -192,7 +201,7 @@ public class VendorProductLinkUtilTest {
     }
 
     private Product archivedLinkedProduct(String identifier, String name, String vendorEmail) {
-        return linkedProduct(identifier, name, vendorEmail).archive();
+        return buildLinkedProduct(identifier, name, vendorEmail).archive();
     }
 
     private List<Product> collectLinkedProducts(Model model, Email email) {
