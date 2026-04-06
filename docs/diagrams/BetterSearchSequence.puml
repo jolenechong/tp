@@ -1,6 +1,7 @@
 @startuml
 !include style.puml
 skinparam ArrowFontStyle plain
+skinparam defaultFontSize 37
 
 box LOGIC_COLOR_T1
 participant ":Logic" as Logic LOGIC_COLOR
@@ -11,6 +12,8 @@ participant "m:ModelManager" as ModelManager MODEL_COLOR
 participant "scoredPred:NameContainsKeywordsScoredPredicate" as sPred MODEL_COLOR
 participant "associationPred:VendorEmailMatchesContactsPredicate" as aPred MODEL_COLOR
 end box
+
+-> Logic : execute("adafruit")
 
 note left of Logic
 Parsing and command creation
