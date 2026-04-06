@@ -1,6 +1,7 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.Messages.MESSAGE_NON_PREFIX_BEFORE_PREFIX;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 
@@ -9,6 +10,7 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.FindCommand;
+import seedu.address.model.person.NameAndTagMatchesPredicate;
 import seedu.address.model.person.NameContainsKeywordsScoredPredicate;
 import seedu.address.model.person.PersonTagContainsKeywordsPredicate;
 
@@ -26,64 +28,66 @@ public class FindCommandParserTest {
     }
 
     @Test
-    public void parse_validArgs_returnsFindCommand() {
-        // EP: default name-search mode with valid keywords.
+    public void parse_namePrefixOnly_returnsFindCommand() {
+        // EP: n/-only input produces name-based search.
         FindCommand expectedFindCommand =
-            new FindCommand(new NameContainsKeywordsScoredPredicate(Arrays.asList("Alice", "Bob")));
-        assertParseSuccess(parser, "Alice Bob", expectedFindCommand);
+                new FindCommand(new NameContainsKeywordsScoredPredicate(Arrays.asList("Alice", "Bob")));
+        assertParseSuccess(parser, "n/Alice n/Bob", expectedFindCommand);
 
-        // BV: irregular internal and surrounding whitespace should normalize to the same tokens.
-        assertParseSuccess(parser, " \n Alice\t Bob", expectedFindCommand);
+        // BV: whitespace splitting inside a value should produce multiple keywords.
+        assertParseSuccess(parser, "n/Alice Bob", expectedFindCommand);
     }
 
     @Test
-    public void parse_tagMode_returnsFindCommand() {
-        // EP: leading -t selects tag-search mode.
+    public void parse_tagPrefixOnly_returnsFindCommand() {
+        // EP: t/-only input produces tag-based search.
         FindCommand expectedFindCommand =
                 new FindCommand(new PersonTagContainsKeywordsPredicate(Arrays.asList("vip", "priority")));
-        assertParseSuccess(parser, "-t vip priority", expectedFindCommand);
+        assertParseSuccess(parser, "t/vip t/priority", expectedFindCommand);
 
-        // BV: whitespace around flag and keywords should still parse correctly.
-        assertParseSuccess(parser, " \n -t \t vip  priority", expectedFindCommand);
+        // BV: whitespace splitting inside a value should produce multiple keywords.
+        assertParseSuccess(parser, "t/vip priority", expectedFindCommand);
     }
 
     @Test
-    public void parse_tagModeWithoutKeywords_throwsParseException() {
-        // BV: tag mode requires at least one keyword; exactly one token (-t) is invalid.
-        assertParseFailure(parser, "-t", String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
+    public void parse_nameAndTagPrefixes_returnsFindCommand() {
+        // EP: when both n/ and t/ are present, both predicates are combined with AND
+        NameContainsKeywordsScoredPredicate namePredicate =
+                new NameContainsKeywordsScoredPredicate(Arrays.asList("Alice", "Bob"));
+        PersonTagContainsKeywordsPredicate tagPredicate =
+                new PersonTagContainsKeywordsPredicate(Arrays.asList("vip", "lead"));
 
-        // BV: all tokens are mode flags, so effective keyword set is empty.
-        assertParseFailure(parser, "-t -t", String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+        FindCommand expectedFindCommand =
+                new FindCommand(new NameAndTagMatchesPredicate(namePredicate, tagPredicate));
+        assertParseSuccess(parser, "n/Alice Bob t/vip lead", expectedFindCommand);
+
+        // EP: repeated prefixes in mixed order remain cumulative.
+        assertParseSuccess(parser, "t/vip n/Alice t/lead n/Bob", expectedFindCommand);
+    }
+
+    @Test
+    public void parse_nonPrefixPreamble_throwsParseException() {
+        // EP: reject non-prefix preamble before valid prefixes.
+        assertParseFailure(parser, "Alice n/Bob", MESSAGE_NON_PREFIX_BEFORE_PREFIX + FindCommand.MESSAGE_USAGE);
+
+        // BV: unknown prefix text is rejected.
+        assertParseFailure(parser, "x/Alice n/Bob", MESSAGE_NON_PREFIX_BEFORE_PREFIX + FindCommand.MESSAGE_USAGE);
+    }
+
+    @Test
+    public void parse_emptyEffectiveKeywords_throwsParseException() {
+        // BV: both prefixes present but all values empty is invalid.
+        assertParseFailure(parser, "n/ t/", String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                 FindCommand.MESSAGE_USAGE));
+
+        // BV: unknown input without prefixes is invalid
+        assertParseFailure(parser, "Alice Bob", MESSAGE_NON_PREFIX_BEFORE_PREFIX + FindCommand.MESSAGE_USAGE);
     }
 
     @Test
-    public void parse_nonLeadingTagFlag_returnsFindCommand() {
-        // EP: -t can appear in non-leading position and still activates tag-search mode.
-        FindCommand expectedFindCommand =
-                new FindCommand(new PersonTagContainsKeywordsPredicate(Arrays.asList("vip", "priority")));
-        assertParseSuccess(parser, "vip -t priority", expectedFindCommand);
-
-        // EP: multiple occurrences of -t are treated as flags and ignored for keyword matching.
-        assertParseSuccess(parser, "vip -t -t priority", expectedFindCommand);
-    }
-
-    @Test
-    public void parse_escapedTagFlag_returnsFindCommandWithLiteralKeyword() {
-        // EP: /-t is treated as a literal keyword in name mode, not as a tag-mode flag.
-        FindCommand expectedNameModeCommand =
-                new FindCommand(new NameContainsKeywordsScoredPredicate(Arrays.asList("-t", "vip")));
-        assertParseSuccess(parser, "/-t vip", expectedNameModeCommand);
-
-        // EP: /-t remains a literal keyword even when tag mode is activated by an unescaped -t.
-        FindCommand expectedTagModeCommand =
-                new FindCommand(new PersonTagContainsKeywordsPredicate(Arrays.asList("-t", "vip")));
-        assertParseSuccess(parser, "-t /-t vip", expectedTagModeCommand);
-
-        // BV: escaped literal plus one real flag gives exactly one effective tag keyword ("-t").
-        FindCommand expectedSingleKeywordTagModeCommand =
-            new FindCommand(new PersonTagContainsKeywordsPredicate(Arrays.asList("-t")));
-        assertParseSuccess(parser, "/-t -t", expectedSingleKeywordTagModeCommand);
+    public void parse_caseSensitivePrefixes_throwsParseException() {
+        // BV: uppercase prefix variants are not recognized.
+        assertParseFailure(parser, "N/Alice T/vip", MESSAGE_NON_PREFIX_BEFORE_PREFIX + FindCommand.MESSAGE_USAGE);
     }
 
 }
