@@ -3,8 +3,6 @@ package seedu.address.logic.parser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static seedu.address.logic.Messages.MESSAGE_INVALID_CONFIRMATION_FLAG;
-import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.testutil.TypicalAliases.getTypicalAliases;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalProducts.getTypicalInventory;
@@ -44,17 +42,6 @@ public class ClearCommandParserTest {
 
         assertEquals(ClearCommand.MESSAGE_SUCCESS, result.getFeedbackToUser());
         assertTrue(model.getAddressBook().getPersonList().isEmpty());
-    }
-
-    @Test
-    public void parse_malformedFlagAttached_throwsParseException() {
-        assertParseFailure(parser, "-yabc", MESSAGE_INVALID_CONFIRMATION_FLAG);
-        assertParseFailure(parser, "-y1", MESSAGE_INVALID_CONFIRMATION_FLAG);
-    }
-
-    @Test
-    public void parse_malformedFlagInToken_throwsParseException() {
-        assertParseFailure(parser, "foo -ybar", MESSAGE_INVALID_CONFIRMATION_FLAG);
     }
 }
 

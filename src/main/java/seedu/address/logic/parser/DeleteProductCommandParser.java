@@ -2,7 +2,6 @@ package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.Messages.MESSAGE_INVALID_CONFIRMATION_FLAG;
 import static seedu.address.logic.parser.ConfirmationFlagIndicator.containsConfirmationFlag;
 import static seedu.address.logic.parser.ConfirmationFlagIndicator.removeConfirmationFlag;
 
@@ -21,6 +20,8 @@ public class DeleteProductCommandParser implements Parser<DeleteProductCommand> 
             "Product identifier must be provided.\n"
                     + "Example: " + DeleteProductCommand.COMMAND_WORD + " P001";
 
+    public static final int TOKEN_MIN_LENGTH = 1;
+
     @Override
     public DeleteProductCommand parse(String args) throws ParseException {
         requireNonNull(args);
@@ -29,8 +30,14 @@ public class DeleteProductCommandParser implements Parser<DeleteProductCommand> 
 
         String[] tokens = argsTrimmed.split("\\s+");
         boolean needsConfirmation = !containsConfirmationFlag(
-                tokens, CONFIRMATION_INDICATOR, MESSAGE_INVALID_CONFIRMATION_FLAG);
-        String argsNoConfirmation = removeConfirmationFlag(tokens, CONFIRMATION_INDICATOR);
+                tokens, CONFIRMATION_INDICATOR, TOKEN_MIN_LENGTH);
+
+        String argsNoConfirmation;
+        if (!needsConfirmation) {
+            argsNoConfirmation = removeConfirmationFlag(tokens, CONFIRMATION_INDICATOR);
+        } else {
+            argsNoConfirmation = String.join(" ", tokens);
+        }
 
         if (argsNoConfirmation.isEmpty()) {
             throw new ParseException(

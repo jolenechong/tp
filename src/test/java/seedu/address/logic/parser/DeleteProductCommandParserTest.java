@@ -1,7 +1,6 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.Messages.MESSAGE_INVALID_CONFIRMATION_FLAG;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 
@@ -27,17 +26,6 @@ public class DeleteProductCommandParserTest {
     @Test
     public void parse_validArgsWithConfirmationFlag_returnsDeleteCommand() {
         assertParseSuccess(parser, "-y " + VALID_ID, new DeleteProductCommand(new Identifier(VALID_ID), false));
-    }
-
-    @Test
-    public void parse_validArgsWithConfirmationFlagAfterIndex_returnsDeleteCommand() {
-        assertParseSuccess(parser, VALID_ID + " -y", new DeleteProductCommand(new Identifier(VALID_ID), false));
-    }
-
-    @Test
-    public void parse_wronglyFormedFlagAttachedToIndex_throwsParseException() {
-        assertParseFailure(parser, "-y" + VALID_ID, MESSAGE_INVALID_CONFIRMATION_FLAG);
-        assertParseFailure(parser, "-y1" + VALID_ID, MESSAGE_INVALID_CONFIRMATION_FLAG);
     }
 
     @Test
