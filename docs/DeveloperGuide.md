@@ -239,7 +239,7 @@ The `redo` command does the opposite — it calls `Model#redoVendorVault()`, whi
 
 </box>
 
-**Step 5.** The user then executes the `list` command. Commands that do not modify state,such as `list`, will not call `Model#commitVendorVault()`, `Model#undoVendorVault()` or `Model#redoVendorVault()`. Thus, the `vendorVaultStateList` remains unchanged.
+**Step 5.** The user then executes the `list` command. Commands that do not modify state, such as `list`, will not call `Model#commitVendorVault()`, `Model#undoVendorVault()` or `Model#redoVendorVault()`. Thus, the `vendorVaultStateList` remains unchanged.
 
 <puml src="diagrams/UndoRedoState4.puml" alt="UndoRedoState4" />
 
