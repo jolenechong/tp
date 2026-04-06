@@ -8,9 +8,6 @@ import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Email;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 /**
  * Parses input arguments and creates a new DeleteCommand object
  */

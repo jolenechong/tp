@@ -2,7 +2,6 @@ package seedu.address.logic.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.parser.ConfirmationFlagIndicator.containsConfirmationFlag;
 import static seedu.address.logic.parser.ConfirmationFlagIndicator.removeConfirmationFlag;
@@ -17,31 +16,25 @@ public class ConfirmationFlagIndicatorTest {
 
     @Test
     public void containsConfirmationFlag_flagPresent_returnsTrue() throws ParseException {
-        String[] tokens = {"delete", "1", FLAG};
-        assertTrue(containsConfirmationFlag(tokens, FLAG, EXCEPTION_MESSAGE));
+        String[] tokens = {FLAG, " 1"};
+        assertTrue(containsConfirmationFlag(tokens, FLAG));
     }
 
     @Test
     public void containsConfirmationFlag_flagAbsent_returnsFalse() throws ParseException {
         String[] tokens = {"delete", "1"};
-        assertFalse(containsConfirmationFlag(tokens, FLAG, EXCEPTION_MESSAGE));
+        assertFalse(containsConfirmationFlag(tokens, FLAG));
     }
 
     @Test
     public void containsConfirmationFlag_emptyTokens_returnsFalse() throws ParseException {
         String[] tokens = {};
-        assertFalse(containsConfirmationFlag(tokens, FLAG, EXCEPTION_MESSAGE));
-    }
-
-    @Test
-    public void containsConfirmationFlag_malformedFlag_throwsParseException() {
-        String[] tokens = {"delete", "1", FLAG + "Extra"};
-        assertThrows(ParseException.class, () -> containsConfirmationFlag(tokens, FLAG, EXCEPTION_MESSAGE));
+        assertFalse(containsConfirmationFlag(tokens, FLAG));
     }
 
     @Test
     public void removeConfirmationFlag_flagPresent_removesFlag() {
-        String[] tokens = {"delete", "1", FLAG};
+        String[] tokens = {"delete", FLAG, "1"};
         assertEquals("delete 1", removeConfirmationFlag(tokens, FLAG));
     }
 

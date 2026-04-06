@@ -1,9 +1,10 @@
 package seedu.address.logic.parser;
 
+import seedu.address.logic.parser.exceptions.ParseException;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-
-import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
  * Utility class for detecting and handling confirmation flags in tokenized command inputs.
@@ -28,15 +29,14 @@ public class ConfirmationFlagIndicator {
      */
     public static String removeConfirmationFlag(String[] tokens, String confirmationFlag) {
         boolean removed = false;
-        StringBuilder result = new StringBuilder();
+        ArrayList<String> result = new ArrayList<>();
         for (String token : tokens) {
             if (token.equals(confirmationFlag) && !removed) {
                 removed = true;
             } else {
-                result.append(token)
-                        .append(" ");
+                result.add(token);
             }
         }
-        return result.toString();
+        return String.join(" ", result);
     }
 }
