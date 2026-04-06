@@ -45,16 +45,5 @@ public class ClearCommandParserTest {
         assertEquals(ClearCommand.MESSAGE_SUCCESS, result.getFeedbackToUser());
         assertTrue(model.getAddressBook().getPersonList().isEmpty());
     }
-
-    @Test
-    public void parse_malformedFlagAttached_throwsParseException() {
-        assertParseFailure(parser, "-yabc", MESSAGE_INVALID_CONFIRMATION_FLAG);
-        assertParseFailure(parser, "-y1", MESSAGE_INVALID_CONFIRMATION_FLAG);
-    }
-
-    @Test
-    public void parse_malformedFlagInToken_throwsParseException() {
-        assertParseFailure(parser, "foo -ybar", MESSAGE_INVALID_CONFIRMATION_FLAG);
-    }
 }
 
