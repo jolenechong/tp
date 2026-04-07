@@ -300,7 +300,7 @@ Displays contacts with name and/or tag matching the given keyword(s).
 Format:
 
 ```
-find [n/NAME]... [t/TAG]...
+find [n/NAME_KEYWORD]... [t/TAG_KEYWORD]...
 ```
 (at least one prefix required)
 
@@ -1040,9 +1040,12 @@ Most errors and warnings in `add` also occur in `edit`, except the first three e
 
 Use this section when `find` fails.
 
-| Scenario               | Message shown                 | How to fix          |
-|------------------------|-------------------------------|---------------------|
-| No keyword is provided | `Invalid command format! ...` | Provide keyword(s). |
+| Scenario                             | Message shown                                                | How to fix                              |
+|--------------------------------------|--------------------------------------------------------------|-----------------------------------------|
+| No prefixes at all                   | `Invalid Command format! ...`                                | Use the full prefixed format.           |
+| Text appears before the first prefix | `No non-prefix characters before prefix(es) is allowed, ...` | Remove any text before the prefix.      |
+| Name keyword is blank                | `Name keyword should not be blank.`                          | Provide a non-empty keyword after `n/`. |
+| Tag keyword is blank                 | `Tag keyword should not be blank.`                           | Provide a non-empty keyword after `t/`. |
 
 <div style="height: 30px;"></div>
 
@@ -1169,7 +1172,7 @@ Common `editproduct` warnings:
 
 #### Troubleshooting `findproduct`
 
-Use this section when `find` fails.
+Use this section when `findproduct` fails.
 
 | Scenario               | Message shown                 | How to fix          |
 |------------------------|-------------------------------|---------------------|
