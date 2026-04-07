@@ -4,18 +4,18 @@ skinparam ClassBorderColor MODEL_COLOR
 skinparam ClassBackgroundColor MODEL_COLOR_T1
 skinparam ArrowColor MODEL_COLOR
 
-title After adding alias ls
+title After command "alias list ls"
 
-object "aliasList: AliasList" as list {
+object "<u>aliasList:AliasList</u>" as list {
 }
 
-object "ap : Alias" as addproduct {
+object "<u>ap:Alias</u>" as addproduct {
 }
 
-object "lp : Alias" as listproduct {
+object "<u>lp:Alias</u>" as listproduct {
 }
 
-object "ls : Alias" as ls {
+object "<u>ls:Alias</u>" as ls {
 }
 
 list --> addproduct
