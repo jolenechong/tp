@@ -843,6 +843,26 @@ Use case ends.
 
 **Extensions**
 
+* 1a. VV detects invalid command format
+    * 1a1. VV rejects the command and displays an error message indicating invalid command format.
+
+      Use case resumes from step 1.
+
+* 1b. VV detects invalid email provided.
+    * 1b1. VV rejects the command and displays an error message.
+
+      Use case resumes from step 1.
+
+* 1c. VV detects that no contact with the given email exists.
+    * 1c1. VV displays an error indicating no vendor was found with that email.
+
+      Use case ends.
+
+* 1d. VV detects confirmation flag in user prompt
+    * 1d1. VV validates the flag, skips the confirmation prompt, and proceeds to deletion.
+  
+      Use case resumes from step 4.
+
 * 2a. User decides not to delete the contact, rejecting the deletion.
     * 2a1. VV displays a list of current vendor contacts.
 
