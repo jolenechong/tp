@@ -19,11 +19,11 @@ import seedu.address.model.product.VendorEmailMatchesContactsPredicate;
 public class FindCommand extends Command {
 
     public static final String COMMAND_WORD = "find";
-    public static final String COMMAND_USAGE = COMMAND_WORD + " [n/NAME]... [t/TAG]...";
+    public static final String COMMAND_USAGE = COMMAND_WORD + " [n/NAME_KEYWORD]... [t/TAG_KEYWORD]...";
     public static final String COMMAND_DESCRIPTION = "Displays contacts with matching name and/or tag";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": " + COMMAND_DESCRIPTION + "\n"
-            + "Parameters: [n/NAME]... [t/TAG]... (at least one prefix required)\n"
+            + "Parameters: [n/NAME_KEYWORD]... [t/TAG_KEYWORD]... (at least one prefix required)\n"
             + "Examples: " + COMMAND_WORD + " n/TechSource t/electronics\n";
 
     private final Predicate<Person> predicate;
