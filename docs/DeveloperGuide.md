@@ -555,6 +555,20 @@ The new `Alias` is stored in `Aliases` and persisted to `aliases.json`
 **Step 3.** The user types `ls`. The `AddressBookParser` checks the command word `"ls"` against the stored aliases and finds a match. `"ls"` is mapped to `"list"`.
 The command word is substituted, and the rest of execution proceeds identically to if the user had typed `"list"` directly.
 
+The following sequence diagram shows how the user input `ls` goes through the `Logic` component:
+
+<puml src="diagrams/AliasCommandImplementation/AliasSequenceDiagram-Logic.puml" />
+
+<box type="info" seamless>
+
+**Note:** The lifeline for `RestoreCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of the diagram.
+
+</box>
+
+Similarly, how the `ls` input goes through the `Model` component is shown below:
+
+<puml src="diagrams/AliasCommandImplementation/AliasSequenceDiagram-Model.puml" />
+
 **Step 4.** The user types `ls args`. The same substitution occurs, only the command word `"ls"` is replaced with `"list"`, and `"args"` is passed through unchanged to the underlying parser.
 
 **Step 5.** The user executes `deletealias ls`. A `DeleteAliasCommand` is created and removes `"ls"` from `Aliases`.
@@ -567,10 +581,6 @@ The updated alias list is persisted to `aliases.json`.
 **Note:** If `"ls"` does not exists in `AliasList`, a `NoAliasFoundInAliasListException` is thrown and the command fails with an error message.
 
 </box>
-
-The following sequence diagram shows how the user input `ls` is resolved through `AddressBookParser` and `Aliases`:
-
-<puml src="diagrams/AliasCommandImplementation/AliasSequenceDiagram-Logic.puml" />
 
 #### Design Considerations
 
