@@ -81,6 +81,8 @@ class NameAndTagMatchesPredicateTest {
                 new NameAndTagMatchesPredicate(firstNamePredicate, firstTagPredicate);
         NameAndTagMatchesPredicate secondPredicate =
                 new NameAndTagMatchesPredicate(secondNamePredicate, secondTagPredicate);
+        NameAndTagMatchesPredicate sameNameDifferentTag =
+                new NameAndTagMatchesPredicate(firstNamePredicate, secondTagPredicate);
 
         assertTrue(firstPredicate.equals(firstPredicate));
 
@@ -91,6 +93,7 @@ class NameAndTagMatchesPredicateTest {
         assertFalse(firstPredicate.equals(1));
         assertFalse(firstPredicate.equals(null));
         assertFalse(firstPredicate.equals(secondPredicate));
+        assertFalse(firstPredicate.equals(sameNameDifferentTag));
     }
 
     @Test
