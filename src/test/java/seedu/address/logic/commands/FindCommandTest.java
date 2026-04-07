@@ -39,17 +39,18 @@ import seedu.address.testutil.ProductBuilder;
  * Contains integration tests (interaction with the Model) for {@code FindCommand}.
  */
 public class FindCommandTest {
-    private Model model = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases());
-    private Model expectedModel = new ModelManager(new VendorVault(
-                getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases());
+    private static final String KEYWORD_ALICE = "Alice";
+    private static final String TAG_VIP = "vip";
+
+    private final Model model = new ModelManager(new VendorVault(
+            getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases());
+    private final Model expectedModel = new ModelManager(new VendorVault(
+            getTypicalAddressBook(), getTypicalInventory()), new UserPrefs(), new Aliases());
 
     @Test
     public void equals() {
-        NameContainsKeywordsScoredPredicate firstPredicate =
-            new NameContainsKeywordsScoredPredicate(Collections.singletonList("first"));
-        NameContainsKeywordsScoredPredicate secondPredicate =
-            new NameContainsKeywordsScoredPredicate(Collections.singletonList("second"));
+        NameContainsKeywordsScoredPredicate firstPredicate = namePredicate("first");
+        NameContainsKeywordsScoredPredicate secondPredicate = namePredicate("second");
 
         FindCommand findFirstCommand = new FindCommand(firstPredicate);
         FindCommand findSecondCommand = new FindCommand(secondPredicate);
@@ -73,33 +74,28 @@ public class FindCommandTest {
 
     @Test
     public void execute_zeroKeywords_noPersonFound() {
-        // BV: empty keyword set should produce zero matched contacts and products.
-        String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 0);
-        NameContainsKeywordsScoredPredicate predicate = preparePredicate(" ");
+        NameContainsKeywordsScoredPredicate predicate = namePredicate();
         FindCommand command = new FindCommand(predicate);
         expectedModel.updateFilteredPersonList(predicate);
         updateExpectedProductFilter(expectedModel);
-        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+        assertCommandSuccess(command, model, messageForCount(0), expectedModel);
         assertEquals(Collections.emptyList(), model.getFilteredPersonList());
         assertEquals(Collections.emptyList(), model.getFilteredProductList());
     }
 
     @Test
     public void execute_multipleKeywords_multiplePersonsFound() {
-        // EP: valid name-keyword partition with multiple matches.
-        String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 3);
-        NameContainsKeywordsScoredPredicate predicate = preparePredicate("Kurz Elle Kunz");
+        NameContainsKeywordsScoredPredicate predicate = namePredicate("Kurz", "Elle", "Kunz");
         FindCommand command = new FindCommand(predicate);
         expectedModel.updateFilteredPersonList(predicate);
         updateExpectedProductFilter(expectedModel);
-        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+        assertCommandSuccess(command, model, messageForCount(3), expectedModel);
         assertEquals(Arrays.asList(CARL, ELLE, FIONA), model.getFilteredPersonList());
         assertEquals(Collections.emptyList(), model.getFilteredProductList());
     }
 
     @Test
     public void execute_keywordMatchesVendor_filtersLinkedProducts() {
-        // EP: keyword matches active vendor -> only their linked products shown, unrelated excluded
         Product linkedProduct = new ProductBuilder(IPAD)
                 .withVendorEmail(CARL.getEmail().toString()).build();
         Product unrelatedProduct = new ProductBuilder(AIRPODS)
@@ -110,22 +106,21 @@ public class FindCommandTest {
         inventory.addProduct(unrelatedProduct);
 
         VendorVault vault = new VendorVault(getTypicalAddressBook(), inventory);
-        Model localModel = new ModelManager(vault, new UserPrefs(), new Aliases());
-        Model localExpectedModel = new ModelManager(vault, new UserPrefs(), new Aliases());
+        Model localModel = modelFromVault(vault);
+        Model localExpectedModel = modelFromVault(vault);
 
-        NameContainsKeywordsScoredPredicate predicate = preparePredicate("Carl");
+        NameContainsKeywordsScoredPredicate predicate = namePredicate("Carl");
         FindCommand command = new FindCommand(predicate);
         localExpectedModel.updateFilteredPersonList(predicate);
         updateExpectedProductFilter(localExpectedModel);
 
-        assertCommandSuccess(command, localModel,
-                String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 1), localExpectedModel);
+        assertCommandSuccess(command, localModel, messageForCount(1), localExpectedModel);
         assertEquals(Collections.singletonList(linkedProduct), localModel.getFilteredProductList());
     }
 
     @Test
     public void execute_partialKeyword_ranksByRelevance() {
-        // EP: partial-name matching should rank exact > prefix > substring.
+        // EP: each match tier appears exactly once for keyword "ali"
         Person exact = new PersonBuilder().withName("Ali").withPhone("11111")
                 .withEmail("exact@example.com").withAddress("Exact Street").build();
         Person prefix = new PersonBuilder().withName("Alice").withPhone("22222")
@@ -138,25 +133,21 @@ public class FindCommandTest {
         addressBook.addPerson(prefix);
         addressBook.addPerson(exact);
 
-        Model localModel = new ModelManager(
-                new VendorVault(addressBook, new Inventory()), new UserPrefs(), new Aliases());
-        Model localExpectedModel = new ModelManager(
-                new VendorVault(addressBook, new Inventory()), new UserPrefs(), new Aliases());
+        Model localModel = modelFromData(addressBook, new Inventory());
+        Model localExpectedModel = modelFromData(addressBook, new Inventory());
 
-        String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 3);
-        NameContainsKeywordsScoredPredicate predicate = preparePredicate("ali");
+        NameContainsKeywordsScoredPredicate predicate = namePredicate("ali");
         FindCommand command = new FindCommand(predicate);
 
         localExpectedModel.updateFilteredPersonList(predicate);
         updateExpectedProductFilter(localExpectedModel);
 
-        assertCommandSuccess(command, localModel, expectedMessage, localExpectedModel);
+        assertCommandSuccess(command, localModel, messageForCount(3), localExpectedModel);
         assertEquals(Arrays.asList(exact, prefix, substring), localModel.getFilteredPersonList());
     }
 
     @Test
     public void execute_keywordMatchesArchivedContact_excludesArchivedAndLinkedProducts() {
-        // EP: archived contacts are excluded even when name keyword matches.
         Person archivedCarl = CARL.archive();
         Person activeOther = new PersonBuilder().withName("Active").withPhone("55555")
                 .withEmail("active@example.com").withAddress("Active Street").build();
@@ -171,39 +162,38 @@ public class FindCommandTest {
         Inventory inventory = new Inventory();
         inventory.addProduct(archivedLinkedProduct);
 
-        Model localModel = new ModelManager(
-                new VendorVault(addressBook, inventory), new UserPrefs(), new Aliases());
-        Model localExpectedModel = new ModelManager(
-                new VendorVault(addressBook, inventory), new UserPrefs(), new Aliases());
+        Model localModel = modelFromData(addressBook, inventory);
+        Model localExpectedModel = modelFromData(addressBook, inventory);
 
-        String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 0);
-        NameContainsKeywordsScoredPredicate predicate = preparePredicate("Carl");
+        NameContainsKeywordsScoredPredicate predicate = namePredicate("Carl");
         FindCommand command = new FindCommand(predicate);
 
         localExpectedModel.updateFilteredPersonList(predicate);
         updateExpectedProductFilter(localExpectedModel);
 
-        assertCommandSuccess(command, localModel, expectedMessage, localExpectedModel);
+        assertCommandSuccess(command, localModel, messageForCount(0), localExpectedModel);
         assertEquals(Collections.emptyList(), localModel.getFilteredPersonList());
     }
 
     @Test
     public void execute_tagModeMultipleKeywords_filtersByTagAndExcludesArchived() {
-        // EP: tag-mode OR matching with multiple keywords returns only active matched contacts.
+        // This scenario verifies two things together for tag filtering:
+        // OR semantics across keywords and exclusion of archived contacts.
         Person vipContact = new PersonBuilder().withName("Vip Contact").withPhone("11111")
-            .withEmail("vip@example.com").withAddress("Vip Street").withTags("vip").build();
+                .withEmail("vip@example.com").withAddress("Vip Street").withTags("vip").build();
         Person leadContact = new PersonBuilder().withName("Lead Contact").withPhone("22222")
-            .withEmail("lead@example.com").withAddress("Lead Street").withTags("lead").build();
+                .withEmail("lead@example.com").withAddress("Lead Street").withTags("lead").build();
         Person archivedVipContact = new PersonBuilder().withName("Archived Vip").withPhone("33333")
-            .withEmail("archivedvip@example.com").withAddress("Archived Street").withTags("vip").build()
-            .archive();
+                .withEmail("archivedvip@example.com").withAddress("Archived Street")
+                .withTags("vip").build().archive();
 
         Product vipLinkedProduct = new ProductBuilder().withIdentifier("SKU-9001")
-            .withName("Vip Product").withVendorEmail(vipContact.getEmail().toString()).build();
+                .withName("Vip Product").withVendorEmail(vipContact.getEmail().toString()).build();
         Product leadLinkedProduct = new ProductBuilder().withIdentifier("SKU-9002")
-            .withName("Lead Product").withVendorEmail(leadContact.getEmail().toString()).build();
+                .withName("Lead Product").withVendorEmail(leadContact.getEmail().toString()).build();
         Product archivedVipLinkedProduct = new ProductBuilder().withIdentifier("SKU-9003")
-            .withName("Archived Vip Product").withVendorEmail(archivedVipContact.getEmail().toString()).build();
+                .withName("Archived Vip Product")
+                .withVendorEmail(archivedVipContact.getEmail().toString()).build();
 
         AddressBook addressBook = new AddressBook();
         addressBook.addPerson(vipContact);
@@ -215,10 +205,8 @@ public class FindCommandTest {
         inventory.addProduct(leadLinkedProduct);
         inventory.addProduct(archivedVipLinkedProduct);
 
-        Model localModel = new ModelManager(
-            new VendorVault(addressBook, inventory), new UserPrefs(), new Aliases());
-        Model localExpectedModel = new ModelManager(
-            new VendorVault(addressBook, inventory), new UserPrefs(), new Aliases());
+        Model localModel = modelFromData(addressBook, inventory);
+        Model localExpectedModel = modelFromData(addressBook, inventory);
 
         PersonTagContainsKeywordsPredicate predicate =
                 new PersonTagContainsKeywordsPredicate(Arrays.asList("vip", "lead"));
@@ -227,23 +215,20 @@ public class FindCommandTest {
         localExpectedModel.updateFilteredPersonList(person -> !person.isArchived() && predicate.test(person));
         updateExpectedProductFilter(localExpectedModel);
 
-        assertCommandSuccess(command, localModel,
-                String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 2), localExpectedModel);
+        assertCommandSuccess(command, localModel, messageForCount(2), localExpectedModel);
         assertEquals(Arrays.asList(vipContact, leadContact), localModel.getFilteredPersonList());
         assertEquals(Arrays.asList(vipLinkedProduct, leadLinkedProduct), localModel.getFilteredProductList());
     }
 
     @Test
     public void execute_nameAndTagCombined_filtersByAnd() {
-        // EP: n/ and t/ combined requires both name and tag to match.
         NameAndTagCombinedTestContext context = prepareNameAndTagCombinedContext();
         FindCommand command = new FindCommand(context.combinedPredicate);
 
         context.localExpectedModel.updateFilteredPersonList(context.combinedPredicate);
         updateExpectedProductFilter(context.localExpectedModel);
 
-        assertCommandSuccess(command, context.localModel, String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 1),
-                context.localExpectedModel);
+        assertCommandSuccess(command, context.localModel, messageForCount(1), context.localExpectedModel);
         assertEquals(Collections.singletonList(context.exactMatch), context.localModel.getFilteredPersonList());
     }
 
@@ -255,15 +240,14 @@ public class FindCommandTest {
         context.localExpectedModel.updateFilteredPersonList(context.combinedPredicate);
         updateExpectedProductFilter(context.localExpectedModel);
 
-        assertCommandSuccess(command, context.localModel, String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 1),
-                context.localExpectedModel);
+        assertCommandSuccess(command, context.localModel, messageForCount(1), context.localExpectedModel);
         assertEquals(Collections.singletonList(context.exactLinkedProduct),
                 context.localModel.getFilteredProductList());
     }
 
     @Test
     public void getPendingConfirmation_returnsInactivePendingConfirmation() {
-        NameContainsKeywordsScoredPredicate predicate = preparePredicate(" ");
+        NameContainsKeywordsScoredPredicate predicate = namePredicate();
         FindCommand command = new FindCommand(predicate);
         PendingConfirmation pendingConfirmation = command.getPendingConfirmation();
         assertFalse(pendingConfirmation.getNeedConfirmation());
@@ -278,11 +262,20 @@ public class FindCommandTest {
         assertEquals(expected, findCommand.toString());
     }
 
-    /**
-     * Parses {@code userInput} into a {@code NameContainsKeywordsScoredPredicate}.
-     */
-    private NameContainsKeywordsScoredPredicate preparePredicate(String userInput) {
-        return new NameContainsKeywordsScoredPredicate(Arrays.asList(userInput.split("\\s+")));
+    private NameContainsKeywordsScoredPredicate namePredicate(String... keywords) {
+        return new NameContainsKeywordsScoredPredicate(Arrays.asList(keywords));
+    }
+
+    private String messageForCount(int count) {
+        return String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, count);
+    }
+
+    private Model modelFromData(AddressBook addressBook, Inventory inventory) {
+        return modelFromVault(new VendorVault(addressBook, inventory));
+    }
+
+    private Model modelFromVault(VendorVault vault) {
+        return new ModelManager(vault, new UserPrefs(), new Aliases());
     }
 
     private NameAndTagCombinedTestContext prepareNameAndTagCombinedContext() {
@@ -310,15 +303,13 @@ public class FindCommandTest {
         inventory.addProduct(nameOnlyLinkedProduct);
         inventory.addProduct(tagOnlyLinkedProduct);
 
-        Model localModel = new ModelManager(
-                new VendorVault(addressBook, inventory), new UserPrefs(), new Aliases());
-        Model localExpectedModel = new ModelManager(
-                new VendorVault(addressBook, inventory), new UserPrefs(), new Aliases());
+        Model localModel = modelFromData(addressBook, inventory);
+        Model localExpectedModel = modelFromData(addressBook, inventory);
 
         NameContainsKeywordsScoredPredicate namePredicate =
-                new NameContainsKeywordsScoredPredicate(Collections.singletonList("Alice"));
+                new NameContainsKeywordsScoredPredicate(Collections.singletonList(KEYWORD_ALICE));
         PersonTagContainsKeywordsPredicate tagPredicate =
-                new PersonTagContainsKeywordsPredicate(Collections.singletonList("vip"));
+                new PersonTagContainsKeywordsPredicate(Collections.singletonList(TAG_VIP));
         NameAndTagMatchesPredicate combinedPredicate = new NameAndTagMatchesPredicate(namePredicate, tagPredicate);
 
         return new NameAndTagCombinedTestContext(localModel, localExpectedModel,
