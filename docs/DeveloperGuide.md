@@ -632,7 +632,7 @@ is implemented through a match predicate and shared ranking contract:
 
 2. The same applies for `ProductNameContainsKeywordsScoredPredicate`.
 
-3. `RelevanceRank` defines the ranking contract.
+3. `FindRelevance` defines the ranking contract.
    * Keyword-token matches are tiered: `EXACT_TOKEN` > `PREFIX_TOKEN` > `SUBSTRING_TOKEN` > `NO_MATCH`.
    * `Score(MatchTier tier, int unmatchedCharCount, String sortKey)` represents how relevant a match is.
    * `SCORE_COMPARATOR` implements score comparison.
@@ -676,15 +676,19 @@ The usage scenario for `findproduct` is analogous.
 
 **Aspect: Matching strategy**
 
-* **Alternative 1 (current choice):** Partial matching
-  * Pros: Tolerant of incomplete keywords, hence more user-friendly.
+* **Alternative 1:** Partial matching
+  * Pros: Tolerant of incomplete keywords.
   * Cons: Broader set of results.
 
-* **Alternative 2:** Exact matching
+* **Alternative 2:** Full-word matching
   * Pros: Simpler design; Stricter set of results.
-  * Cons: Low usability as users have to remember exact words.
+  * Cons: Users have to remember exact words.
 
-Alternative 1 was chosen to ensure discoverability and improve user experience.
+Alternative 1 was chosen for searching by name. Users often remember only parts of a name, so partial matching helps with reducing failed searches.
+
+Alternative 2 was chosen for searching by tag. Tags represent categories, so users typically expect precise filtering.
+
+This split approach ensures usability by supporting both exploratory and precise search.
 
 **Aspect: Ranking implementation**
 
@@ -853,7 +857,7 @@ Use case ends.
 1. User chooses to delete a contact.
 2. VV requests for confirmation for deleting the contact.
 3. User confirms deletion.
-4. VV deletes contact and displays a list of current contacts.
+4. VV deletes contact, disassociates its products, and displays a list of current contacts.
 
 Use case ends.
 
@@ -991,7 +995,42 @@ Use case ends.
       Use case resumes from step 3.
 
 **Use Case: UC9 - Add a Product**
-TODO
+
+**Preconditions: Application is running, user is on the main screen.**
+
+**MSS**
+
+1. User chooses to add a product and provides required fields.
+2. VV validates the command format and fields, then adds the product and displays the list of products.
+
+Use case ends.
+
+**Extensions**
+
+* 1a. VV detects invalid command format
+    * 1a1. VV rejects the command and displays an error indicating invalid command format.
+
+      Use case resumes from step 1.
+
+* 1b. VV detects duplicate product
+    * 1b1. VV rejects the command and displays a duplicate product error.
+
+      Use case resumes from step 1.
+
+* 1c. VV detects that product is associated with a contact that does not exist.
+    * 1c1. VV rejects the command and displays an error.
+
+      Use case resumes from step 1.
+
+* 2a. VV detects potential duplicate product
+    * 2a1. VV accepts the command and displays a warning with details of the similar product.
+
+      Use case ends.
+
+* 2b. VV detects potential input mistake
+    * 2b1. VV accepts the command and displays a warning indicating the input may be unintended.
+
+      Use case ends.
 
 **Use case: UC10 - Edit a Product**
 
@@ -1017,7 +1056,7 @@ Use case ends.
       Use case ends.
 
 * 1c. VV detects error in the fields provided (e.g. invalid data format).
-    * 1c1. VV displays an appropriate error message indicating the invalid field.
+    * 1c1. VV displays an error indicating the invalid field.
 
       Use case resumes from step 1.
 
@@ -1265,8 +1304,9 @@ Accessibility:
 
 1. Prerequisites: There should be no contact with email `support@adafruit.com`.
 
-2. Test case: `add n/Adafruit Industries p/64601234 e/support@adafruit.com a/151 Varick St, New York, NY 10013, USA`
-   - Expected: Adafruit Industries's Contact is added.
+2. Test case: `add n/Adafruit Industries p/64601234 e/support@adafruit.com a/151 Varick St, New York, NY 10013, USA 
+t/iot`
+   - Expected: Adafruit Industries Contact is added.
 
 3. Test case: `add`
    - Expected: `Invalid Command Format..` error.
@@ -1312,13 +1352,16 @@ Accessibility:
 
 ### Finding a contact
 
-1. Prerequisites: There should be a contact named Adafruit Industries
+1. Prerequisites: There should be a contact named Adafruit Industries with the tag `iot`
 
 2. Test case: `find`
    - Expected: `Invalid command format! …` error
 
-3. Test case: `find ada`
-   - Expected: Contact named Adafruit Industries is listed
+3. Test case: `find n/ada`
+   - Expected: Contact named Adafruit Industries is displayed
+
+4. Test case: `find t/iot`
+   - Expected: Contact named Adafruit Industries is displayed
 
 ### Clearing all contacts
 
@@ -1542,7 +1585,8 @@ At the end, run `listall` and verify both added contact and product are present 
   - Expected: `WARNING: Error reading from jsonFile` is logged to the terminal and app starts with empty inventory
 
 5. Test case: Enter invalid JSON to `/preferences.json` and restart the app
-   - Expected: `WARNING: Error reading from jsonFile file preferences.json` logged to the console and app starts with default preferences
+   - Expected: `WARNING: Error reading from jsonFile file preferences.json` is logged to the console and app starts 
+     with default preferences
 
 ## **Appendix: Effort**
 
@@ -1583,3 +1627,8 @@ At the end, run `listall` and verify both added contact and product are present 
 8. Consistently tested each other's code and fixed bugs early before they became larger issues
 
 ## **Appendix: Planned Enhancements**
+
+Team size: 4
+
+1. Enhance delete/archive contact commands: Prompt user if they would like to cascade delete and archive operations 
+   to products associated with the contact.

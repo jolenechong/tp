@@ -6,35 +6,35 @@ skinparam ArrowColor MODEL_COLOR
 show members
 hide empty members
 
-object "__pred : NameContainsKeywordsScoredPredicate__" as pred {
+object "__pred:NameContainsKeywordsScoredPredicate__" as pred {
   keywords = ["adafruit"]
 }
 
-object "__scoreExact : Score__" as scoreExact {
+object "__scoreExact:Score__" as scoreExact {
   tier = EXACT_TOKEN
   unmatchedCharCount = 0
   sortKey = "Adafruit"
 }
 
-object "__scorePrefix : Score__" as scorePrefix {
+object "__scorePrefix:Score__" as scorePrefix {
   tier = PREFIX_TOKEN
   unmatchedCharCount = 1
   sortKey = "Adafruity"
 }
 
-object "__scoreSubstring : Score__" as scoreSubstring {
+object "__scoreSubstring:Score__" as scoreSubstring {
   tier = SUBSTRING_TOKEN
   unmatchedCharCount = 1
   sortKey = "Tadafruit"
 }
 
-object "__scoreNoMatch : Score__" as scoreNoMatch {
+object "__scoreNoMatch:Score__" as scoreNoMatch {
   tier = NO_MATCH
   unmatchedCharCount = MAX_INT
   sortKey = "Cytron"
 }
 
-object "__SCORE_COMPARATOR : Comparator<Score>__" as scoreComp {
+object "__SCORE_COMPARATOR:Comparator<Score>__" as scoreComp {
 }
 
 pred --> scoreExact
