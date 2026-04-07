@@ -1027,23 +1027,7 @@ Use case ends.
 
 **Use case: UC12 - Delete Product**
 
-**Preconditions: Application is running, user is on the main screen and has added a product.**
-
-**MSS**
-
-1. User chooses to delete a product.
-2. VV requests for confirmation for deleting the product.
-3. User confirms deletion.
-4. VV deletes product and displays list of current product.
-
-Use case ends.
-
-**Extensions**
-
-* 2a. User decides not to delete the product, rejecting deletion.
-  * 2a1. VV displays a list of current product.
-
-  Use case ends.
+Analogous to !!UC4 - Delete Vendor Contact!!, except the product's identifier is used instead of the vendor's email.
 
 **Use case: UC13 - Find Product**
 
