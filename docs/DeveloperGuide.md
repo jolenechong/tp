@@ -1476,3 +1476,8 @@ At the end, run `listall` and verify both added contact and product are present 
 8. Consistently tested each other's code and fixed bugs early before they became larger issues
 
 ## **Appendix: Planned Enhancements**
+
+Team size: 4
+
+1. Enhance delete/archive contact commands: Prompt user if they would like to cascade delete and archive operations 
+   to products associated with the contact.
