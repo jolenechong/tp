@@ -6,16 +6,16 @@ skinparam ArrowColor MODEL_COLOR
 
 title After adding alias ls
 
-object "<u>aliasList: AliasList</u>" as list {
+object "<u>aliasList:AliasList</u>" as list {
 }
 
-object "<u>ap : Alias</u>" as addproduct {
+object "<u>ap:Alias</u>" as addproduct {
 }
 
-object "<u>lp : Alias</u>" as listproduct {
+object "<u>lp:Alias</u>" as listproduct {
 }
 
-object "<u>ls : Alias</u>" as ls {
+object "<u>ls:Alias</u>" as ls {
 }
 
 list --> addproduct
