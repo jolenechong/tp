@@ -868,7 +868,32 @@ Use case ends.
 
       Use case ends.
 
-**Use case: UC5 - Find Vendor Contact**
+**Use case: UC5 - Clearing All Vendor Contacts**
+
+**Preconditions: Application is running, user is on the main screen and has added a contact.**
+
+**MSS**
+
+1. User chooses to clear all vendor contacts.
+2. VV requests for confirmation for clearing all contacts.
+3. User confirms deletion.
+4. VV clears all contacts and displays an empty list of contacts.
+
+Use case ends.
+
+**Extensions**
+
+* 1a. VV detects confirmation flag in user prompt
+    * 1a1. VV validates the flag, skips the confirmation prompt, and proceeds to deletion.
+
+      Use case resumes from step 4.
+
+* 2a. User decides not to delete the contacts, rejecting the deletion.
+    * 2a1. VV displays a list of current vendor contacts.
+
+      Use case ends.
+
+**Use case: UC6 - Find Vendor Contact**
 
 **Preconditions: Application is running, user is on the main screen and has added a contact.**
 
@@ -886,7 +911,7 @@ Use case ends.
     
       Use case ends.
 
-**Use case: UC6 - Archive a Vendor Contact**
+**Use case: UC7 - Archive a Vendor Contact**
 
 **Preconditions: Application is running, user is on the main screen and has added a contact.**
 
@@ -919,7 +944,7 @@ Use case ends.
 
       Use case ends.
 
-**Use case: UC7 - Restore an Archived Vendor Contact**
+**Use case: UC8 - Restore an Archived Vendor Contact**
 
 **Preconditions: Application is running, user is on the main screen and has at least one archived contact.**
 
@@ -949,10 +974,10 @@ Use case ends.
   
       Use case resumes from step 3.
 
-**Use Case: UC8 - Add a Product**
+**Use Case: UC9 - Add a Product**
 TODO
 
-**Use case: UC9 - Edit a Product**
+**Use case: UC10 - Edit a Product**
 
 **Preconditions: Application is running, user is on the main screen and has added a product.**
 
@@ -990,7 +1015,7 @@ Use case ends.
 
       Use case ends.
 
-**Use Case: UC10 - View Products**
+**Use Case: UC11 - View Products**
 
 **Preconditions: Application is running, user is on the main screen.**
 
@@ -1000,7 +1025,7 @@ Use case ends.
 
 Use case ends.
 
-**Use case: UC11 - Delete Product**
+**Use case: UC12 - Delete Product**
 
 **Preconditions: Application is running, user is on the main screen and has added a product.**
 
@@ -1020,20 +1045,20 @@ Use case ends.
 
   Use case ends.
 
-**Use case: UC12 - Find Product**
+**Use case: UC13 - Find Product**
 
 Analogous to !!UC5 - Find Vendor Contact!!.
 
-**Use case: UC13 - Archive a Product**
+**Use case: UC14 - Archive a Product**
 
 Analogous to !!UC6 - Archive a Vendor Contact!!, except the product's identifier is used instead of the vendor's email.
 
-**Use case: UC14 - Restore an Archived Product**
+**Use case: UC15 - Restore an Archived Product**
 
 Analogous to !!UC7 - Restore an Archived Vendor Contact!!, except the product's identifier is used instead of the 
 vendor's email.
 
-**Use case: UC15 - Undo/Redo a Change**
+**Use case: UC16 - Undo/Redo a Change**
 
 **Preconditions: Application is running, user is on the main screen.**
 
@@ -1064,7 +1089,7 @@ Use case ends.
       Use case ends.
 
 
-**Use case: UC16 - Navigate Command History**
+**Use case: UC17 - Navigate Command History**
 
 **Preconditions: Application is running, user is on the main screen.**
 
