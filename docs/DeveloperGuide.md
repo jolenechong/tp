@@ -13,8 +13,6 @@
 
 ## **Acknowledgements**
 
-_{ list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well }_
-
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Setting up, getting started**
@@ -73,7 +71,7 @@ The **API** of this component is specified in [`Ui.java`](https://github.com/AY2
 
 The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
 
-The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S2-CS2103T-W08-2/tp/blob/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S2-CS2103T-W08-2/tp/blob/master/src/main/resources/view/MainWindow.fxml)
+The `UI` component uses the JavaFx UI framework. The layout of these UI parts is defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S2-CS2103T-W08-2/tp/blob/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S2-CS2103T-W08-2/tp/blob/master/src/main/resources/view/MainWindow.fxml)
 
 The `UI` component
 
@@ -241,7 +239,7 @@ The `redo` command does the opposite — it calls `Model#redoVendorVault()`, whi
 
 </box>
 
-**Step 5.** The user then executes the `list` command. Commands that do not modify state,such as `list`, will not call `Model#commitVendorVault()`, `Model#undoVendorVault()` or `Model#redoVendorVault()`. Thus, the `vendorVaultStateList` remains unchanged.
+**Step 5.** The user then executes the `list` command. Commands that do not modify state, such as `list`, will not call `Model#commitVendorVault()`, `Model#undoVendorVault()` or `Model#redoVendorVault()`. Thus, the `vendorVaultStateList` remains unchanged.
 
 <puml src="diagrams/UndoRedoState4.puml" alt="UndoRedoState4" />
 
@@ -557,6 +555,20 @@ The new `Alias` is stored in `Aliases` and persisted to `aliases.json`
 **Step 3.** The user types `ls`. The `AddressBookParser` checks the command word `"ls"` against the stored aliases and finds a match. `"ls"` is mapped to `"list"`.
 The command word is substituted, and the rest of execution proceeds identically to if the user had typed `"list"` directly.
 
+The following sequence diagram shows how the user input `ls` goes through the `Logic` component:
+
+<puml src="diagrams/AliasCommandImplementation/AliasSequenceDiagram-Logic.puml" />
+
+<box type="info" seamless>
+
+**Note:** The lifeline for `RestoreCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of the diagram.
+
+</box>
+
+Similarly, how the `ls` input goes through the `Model` component is shown below:
+
+<puml src="diagrams/AliasCommandImplementation/AliasSequenceDiagram-Model.puml" />
+
 **Step 4.** The user types `ls args`. The same substitution occurs, only the command word `"ls"` is replaced with `"list"`, and `"args"` is passed through unchanged to the underlying parser.
 
 **Step 5.** The user executes `deletealias ls`. A `DeleteAliasCommand` is created and removes `"ls"` from `Aliases`.
@@ -569,10 +581,6 @@ The updated alias list is persisted to `aliases.json`.
 **Note:** If `"ls"` does not exists in `AliasList`, a `NoAliasFoundInAliasListException` is thrown and the command fails with an error message.
 
 </box>
-
-The following sequence diagram shows how the user input `ls` is resolved through `AddressBookParser` and `Aliases`:
-
-<puml src="diagrams/AliasCommandImplementation/AliasSequenceDiagram.puml" />
 
 #### Design Considerations
 
@@ -627,7 +635,7 @@ This diagram shows the structure and dependency of Better Search classes:
 
 <puml src="diagrams/BetterSearchClass.puml" width="400"/>
 
-This diagram shows an example of scoring state when the given keyword is `"adafruit"`:
+This diagram shows an example of scoring state when the given keyword is "adafruit":
 
 <puml src="diagrams/BetterSearchObject.puml" width="900"/>
 
@@ -652,7 +660,7 @@ This diagram shows the interactions between `Logic` and `Model`:
 
 This diagram summarises the decision flow in `Model`:
 
-<puml src="diagrams/BetterSearchActivity.puml" width="400"/>
+<puml src="diagrams/BetterSearchActivity.puml" width="350"/>
 
 The usage scenario for `findproduct` is analogous.
 
@@ -704,13 +712,13 @@ Alternative 1 was chosen for consistency and maintainability.
 
 ### Product scope
 
-**Target user profile**:
+**Target user profile**
 
 Small business owners who:
 * Have many vendors' contacts and inventory to manage
 * Are tech-savvy and prefers CLI over GUI
 
-**Value proposition**:
+**Value proposition**
 
 VendorVault helps small business owners seamlessly manage vendor contacts and track inventory in one simple system.
 By flagging and sorting low-quantity products, owners instantly know what needs restocking and who to contact, enabling timely action without relying on complex or costly inventory tools.
@@ -719,34 +727,37 @@ By flagging and sorting low-quantity products, owners instantly know what needs 
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …      | I want to …                      | So that I can …                                                   |
-|----------|-------------|----------------------------------|-------------------------------------------------------------------|
-| `* *`    | new user    | see usage guide                  | recap and learn commands                                          |
-| `* * *`  | user        | add a new contact                | add new vendors I work with                                       |
-| `* *`    | user        | edit an existing contact         | keep vendor information up to date                                |
-| `* * *`  | user        | delete a contact                 | remove vendors I no longer work with                              |
-| `* * *`  | user        | view contacts                    |                                                                   |
-| `* *`    | user        | find a contact by name           | locate their details without having to go through the entire list |
-| `*`      | user        | sort contacts by name            | browse them easily                                                |
-| `* *`    | user        | clear all contacts               | reset my vendor list                                              |
-| `* *`    | user        | archive a contact                | hide vendors I no longer work with without permanently deleting them |
-| `* *`    | user        | restore an archived contact      | bring back a previously archived vendor                           |
-| `* * *`  | user        | add a product                    | add new products I sell                                           |
-| `* *`    | user        | edit an existing product         | keep product information up to date                               |
-| `* * *`  | user        | delete a product                 | remove products I no longer sell                                  |
-| `* * *`  | user        | view products                    |                                                                   |
-| `* *`    | user        | find a product by name           | locate their details without having to go through the entire list |
-| `*`      | user        | sort products by name/identifier | browse them easily                                                |
-| `* *`    | user        | clear all products               | reset my inventory                                                |
-| `* *`    | user        | view inventory statistics        | understand my product quantity levels at a glance                 |
-| `* *`    | user        | undo changes I made              | easily revert and correct mistake                                 |
-| `* *`    | user        | redo changes I made              | easily reapply changes I accidentally undid                       |
-| `* *`    | user        | navigate my previous commands    | reuse or correct recent commands without providing them again     |
-| `* *`    | user        | archive a product                | hide products I no longer sell without permanently deleting them  |
-| `* *`    | user        | restore an archived product      | bring back a previously archived product                          |
-| `* *`    | expert user | add alias for commands           | create alias for long commands according to my preferences        |
-| `* *`    | expert user | delete alias for commands        | remove alias for I no longer want to use                          |
-| `* *`    | expert user | view aliases for commands        | view all aliases that I have set                                  |
+| Priority | As a …      | I want to …                           | So that I can …                                                      |
+|----------|-------------|---------------------------------------|----------------------------------------------------------------------|
+| `* *`    | new user    | see usage guide                       | recap and learn commands                                             |
+| `* * *`  | user        | add a new contact                     | add new vendors I work with                                          |
+| `* *`    | user        | edit an existing contact              | keep vendor information up to date                                   |
+| `* * *`  | user        | delete a contact                      | remove vendors I no longer work with                                 |
+| `* * *`  | user        | view contacts                         |                                                                      |
+| `* *`    | user        | find a contact by name/tag            | locate their details without having to go through the entire list    |
+| `*`      | user        | sort contacts by name                 | browse them easily                                                   |
+| `* *`    | user        | clear all contacts                    | reset my vendor list                                                 |
+| `* *`    | user        | archive a contact                     | hide vendors I no longer work with without permanently deleting them |
+| `* *`    | user        | restore an archived contact           | bring back a previously archived vendor                              |
+| `* * *`  | user        | add a product                         | add new products that I sell                                         |
+| `* *`    | user        | edit an existing product              | keep product information up to date                                  |
+| `* * *`  | user        | delete a product                      | remove products I no longer sell                                     |
+| `* * *`  | user        | view products                         |                                                                      |
+| `* *`    | user        | find a product by name                | locate their details without having to go through the entire list    |
+| `* *`    | user        | find vendor associated with a product | know who to contact when restocking                                  |
+| `*`      | user        | sort products by name/identifier      | browse them easily                                                   |
+| `* *`    | user        | clear all products                    | reset my inventory                                                   |
+| `* *`    | user        | view inventory statistics             | understand my product quantity levels at a glance                    |
+| `* *`    | user        | undo changes I made                   | easily revert and correct mistake                                    |
+| `* *`    | user        | redo changes I made                   | easily reapply changes I accidentally undid                          |
+| `* *`    | user        | navigate my previous commands         | reuse or correct recent commands without providing them again        |
+| `* *`    | user        | archive a product                     | hide products I no longer sell without permanently deleting them     |
+| `* *`    | user        | restore an archived product           | bring back a previously archived product                             |
+| `* *`    | user        | set a threshold for stock level       | track when a product needs restocking                                |
+| `* *`    | expert user | add alias for commands                | create alias for long commands according to my preferences           |
+| `* *`    | expert user | delete alias for commands             | remove alias that I no longer want to use                            |
+| `* *`    | expert user | view aliases for commands             | view all aliases that I have set                                     |
+
 
 ### Use cases
 
@@ -766,38 +777,29 @@ Use case ends.
 **Extensions**
 
 * 1a. VV detects invalid command format
-    * 1a1. VV rejects the command and displays an error message indicating the correct format with an example.
-    * 1a2. User re-enters the corrected command.
+    * 1a1. VV rejects the command and displays an error message indicating invalid command format.
 
-    Steps 1a1–1a2 are repeated until the command format is valid.
-
-    Use case resumes from step 1.
+      Use case resumes from step 1.
 
 * 1b. VV detects error in fields provided
     * 1b1. VV rejects the command and displays validation error message.
-    * 1b2. User re-enters the corrected fields.
-
-      Steps 1b1–1b2 are repeated until the fields are valid.
-
+  
       Use case resumes from step 1.
 
 * 1c. VV detects duplicate contact
     * 1c1. VV rejects the command and displays a duplicate contact error message.
-    * 1c2. User re-enters the corrected fields.
-
-      Steps 1c1–1c2 are repeated until the fields are not a duplicate.
-
+  
       Use case resumes from step 1.
 
-* 1d. VV detects potential duplicate contact
-    * 1d1. VV accepts the command and displays a warning with details of the similar contact.
+* 2a. VV detects potential duplicate contact
+    * 2a1. VV accepts the command and displays a warning with details of the similar contact.
 
-      Use case resumes from step 2.
+      Use case ends.
 
-* 1e. VV detects potential input mistake
-    * 1e1. VV accepts the command displays a warning indicating the input may be unintended.
+* 2b. VV detects potential input mistake
+    * 2b1. VV accepts the command displays a warning indicating the input may be unintended.
 
-      Use case resumes from step 2.
+      Use case ends.
 
 **Use case: UC2 - Edit a Vendor Contact**
 
@@ -812,16 +814,16 @@ Use case ends.
 
 **Extensions**
 
-* *a. All extensions that apply to !!UC1: Add a Vendor Contact!! also apply here.
+All extensions that apply to !!UC1: Add a Vendor Contact!! also apply here.
 
-* 1f. VV detects that the operation removes all tags.
-    * 1f1. VV requests confirmation.
-    * 1f2. User confirms the deletion.
+* 1a. VV detects that the operation removes all tags.
+    * 1a1. VV requests confirmation.
+    * 1a2. User confirms the deletion.
 
       Use case resumes from step 2.
 
-    * 1f2a. User cancels the deletion instead.
-      * 1f2a1. VV aborts the edit operation and displays a cancellation message.
+    * 1a2a. User cancels the deletion instead.
+      * 1a2a1. VV aborts the edit operation and displays a cancellation message.
 
         Use case ends.
 
@@ -831,12 +833,12 @@ Use case ends.
 
 **MSS**
 
-1. User chooses to view all vendor contacts.
-2. VV shows all vendor contacts.
+1. User chooses to view all active vendor contacts.
+2. VV shows all active vendor contacts.
 
 Use case ends.
 
-**Use case: UC3 - Delete Vendor Contact**
+**Use case: UC4 - Delete Vendor Contact**
 
 **Preconditions: Application is running, user is on the main screen and has added a contact.**
 
@@ -852,124 +854,102 @@ Use case ends.
 **Extensions**
 
 * 2a. User decides not to delete the contact, rejecting the deletion.
-  * 2a1. VV displays a list of current vendor contacts.
+    * 2a1. VV displays a list of current vendor contacts.
 
-  Use case ends.
+      Use case ends.
 
-**Use case: UC4 - Find Vendor Contact**
+**Use case: UC5 - Find Vendor Contact**
 
 **Preconditions: Application is running, user is on the main screen and has added a contact.**
 
 **MSS**
 
-1. User chooses to find a vendor contact by entering one or more keywords.
-2. VV searches vendor contacts using the provided keyword(s).
-3. VV displays the matching vendor contacts.
+1. User chooses to find a vendor contact by providing one or more keywords.
+2. VV displays matching vendor contacts and their associated products (if any).
 
 Use case ends.
 
 **Extensions**
 
-* 1a. User provides no keyword.
-  * 1a1. VV displays an error indicating missing keywords.
+* 1a. VV detects invalid command format
+    * 1a1. VV rejects the command and displays an error message indicating invalid command format.
+    
+      Use case ends.
 
-  Use case ends.
-
-**Use case: UC11 - Archive a Vendor Contact**
+**Use case: UC6 - Archive a Vendor Contact**
 
 **Preconditions: Application is running, user is on the main screen and has added a contact.**
 
 **MSS**
 
-1. User chooses to archive a vendor contact by providing their email.
+1. User chooses to archive a vendor contact and provides their email.
 2. VV validates the email and moves the contact from the active to the archived contact list.
 
 Use case ends.
 
 **Extensions**
 
-* 1a. VV detects that no contact with the given email exists.
-    * 1a1. VV displays an error indicating no vendor was found with that email.
+* 1a. VV detects no email provided.
+    * 1a1. VV rejects the command and displays an error message indicating invalid command format.
+    
+      Use case ends.
+  
+* 1b. VV detects invalid email provided.
+    * 1b1. VV rejects the command and displays an error message.
+  
+      Use case resumes from step 1.
+  
+* 1c. VV detects that no contact with the given email exists.
+    * 1c1. VV displays an error indicating no vendor was found with that email.
 
-    Use case ends.
+      Use case ends.
 
-* 1b. VV detects that the contact is already archived.
-    * 1b1. VV displays an error indicating the vendor is already archived and suggests using restore instead.
+* 1d. VV detects that the contact is already archived.
+    * 1d1. VV displays an error indicating the vendor is already archived and suggests using restore instead.
 
-    Use case ends.
+      Use case ends.
 
-**Use case: UC12 - Restore an Archived Vendor Contact**
+**Use case: UC7 - Restore an Archived Vendor Contact**
 
 **Preconditions: Application is running, user is on the main screen and has at least one archived contact.**
 
 **MSS**
 
-1. User runs `restore` without an argument to view all archived contacts.
-2. VV displays the list of archived contacts.
-3. User runs `restore EMAIL` to restore a specific contact.
+1. User chooses to view all archived contacts.
+2. VV displays the list of all archived contacts.
+3. User chooses to restore a specific contact.
 4. VV restores the contact, moving it from the archived list to the active contact list.
 
 Use case ends.
 
 **Extensions**
 
-* 1a. No archived contacts exist.
+* 1a. VV detects that no archived contacts exist.
     * 1a1. VV displays a message indicating there are no archived contacts.
 
-    Use case ends.
+      Use case ends.
 
 * 3a. VV detects that no archived contact with the given email exists.
     * 3a1. VV displays the archived contact list and an error indicating no archived vendor was found with that email.
 
-    Use case ends.
+      Use case ends.
+  
+* 3b. VV detects invalid email provided.
+    * 3b1. VV rejects the command and displays an error message.
+  
+      Use case resumes from step 3.
 
-**Use Case: UC5 - Add Product**
+**Use Case: UC8 - Add a Product**
+TODO
 
-**Preconditions: Application is running, user is on the main screen.**
-
-**MSS**
-
-1. User enters data to add a Product.
-2. VV validates the input data.
-3. VV checks that the product does not already exist.
-4. VV creates the product.
-5. VV adds the product to the inventory.
-6. VV saves the updated inventory to storage.
-7. VV displays a success message.
-
-Use case ends.
-
-**Extensions**
-
-* 2a. VV detects error in provided data (e.g. missing compulsory fields, invalid data format).
-  * 2a1. VV displays an appropriate error message indicating the invalid or missing field.
-  * 2a2. User re-provides the corrected data.
-
-  Steps 2a1–2a2 are repeated until all fields are valid.
-
-  Use case resumes from step 4.
-
-* 3a. VV detects duplicate product.
-  * 3a1. VV displays an error.
-  * 3a2. User re-provides the corrected data.
-
-  Steps 3a1–3a2 are repeated until a unique ID is provided.
-
-  Use case resumes from step 5.
-
-* 6a. Storage file cannot be written or accessed.
-  * 6a1. VV displays an error indicating inventory could not be saved.
-
-  Use case ends.
-
-**Use case: UC13 - Edit a Product**
+**Use case: UC9 - Edit a Product**
 
 **Preconditions: Application is running, user is on the main screen and has added a product.**
 
 **MSS**
 
 1. User chooses to edit a product and provides the identifier along with fields to update.
-2. VV validates the identifier and fields, updates the product, and displays the updated product list.
+2. VV validates the identifier and fields, edits the product, and displays the product list.
 
 Use case ends.
 
@@ -978,45 +958,39 @@ Use case ends.
 * 1a. VV detects that no product with the given identifier exists.
     * 1a1. VV displays an error indicating no product was found with the specified identifier.
 
-    Use case ends.
+      Use case ends.
 
 * 1b. VV detects that no fields to edit are provided.
     * 1b1. VV displays an error indicating that at least one field must be provided.
 
-    Use case ends.
+      Use case ends.
 
 * 1c. VV detects error in the fields provided (e.g. invalid data format).
     * 1c1. VV displays an appropriate error message indicating the invalid field.
-    * 1c2. User re-provides the corrected data.
 
-    Steps 1c1–1c2 are repeated until all fields are valid.
-
-    Use case resumes from step 2.
+      Use case resumes from step 1.
 
 * 1d. VV detects that the new identifier already belongs to another existing product.
     * 1d1. VV displays an error indicating the identifier is already in use.
-    * 1d2. User re-provides a different identifier.
 
-    Steps 1d1–1d2 are repeated until a unique identifier is provided.
-
-    Use case resumes from step 2.
+      Use case resumes from step 1.
 
 * 1e. VV detects that the provided vendor email does not match any existing contact.
     * 1e1. VV displays an error indicating no contact with the specified email was found.
 
-    Use case ends.
+      Use case ends.
 
-**Use Case: UC6 - View Products**
+**Use Case: UC10 - View Products**
 
 **Preconditions: Application is running, user is on the main screen.**
 
 **MSS**
-1. User chooses to view all products.
-2. VV shows all products.
+1. User chooses to view all active products.
+2. VV shows all active products.
 
 Use case ends.
 
-**Use case: UC7 - Delete Product**
+**Use case: UC11 - Delete Product**
 
 **Preconditions: Application is running, user is on the main screen and has added a product.**
 
@@ -1036,81 +1010,79 @@ Use case ends.
 
   Use case ends.
 
-**Use case: UC8 - Find Product**
+**Use case: UC12 - Find Product**
 
-Analogous to UC4.
+Analogous to !!UC5 - Find Vendor Contact!!.
 
-**Use case: UC14 - Archive a Product**
+**Use case: UC13 - Archive a Product**
 
-Analogous to UC11, except the product's identifier is used instead of the vendor's email.
+Analogous to !!UC6 - Archive a Vendor Contact!!, except the product's identifier is used instead of the vendor's email.
 
-**Use case: UC15 - Restore an Archived Product**
+**Use case: UC14 - Restore an Archived Product**
 
-Analogous to UC12, except the product's identifier is used instead of the vendor's email.
+Analogous to !!UC7 - Restore an Archived Vendor Contact!!, except the product's identifier is used instead of the 
+vendor's email.
 
-**Use case: UC9 - Undo/Redo a Change**
+**Use case: UC15 - Undo/Redo a Change**
 
-**Preconditions: Application is running, user is on the main screen, and at least one undoable action has been performed in the current session.**
+**Preconditions: Application is running, user is on the main screen.**
 
 **MSS**
 
 1. User chooses to undo the last change.
-2. VV reverts the last change and displays a success message indicating what was undone.
+2. VV reverts the last change and displays a success message.
 3. User chooses to redo the undone change.
-4. VV reapplies the change and displays a success message indicating what was redone.
+4. VV reapplies the change and displays a success message.
 
 Use case ends.
 
 **Extensions**
 
 * 1a. VV detects that no undoable actions exist in the current session.
-  * 1a1. VV displays an error message indicating there is nothing to undo.
+    * 1a1. VV displays an error message indicating there is nothing to undo.
+  
+      Use case ends.
 
-    Use case ends.
-
-* 2b. User performs a new undoable action after undoing a previous action.
-    * 2b1. VV clears the redo history.
-    * 2b2. The new action becomes the latest undoable action.
+* 2b. User performs a new undoable action.
+    * 2b1. VV updates the redo history, and the new action becomes the latest undoable action.
 
       Use case ends.
 
-* 3a. VV detects that no redoable actions exist (e.g. redo history was cleared, or no undo was performed).
+* 3a. VV detects that no redoable actions exist.
     * 3a1. VV displays an error message indicating there is nothing to redo.
 
       Use case ends.
 
 
-**Use case: UC10 - Navigate Command History**
+**Use case: UC16 - Navigate Command History**
 
 **Preconditions: Application is running, user is on the main screen.**
 
 **MSS**
 
-1. User has a partial unsent command and chooses to go to previous command.
+1. User has a draft command and chooses to go to previous command.
 2. VV saves the current input as a draft and displays the previous command.
 3. User chooses to go to next command.
-4. VV displays the next command.
-5. User navigates back to the most recent command.
-6. VV restores the saved draft.
+4. VV restores the saved draft.
 
 Use case ends.
 
 **Extensions**
 
-* *a. VV detects that no command history exists (no commands have been entered in this session).
+* *a. VV detects that no command history exists.
     * *a1. VV does nothing.
 
-        Use case ends.
+      Use case ends.
 
-* 1a. User is already at the oldest command in the history.
-  * 1a1. VV does nothing.
+* 1a. VV detects that the user is already at the oldest command in the history.
+    * 1a1. VV does nothing.
+  
+      Use case ends.
 
-    Use case resumes from step 2.
-
-* 3a. User is already at the most recent command in the history.
-  * 3a1. VV does nothing.
-
-    Use case resumes from step 4.
+* 3a. VV detects that the user is already at the most recent command in the history.
+    * 3a1. VV does nothing.
+  
+      Use case ends.
 
 
 ### Non-Functional Requirements

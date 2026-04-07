@@ -152,10 +152,18 @@ When in doubt, **archive, don't delete.**
 
 <box type="info" seamless>
 
-**Note about destructive commands:**
+**Notes about destructive commands:**
 
 * You can use undo to restore the data only **within the same app session**.
 * If you need the contact or product again, consider using [`archive`](#archiving-a-contact-archive) / [`archiveproduct`](#archiving-a-product-archiveproduct).
+
+</box>
+
+<box type="info" seamless>
+
+**Notes about confirmation prompt:**
+
+* To skip the confirmation prompt, include the `-y` flag after the command.
 
 </box>
 
@@ -166,7 +174,7 @@ When in doubt, **archive, don't delete.**
 * Words in `UPPER_CASE` are the parameters to be supplied.
 * Items in square brackets such as `[t/TAG]` are optional.
 * Parameters can be supplied in any order.
-* To skip the confirmation prompt, use the `-y` flag: `deleteproduct -y PRODUCT_IDENTIFIER`
+
 
 </box>
 

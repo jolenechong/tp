@@ -55,6 +55,7 @@ public class ModelManagerTest {
 
     @Test
     public void constructor() {
+        // EP: default constructor initializes empty state and default preferences.
         assertEquals(new UserPrefs(), modelManager.getUserPrefs());
         assertEquals(new GuiSettings(), modelManager.getGuiSettings());
         assertEquals(new AddressBook(), new AddressBook(modelManager.getAddressBook()));
@@ -101,6 +102,7 @@ public class ModelManagerTest {
 
     @Test
     public void setAddressBookFilePath_validPath_setsAddressBookFilePath() {
+        // EP: valid file path should be persisted in user prefs.
         Path path = Paths.get("address/book/file/path");
         modelManager.setAddressBookFilePath(path);
         assertEquals(path, modelManager.getAddressBookFilePath());
@@ -229,6 +231,7 @@ public class ModelManagerTest {
 
     @Test
     public void updateFilteredPersonList_scoredPredicate_sortsByRelevance() {
+        // EP: scored predicate ranks exact > prefix > substring matches.
         Person substring = new PersonBuilder().withName("Mali Ong").withEmail("substring@example.com").build();
         Person prefix = new PersonBuilder().withName("Alice Wong").withEmail("prefix@example.com").build();
         Person exact = new PersonBuilder().withName("Ali Tan").withEmail("exact@example.com").build();
@@ -243,6 +246,7 @@ public class ModelManagerTest {
 
     @Test
     public void updateFilteredPersonList_afterScoredPredicate_resetsToUnderlyingOrder() {
+        // EP: switching back to non-ranked predicate should clear custom comparator ordering.
         Person substring = new PersonBuilder().withName("Mali Ong").withEmail("substring@example.com").build();
         Person prefix = new PersonBuilder().withName("Alice Wong").withEmail("prefix@example.com").build();
         Person exact = new PersonBuilder().withName("Ali Tan").withEmail("exact@example.com").build();
@@ -260,6 +264,7 @@ public class ModelManagerTest {
 
     @Test
     public void updateFilteredPersonList_rankedPredicateInterface_dispatchesComparatorAndFilter() {
+        // EP: RankedPersonPredicate interface path should apply both filter and comparator.
         Person alpha = new PersonBuilder().withName("Ali Alpha").withEmail("alpha@example.com").build();
         Person beta = new PersonBuilder().withName("Ali Beta").withEmail("beta@example.com").build();
         Person nonMatch = new PersonBuilder().withName("Chris Tan").withEmail("chris@example.com").build();
@@ -274,6 +279,7 @@ public class ModelManagerTest {
 
     @Test
     public void updateFilteredPersonList_rankedPredicate_excludesArchivedPersons() {
+        // EP: ranked person filtering must still exclude archived contacts.
         AddressBook addressBook = new AddressBook();
         Person archivedMatching = new PersonBuilder()
                 .withName("Ali Archived")
@@ -306,6 +312,7 @@ public class ModelManagerTest {
 
     @Test
     public void hasProduct_productInInventory_returnsTrue() {
+        // EP: querying existing product should return true.
         modelManager.addProduct(OIL);
         assertTrue(modelManager.hasProduct(OIL));
     }
@@ -405,6 +412,7 @@ public class ModelManagerTest {
 
     @Test
     public void updateFilteredProductList_scoredPredicate_sortsByRelevance() {
+        // EP: scored product predicate ranks exact > prefix > substring matches.
         Product substring = new ProductBuilder().withIdentifier("SKU-SUB").withName("Tali Watch").build();
         Product prefix = new ProductBuilder().withIdentifier("SKU-PRE").withName("Aliphatic Cake").build();
         Product exact = new ProductBuilder().withIdentifier("SKU-EXA").withName("Ali").build();
@@ -419,6 +427,7 @@ public class ModelManagerTest {
 
     @Test
     public void updateFilteredProductList_scoredPredicate_excludesArchivedProducts() {
+        // EP: ranked product filtering must still exclude archived products.
         Inventory inventory = new Inventory();
         Product archivedMatching = new ProductBuilder()
                 .withIdentifier("SKU-ARCH-MATCH")
@@ -441,6 +450,7 @@ public class ModelManagerTest {
 
     @Test
     public void updateFilteredProductList_afterScoredPredicate_resetsToUnderlyingOrder() {
+        // EP: switching back to non-ranked predicate clears ranked comparator ordering.
         Product substring = new ProductBuilder().withIdentifier("SKU-SUB2").withName("Tali Watch").build();
         Product prefix = new ProductBuilder().withIdentifier("SKU-PRE2").withName("Aliphatic Cake").build();
         Product exact = new ProductBuilder().withIdentifier("SKU-EXA2").withName("Ali").build();
@@ -458,6 +468,7 @@ public class ModelManagerTest {
 
     @Test
     public void updateFilteredProductList_rankedPredicateInterface_dispatchesComparatorAndFilter() {
+        // EP: RankedProductPredicate interface path applies filter and comparator.
         Product alpha = new ProductBuilder().withIdentifier("SKU-ALPHA").withName("Ali Alpha").build();
         Product beta = new ProductBuilder().withIdentifier("SKU-BETA").withName("Ali Beta").build();
         Product nonMatch = new ProductBuilder().withIdentifier("SKU-OTHER").withName("Rice Bag").build();
@@ -489,6 +500,7 @@ public class ModelManagerTest {
 
     @Test
     public void constructor_productsFilteredCorrectly() {
+        // EP: newly added active product should appear in filtered product list.
         ModelManager model = new ModelManager(new VendorVault(), new UserPrefs(), new Aliases());
 
         Product product = new ProductBuilder().build();

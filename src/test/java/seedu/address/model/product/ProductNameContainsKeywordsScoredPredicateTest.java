@@ -18,6 +18,8 @@ import seedu.address.testutil.ProductBuilder;
 
 class ProductNameContainsKeywordsScoredPredicateTest {
 
+    private static final String NAME_SSD_2TB = "SSD 2TB";
+
     @Test
     void constructor_nullKeywords_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new ProductNameContainsKeywordsScoredPredicate(null));
@@ -46,81 +48,69 @@ class ProductNameContainsKeywordsScoredPredicateTest {
 
     @Test
     void test_nameContainsKeywords_returnsTrue() {
-        ProductNameContainsKeywordsScoredPredicate predicate =
-                new ProductNameContainsKeywordsScoredPredicate(Collections.singletonList("ssd"));
-        assertTrue(predicate.test(new ProductBuilder().withName("SSD 2TB").build()));
-
-        predicate = new ProductNameContainsKeywordsScoredPredicate(Arrays.asList("xxx", "2tb"));
-        assertTrue(predicate.test(new ProductBuilder().withName("SSD 2TB").build()));
-
-        predicate = new ProductNameContainsKeywordsScoredPredicate(Collections.singletonList("SsD"));
-        assertTrue(predicate.test(new ProductBuilder().withName("SSD 2TB").build()));
+        assertMatches(NAME_SSD_2TB, "ssd");
+        assertMatches(NAME_SSD_2TB, "xxx", "2tb");
+        assertMatches(NAME_SSD_2TB, "SsD");
     }
 
     @Test
     void test_nameDoesNotContainKeywords_returnsFalse() {
+        assertDoesNotMatch("SSD", Collections.emptyList());
+        assertDoesNotMatch(NAME_SSD_2TB, Collections.singletonList("RAM"));
+
         ProductNameContainsKeywordsScoredPredicate predicate =
-                new ProductNameContainsKeywordsScoredPredicate(Collections.emptyList());
-        assertFalse(predicate.test(new ProductBuilder().withName("SSD").build()));
-
-        predicate = new ProductNameContainsKeywordsScoredPredicate(Collections.singletonList("RAM"));
-        assertFalse(predicate.test(new ProductBuilder().withName("SSD 2TB").build()));
-
-        predicate = new ProductNameContainsKeywordsScoredPredicate(
-                Arrays.asList("DE/339", "support.rochor@yahoo.com", "10", "10"));
+                predicate("DE/339", "support.rochor@yahoo.com", "10", "10");
         assertFalse(predicate.test(new ProductBuilder().withName("NVMe SSD 2TB").withIdentifier("DE/339")
                 .withQuantity("10").withThreshold("10").withVendorEmail("support.rochor@yahoo.com").build()));
     }
 
     @Test
     void computeScore_selectsBestMatchTierAndQuality() {
-        ProductNameContainsKeywordsScoredPredicate predicate =
-                new ProductNameContainsKeywordsScoredPredicate(Arrays.asList("sd", "ssd"));
-        Product product = new ProductBuilder().withName("SSD 2TB").build();
+        // EP: strongest keyword-token pair should determine final score.
+        ProductNameContainsKeywordsScoredPredicate predicate = predicate("sd", "ssd");
+        Product product = productWithName(NAME_SSD_2TB);
 
         Score score = predicate.computeScore(product);
 
-        assertEquals(MatchTier.EXACT_TOKEN, score.tier());
-        assertEquals(0, score.unmatchedCharCount());
-        assertEquals("SSD 2TB", score.sortKey());
+        assertExactMatchScore(score);
+        assertEquals(NAME_SSD_2TB, score.sortKey());
     }
 
     @Test
     void createProductComparator_ordersByRelevanceThenAlphabetical() {
-        ProductNameContainsKeywordsScoredPredicate predicate =
-                new ProductNameContainsKeywordsScoredPredicate(Collections.singletonList("ali"));
+        // EP: ties on relevance should break using alphabetical sort key, not insertion order.
+        ProductNameContainsKeywordsScoredPredicate predicate = predicate("ali");
 
-        Product exactAlpha = new ProductBuilder().withIdentifier("SKU-B").withName("Ali").build();
-        Product exactAlphaTie = new ProductBuilder().withIdentifier("SKU-A").withName("Ali").build();
-        Product prefix = new ProductBuilder().withIdentifier("SKU-C").withName("Alice").build();
-        Product substring = new ProductBuilder().withIdentifier("SKU-D").withName("Tali").build();
+        Product exactAliAlpha = productWithNameAndIdentifier("Ali Alpha", "SKU-B");
+        Product exactAliBeta = productWithNameAndIdentifier("Ali Beta", "SKU-A");
+        Product prefix = productWithNameAndIdentifier("Alice", "SKU-C");
+        Product substring = productWithNameAndIdentifier("Tali", "SKU-D");
 
-        List<Product> products = new ArrayList<>(Arrays.asList(substring, prefix, exactAlpha, exactAlphaTie));
+        List<Product> products = new ArrayList<>(Arrays.asList(substring, prefix, exactAliBeta, exactAliAlpha));
         products.sort(predicate.createProductComparator());
 
-        assertEquals(Arrays.asList(exactAlpha, exactAlphaTie, prefix, substring), products);
+        assertEquals(Arrays.asList(exactAliAlpha, exactAliBeta, prefix, substring), products);
     }
 
     @Test
     void computeScore_multipleKeywords_usesBestKeywordAcrossAllTokens() {
-        ProductNameContainsKeywordsScoredPredicate predicate =
-                new ProductNameContainsKeywordsScoredPredicate(Arrays.asList("tb", "2tb"));
-        Product product = new ProductBuilder().withName("SSD 2TB").build();
+        // EP: multi-keyword scoring should select the strongest exact match across all keywords/tokens.
+        ProductNameContainsKeywordsScoredPredicate predicate = predicate("tb", "2tb");
+        Product product = productWithName(NAME_SSD_2TB);
 
         Score score = predicate.computeScore(product);
 
-        assertEquals(MatchTier.EXACT_TOKEN, score.tier());
-        assertEquals(0, score.unmatchedCharCount());
+        assertExactMatchScore(score);
     }
 
     @Test
     void createProductComparator_multiKeywordRanking_prefersHigherTierThenQuality() {
-        ProductNameContainsKeywordsScoredPredicate predicate =
-                new ProductNameContainsKeywordsScoredPredicate(Arrays.asList("ali", "cake"));
+        // EP: comparator should prioritize higher tier, then better quality (fewer unmatched chars).
+        ProductNameContainsKeywordsScoredPredicate predicate = predicate("ali", "cake");
 
-        Product exact = new ProductBuilder().withIdentifier("SKU-EXACT").withName("Cake Mix").build();
-        Product prefix = new ProductBuilder().withIdentifier("SKU-PREFIX").withName("Alice Crackers").build();
-        Product substring = new ProductBuilder().withIdentifier("SKU-SUB").withName("Tali Watch").build();
+        Product exact = productWithNameAndIdentifier("Cake Mix", "SKU-EXACT");
+        Product prefix = productWithNameAndIdentifier("Alice Crackers", "SKU-PREFIX");
+        Product substring = productWithNameAndIdentifier("Tali Watch", "SKU-SUB");
 
         List<Product> products = new ArrayList<>(Arrays.asList(substring, prefix, exact));
         products.sort(predicate.createProductComparator());
@@ -136,5 +126,30 @@ class ProductNameContainsKeywordsScoredPredicateTest {
         String expected = ProductNameContainsKeywordsScoredPredicate.class.getCanonicalName()
                 + "{keywords=" + keywords + "}";
         assertEquals(expected, predicate.toString());
+    }
+
+    private ProductNameContainsKeywordsScoredPredicate predicate(String... keywords) {
+        return new ProductNameContainsKeywordsScoredPredicate(Arrays.asList(keywords));
+    }
+
+    private Product productWithName(String name) {
+        return new ProductBuilder().withName(name).build();
+    }
+
+    private Product productWithNameAndIdentifier(String name, String identifier) {
+        return new ProductBuilder().withIdentifier(identifier).withName(name).build();
+    }
+
+    private void assertMatches(String productName, String... keywords) {
+        assertTrue(predicate(keywords).test(productWithName(productName)));
+    }
+
+    private void assertDoesNotMatch(String productName, List<String> keywords) {
+        assertFalse(new ProductNameContainsKeywordsScoredPredicate(keywords).test(productWithName(productName)));
+    }
+
+    private void assertExactMatchScore(Score score) {
+        assertEquals(MatchTier.EXACT_TOKEN, score.tier());
+        assertEquals(0, score.unmatchedCharCount());
     }
 }

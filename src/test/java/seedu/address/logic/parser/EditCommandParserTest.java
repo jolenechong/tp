@@ -245,17 +245,6 @@ public class EditCommandParserTest {
     }
 
     @Test
-    public void parse_wronglyFormedFlagAttached_failure() {
-        // EP: flag before target email
-        assertParseFailure(parser, SKIP_FLAG + TARGET_EMAIL + TAG_EMPTY,
-                EditCommandParser.MESSAGE_WRONGLY_FORMED_FLAG);
-
-        // EP: flag attached mid-input with trailing characters
-        assertParseFailure(parser, TARGET_EMAIL + ATTACHED_SKIP_FLAG_WITH_TRAILING + TAG_EMPTY,
-                EditCommandParser.MESSAGE_WRONGLY_FORMED_FLAG);
-    }
-
-    @Test
     public void parse_resetTagsWithSkipFlag_skipsConfirmationPrompt() {
         // EP: -y flag present -> skips confirmation, tags cleared directly
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withTags().build();
