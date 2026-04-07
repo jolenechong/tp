@@ -17,7 +17,7 @@ end box
 [-> LogicManager : execute("ls")
 activate LogicManager
 
-LogicManager -> AddressBookParser : parseCommand("ls", pendingConfirmation, model)
+LogicManager -> AddressBookParser : parseCommand("ls")
 activate AddressBookParser
 
 note right of AddressBookParser
