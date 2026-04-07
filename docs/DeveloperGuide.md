@@ -380,35 +380,16 @@ Preserving draft input improves user experience and is easy to implement with mi
 
 #### Implementation
 
-The archive feature allows both vendor contacts and products to be hidden from the main lists without permanently deleting them. Archived records remain stored in the system and can be restored at any time.
+The archive feature allows both vendor contacts and products to be hidden from the main lists without permanently deleting them. Archived records remain stored in the system and can be restored at any time. Archived records are kept in the same data structures, with archived status tracked as follows:
+* `Person#archive()` / `Person#restore()` — Returns a new `Person` with the reserved `"archived"` tag added or removed. `Person#isArchived()` checks whether the tag set contains `"archived"`.
+* `Product#archive()` / `Product#restore()` — Returns a new `Product` with the dedicated `boolean isArchived` field toggled accordingly.
 
-The feature introduces four commands:
-```
-archive EMAIL                 — archives a vendor contact
-restore [EMAIL]               — restores an archived vendor; lists all archived vendors if no email given
-archiveproduct IDENTIFIER     — archives a product
-restoreproduct [IDENTIFIER]   — restores an archived product; lists all archived products if no identifier given
-```
-
-**Vendor archiving** — `Person` uses a tag-based approach: `isArchived()` checks whether the person's tag set contains an `"archived"` tag. `Person#archive()` returns a new `Person` with the tag added; `Person#restore()` returns a new `Person` with the tag removed.
-
-**Product archiving** — `Product` uses a dedicated `boolean isArchived` field. `Product#archive()` and `Product#restore()` return new instances with the flag toggled accordingly.
-
-Both sets of operations are exposed through the `Model` interface:
-```
-Model#archivePerson(Person person)
-Model#restorePerson(Person person)
-Model#archiveProduct(Product product)
-Model#restoreProduct(Product product)
-```
-
-The `ModelManager` implementations call `addressBook.setPerson()` and `inventory.setProduct()` respectively to swap the old record for the newly created immutable copy.
+These operations are exposed in the `Model` interface as `Model#archivePerson()`, `Model#restorePerson()`, `Model#archiveProduct()` and `Model#restoreProduct()`. The `ModelManager` implementations call `addressBook.setPerson()` and `inventory.setProduct()` respectively to swap the old record for the newly created immutable copy.
 
 #### Usage Scenario
-
 Given below is an example of the vendor archive/restore lifecycle.
 
-**Step 1.** The vendor list contains two active vendors, Alice and Bob.
+**Step 1.** The vendor list contains two active vendors, Alice (alice@example.com) and Bob.
 
 <puml src="diagrams/ArchiveState0.puml" />
 
@@ -416,19 +397,7 @@ Given below is an example of the vendor archive/restore lifecycle.
 
 <puml src="diagrams/ArchiveState1.puml" />
 
-**Step 3.** The user executes `restore alice@example.com`. Alice's `Person` object is replaced with a copy that has the `"archived"` tag removed. She reappears in the main list.
-
-<puml src="diagrams/ArchiveState2.puml" />
-
-<br>
-
-<box type="info" seamless>
-
-`archiveproduct` / `restoreproduct` follow the same lifecycle as described above, operating on `Product` objects in the `Inventory` instead of `Person` objects in the `AddressBook`.
-</box>
-
-
-The sequence diagram below shows the interactions within the `Logic` component when `archive support@adafruit.com` is executed:
+The following sequence diagram shows how an archive operation goes through the `Logic` component:
 
 <puml src="diagrams/ArchiveSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the archive command" />
 
@@ -438,50 +407,31 @@ The sequence diagram below shows the interactions within the `Logic` component w
 
 </box>
 
-The sequence diagram below shows the interactions for `restore support@adafruit.com`:
-
-<puml src="diagrams/RestoreSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the restore command" />
-
-<box type="info" seamless>
-
-**Note:** The lifeline for `RestoreCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of the diagram.
-
-</box>
-
 Similarly, how an `archive` operation goes through the `Model` component is shown below:
 
 <puml src="diagrams/ArchiveSequenceDiagram-Model.puml" alt="ArchiveSequenceDiagram-Model" />
 
-Similarly, how a `restore` operation goes through the `Model` component is shown below:
+The `restore` command does the opposite — it searches only the archived subset of persons for a matching email, calls `Model#restorePerson()`, then commits.
 
-<puml src="diagrams/RestoreSequenceDiagram-Model.puml" alt="RestoreSequenceDiagram-Model" />
-
-In full, the steps for `archive support@adafruit.com` are:
-
-1. `AddressBookParser` identifies the command word `archive`.
-2. `ArchiveCommandParser` parses the email argument.
-3. An `ArchiveCommand` object is created.
-4. `LogicManager` executes the command.
-5. The command searches the **full** `VendorVault` person list (not just the filtered list) for the matching email.
-6. `Model#archivePerson()` is called, replacing the `Person` with an archived copy via `Person#archive()`.
-7. `Model#commitVendorVault()` is called to save the state for undo/redo.
-8. The UI updates automatically because archived vendors are excluded from the active filtered list.
-
-The `restore EMAIL` command follows a similar flow: it searches only the archived subset of persons, calls `Model#restorePerson()`, then commits. If no email is provided (or the email is not found), the filtered list is switched to show only archived vendors as a convenience.
+The `restore` operation through the `Model` is also the reverse of `archive` — `ModelManager#restorePerson(person)` calls `person.restore()` to obtain `restoredPerson`, then calls `addressBook.setPerson(person, restoredPerson)`, and finally applies `PREDICATE_SHOW_ACTIVE_PERSONS`.
 
 <box type="info" seamless>
 
-`archiveproduct IDENTIFIER` and `restoreproduct IDENTIFIER` mirror this flow against the `Inventory`, using `Model#archiveProduct()` / `Model#restoreProduct()`.
+**Note:** If the `restore` command is given without an email, or the email is not found in the archived list, the filtered list is switched to show only archived vendors. The `archiveproduct` / `restoreproduct` commands follow the same flow against the `Inventory`.
+
 </box>
 
-The model also maintains two constant predicates:
+**Step 3.** The user executes `restore alice@example.com`. Alice's `Person` object is replaced with a copy that has the `"archived"` tag removed. She reappears in the main list.
 
-```java
-PREDICATE_SHOW_ACTIVE_PERSONS  = person  -> !person.isArchived()
-PREDICATE_SHOW_ACTIVE_PRODUCTS = product -> !product.isArchived()
-```
+<puml src="diagrams/ArchiveState2.puml" />
 
-These are applied by default so that archived records are hidden from the main display. When `restore` (without an argument) or `restoreproduct` (without an identifier or with an unknown identifier) is executed, `updateFilteredPersonList(Person::isArchived)` or `updateFilteredProductList(Product::isArchived)` is called temporarily to surface the archived records as a guide to the user.
+<br>
+
+The following activity diagram summarizes what happens when a user executes the `archive` command:
+
+<puml src="diagrams/ArchiveActivityDiagram.puml" width="400" />
+
+The `restore` command follows a similar flow, operating on archived products in the `Inventory` instead.
 
 #### Design Considerations
 
@@ -793,12 +743,12 @@ Use case ends.
 
 * 1b. VV detects error in fields provided
     * 1b1. VV rejects the command and displays validation error message.
-  
+
       Use case resumes from step 1.
 
 * 1c. VV detects duplicate contact
     * 1c1. VV rejects the command and displays a duplicate contact error message.
-  
+
       Use case resumes from step 1.
 
 * 2a. VV detects potential duplicate contact
@@ -880,7 +830,7 @@ Use case ends.
 
 * 1d. VV detects confirmation flag in user prompt
     * 1d1. VV validates the flag, skips the confirmation prompt, and proceeds to deletion.
-  
+
       Use case resumes from step 4.
 
 * 2a. User decides not to delete the contact, rejecting the deletion.
@@ -928,7 +878,7 @@ Use case ends.
 
 * 1a. VV detects invalid command format
     * 1a1. VV rejects the command and displays an error message indicating invalid command format.
-    
+
       Use case ends.
 
 **Use case: UC7 - Archive a Vendor Contact**
@@ -946,14 +896,14 @@ Use case ends.
 
 * 1a. VV detects no email provided.
     * 1a1. VV rejects the command and displays an error message indicating invalid command format.
-    
+
       Use case ends.
-  
+
 * 1b. VV detects invalid email provided.
     * 1b1. VV rejects the command and displays an error message.
-  
+
       Use case resumes from step 1.
-  
+
 * 1c. VV detects that no contact with the given email exists.
     * 1c1. VV displays an error indicating no vendor was found with that email.
 
@@ -988,10 +938,10 @@ Use case ends.
     * 3a1. VV displays the archived contact list and an error indicating no archived vendor was found with that email.
 
       Use case ends.
-  
+
 * 3b. VV detects invalid email provided.
     * 3b1. VV rejects the command and displays an error message.
-  
+
       Use case resumes from step 3.
 
 **Use Case: UC9 - Add a Product**
@@ -1098,7 +1048,7 @@ Analogous to !!UC6 - Archive a Vendor Contact!!, except the product's identifier
 
 **Use case: UC16 - Restore an Archived Product**
 
-Analogous to !!UC7 - Restore an Archived Vendor Contact!!, except the product's identifier is used instead of the 
+Analogous to !!UC7 - Restore an Archived Vendor Contact!!, except the product's identifier is used instead of the
 vendor's email.
 
 **Use case: UC17 - Undo/Redo a Change**
@@ -1118,7 +1068,7 @@ Use case ends.
 
 * 1a. VV detects that no undoable actions exist in the current session.
     * 1a1. VV displays an error message indicating there is nothing to undo.
-  
+
       Use case ends.
 
 * 2b. User performs a new undoable action.
@@ -1222,12 +1172,12 @@ Use case ends.
 
 * 1a. VV detects that the user is already at the oldest command in the history.
     * 1a1. VV does nothing.
-  
+
       Use case ends.
 
 * 3a. VV detects that the user is already at the most recent command in the history.
     * 3a1. VV does nothing.
-  
+
       Use case ends.
 
 
@@ -1304,7 +1254,7 @@ Accessibility:
 
 1. Prerequisites: There should be no contact with email `support@adafruit.com`.
 
-2. Test case: `add n/Adafruit Industries p/64601234 e/support@adafruit.com a/151 Varick St, New York, NY 10013, USA 
+2. Test case: `add n/Adafruit Industries p/64601234 e/support@adafruit.com a/151 Varick St, New York, NY 10013, USA
 t/iot`
    - Expected: Adafruit Industries Contact is added.
 
@@ -1585,7 +1535,7 @@ At the end, run `listall` and verify both added contact and product are present 
   - Expected: `WARNING: Error reading from jsonFile` is logged to the terminal and app starts with empty inventory
 
 5. Test case: Enter invalid JSON to `/preferences.json` and restart the app
-   - Expected: `WARNING: Error reading from jsonFile file preferences.json` is logged to the console and app starts 
+   - Expected: `WARNING: Error reading from jsonFile file preferences.json` is logged to the console and app starts
      with default preferences
 
 ## **Appendix: Effort**
@@ -1630,5 +1580,5 @@ At the end, run `listall` and verify both added contact and product are present 
 
 Team size: 4
 
-1. Enhance delete/archive contact commands: Prompt user if they would like to cascade delete and archive operations 
+1. Enhance delete/archive contact commands: Prompt user if they would like to cascade delete and archive operations
    to products associated with the contact.
