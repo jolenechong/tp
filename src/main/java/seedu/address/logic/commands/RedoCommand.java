@@ -7,13 +7,14 @@ import seedu.address.model.Model;
  * Represents a redo command that redoes to next stage after an undo.
  */
 public class RedoCommand extends Command {
+    // Solution inspired by https://se-education.org/addressbook-level3/DeveloperGuide.html#proposed-undoredo-feature
+
     public static final String COMMAND_WORD = "redo";
     public static final String COMMAND_USAGE = COMMAND_WORD;
     public static final String COMMAND_DESCRIPTION = "Redoes last undone change.";
 
     public static final String MESSAGE_SUCCESS = "Redo successful:\nReapplied the ";
     public static final String MESSAGE_FAILURE = "Nothing to redo.";
-    public static final String MESSAGE_REDID_ACTION = ": \n%1$s";
 
     @Override
     public CommandResult execute(Model model) throws CommandException {

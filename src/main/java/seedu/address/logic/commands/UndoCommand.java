@@ -7,13 +7,14 @@ import seedu.address.model.Model;
  * Represents an undo command that undoes the last command that modified the address book.
  */
 public class UndoCommand extends Command {
+    // Solution inspired by https://se-education.org/addressbook-level3/DeveloperGuide.html#proposed-undoredo-feature
+
     public static final String COMMAND_WORD = "undo";
     public static final String COMMAND_USAGE = COMMAND_WORD;
     public static final String COMMAND_DESCRIPTION = "Undoes previous change.";
 
     public static final String MESSAGE_SUCCESS = "Undo successful:\nReverted the ";
     public static final String MESSAGE_FAILURE = "Nothing to undo.";
-    public static final String MESSAGE_UNDID_ACTION = ": \n%1$s";
 
     @Override
     public CommandResult execute(Model model) throws CommandException {

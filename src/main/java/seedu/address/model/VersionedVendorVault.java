@@ -14,6 +14,7 @@ import seedu.address.logic.commands.UndoCommand;
  * Represents the version history of whole of VendorVault.
  */
 public class VersionedVendorVault extends VendorVault {
+    // Solution inspired by https://se-education.org/addressbook-level3/DeveloperGuide.html#proposed-undoredo-feature
 
     private static final int INITIAL_STATE = 0;
     private static final int HISTORY_STEP = 1;
