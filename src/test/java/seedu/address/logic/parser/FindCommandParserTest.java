@@ -36,6 +36,9 @@ public class FindCommandParserTest {
 
         // BV: whitespace splitting inside a value should produce multiple keywords.
         assertParseSuccess(parser, "n/Alice Bob", expectedFindCommand);
+
+        // BV: repeated spaces are normalized after token filtering.
+        assertParseSuccess(parser, "n/Alice   Bob", expectedFindCommand);
     }
 
     @Test
@@ -46,6 +49,9 @@ public class FindCommandParserTest {
 
         // BV: whitespace splitting inside a value should produce multiple keywords.
         assertParseSuccess(parser, "t/vip priority", expectedFindCommand);
+
+        // BV: repeated spaces are normalized after token filtering.
+        assertParseSuccess(parser, "t/vip   priority", expectedFindCommand);
     }
 
     @Test
