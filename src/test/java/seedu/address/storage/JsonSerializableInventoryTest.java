@@ -23,6 +23,7 @@ public class JsonSerializableInventoryTest {
     private static final Path INVALID_PRODUCT_NAME_FILE = TEST_DATA_FOLDER.resolve("invalidNameInventory.json");
     private static final Path DUPLICATE_IDENTIFIER_FILE = TEST_DATA_FOLDER.resolve("duplicateProductIDInventory.json");
     private static final Path NULL_IDENTIFIER_FILE = TEST_DATA_FOLDER.resolve("nullIdentifierInventory.json");
+    private static final String DUPLICATE_IDENTIFIER = "SKU-2001";
 
     @Test
     public void toModelType_typicalInventoryFile_success() throws Exception {
@@ -55,6 +56,14 @@ public class JsonSerializableInventoryTest {
         JsonSerializableInventory dataFromFile = readJsonFile(NULL_IDENTIFIER_FILE,
                 JsonSerializableInventory.class).get();
 
-        assertEquals(List.of("SKU-2001"), dataFromFile.findDuplicateIdentifiers());
+        assertEquals(List.of(DUPLICATE_IDENTIFIER), dataFromFile.findDuplicateIdentifiers());
+    }
+
+    @Test
+    public void findDuplicateIdentifiers_allUnique_returnsEmptyList() throws Exception {
+        JsonSerializableInventory dataFromFile = readJsonFile(TYPICAL_PRODUCT_FILE,
+                JsonSerializableInventory.class).get();
+
+        assertEquals(List.of(), dataFromFile.findDuplicateIdentifiers());
     }
 }
