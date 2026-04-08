@@ -1,5 +1,7 @@
 package seedu.address;
 
+import static seedu.address.model.util.VendorVaultConsistencyUtil.findUnknownVendorLinksFromJson;
+import static seedu.address.model.util.VendorVaultConsistencyUtil.validateOrThrow;
 import static seedu.address.ui.Messages.DUPLICATE_IDENTIFIER_PREFIX;
 import static seedu.address.ui.Messages.MESSAGE_COULD_NOT_LOAD_STARTING_EMPTY_ADDRESS_BOOK;
 import static seedu.address.ui.Messages.MESSAGE_COULD_NOT_LOAD_STARTING_EMPTY_ALIAS;
@@ -44,7 +46,6 @@ import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.VendorVault;
 import seedu.address.model.util.SampleDataUtil;
-import seedu.address.model.util.VendorVaultConsistencyUtil;
 import seedu.address.storage.AddressBookStorage;
 import seedu.address.storage.AliasStorage;
 import seedu.address.storage.InventoryStorage;
@@ -153,7 +154,7 @@ public class MainApp extends Application {
     private ReadOnlyInventory validateInitialInventory(Storage storage, ReadOnlyAddressBook initialData,
                                                        ReadOnlyInventory initialInventory) {
         try {
-            VendorVaultConsistencyUtil.validateOrThrow(initialData, initialInventory, storage.getInventoryFilePath());
+            validateOrThrow(initialData, initialInventory, storage.getInventoryFilePath());
             return initialInventory;
         } catch (IllegalValueException e) {
             logger.warning(MESSAGE_ILLEGAL_VALUES_FOUND_IN + storage.getInventoryFilePath() + MESSAGE_LOG_SEPARATOR
@@ -222,7 +223,7 @@ public class MainApp extends Application {
             return;
         }
 
-        List<String> issues = VendorVaultConsistencyUtil.findUnknownVendorLinksFromJson(initialData, inventoryFilePath);
+        List<String> issues = findUnknownVendorLinksFromJson(initialData, inventoryFilePath);
         for (String issue : issues) {
             logger.warning(MESSAGE_ILLEGAL_VALUES_FOUND_IN + inventoryFilePath + MESSAGE_LOG_SEPARATOR
                     + MESSAGE_UNKNOWN_VENDOR_EMAIL + issue + ".");

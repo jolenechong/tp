@@ -1,5 +1,6 @@
 package seedu.address.model.util;
 
+import static javafx.collections.FXCollections.observableArrayList;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static seedu.address.model.util.VendorVaultConsistencyUtil.MESSAGE_DUPLICATE_PRODUCT_IDENTIFIER;
@@ -19,7 +20,6 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.ReadOnlyInventory;
@@ -281,7 +281,7 @@ public class VendorVaultConsistencyUtilTest {
     }
 
     private ReadOnlyInventory inventoryWithProducts(Product... products) {
-        ObservableList<Product> productList = FXCollections.observableArrayList(products);
+        ObservableList<Product> productList = observableArrayList(products);
 
         return new ReadOnlyInventory() {
             @Override
