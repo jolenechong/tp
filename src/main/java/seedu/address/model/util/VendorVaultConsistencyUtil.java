@@ -25,7 +25,7 @@ import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Product;
 
 /**
- * Validates startup consistency between address book and inventory data.
+ * Encapsulates validation of data consistency between contacts and inventory.
  */
 public final class VendorVaultConsistencyUtil {
 
