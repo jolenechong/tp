@@ -58,6 +58,10 @@ public class JsonAdaptedProduct {
         this.isArchived = product.isArchived();
     }
 
+    String getIdentifier() {
+        return identifier;
+    }
+
     /**
      * Converts this Jackson-friendly adapted product into the model's {@code Product} object.
      *
