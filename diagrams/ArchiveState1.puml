@@ -6,18 +6,18 @@ skinparam ArrowColor MODEL_COLOR
 
 title After archive alice@example.com
 
-object "vendorList : UniquePersonList" as list {
+object "<u>vendorList : UniquePersonList</u>" as list {
 }
 
-object "alice : Person" as alice #FFCCCC {
+object "<u>alice : Person</u>" as alice #FFCCCC {
   name = "Alice"
-  email = "alice@example.com"
+  email = alice@example.com
   tags = [archived]
 }
 
-object "bob : Person" as bob {
+object "<u>bob : Person</u>" as bob {
   name = "Bob"
-  email = "bob@example.com"
+  email = bob@example.com
   tags = []
 }
 

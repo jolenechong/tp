@@ -6,13 +6,13 @@ skinparam ArrowColor MODEL_COLOR
 
 title Initialize Aliases
 
-object "aliasList: AliasList" as list {
+object "<u>aliasList:AliasList</u>" as list {
 }
 
-object "ap : Alias" as addproduct {
+object "<u>ap:Alias</u>" as addproduct {
 }
 
-object "lp : Alias" as listproduct {
+object "<u>lp:Alias</u>" as listproduct {
 }
 
 list --> addproduct

@@ -1,0 +1,26 @@
+@startuml
+!include ../style.puml
+skinparam ArrowFontStyle plain
+
+box "Model" MODEL_COLOR_T1
+participant ":ModelManager" as ModelManager MODEL_COLOR
+participant ":Aliases" as Aliases MODEL_COLOR
+participant ":AliasList" as AliasList MODEL_COLOR
+end box
+
+[-> ModelManager : findAlias("ls")
+activate ModelManager
+
+ModelManager -> Aliases : findAlias("ls")
+activate Aliases
+
+Aliases -> AliasList : findAlias("ls")
+activate AliasList
+AliasList --> Aliases : alias
+deactivate AliasList
+
+Aliases --> ModelManager : alias
+deactivate Aliases
+
+[<-- ModelManager : alias
+@enduml

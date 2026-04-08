@@ -48,9 +48,9 @@ deactivate AddressBookParser
 LogicManager -> ArchiveCommand : execute(m)
 activate ArchiveCommand
 
-ArchiveCommand -> Model : getVendorVault().getPersonList()
+ArchiveCommand -> Model : getPersonList()
 activate Model
-Model --> ArchiveCommand : fullList
+Model --> ArchiveCommand : personList
 deactivate Model
 
 ArchiveCommand -> Model : archivePerson(vendorToArchive)

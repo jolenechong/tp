@@ -38,7 +38,7 @@ deactivate Model
 UndoCommand -> Model : undoVendorVault()
 activate Model
 
-Model --> UndoCommand
+Model --> UndoCommand : actionSummary
 deactivate Model
 
 UndoCommand --> LogicManager : result
@@ -46,6 +46,6 @@ deactivate UndoCommand
 UndoCommand -[hidden]-> LogicManager : result
 destroy UndoCommand
 
-[<--LogicManager
+[<--LogicManager : result
 deactivate LogicManager
 @enduml

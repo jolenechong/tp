@@ -3,7 +3,7 @@
 skinparam ArrowFontStyle plain
 
 box Model MODEL_COLOR_T1
-participant ":Model" as Model MODEL_COLOR
+participant ":ModelManager" as Model MODEL_COLOR
 participant ":VersionedVendorVault" as VersionedVendorVault MODEL_COLOR
 participant "currentState:VendorVault" as VendorVault MODEL_COLOR
 end box
@@ -19,10 +19,10 @@ activate VendorVault
 VendorVault --> VersionedVendorVault
 deactivate VendorVault
 
-VersionedVendorVault --> Model
+VersionedVendorVault --> Model : actionSummary
 deactivate VersionedVendorVault
 
-[<-- Model
+[<-- Model : actionSummary
 deactivate Model
 
 @enduml
