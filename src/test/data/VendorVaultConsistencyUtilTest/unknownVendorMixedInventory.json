@@ -1,0 +1,17 @@
+{
+  "products" : [ {
+    "name" : "Known Vendor Product",
+    "quantity" : "1",
+    "threshold" : "0",
+    "vendorEmail" : "alice@example.com",
+    "isArchived" : false,
+    "identifier" : "SKU-KNOWN"
+  }, {
+    "name" : "Unknown Vendor Product",
+    "quantity" : "2",
+    "threshold" : "0",
+    "vendorEmail" : "missing@example.com",
+    "isArchived" : false,
+    "identifier" : "SKU-UNKNOWN"
+  } ]
+}
