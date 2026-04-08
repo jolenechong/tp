@@ -776,14 +776,19 @@ Use case ends.
 
 All extensions that apply to !!UC1: Add a Vendor Contact!! also apply here.
 
-* 1a. VV detects that the operation removes all tags.
-    * 1a1. VV requests confirmation.
-    * 1a2. User confirms the deletion.
+* 1a. VV detects that no contact with the given email exists.
+  * 1a1. VV displays an error indicating no vendor was found with that email. 
+  
+    Use case ends.
+
+* 1b. VV detects that the operation removes all tags.
+    * 1b1. VV requests confirmation.
+    * 1b2. User confirms the removal of all tags.
 
       Use case resumes from step 2.
 
-    * 1a2a. User cancels the deletion instead.
-      * 1a2a1. VV aborts the edit operation and displays a cancellation message.
+    * 1b2a. User cancels the deletion instead.
+      * 1b2a1. VV aborts the edit operation and displays a cancellation message.
 
         Use case ends.
 
