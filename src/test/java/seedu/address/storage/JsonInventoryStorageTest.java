@@ -27,6 +27,15 @@ public class JsonInventoryStorageTest {
 
     private static final String MISSING_FILE = "NonExistentFile.json";
     private static final String DUPLICATE_IDENTIFIER_FILE = "duplicateProductIDInventory.json";
+    private static final String NOT_JSON_FORMAT_FILE = "notJsonFormatInventory.json";
+    private static final String INVALID_NAME_FILE = "invalidNameInventory.json";
+    private static final String SAMPLE_FILE_NAME = "SomeFile.json";
+    private static final String DUPLICATE_IDENTIFIER = "SKU-1001";
+    private static final String DUPLICATE_IDENTIFIER_WITHOUT_LINES = "SKU-404";
+    private static final String LINE_REFERENCE_MULTIPLE = "lines 7, 13";
+    private static final String LINE_REFERENCE_SINGLE = "line 5";
+    private static final String REFLECTION_BUILD_DUPLICATE_MESSAGE_METHOD = "buildDuplicateIdentifierErrorMessage";
+    private static final String REFLECTION_FORMAT_LINE_REFERENCE_METHOD = "formatLineReference";
 
     @TempDir
     public Path testFolder;
@@ -77,12 +86,12 @@ public class JsonInventoryStorageTest {
 
     @Test
     public void read_notJsonFormat_exceptionThrown() {
-        assertThrows(DataLoadingException.class, () -> readInventory("notJsonFormatInventory.json"));
+        assertThrows(DataLoadingException.class, () -> readInventory(NOT_JSON_FORMAT_FILE));
     }
 
     @Test
     public void read_invalidNameInventoryJson_exceptionThrown() {
-        assertThrows(DataLoadingException.class, () -> readInventory("invalidNameInventory.json"));
+        assertThrows(DataLoadingException.class, () -> readInventory(INVALID_NAME_FILE));
     }
 
     @Test
@@ -91,8 +100,9 @@ public class JsonInventoryStorageTest {
                 DataLoadingException.class, () ->
                         readInventory(DUPLICATE_IDENTIFIER_FILE));
 
-        assertTrue(exception.getCause().getMessage().contains("Duplicate product identifier 'SKU-1001'"));
-        assertTrue(exception.getCause().getMessage().contains("lines 7, 13"));
+        assertTrue(exception.getCause().getMessage().contains(
+                "Duplicate product identifier '" + DUPLICATE_IDENTIFIER + "'"));
+        assertTrue(exception.getCause().getMessage().contains(LINE_REFERENCE_MULTIPLE));
     }
 
     @Test
@@ -110,9 +120,9 @@ public class JsonInventoryStorageTest {
         JsonInventoryStorage storage = new JsonInventoryStorage(TEST_DATA_FOLDER.resolve(DUPLICATE_IDENTIFIER_FILE));
 
         String message = invokeBuildDuplicateIdentifierErrorMessage(storage,
-                TEST_DATA_FOLDER.resolve(MISSING_FILE), List.of("SKU-404"));
+                TEST_DATA_FOLDER.resolve(MISSING_FILE), List.of(DUPLICATE_IDENTIFIER_WITHOUT_LINES));
 
-        assertEquals("Duplicate product identifier 'SKU-404'.", message);
+        assertEquals("Duplicate product identifier '" + DUPLICATE_IDENTIFIER_WITHOUT_LINES + "'.", message);
     }
 
     @Test
@@ -121,27 +131,27 @@ public class JsonInventoryStorageTest {
 
         String lineReference = invokeFormatLineReference(storage, List.of(5));
 
-        assertEquals("line 5", lineReference);
+        assertEquals(LINE_REFERENCE_SINGLE, lineReference);
     }
 
     private String invokeBuildDuplicateIdentifierErrorMessage(JsonInventoryStorage storage, Path filePath,
                                                               List<String> duplicateIdentifiers) throws Exception {
         java.lang.reflect.Method method = JsonInventoryStorage.class
-                .getDeclaredMethod("buildDuplicateIdentifierErrorMessage", Path.class, List.class);
+                .getDeclaredMethod(REFLECTION_BUILD_DUPLICATE_MESSAGE_METHOD, Path.class, List.class);
         method.setAccessible(true);
         return (String) method.invoke(storage, filePath, duplicateIdentifiers);
     }
 
     private String invokeFormatLineReference(JsonInventoryStorage storage, List<Integer> lineNumbers) throws Exception {
         java.lang.reflect.Method method = JsonInventoryStorage.class
-                .getDeclaredMethod("formatLineReference", List.class);
+                .getDeclaredMethod(REFLECTION_FORMAT_LINE_REFERENCE_METHOD, List.class);
         method.setAccessible(true);
         return (String) method.invoke(storage, lineNumbers);
     }
 
     @Test
     public void saveInventory_nullInventory_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> saveInventory(null, "SomeFile.json"));
+        assertThrows(NullPointerException.class, () -> saveInventory(null, SAMPLE_FILE_NAME));
     }
 
     private void saveInventory(ReadOnlyInventory inventory, String filePath) {
