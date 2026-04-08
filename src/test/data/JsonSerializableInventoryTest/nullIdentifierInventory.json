@@ -1,0 +1,21 @@
+{
+  "products" : [ {
+    "name" : "Coffee Beans 1kg",
+    "quantity" : "10",
+    "threshold" : "5",
+    "isArchived" : false,
+    "identifier" : null
+  }, {
+    "name" : "Pasta 500g",
+    "quantity" : "20",
+    "threshold" : "8",
+    "isArchived" : false,
+    "identifier" : "SKU-2001"
+  }, {
+    "name" : "Tomato Sauce",
+    "quantity" : "15",
+    "threshold" : "6",
+    "isArchived" : false,
+    "identifier" : "SKU-2001"
+  } ]
+}
