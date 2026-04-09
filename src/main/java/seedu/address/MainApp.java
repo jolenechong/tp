@@ -64,9 +64,12 @@ import seedu.address.ui.UiManager;
  */
 public class MainApp extends Application {
 
-    public static final Version VERSION = new Version(1, 3, 0, true);
+    public static final Version VERSION = new Version(1, 5, 1, true);
 
     private static final Logger logger = LogsCenter.getLogger(MainApp.class);
+    public static final String LOG_HEADER =
+            "=============================[ Initializing VendorVault ]===========================";
+    public static final String LOG_FOOTER = "============================ [ Stopping AddressBook ] =============================";
 
     protected Ui ui;
     protected Logic logic;
@@ -76,7 +79,7 @@ public class MainApp extends Application {
 
     @Override
     public void init() throws Exception {
-        logger.info("=============================[ Initializing AddressBook ]===========================");
+        logger.info(LOG_HEADER);
         super.init();
 
         AppParameters appParameters = AppParameters.parse(getParameters());
@@ -312,13 +315,13 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        logger.info("Starting AddressBook " + MainApp.VERSION);
+        logger.info("Starting VendorVault " + MainApp.VERSION);
         ui.start(primaryStage);
     }
 
     @Override
     public void stop() {
-        logger.info("============================ [ Stopping AddressBook ] =============================");
+        logger.info(LOG_FOOTER);
         try {
             storage.saveUserPrefs(model.getUserPrefs());
         } catch (IOException e) {
