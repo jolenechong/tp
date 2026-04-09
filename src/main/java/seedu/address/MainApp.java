@@ -1,7 +1,25 @@
 package seedu.address;
 
+import static seedu.address.model.util.VendorVaultConsistencyUtil.findUnknownVendorLinksFromJson;
+import static seedu.address.model.util.VendorVaultConsistencyUtil.validateOrThrow;
+import static seedu.address.ui.Messages.DUPLICATE_IDENTIFIER_PREFIX;
+import static seedu.address.ui.Messages.MESSAGE_COULD_NOT_LOAD_STARTING_EMPTY_ADDRESS_BOOK;
+import static seedu.address.ui.Messages.MESSAGE_COULD_NOT_LOAD_STARTING_EMPTY_ALIAS;
+import static seedu.address.ui.Messages.MESSAGE_COULD_NOT_LOAD_STARTING_EMPTY_INVENTORY;
+import static seedu.address.ui.Messages.MESSAGE_CREATING_NEW_DATA_FILE;
+import static seedu.address.ui.Messages.MESSAGE_DATA_FILE_AT;
+import static seedu.address.ui.Messages.MESSAGE_ILLEGAL_VALUES_FOUND_IN;
+import static seedu.address.ui.Messages.MESSAGE_LOG_SEPARATOR;
+import static seedu.address.ui.Messages.MESSAGE_POPULATED_EMPTY_ALIAS_FILE;
+import static seedu.address.ui.Messages.MESSAGE_POPULATED_SAMPLE_ADDRESS_BOOK;
+import static seedu.address.ui.Messages.MESSAGE_POPULATED_SAMPLE_INVENTORY;
+import static seedu.address.ui.Messages.MESSAGE_UNKNOWN_VENDOR_EMAIL;
+import static seedu.address.ui.Messages.NEWLINE;
+
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -11,6 +29,7 @@ import seedu.address.commons.core.Config;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.core.Version;
 import seedu.address.commons.exceptions.DataLoadingException;
+import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.util.ConfigUtil;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.Logic;
@@ -45,7 +64,11 @@ import seedu.address.ui.UiManager;
  */
 public class MainApp extends Application {
 
-    public static final Version VERSION = new Version(1, 3, 0, true);
+    public static final Version VERSION = new Version(1, 5, 1, true);
+    public static final String LOG_HEADER =
+            "=============================[ Initializing VendorVault ]===========================";
+    public static final String LOG_FOOTER =
+            "============================ [ Stopping VendorVault ] =============================";
 
     private static final Logger logger = LogsCenter.getLogger(MainApp.class);
 
@@ -57,7 +80,7 @@ public class MainApp extends Application {
 
     @Override
     public void init() throws Exception {
-        logger.info("=============================[ Initializing AddressBook ]===========================");
+        logger.info(LOG_HEADER);
         super.init();
 
         AppParameters appParameters = AppParameters.parse(getParameters());
@@ -86,56 +109,134 @@ public class MainApp extends Application {
     private Model initModelManager(Storage storage, ReadOnlyUserPrefs userPrefs) {
         logger.info("Using data file : " + storage.getAddressBookFilePath());
 
-        Optional<ReadOnlyAddressBook> addressBookOptional = Optional.empty();
-        ReadOnlyAddressBook initialData;
-        try {
-            addressBookOptional = storage.readAddressBook();
-            if (!addressBookOptional.isPresent()) {
-                logger.info("Creating a new data file " + storage.getAddressBookFilePath()
-                        + " populated with a sample AddressBook.");
-            }
-            initialData = addressBookOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
-        } catch (DataLoadingException e) {
-            logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
-                    + " Will be starting with an empty AddressBook.");
-            initialData = new AddressBook();
-        }
+        ReadOnlyAddressBook initialData = loadInitialAddressBook(storage);
+        ReadOnlyInventory initialInventory = loadInitialInventory(storage, initialData);
+        ReadOnlyAliases initialAliases = loadInitialAliases(storage);
 
-        Optional<ReadOnlyInventory> inventoryOptional;
-        ReadOnlyInventory initialInventory;
-        try {
-            inventoryOptional = storage.readInventory();
-            if (!inventoryOptional.isPresent()) {
-                logger.info("Creating a new data file " + storage.getInventoryFilePath()
-                        + " populated with a sample Inventory.");
-            }
-            initialInventory = inventoryOptional.orElseGet(SampleDataUtil::getSampleInventory);
-        } catch (DataLoadingException e) {
-            logger.warning("Data file at " + storage.getInventoryFilePath() + " could not be loaded."
-                    + " Will be starting with an empty Inventory.");
-            initialInventory = new Inventory();
-        }
+        VendorVault initialVV = new VendorVault(initialData, initialInventory);
 
-        Optional<ReadOnlyAliases> aliasesOptional;
-        ReadOnlyAliases initialAliases;
-        try {
-            aliasesOptional = storage.readAliases();
-            if (!aliasesOptional.isPresent()) {
-                logger.info("Creating a new data file " + storage.getAliasFilePath()
-                        + " populated with an empty Alias file.");
-            }
-            initialAliases = aliasesOptional.orElseGet(Aliases::new);
-        } catch (DataLoadingException e) {
-            logger.warning("Data file at " + storage.getAliasFilePath() + " could not be loaded."
-                    + " Will be starting with an empty Alias file.");
-            initialAliases = new Aliases();
-        }
-
-        VendorVault initialVault = new VendorVault(initialData, initialInventory);
-
-        ModelManager modelManager = new ModelManager(initialVault, userPrefs, initialAliases);
+        ModelManager modelManager = new ModelManager(initialVV, userPrefs, initialAliases);
 
         return modelManager;
+    }
+
+    private ReadOnlyAddressBook loadInitialAddressBook(Storage storage) {
+        try {
+            Optional<ReadOnlyAddressBook> addressBookOptional = storage.readAddressBook();
+            if (!addressBookOptional.isPresent()) {
+                logger.info(MESSAGE_CREATING_NEW_DATA_FILE + storage.getAddressBookFilePath()
+                        + MESSAGE_POPULATED_SAMPLE_ADDRESS_BOOK);
+            }
+            return addressBookOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
+        } catch (DataLoadingException e) {
+            logger.warning(MESSAGE_DATA_FILE_AT + storage.getAddressBookFilePath()
+                    + MESSAGE_COULD_NOT_LOAD_STARTING_EMPTY_ADDRESS_BOOK);
+
+            return new AddressBook();
+        }
+    }
+
+    private ReadOnlyInventory loadInitialInventory(Storage storage, ReadOnlyAddressBook initialData) {
+        try {
+            Optional<ReadOnlyInventory> inventoryOptional = storage.readInventory();
+            if (!inventoryOptional.isPresent()) {
+                logger.info(MESSAGE_CREATING_NEW_DATA_FILE + storage.getInventoryFilePath()
+                        + MESSAGE_POPULATED_SAMPLE_INVENTORY);
+            }
+
+            ReadOnlyInventory initialInventory = inventoryOptional.orElseGet(SampleDataUtil::getSampleInventory);
+            return validateInitialInventory(storage, initialData, initialInventory);
+        } catch (DataLoadingException e) {
+            logInventoryLoadingIssue(storage.getInventoryFilePath(), e, initialData);
+            logger.warning(MESSAGE_DATA_FILE_AT + storage.getInventoryFilePath()
+                    + MESSAGE_COULD_NOT_LOAD_STARTING_EMPTY_INVENTORY);
+
+            return new Inventory();
+        }
+    }
+
+    private ReadOnlyInventory validateInitialInventory(Storage storage, ReadOnlyAddressBook initialData,
+                                                       ReadOnlyInventory initialInventory) {
+        try {
+            validateOrThrow(initialData, initialInventory, storage.getInventoryFilePath());
+            return initialInventory;
+        } catch (IllegalValueException e) {
+            logger.warning(MESSAGE_ILLEGAL_VALUES_FOUND_IN + storage.getInventoryFilePath() + MESSAGE_LOG_SEPARATOR
+                + e.getMessage().replace(NEWLINE, " "));
+            logger.warning(MESSAGE_DATA_FILE_AT + storage.getInventoryFilePath()
+                + MESSAGE_COULD_NOT_LOAD_STARTING_EMPTY_INVENTORY);
+
+            return new Inventory();
+        }
+    }
+
+    private ReadOnlyAliases loadInitialAliases(Storage storage) {
+        try {
+            Optional<ReadOnlyAliases> aliasesOptional = storage.readAliases();
+            if (!aliasesOptional.isPresent()) {
+                logger.info(MESSAGE_CREATING_NEW_DATA_FILE + storage.getAliasFilePath()
+                        + MESSAGE_POPULATED_EMPTY_ALIAS_FILE);
+            }
+            return aliasesOptional.orElseGet(Aliases::new);
+        } catch (DataLoadingException e) {
+            logAliasLoadingIssue(storage.getAliasFilePath(), e);
+            logger.warning(MESSAGE_DATA_FILE_AT + storage.getAliasFilePath()
+                    + MESSAGE_COULD_NOT_LOAD_STARTING_EMPTY_ALIAS);
+
+            return new Aliases();
+        }
+    }
+
+    private void logInventoryLoadingIssue(Path inventoryFilePath, DataLoadingException exception,
+                                          ReadOnlyAddressBook initialData) {
+        Optional<String> illegalValueDetails = getIllegalValueDetails(exception);
+        if (!illegalValueDetails.isPresent()) {
+            return;
+        }
+
+        String details = illegalValueDetails.get();
+        logIllegalValueIssue(inventoryFilePath, details);
+        logUnknownVendorIssuesIfDuplicateIdentifier(inventoryFilePath, initialData, details);
+    }
+
+    private void logAliasLoadingIssue(Path filePath, DataLoadingException exception) {
+        Optional<String> illegalValueDetails = getIllegalValueDetails(exception);
+        if (!illegalValueDetails.isPresent()) {
+            return;
+        }
+
+        logIllegalValueIssue(filePath, illegalValueDetails.get());
+    }
+
+    private Optional<String> getIllegalValueDetails(DataLoadingException exception) {
+        Throwable cause = exception.getCause();
+
+        String details;
+        details = Objects.requireNonNullElse(cause, exception).getMessage();
+
+        if (!(cause instanceof IllegalValueException) || details == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(details);
+    }
+
+    private void logUnknownVendorIssuesIfDuplicateIdentifier(Path inventoryFilePath, ReadOnlyAddressBook initialData,
+                                                             String details) {
+        if (!details.startsWith(DUPLICATE_IDENTIFIER_PREFIX)) {
+            return;
+        }
+
+        List<String> issues = findUnknownVendorLinksFromJson(initialData, inventoryFilePath);
+        for (String issue : issues) {
+            logger.warning(MESSAGE_ILLEGAL_VALUES_FOUND_IN + inventoryFilePath + MESSAGE_LOG_SEPARATOR
+                    + MESSAGE_UNKNOWN_VENDOR_EMAIL + issue + ".");
+        }
+    }
+
+    private void logIllegalValueIssue(Path filePath, String details) {
+        logger.warning(MESSAGE_ILLEGAL_VALUES_FOUND_IN + filePath + MESSAGE_LOG_SEPARATOR
+                + details.replace(NEWLINE, " "));
     }
 
     private void initLogging(Config config) {
@@ -172,7 +273,7 @@ public class MainApp extends Application {
             initializedConfig = new Config();
         }
 
-        //Update config file in case it was missing to begin with or there are new/unused fields
+        // Update config file in case it was missing to begin with or there are new/unused fields
         try {
             ConfigUtil.saveConfig(initializedConfig, configFilePathUsed);
         } catch (IOException e) {
@@ -203,7 +304,7 @@ public class MainApp extends Application {
             initializedPrefs = new UserPrefs();
         }
 
-        //Update prefs file in case it was missing to begin with or there are new/unused fields
+        // Update prefs file in case it was missing to begin with or there are new/unused fields
         try {
             storage.saveUserPrefs(initializedPrefs);
         } catch (IOException e) {
@@ -215,13 +316,13 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        logger.info("Starting AddressBook " + MainApp.VERSION);
+        logger.info("Starting VendorVault " + MainApp.VERSION);
         ui.start(primaryStage);
     }
 
     @Override
     public void stop() {
-        logger.info("============================ [ Stopping AddressBook ] =============================");
+        logger.info(LOG_FOOTER);
         try {
             storage.saveUserPrefs(model.getUserPrefs());
         } catch (IOException e) {

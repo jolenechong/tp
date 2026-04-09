@@ -58,7 +58,7 @@ public class JsonAdaptedAlias {
         }
 
         if (!CommandType.isValidAliasCommand(originalCommand)) {
-            throw new ParseException(MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS);
+            throw new ParseException(String.format(MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS, originalCommand));
         }
 
         if (alias.isEmpty()) {

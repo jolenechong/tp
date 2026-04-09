@@ -44,10 +44,14 @@ public class JsonAdaptedAliasTest {
     @Test
     public void toModelType_originalCommandNotValid_throwsParseException() {
         JsonAdaptedAlias alias = new JsonAdaptedAlias(VALID_ALIAS, INVALID_ORIGINAL_COMMAND_NOT_VALID);
-        assertThrows(ParseException.class, MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS, alias::toModelType);
+        assertThrows(ParseException.class,
+                String.format(MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS, INVALID_ORIGINAL_COMMAND_NOT_VALID),
+                alias::toModelType);
 
         JsonAdaptedAlias alias1 = new JsonAdaptedAlias(VALID_ALIAS, INVALID_ORIGINAL_COMMAND_NOT_VALID_WITH_SPACE);
-        assertThrows(ParseException.class, MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS, alias1::toModelType);
+        assertThrows(ParseException.class,
+                String.format(MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS, INVALID_ORIGINAL_COMMAND_NOT_VALID_WITH_SPACE),
+                alias1::toModelType);
     }
 
     @Test

@@ -57,7 +57,7 @@ public class JsonSerializableAliasTest {
         JsonSerializableAlias dataFromFile = JsonUtil.readJsonFile(NO_COMMAND_FOUND_FILE,
                 JsonSerializableAlias.class).get();
 
-        assertThrows(ParseException.class, MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS,
+        assertThrows(ParseException.class, String.format(MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS, "lst"),
                 dataFromFile::toModelType);
     }
 }

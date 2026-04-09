@@ -1,0 +1,15 @@
+{
+  "products" : [ {
+    "name" : "Brown Rice 5kg",
+    "quantity" : "24",
+    "threshold" : "20",
+    "isArchived" : false,
+    "identifier" : "SKU-1001"
+  }, {
+    "name" : "Cooking Oil 2L",
+    "quantity" : "18",
+    "threshold" : "20",
+    "isArchived" : false,
+    "identifier" : "SKU-1001"
+  } ]
+}

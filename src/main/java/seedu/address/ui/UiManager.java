@@ -83,6 +83,12 @@ public class UiManager implements Ui {
         return new Image(MainApp.class.getResourceAsStream(imagePath));
     }
 
+    /**
+     * Resolves the concrete font family names used by the theme.
+     *
+     * <p>Each font role is chosen from ordered candidates to keep typography
+     * consistent across platforms while still falling back to available fonts.
+     */
     private void initBrandFonts() {
         uiFont = resolveFirstAvailableFontName(UI_FONT_CANDIDATES);
         uiFontSemibold = resolveFirstAvailableFontName(appendFallbackCandidate(SEMIBOLD_FONT_CANDIDATES, uiFont));
@@ -109,6 +115,12 @@ public class UiManager implements Ui {
             MONO_FONT_CANDIDATES);
     }
 
+    /**
+     * Logs availability of the given candidate font names.
+     *
+     * <p>Used to diagnose platform-specific font fallback decisions without
+     * changing runtime behavior.
+     */
     private void logCandidateGroup(String groupName,
                                    Set<String> availableFontNamesLower,
                                    String... candidates) {
@@ -139,6 +151,12 @@ public class UiManager implements Ui {
         return combined;
     }
 
+    /**
+     * Builds a temporary stylesheet URL with brand font placeholders resolved.
+     *
+     * @return URI string to the resolved temporary stylesheet
+     * @throws IOException if the template cannot be read or the temp file cannot be written
+     */
     private String buildResolvedDarkThemeStylesheetUrl() throws IOException {
         String cssTemplate = readCssTemplate();
         String resolvedCss = cssTemplate
@@ -166,6 +184,10 @@ public class UiManager implements Ui {
         return family.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 
+    /**
+     * Replaces the default dark theme stylesheet on the given stage with the
+     * pre-resolved temporary stylesheet URL.
+     */
     private void replaceDarkThemeStylesheet(Stage stage) {
         if (stage.getScene() == null || stage.getScene().getRoot() == null) {
             return;

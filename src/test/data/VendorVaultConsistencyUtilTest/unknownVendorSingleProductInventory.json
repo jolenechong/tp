@@ -1,0 +1,10 @@
+{
+  "products" : [ {
+    "name" : "Unlinked Product",
+    "quantity" : "1",
+    "threshold" : "0",
+    "vendorEmail" : "missing@example.com",
+    "isArchived" : false,
+    "identifier" : "SKU-UNKNOWN"
+  } ]
+}

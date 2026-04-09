@@ -2,6 +2,7 @@ package seedu.address.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalAliases.RESTORE;
 import static seedu.address.testutil.TypicalAliases.UNDO;
@@ -23,6 +24,7 @@ public class JsonAliasStorageTest {
     private static final Path TEST_DATA_FOLDER = Paths.get("src", "test", "data", "JsonAliasStorageTest");
 
     private static final String MISSING_FILE = "NonExistentFile.json";
+    private static final String NO_COMMAND_FOUND_FILE = "noCommandFoundAliases.json";
 
     @TempDir
     public Path testFolder;
@@ -88,6 +90,14 @@ public class JsonAliasStorageTest {
     @Test
     public void read_invalidAliasNameJson_exceptionThrown() {
         assertThrows(DataLoadingException.class, () -> readAliasFile("invalidAliasAliases.json"));
+    }
+
+    @Test
+    public void read_noCommandFoundAliasJson_exceptionMessageContainsInvalidCommand() {
+        DataLoadingException exception = org.junit.jupiter.api.Assertions.assertThrows(DataLoadingException.class, () ->
+                readAliasFile(NO_COMMAND_FOUND_FILE));
+
+        assertTrue(exception.getCause().getMessage().contains("Command 'addproducts' does not exist."));
     }
 
     @Test

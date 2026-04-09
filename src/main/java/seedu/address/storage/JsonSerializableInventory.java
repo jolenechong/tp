@@ -1,7 +1,9 @@
 package seedu.address.storage;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -41,5 +43,22 @@ class JsonSerializableInventory {
         }
 
         return inventory;
+    }
+
+    List<String> findDuplicateIdentifiers() {
+        Map<String, Integer> counts = new LinkedHashMap<>();
+
+        for (JsonAdaptedProduct product : products) {
+            String identifier = product.getIdentifier();
+            if (identifier == null) {
+                continue;
+            }
+            counts.merge(identifier, 1, Integer::sum);
+        }
+
+        return counts.entrySet().stream()
+                .filter(entry -> entry.getValue() > 1)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 }

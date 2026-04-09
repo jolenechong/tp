@@ -35,8 +35,7 @@ public class AliasCommand extends Command {
     public static final String MESSAGE_DISPLAY_ALIAS_LIST = "Here are your current aliases:\n";
 
     public static final String MESSAGE_ORIGINAL_COMMAND_DOES_NOT_EXISTS =
-            "The original command (%s) does not exists or is not supported.\n"
-                    + "For the list of commands visit the User Guide.";
+            "Command '%s' does not exist. For the list of commands visit our User Guide.";
 
     public static final String MESSAGE_ALIAS_CANNOT_BE_EMPTY = "The alias should not be empty\n" + MESSAGE_USAGE;
 
