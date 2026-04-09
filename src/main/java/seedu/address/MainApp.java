@@ -65,11 +65,12 @@ import seedu.address.ui.UiManager;
 public class MainApp extends Application {
 
     public static final Version VERSION = new Version(1, 5, 1, true);
-
-    private static final Logger logger = LogsCenter.getLogger(MainApp.class);
     public static final String LOG_HEADER =
             "=============================[ Initializing VendorVault ]===========================";
-    public static final String LOG_FOOTER = "============================ [ Stopping AddressBook ] =============================";
+    public static final String LOG_FOOTER =
+            "============================ [ Stopping AddressBook ] =============================";
+
+    private static final Logger logger = LogsCenter.getLogger(MainApp.class);
 
     protected Ui ui;
     protected Logic logic;
