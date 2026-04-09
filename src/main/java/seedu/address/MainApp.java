@@ -159,8 +159,10 @@ public class MainApp extends Application {
         }
     }
 
-    private ReadOnlyInventory validateInitialInventory(Path inventoryFilePath, ReadOnlyAddressBook initialData,
-                                                       ReadOnlyInventory initialInventory) throws IllegalValueException {
+    private ReadOnlyInventory validateInitialInventory(Path inventoryFilePath,
+                                                       ReadOnlyAddressBook initialData,
+                                                       ReadOnlyInventory initialInventory)
+            throws IllegalValueException {
         validateOrThrow(initialData, initialInventory, inventoryFilePath);
         return initialInventory;
     }
