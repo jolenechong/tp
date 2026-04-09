@@ -129,11 +129,21 @@ public class MainApp extends Application {
             }
             return addressBookOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
         } catch (DataLoadingException e) {
+            logAddressBookLoadingIssue(storage.getAddressBookFilePath(), e);
             logger.warning(MESSAGE_DATA_FILE_AT + storage.getAddressBookFilePath()
                     + MESSAGE_COULD_NOT_LOAD_STARTING_EMPTY_ADDRESS_BOOK);
 
             return new AddressBook();
         }
+    }
+
+    private void logAddressBookLoadingIssue(Path filePath, DataLoadingException exception) {
+        Optional<String> illegalValueDetails = getIllegalValueDetails(exception);
+        if (!illegalValueDetails.isPresent()) {
+            return;
+        }
+
+        logIllegalValueIssue(filePath, illegalValueDetails.get());
     }
 
     private ReadOnlyInventory loadInitialInventory(Storage storage, ReadOnlyAddressBook initialData) {
