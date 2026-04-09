@@ -305,7 +305,7 @@ find [n/NAME_KEYWORD]... [t/TAG_KEYWORD]...
 (at least one prefix required)
 
 Examples:
-* `find n/TechSource t/electronics` matches name containing `TechSource` and tag `electronics`
+* `find n/Cytron t/wholesale` matches name containing `Cytron` and tag `wholesale`
 
 <box type="info" seamless>
 
@@ -809,7 +809,7 @@ exit
 | **Edit Contact**    | `edit EMAIL [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​` | `edit sales@techsource.com n/TechSource p/61234568`                                                        | Edits a contact's details                                          |
 | **Delete Contact**  | `delete EMAIL`                                                         | `delete sales@techsource.com`                                                                              | Deletes a contact                                                  |
 | **List Contacts**   | `list`                                                                 | &nbsp;                                                                                                     | Lists active contacts                                              |
-| **Find Contacts**   | `find [n/NAME]... [t/TAG]...`                                          | `find n/TechSource <br/>t/electronics`                                                                     | Displays contacts with matching name and/or tag                    |
+| **Find Contacts**   | `find [n/NAME]... [t/TAG]...`                                          | `find n/TechSource t/electronics`                                                                          | Displays contacts with matching name and/or tag                    |
 | **Archive Contact** | `archive EMAIL`                                                        | `archive sales@techsource.com`                                                                             | Archives a contact                                                 |
 | **Restore Contact** | `restore [EMAIL]`                                                      | `restore sales@techsource.com`                                                                             | Restores an archived contact; lists all archived if no email given |
 | **Clear Contacts**  | `clear`                                                                | &nbsp;                                                                                                     | Clears all contacts                                                |
