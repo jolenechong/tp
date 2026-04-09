@@ -97,7 +97,7 @@ public class JsonAliasStorageTest {
         DataLoadingException exception = org.junit.jupiter.api.Assertions.assertThrows(DataLoadingException.class, () ->
                 readAliasFile(NO_COMMAND_FOUND_FILE));
 
-        assertTrue(exception.getCause().getMessage().contains("The command (addproducts) does not exists."));
+        assertTrue(exception.getCause().getMessage().contains("Command 'addproducts' does not exist."));
     }
 
     @Test

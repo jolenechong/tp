@@ -380,35 +380,16 @@ Preserving draft input improves user experience and is easy to implement with mi
 
 #### Implementation
 
-The archive feature allows both vendor contacts and products to be hidden from the main lists without permanently deleting them. Archived records remain stored in the system and can be restored at any time.
+The archive feature allows both vendor contacts and products to be hidden from the main lists without permanently deleting them. Archived records remain stored in the system and can be restored at any time. Archived records are kept in the same data structures, with archived status tracked as follows:
+* `Person#archive()` / `Person#restore()` — Returns a new `Person` with the reserved `"archived"` tag added or removed. `Person#isArchived()` checks whether the tag set contains `"archived"`.
+* `Product#archive()` / `Product#restore()` — Returns a new `Product` with the dedicated `boolean isArchived` field toggled accordingly.
 
-The feature introduces four commands:
-```
-archive EMAIL                 — archives a vendor contact
-restore [EMAIL]               — restores an archived vendor; lists all archived vendors if no email given
-archiveproduct IDENTIFIER     — archives a product
-restoreproduct [IDENTIFIER]   — restores an archived product; lists all archived products if no identifier given
-```
-
-**Vendor archiving** — `Person` uses a tag-based approach: `isArchived()` checks whether the person's tag set contains an `"archived"` tag. `Person#archive()` returns a new `Person` with the tag added; `Person#restore()` returns a new `Person` with the tag removed.
-
-**Product archiving** — `Product` uses a dedicated `boolean isArchived` field. `Product#archive()` and `Product#restore()` return new instances with the flag toggled accordingly.
-
-Both sets of operations are exposed through the `Model` interface:
-```
-Model#archivePerson(Person person)
-Model#restorePerson(Person person)
-Model#archiveProduct(Product product)
-Model#restoreProduct(Product product)
-```
-
-The `ModelManager` implementations call `addressBook.setPerson()` and `inventory.setProduct()` respectively to swap the old record for the newly created immutable copy.
+These operations are exposed in the `Model` interface as `Model#archivePerson()`, `Model#restorePerson()`, `Model#archiveProduct()` and `Model#restoreProduct()`. The `ModelManager` implementations call `addressBook.setPerson()` and `inventory.setProduct()` respectively to swap the old record for the newly created immutable copy.
 
 #### Usage Scenario
-
 Given below is an example of the vendor archive/restore lifecycle.
 
-**Step 1.** The vendor list contains two active vendors, Alice and Bob.
+**Step 1.** The vendor list contains two active vendors, Alice (alice@example.com) and Bob.
 
 <puml src="diagrams/ArchiveState0.puml" />
 
@@ -416,19 +397,7 @@ Given below is an example of the vendor archive/restore lifecycle.
 
 <puml src="diagrams/ArchiveState1.puml" />
 
-**Step 3.** The user executes `restore alice@example.com`. Alice's `Person` object is replaced with a copy that has the `"archived"` tag removed. She reappears in the main list.
-
-<puml src="diagrams/ArchiveState2.puml" />
-
-<br>
-
-<box type="info" seamless>
-
-`archiveproduct` / `restoreproduct` follow the same lifecycle as described above, operating on `Product` objects in the `Inventory` instead of `Person` objects in the `AddressBook`.
-</box>
-
-
-The sequence diagram below shows the interactions within the `Logic` component when `archive support@adafruit.com` is executed:
+The following sequence diagram shows how an archive operation goes through the `Logic` component:
 
 <puml src="diagrams/ArchiveSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the archive command" />
 
@@ -438,50 +407,31 @@ The sequence diagram below shows the interactions within the `Logic` component w
 
 </box>
 
-The sequence diagram below shows the interactions for `restore support@adafruit.com`:
-
-<puml src="diagrams/RestoreSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the restore command" />
-
-<box type="info" seamless>
-
-**Note:** The lifeline for `RestoreCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of the diagram.
-
-</box>
-
 Similarly, how an `archive` operation goes through the `Model` component is shown below:
 
 <puml src="diagrams/ArchiveSequenceDiagram-Model.puml" alt="ArchiveSequenceDiagram-Model" />
 
-Similarly, how a `restore` operation goes through the `Model` component is shown below:
+The `restore` command does the opposite — it searches only the archived subset of persons for a matching email, calls `Model#restorePerson()`, then commits.
 
-<puml src="diagrams/RestoreSequenceDiagram-Model.puml" alt="RestoreSequenceDiagram-Model" />
-
-In full, the steps for `archive support@adafruit.com` are:
-
-1. `AddressBookParser` identifies the command word `archive`.
-2. `ArchiveCommandParser` parses the email argument.
-3. An `ArchiveCommand` object is created.
-4. `LogicManager` executes the command.
-5. The command searches the **full** `VendorVault` person list (not just the filtered list) for the matching email.
-6. `Model#archivePerson()` is called, replacing the `Person` with an archived copy via `Person#archive()`.
-7. `Model#commitVendorVault()` is called to save the state for undo/redo.
-8. The UI updates automatically because archived vendors are excluded from the active filtered list.
-
-The `restore EMAIL` command follows a similar flow: it searches only the archived subset of persons, calls `Model#restorePerson()`, then commits. If no email is provided (or the email is not found), the filtered list is switched to show only archived vendors as a convenience.
+The `restore` operation through the `Model` is also the reverse of `archive` — `ModelManager#restorePerson(person)` calls `person.restore()` to obtain `restoredPerson`, then calls `addressBook.setPerson(person, restoredPerson)`, and finally applies `PREDICATE_SHOW_ACTIVE_PERSONS`.
 
 <box type="info" seamless>
 
-`archiveproduct IDENTIFIER` and `restoreproduct IDENTIFIER` mirror this flow against the `Inventory`, using `Model#archiveProduct()` / `Model#restoreProduct()`.
+**Note:** If the `restore` command is given without an email, or the email is not found in the archived list, the filtered list is switched to show only archived vendors. The `archiveproduct` / `restoreproduct` commands follow the same flow against the `Inventory`.
+
 </box>
 
-The model also maintains two constant predicates:
+**Step 3.** The user executes `restore alice@example.com`. Alice's `Person` object is replaced with a copy that has the `"archived"` tag removed. She reappears in the main list.
 
-```java
-PREDICATE_SHOW_ACTIVE_PERSONS  = person  -> !person.isArchived()
-PREDICATE_SHOW_ACTIVE_PRODUCTS = product -> !product.isArchived()
-```
+<puml src="diagrams/ArchiveState2.puml" />
 
-These are applied by default so that archived records are hidden from the main display. When `restore` (without an argument) or `restoreproduct` (without an identifier or with an unknown identifier) is executed, `updateFilteredPersonList(Person::isArchived)` or `updateFilteredProductList(Product::isArchived)` is called temporarily to surface the archived records as a guide to the user.
+<br>
+
+The following activity diagram summarizes what happens when a user executes the `archive` command:
+
+<puml src="diagrams/ArchiveActivityDiagram.puml" width="400" />
+
+The `restore` command follows a similar flow, operating on archived products in the `Inventory` instead.
 
 #### Design Considerations
 
@@ -632,7 +582,7 @@ is implemented through a match predicate and shared ranking contract:
 
 2. The same applies for `ProductNameContainsKeywordsScoredPredicate`.
 
-3. `RelevanceRank` defines the ranking contract.
+3. `FindRelevance` defines the ranking contract.
    * Keyword-token matches are tiered: `EXACT_TOKEN` > `PREFIX_TOKEN` > `SUBSTRING_TOKEN` > `NO_MATCH`.
    * `Score(MatchTier tier, int unmatchedCharCount, String sortKey)` represents how relevant a match is.
    * `SCORE_COMPARATOR` implements score comparison.
@@ -676,15 +626,19 @@ The usage scenario for `findproduct` is analogous.
 
 **Aspect: Matching strategy**
 
-* **Alternative 1 (current choice):** Partial matching
-  * Pros: Tolerant of incomplete keywords, hence more user-friendly.
+* **Alternative 1:** Partial matching
+  * Pros: Tolerant of incomplete keywords.
   * Cons: Broader set of results.
 
-* **Alternative 2:** Exact matching
+* **Alternative 2:** Full-word matching
   * Pros: Simpler design; Stricter set of results.
-  * Cons: Low usability as users have to remember exact words.
+  * Cons: Users have to remember exact words.
 
-Alternative 1 was chosen to ensure discoverability and improve user experience.
+Alternative 1 was chosen for searching by name. Users often remember only parts of a name, so partial matching helps with reducing failed searches.
+
+Alternative 2 was chosen for searching by tag. Tags represent categories, so users typically expect precise filtering.
+
+This split approach ensures usability by supporting both exploratory and precise search.
 
 **Aspect: Ranking implementation**
 
@@ -789,12 +743,12 @@ Use case ends.
 
 * 1b. VV detects error in fields provided
     * 1b1. VV rejects the command and displays validation error message.
-  
+
       Use case resumes from step 1.
 
 * 1c. VV detects duplicate contact
     * 1c1. VV rejects the command and displays a duplicate contact error message.
-  
+
       Use case resumes from step 1.
 
 * 2a. VV detects potential duplicate contact
@@ -822,14 +776,19 @@ Use case ends.
 
 All extensions that apply to !!UC1: Add a Vendor Contact!! also apply here.
 
-* 1a. VV detects that the operation removes all tags.
-    * 1a1. VV requests confirmation.
-    * 1a2. User confirms the deletion.
+* 1a. VV detects that no contact with the given email exists.
+  * 1a1. VV displays an error indicating no vendor was found with that email. 
+  
+    Use case ends.
+
+* 1b. VV detects that the operation removes all tags.
+    * 1b1. VV requests confirmation.
+    * 1b2. User confirms the removal of all tags.
 
       Use case resumes from step 2.
 
-    * 1a2a. User cancels the deletion instead.
-      * 1a2a1. VV aborts the edit operation and displays a cancellation message.
+    * 1b2a. User cancels the deletion instead.
+      * 1b2a1. VV aborts the edit operation and displays a cancellation message.
 
         Use case ends.
 
@@ -853,7 +812,7 @@ Use case ends.
 1. User chooses to delete a contact.
 2. VV requests for confirmation for deleting the contact.
 3. User confirms deletion.
-4. VV deletes contact and displays a list of current contacts.
+4. VV deletes contact, disassociates its products, and displays a list of current contacts.
 
 Use case ends.
 
@@ -876,7 +835,7 @@ Use case ends.
 
 * 1d. VV detects confirmation flag in user prompt
     * 1d1. VV validates the flag, skips the confirmation prompt, and proceeds to deletion.
-  
+
       Use case resumes from step 4.
 
 * 2a. User decides not to delete the contact, rejecting the deletion.
@@ -924,7 +883,7 @@ Use case ends.
 
 * 1a. VV detects invalid command format
     * 1a1. VV rejects the command and displays an error message indicating invalid command format.
-    
+
       Use case ends.
 
 **Use case: UC7 - Archive a Vendor Contact**
@@ -942,14 +901,14 @@ Use case ends.
 
 * 1a. VV detects no email provided.
     * 1a1. VV rejects the command and displays an error message indicating invalid command format.
-    
+
       Use case ends.
-  
+
 * 1b. VV detects invalid email provided.
     * 1b1. VV rejects the command and displays an error message.
-  
+
       Use case resumes from step 1.
-  
+
 * 1c. VV detects that no contact with the given email exists.
     * 1c1. VV displays an error indicating no vendor was found with that email.
 
@@ -984,14 +943,49 @@ Use case ends.
     * 3a1. VV displays the archived contact list and an error indicating no archived vendor was found with that email.
 
       Use case ends.
-  
+
 * 3b. VV detects invalid email provided.
     * 3b1. VV rejects the command and displays an error message.
-  
+
       Use case resumes from step 3.
 
 **Use Case: UC9 - Add a Product**
-TODO
+
+**Preconditions: Application is running, user is on the main screen.**
+
+**MSS**
+
+1. User chooses to add a product and provides required fields.
+2. VV validates the command format and fields, then adds the product and displays the list of products.
+
+Use case ends.
+
+**Extensions**
+
+* 1a. VV detects invalid command format
+    * 1a1. VV rejects the command and displays an error indicating invalid command format.
+
+      Use case resumes from step 1.
+
+* 1b. VV detects duplicate product
+    * 1b1. VV rejects the command and displays a duplicate product error.
+
+      Use case resumes from step 1.
+
+* 1c. VV detects that product is associated with a contact that does not exist.
+    * 1c1. VV rejects the command and displays an error.
+
+      Use case resumes from step 1.
+
+* 2a. VV detects potential duplicate product
+    * 2a1. VV accepts the command and displays a warning with details of the similar product.
+
+      Use case ends.
+
+* 2b. VV detects potential input mistake
+    * 2b1. VV accepts the command and displays a warning indicating the input may be unintended.
+
+      Use case ends.
 
 **Use case: UC10 - Edit a Product**
 
@@ -1017,7 +1011,7 @@ Use case ends.
       Use case ends.
 
 * 1c. VV detects error in the fields provided (e.g. invalid data format).
-    * 1c1. VV displays an appropriate error message indicating the invalid field.
+    * 1c1. VV displays an error indicating the invalid field.
 
       Use case resumes from step 1.
 
@@ -1059,7 +1053,7 @@ Analogous to !!UC6 - Archive a Vendor Contact!!, except the product's identifier
 
 **Use case: UC16 - Restore an Archived Product**
 
-Analogous to !!UC7 - Restore an Archived Vendor Contact!!, except the product's identifier is used instead of the 
+Analogous to !!UC7 - Restore an Archived Vendor Contact!!, except the product's identifier is used instead of the
 vendor's email.
 
 **Use case: UC17 - Undo/Redo a Change**
@@ -1079,7 +1073,7 @@ Use case ends.
 
 * 1a. VV detects that no undoable actions exist in the current session.
     * 1a1. VV displays an error message indicating there is nothing to undo.
-  
+
       Use case ends.
 
 * 2b. User performs a new undoable action.
@@ -1183,12 +1177,12 @@ Use case ends.
 
 * 1a. VV detects that the user is already at the oldest command in the history.
     * 1a1. VV does nothing.
-  
+
       Use case ends.
 
 * 3a. VV detects that the user is already at the most recent command in the history.
     * 3a1. VV does nothing.
-  
+
       Use case ends.
 
 
@@ -1265,8 +1259,9 @@ Accessibility:
 
 1. Prerequisites: There should be no contact with email `support@adafruit.com`.
 
-2. Test case: `add n/Adafruit Industries p/64601234 e/support@adafruit.com a/151 Varick St, New York, NY 10013, USA`
-   - Expected: Adafruit Industries's Contact is added.
+2. Test case: `add n/Adafruit Industries p/64601234 e/support@adafruit.com a/151 Varick St, New York, NY 10013, USA
+t/iot`
+   - Expected: Adafruit Industries Contact is added.
 
 3. Test case: `add`
    - Expected: `Invalid Command Format..` error.
@@ -1312,13 +1307,16 @@ Accessibility:
 
 ### Finding a contact
 
-1. Prerequisites: There should be a contact named Adafruit Industries
+1. Prerequisites: There should be a contact named Adafruit Industries with the tag `iot`
 
 2. Test case: `find`
    - Expected: `Invalid command format! …` error
 
-3. Test case: `find ada`
-   - Expected: Contact named Adafruit Industries is listed
+3. Test case: `find n/ada`
+   - Expected: Contact named Adafruit Industries is displayed
+
+4. Test case: `find t/iot`
+   - Expected: Contact named Adafruit Industries is displayed
 
 ### Clearing all contacts
 
@@ -1542,7 +1540,8 @@ At the end, run `listall` and verify both added contact and product are present 
   - Expected: `WARNING: Error reading from jsonFile` is logged to the terminal and app starts with empty inventory
 
 5. Test case: Enter invalid JSON to `/preferences.json` and restart the app
-   - Expected: `WARNING: Error reading from jsonFile file preferences.json` logged to the console and app starts with default preferences
+   - Expected: `WARNING: Error reading from jsonFile file preferences.json` is logged to the console and app starts
+     with default preferences
 
 ## **Appendix: Effort**
 
@@ -1583,3 +1582,8 @@ At the end, run `listall` and verify both added contact and product are present 
 8. Consistently tested each other's code and fixed bugs early before they became larger issues
 
 ## **Appendix: Planned Enhancements**
+
+Team size: 4
+
+1. Enhance delete/archive contact commands: Prompt user if they would like to cascade delete and archive operations
+   to products associated with the contact.

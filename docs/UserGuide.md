@@ -22,6 +22,8 @@ Spend less time searching through spreadsheets and switching between apps. Vendo
 
 <br>
 
+<div style="page-break-after: always;"></div>
+
 ## Quick start
 
 Follow these steps to get VendorVault up and running:
@@ -130,6 +132,8 @@ Some example commands you can try:
 
 <br>
 
+<div style="page-break-after: always;"></div>
+
 ## Features
 
 ### Before you begin
@@ -140,11 +144,11 @@ Some example commands you can try:
 
 VendorVault keeps your data in one of three states:
 
-| <div style="width:200px">State</div>| <div style="width:250px">What it means</div>| <div style="width:250px">Related commands</div>                                           |
-|--------------|------------------------------------------------|-----------------------------------------------------------|
-| **Active**   | Visible on the home page        | `listall`                    |
-| **Archived** | Hidden but recoverable           | `archive` / `archiveproduct`                              |
-| **Deleted**  | Permanently gone          | `delete` / `deleteproduct` / `clear` / `clearproduct`     |
+| State        | What it means            | <div style="width:250px">Related commands</div>       |
+|--------------|--------------------------|-------------------------------------------------------|
+| **Active**   | Visible on the home page | `listall`                                             |
+| **Archived** | Hidden but recoverable   | `archive` / `archiveproduct`                          |
+| **Deleted**  | Permanently gone         | `delete` / `deleteproduct` / `clear` / `clearproduct` |
 
 When in doubt, **archive, don't delete.**
 
@@ -175,10 +179,17 @@ When in doubt, **archive, don't delete.**
 * Items in square brackets such as `[t/TAG]` are optional.
 * Parameters can be supplied in any order.
 
+</box>
+
+<box type="info" seamless>
+
+Long names may be truncated in the list view. Use [`findproduct`](#locating-products-findproduct-coming-soon) to view a product's full details.
 
 </box>
 
 <div style="height: 20px;"></div>
+
+<div style="page-break-after: always;"></div>
 
 ### Managing Vendor Contacts
 
@@ -305,7 +316,7 @@ find [n/NAME_KEYWORD]... [t/TAG_KEYWORD]...
 (at least one prefix required)
 
 Examples:
-* `find n/TechSource t/electronics` matches name containing `TechSource` and tag `electronics`
+* `find n/Cytron t/wholesale` matches name containing `Cytron` and tag `wholesale`
 
 <box type="info" seamless>
 
@@ -425,6 +436,8 @@ clear
 
 <div style="height: 30px;"></div>
 
+<div style="page-break-after: always;"></div>
+
 ### Managing Inventory
 
 #### Adding a product: `addproduct`
@@ -477,6 +490,8 @@ For more details on possible warnings and errors, refer to the [troubleshooting 
 
 <div style="height: 30px;"></div>
 
+<div style="page-break-after: always;"></div>
+
 #### Listing all products : `listproduct`
 
 Shows a list of all **active** products in the inventory.
@@ -486,12 +501,6 @@ Format:
 ```
 listproduct
 ```
-
-<box type="tip" seamless>
-
-Long names may be truncated in the list view. Use [`findproduct`](#locating-products-findproduct-coming-soon) to view a product's full details.
-
-</box>
 
 <div style="height: 30px;"></div>
 
@@ -655,6 +664,8 @@ clearproduct
 
 <div style="height: 30px;"></div>
 
+<div style="page-break-after: always;"></div>
+
 ### Utility Commands
 
 #### Viewing help : `help`
@@ -670,7 +681,7 @@ help
 
 #### Adding a command shortcut : `alias`
 
-Creates a shortcut to an existing command (excluding `alias`).
+Creates a shortcut to an existing command.
 
 Format:
 ```
@@ -703,6 +714,8 @@ Example:
 * `deletealias ls` removes `ls` as an alias
 
 <div style="height: 30px;"></div>
+
+<div style="page-break-after: always;"></div>
 
 #### Changing default threshold : `threshold`
 
@@ -799,6 +812,8 @@ exit
 
 <br>
 
+<div style="page-break-after: always;"></div>
+
 ## Command Summary
 
 ### Contact Commands
@@ -809,7 +824,7 @@ exit
 | **Edit Contact**    | `edit EMAIL [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​` | `edit sales@techsource.com n/TechSource p/61234568`                                                        | Edits a contact's details                                          |
 | **Delete Contact**  | `delete EMAIL`                                                         | `delete sales@techsource.com`                                                                              | Deletes a contact                                                  |
 | **List Contacts**   | `list`                                                                 | &nbsp;                                                                                                     | Lists active contacts                                              |
-| **Find Contacts**   | `find [n/NAME]... [t/TAG]...`                                          | `find n/TechSource <br/>t/electronics`                                                                     | Displays contacts with matching name and/or tag                    |
+| **Find Contacts**   | `find [n/NAME]... [t/TAG]...`                                          | `find n/TechSource t/electronics`                                                                          | Displays contacts with matching name and/or tag                    |
 | **Archive Contact** | `archive EMAIL`                                                        | `archive sales@techsource.com`                                                                             | Archives a contact                                                 |
 | **Restore Contact** | `restore [EMAIL]`                                                      | `restore sales@techsource.com`                                                                             | Restores an archived contact; lists all archived if no email given |
 | **Clear Contacts**  | `clear`                                                                | &nbsp;                                                                                                     | Clears all contacts                                                |
@@ -942,6 +957,8 @@ You can try the following steps:
 
 <br>
 
+<div style="page-break-after: always;"></div>
+
 ## Troubleshooting
 
 <box type="important" seamless>
@@ -953,7 +970,7 @@ You can try the following steps:
 </box>
 
 ### Managing contacts
-<div style="height: 30px;"></div>
+<div style="height: 10px;"></div>
 
 #### Troubleshooting `add` contact
 
@@ -1021,7 +1038,6 @@ Most errors and warnings in `add` also occur in `edit`, except the first three e
 
 </box>
 
-
 | Scenario                                                              | Message shown                                    | How to fix                                                              |
 |-----------------------------------------------------------------------|--------------------------------------------------|-------------------------------------------------------------------------|
 | Missing/invalid target email (or extra non-prefixed text after email) | `Invalid command format! ...`                    | Follow the syntax `edit EMAIL [n/...] [p/...] [e/...] [a/...] [t/...]`. |
@@ -1081,7 +1097,7 @@ Use this section when `delete` fails.
 | Scenario                               | Message shown                                            | How to fix                                                         |
 |----------------------------------------|----------------------------------------------------------|--------------------------------------------------------------------|
 | No email is provided                   | `Invalid Command format! ...`                            | Provide the vendor's email: `delete EMAIL`.                        |
-| Email Format is invalid                | `Email should be a valid format (e.g. user@example.com).` | Provide the correct vendor's email: `delete EMAIL`.                |
+| Email format is invalid                | `Email should be a valid format (e.g. user@example.com).` | Provide the correct vendor's email: `delete EMAIL`.                |
 | Email provided but no matching contact | `No contact with the specified email was found.`         | Ensures the vendor exists in the active list. Use `list` to check. |
 
 <br>
@@ -1095,7 +1111,7 @@ Common `delete` warnings:
 <div style="height: 30px;"></div>
 
 ### Managing inventory
-<div style="height: 30px;"></div>
+<div style="height: 10px;"></div>
 
 #### Troubleshooting `addproduct`
 
@@ -1215,7 +1231,7 @@ Use this section when `deleteproduct` fails.
 <div style="height: 30px;"></div>
 
 ### General commands
-<div style="height: 30px;"></div>
+<div style="height: 10px;"></div>
 
 #### Troubleshooting `alias`
 
@@ -1250,6 +1266,8 @@ Use this section when `threshold` fails.
 | Threshold is invalid  | `Restock threshold should be a non-negative valid integer.` | Ensure threshold is a whole number between 0 and 2,147,483,647. |
 
 <div style="height: 30px;"></div>
+
+<div style="page-break-after: always;"></div>
 
 ### Why am I seeing warnings?
 

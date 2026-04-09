@@ -67,7 +67,7 @@ public class MainApp extends Application {
     public static final String LOG_HEADER =
             "=============================[ Initializing VendorVault ]===========================";
     public static final String LOG_FOOTER =
-            "============================ [ Stopping AddressBook ] =============================";
+            "============================ [ Stopping VendorVault ] =============================";
 
     private static final Logger logger = LogsCenter.getLogger(MainApp.class);
 

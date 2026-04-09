@@ -1,0 +1,23 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+
+start
+
+:Retrieve full vendor list from VendorVault;
+
+if () then ([matching vendor found])
+    if () then ([already archived])
+        :Show "already archived" error;
+    else ([else])
+        :Call Model#archivePerson();
+        :Commit VendorVault;
+        :Show success message;
+    endif
+else ([no match])
+    :Show "not found" error;
+endif
+
+stop
+@enduml
