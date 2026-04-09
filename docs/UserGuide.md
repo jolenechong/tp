@@ -681,7 +681,7 @@ help
 
 #### Adding a command shortcut : `alias`
 
-Creates a shortcut to an existing command (excluding `alias`).
+Creates a shortcut to an existing command.
 
 Format:
 ```
