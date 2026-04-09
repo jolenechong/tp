@@ -2,9 +2,11 @@ package seedu.address.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static seedu.address.testutil.Assert.assertThrows;
+import static seedu.address.testutil.TypicalPersons.ALICE;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +21,8 @@ public class JsonSerializableAddressBookTest {
     private static final Path TYPICAL_PERSONS_FILE = TEST_DATA_FOLDER.resolve("typicalPersonsAddressBook.json");
     private static final Path INVALID_PERSON_FILE = TEST_DATA_FOLDER.resolve("invalidPersonAddressBook.json");
     private static final Path DUPLICATE_PERSON_FILE = TEST_DATA_FOLDER.resolve("duplicatePersonAddressBook.json");
+    private static final String DUPLICATE_EMAIL_IN_TYPICAL_DATA = ALICE.getEmail().value;
+    private static final String DUPLICATE_EMAIL_IN_NULL_EMAIL_TEST = "two@example.com";
 
     @Test
     public void toModelType_typicalPersonsFile_success() throws Exception {
@@ -42,6 +46,28 @@ public class JsonSerializableAddressBookTest {
                 JsonSerializableAddressBook.class).get();
         assertThrows(IllegalValueException.class, JsonSerializableAddressBook.MESSAGE_DUPLICATE_PERSON,
                 dataFromFile::toModelType);
+    }
+
+    @Test
+    public void findDuplicateEmails_duplicatePersonsFile_returnsDuplicateEmail() throws Exception {
+        JsonSerializableAddressBook dataFromFile = JsonUtil.readJsonFile(DUPLICATE_PERSON_FILE,
+                JsonSerializableAddressBook.class).get();
+
+        assertEquals(List.of(DUPLICATE_EMAIL_IN_TYPICAL_DATA), dataFromFile.findDuplicateEmails());
+    }
+
+    @Test
+    public void findDuplicateEmails_nullEmail_ignoresNullEmail() {
+        List<JsonAdaptedPerson> personList = List.of(
+                new JsonAdaptedPerson("One", "91234567", null, "Address One", List.of()),
+                new JsonAdaptedPerson("Two", "91234568", DUPLICATE_EMAIL_IN_NULL_EMAIL_TEST,
+                        "Address Two", List.of()),
+                new JsonAdaptedPerson("Three", "91234569", DUPLICATE_EMAIL_IN_NULL_EMAIL_TEST,
+                        "Address Three", List.of()));
+
+        JsonSerializableAddressBook data = new JsonSerializableAddressBook(personList);
+
+        assertEquals(List.of(DUPLICATE_EMAIL_IN_NULL_EMAIL_TEST), data.findDuplicateEmails());
     }
 
 }
