@@ -312,7 +312,7 @@ public class MainAppTest {
     }
 
     @Test
-    public void logInventoryLoadingIssue_nonIllegalCause_returnsEarly() throws Exception {
+    public void logInventoryLoadingIssue_nonIllegalCause_returnsEarly() {
         TestableMainApp app = new TestableMainApp();
 
         assertDoesNotThrow(() -> invokeLogInventoryLoadingIssue(
@@ -323,7 +323,7 @@ public class MainAppTest {
     }
 
     @Test
-    public void logInventoryLoadingIssue_illegalValueCause_logsIllegalValueIssuePath() throws Exception {
+    public void logInventoryLoadingIssue_illegalValueCause_logsIllegalValueIssuePath() {
         TestableMainApp app = new TestableMainApp();
 
         assertDoesNotThrow(() -> invokeLogInventoryLoadingIssue(
@@ -334,7 +334,7 @@ public class MainAppTest {
     }
 
     @Test
-    public void logUnknownVendorIssuesIfDuplicateIdentifier_nonDuplicatePrefix_returnsEarly() throws Exception {
+    public void logUnknownVendorIssuesIfDuplicateIdentifier_nonDuplicatePrefix_returnsEarly() {
         TestableMainApp app = new TestableMainApp();
 
         assertDoesNotThrow(() -> invokeLogUnknownVendorIssuesIfDuplicateIdentifier(
@@ -345,7 +345,7 @@ public class MainAppTest {
     }
 
     @Test
-    public void logUnknownVendorIssuesIfDuplicateIdentifier_duplicatePrefix_logsUnknownVendorIssues() throws Exception {
+    public void logUnknownVendorIssuesIfDuplicateIdentifier_duplicatePrefix_logsUnknownVendorIssues() {
         TestableMainApp app = new TestableMainApp();
 
         assertDoesNotThrow(() -> invokeLogUnknownVendorIssuesIfDuplicateIdentifier(
@@ -356,14 +356,14 @@ public class MainAppTest {
     }
 
     @Test
-    public void logIllegalValueIssue_withNewLineInDetails_noException() throws Exception {
+    public void logIllegalValueIssue_withNewLineInDetails_noException() {
         TestableMainApp app = new TestableMainApp();
 
         assertDoesNotThrow(() -> invokeLogIllegalValueIssue(app, UNKNOWN_VENDOR_MIXED_FILE, DETAILS_WITH_NEWLINE));
     }
 
     @Test
-    public void initLogging_withConfig_noException() throws Exception {
+    public void initLogging_withConfig_noException() {
         TestableMainApp app = new TestableMainApp();
 
         assertDoesNotThrow(() -> invokeInitLogging(app, new Config()));
@@ -373,6 +373,7 @@ public class MainAppTest {
         return (Model) invokePrivateMethod(
                 app,
                 METHOD_INIT_MODEL_MANAGER,
+                // Reflection needs an explicit parameter-type signature to resolve the private overload:
                 new Class<?>[]{Storage.class, ReadOnlyUserPrefs.class},
                 storage,
                 userPrefs);
