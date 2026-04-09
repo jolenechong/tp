@@ -356,7 +356,7 @@ Similarly, how the `getPrevCommandHistory` operation goes through `Logic` compon
 <div style="height: 20px;"></div>
 
 The following activity diagram below summarizes how key presses are handled to navigate through the command history:
-<puml src="diagrams/command-history/ActivityDiagram.puml" alt="Command History Activity Diagram" width="550" />
+<puml src="diagrams/command-history/ActivityDiagram.puml" alt="Command History Activity Diagram" width="700" />
 
 #### Design Considerations
 **Aspect: How command history stores input:**
@@ -388,8 +388,6 @@ Preserving draft input improves user experience and is easy to implement with mi
 ---
 
 <div style="height: 10px;"></div>
-
-<div style="page-break-after: always;"></div>
 
 ### Data Archiving Feature
 
@@ -608,11 +606,11 @@ is implemented through a match predicate and shared ranking contract:
 
 This diagram shows the structure and dependency of Better Search classes:
 
-<puml src="diagrams/BetterSearchClass.puml" width="400"/>
+<puml src="diagrams/BetterSearchClass.puml" width="300"/>
 
 This diagram shows an example of scoring state when the given keyword is "adafruit":
 
-<puml src="diagrams/BetterSearchObject.puml" width="900"/>
+<puml src="diagrams/BetterSearchObject.puml" width="650"/>
 
 `SCORE_COMPARATOR` compares scores in this order: `tier`, `unmatchedCharCount`, `sortKey` (alphabetical). This
 gives the ranking: "Adafruit", "Adafruity", "Tadafruit", "Cytron".
