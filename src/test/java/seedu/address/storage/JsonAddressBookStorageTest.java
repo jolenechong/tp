@@ -3,6 +3,7 @@ package seedu.address.storage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.storage.JsonSerializableAddressBook.MESSAGE_DUPLICATE_PERSON;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.HOON;
@@ -99,6 +100,20 @@ public class JsonAddressBookStorageTest {
 
         assertEquals(DUPLICATE_CONTACT_EMAIL_PREFIX + DUPLICATE_EMAIL + DUPLICATE_CONTACT_EMAIL_MESSAGE_SUFFIX,
             message);
+    }
+
+    @Test
+    public void buildDuplicateEmailErrorMessage_noDuplicateEmails_returnsDefaultDuplicatePersonMessage()
+            throws Exception {
+        Path resolvedDupeEmailFilePath = TEST_DATA_FOLDER.resolve(DUPLICATE_EMAIL_FILE);
+        JsonAddressBookStorage storage = new JsonAddressBookStorage(resolvedDupeEmailFilePath);
+
+        String message = invokeBuildDuplicateEmailErrorMessage(
+                storage,
+                resolvedDupeEmailFilePath,
+                List.of());
+
+        assertEquals(MESSAGE_DUPLICATE_PERSON, message);
     }
 
     @Test
