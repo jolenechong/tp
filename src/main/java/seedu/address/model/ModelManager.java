@@ -253,7 +253,7 @@ public class ModelManager implements Model {
     @Override
     public void addProduct(Product product) {
         inventory.addProduct(product);
-        updateFilteredProductList(PREDICATE_SHOW_ALL_PRODUCTS);
+        updateFilteredProductList(PREDICATE_SHOW_ACTIVE_PRODUCTS);
     }
 
     // =========== Alias List Operations ======================================================================

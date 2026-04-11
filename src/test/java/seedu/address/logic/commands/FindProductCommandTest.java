@@ -172,6 +172,33 @@ public class FindProductCommandTest {
     }
 
     @Test
+    public void execute_relevanceOrder_ignoresLowStockPriority() {
+        // EP: command does not trigger low-stock sorting of results
+        Product lowStockPrefixMatch = new ProductBuilder()
+                .withIdentifier("SKU-LOW")
+                .withName("Desktop Organizer")
+                .withQuantity("1")
+                .withThreshold("10")
+                .build();
+        Product nonLowStockExactMatch = new ProductBuilder()
+                .withIdentifier("SKU-EXACT")
+                .withName("Desk")
+                .withQuantity("50")
+                .withThreshold("10")
+                .build();
+
+        Model localModel = new ModelManager(new VendorVault(), new UserPrefs(), new Aliases());
+        localModel.addProduct(lowStockPrefixMatch);
+        localModel.addProduct(nonLowStockExactMatch);
+
+        ProductNameContainsKeywordsScoredPredicate predicate = preparePredicate("desk");
+        FindProductCommand command = new FindProductCommand(predicate);
+        command.execute(localModel);
+
+        assertEquals(List.of(nonLowStockExactMatch, lowStockPrefixMatch), localModel.getFilteredProductList());
+    }
+
+    @Test
     public void getPendingConfirmation_returnsInactivePendingConfirmation() {
         ProductNameContainsKeywordsScoredPredicate predicate = preparePredicate(" ");
         FindProductCommand command = new FindProductCommand(predicate);

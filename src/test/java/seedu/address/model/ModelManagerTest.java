@@ -522,6 +522,18 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void addProduct_whenArchivedProductExists_keepsFilteredListActiveOnly() {
+        ModelManager model = new ModelManager(new VendorVault(), new UserPrefs(), new Aliases());
+
+        model.addProduct(OIL);
+        model.archiveProduct(OIL);
+        model.addProduct(RICE);
+
+        assertEquals(1, model.getFilteredProductList().size());
+        assertEquals(RICE, model.getFilteredProductList().get(0));
+    }
+
+    @Test
     public void restoreProduct_updatesFilteredList() {
         ModelManager model = new ModelManager(new VendorVault(), new UserPrefs(), new Aliases());
 
