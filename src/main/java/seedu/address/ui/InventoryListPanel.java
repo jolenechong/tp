@@ -46,6 +46,7 @@ public class InventoryListPanel extends UiPart<Region> {
     private static final double SCROLLBAR_RESERVE = 18;
 
     private final BooleanProperty isFiltered = new SimpleBooleanProperty(false);
+    private final SortedList<Product> sortedProducts;
 
     private final Label headerId;
     private final Label headerProduct;
@@ -103,14 +104,14 @@ public class InventoryListPanel extends UiPart<Region> {
 
         isFiltered.set(false);
 
-        SortedList<Product> sorted =
-                new SortedList<>(productList, this::compareInventoryItems);
-        inventoryListView.setItems(sorted);
+        sortedProducts = new SortedList<>(productList, this::compareInventoryItems);
+        inventoryListView.setItems(sortedProducts);
         inventoryListView.setCellFactory(lv -> createInventoryCell());
         inventoryListView.setFocusTraversable(false);
         inventoryListView.setFixedCellSize(Region.USE_COMPUTED_SIZE);
 
         isFiltered.addListener((obs, was, now) -> {
+            updateInventoryComparator(now);
             inventoryListView.setFixedCellSize(Region.USE_COMPUTED_SIZE);
             inventoryListView.refresh();
         });
@@ -121,7 +122,21 @@ public class InventoryListPanel extends UiPart<Region> {
      * In filtered mode, all text is fully visible (wraps). In unfiltered mode, text is clipped with ellipsis.
      */
     public void setFiltered(boolean filtered) {
+        if (isFiltered.get() == filtered) {
+            return;
+        }
         isFiltered.set(filtered);
+    }
+
+    /**
+     * Uses model ordering for findproduct; otherwise, keep low-stock prioritization for normal display.
+     */
+    private void updateInventoryComparator(boolean filtered) {
+        if (filtered) {
+            sortedProducts.setComparator(null);
+            return;
+        }
+        sortedProducts.setComparator(this::compareInventoryItems);
     }
 
     /**
