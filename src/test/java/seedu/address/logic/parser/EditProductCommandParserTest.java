@@ -82,7 +82,7 @@ public class EditProductCommandParserTest {
 
     @Test
     public void parse_missingIdentifier_failure() {
-        assertParseFailure(parser, PRODUCT_NAME_DESC_IPAD, MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, PRODUCT_NAME_DESC_IPAD, EditProductCommand.MESSAGE_NOT_EDITED);
     }
 
     @Test

@@ -26,16 +26,44 @@ public class EditProductCommandParser implements Parser<EditProductCommand> {
     public EditProductCommand parse(String args) throws ParseException {
         requireNonNull(args);
 
-        ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(
-                    args, PREFIX_IDENTIFIER, PREFIX_NAME, PREFIX_QUANTITY, PREFIX_THRESHOLD, PREFIX_EMAIL);
+        // Find the target identifier as everything before the first occurrence of " <knownprefix>".
+        // This allows IDs that start with prefix-like patterns (e.g. "q/l") while still
+        // correctly detecting a missing identifier when args starts with a known prefix.
+        String[] knownPrefixStrings = {
+            PREFIX_NAME.getPrefix(), PREFIX_QUANTITY.getPrefix(), PREFIX_THRESHOLD.getPrefix(),
+            PREFIX_EMAIL.getPrefix(), PREFIX_IDENTIFIER.getPrefix()
+        };
 
-        String targetIdentifier = argMultimap.getPreamble().trim();
+        // Find the earliest " <prefix>" occurrence in args to split identifier from rest.
+        // Start searching from index 1 so that an ID beginning with a prefix pattern
+        // (e.g. "q/l") at position 0 is not mistaken for a missing identifier.
+        int splitPos = -1;
+        for (String p : knownPrefixStrings) {
+            int idx = args.indexOf(" " + p, 1);
+            if (idx != -1 && (splitPos == -1 || idx < splitPos)) {
+                splitPos = idx;
+            }
+        }
+
+        String targetIdentifier;
+        String remainingArgs;
+        if (splitPos == -1) {
+            // No prefix found at all — everything is the identifier (will fail MESSAGE_NOT_EDITED later)
+            targetIdentifier = args.trim();
+            remainingArgs = "";
+        } else {
+            targetIdentifier = args.substring(0, splitPos).trim();
+            remainingArgs = args.substring(splitPos);
+        }
 
         if (targetIdentifier.isEmpty()) {
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditProductCommand.MESSAGE_USAGE));
         }
+
+        ArgumentMultimap argMultimap =
+                ArgumentTokenizer.tokenize(
+                    remainingArgs, PREFIX_IDENTIFIER, PREFIX_NAME, PREFIX_QUANTITY, PREFIX_THRESHOLD, PREFIX_EMAIL);
 
         argMultimap.verifyNoDuplicatePrefixesFor(
             PREFIX_IDENTIFIER, PREFIX_NAME, PREFIX_QUANTITY, PREFIX_THRESHOLD, PREFIX_EMAIL);
