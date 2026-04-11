@@ -1068,11 +1068,11 @@ Analogous to !!UC5 - Find Vendor Contact!!.
 
 **Use case: UC15 - Archive a Product**
 
-Analogous to !!UC6 - Archive a Vendor Contact!!, except the product's identifier is used instead of the vendor's email.
+Analogous to !!UC7 - Archive a Vendor Contact!!, except the product's identifier is used instead of the vendor's email.
 
 **Use case: UC16 - Restore an Archived Product**
 
-Analogous to !!UC7 - Restore an Archived Vendor Contact!!, except the product's identifier is used instead of the
+Analogous to !!UC8 - Restore an Archived Vendor Contact!!, except the product's identifier is used instead of the
 vendor's email.
 
 **Use case: UC17 - Undo/Redo a Change**
