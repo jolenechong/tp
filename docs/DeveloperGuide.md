@@ -1154,7 +1154,7 @@ Use case ends.
       Use case resumes from step 1.
 
 * 1b. VV detects that the alias does not exists.
-    * 1b1. VV rejects the command and displays an error indicating the alias does not exists.
+    * 1b1. VV rejects the command and displays an error indicating the alias does not exist.
 
       Use case ends.
 
