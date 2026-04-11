@@ -68,6 +68,29 @@ public class LogicManagerTest {
     }
 
     @Test
+    public void getOriginalCommand_knownAlias_returnsOriginalCommand() throws Exception {
+        logic.execute("alias list ls");
+        String result = logic.getOriginalCommand("ls");
+        assertEquals("list", result);
+    }
+
+    @Test
+    public void getOriginalCommand_unknownAlias_returnsInputUnchanged() {
+        String nonAlias = "someRandomCommand";
+        assertEquals(nonAlias, logic.getOriginalCommand(nonAlias));
+    }
+
+    @Test
+    public void getOriginalCommand_originalCommandWithNoAlias_returnsOriginalCommand() {
+        assertEquals(ListCommand.COMMAND_WORD, logic.getOriginalCommand(ListCommand.COMMAND_WORD));
+    }
+
+    @Test
+    public void getOriginalCommand_emptyString_returnsEmptyString() {
+        assertEquals("", logic.getOriginalCommand(""));
+    }
+
+    @Test
     public void execute_invalidCommandFormat_throwsParseException() {
         String invalidCommand = "uicfhmowqewca";
         assertParseException(invalidCommand, MESSAGE_UNKNOWN_COMMAND);
