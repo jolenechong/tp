@@ -183,7 +183,8 @@ When in doubt, **archive, don't delete.**
 
 <box type="info" seamless>
 
-Long names may be truncated in the list view. Use [`findproduct`](#locating-products-findproduct-coming-soon) to view a product's full details.
+Long names/identifiers are truncated in the list view. Use [`find`](#locating-contacts-find)/[`findproduct`]
+(#locating-products-findproduct) to view full details.
 
 </box>
 
@@ -477,10 +478,12 @@ If vendor email is omitted, product will not be associated with a vendor.
 
 <panel header="What products are considered duplicates?" type="seamless" id="faq-duplicate-products">
 
-A product is considered a duplicate if it has the **same identifier (id) as an existing product**. For example:
+A product is considered a duplicate if it has the **same identifier as an existing product**. For example:
 
 * `addproduct id/SKU-1003 n/Arduino Uno R4`
 * `addproduct id/SKU-1003 n/Raspberry Pi 5`
+
+Identifiers are case-sensitive, meaning `SKU-1003` and `sku-1003` are different.
 
 </panel>
 
