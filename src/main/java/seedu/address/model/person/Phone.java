@@ -66,7 +66,7 @@ public class Phone {
 
     /**
      * Returns true if a given string is a valid phone number according to stricter validation.
-     * Used for warning users about potential issues with their input.
+     * To warn users about potential issues with their input.
      *
      * @param test the string to test.
      * @return true if the string is a valid phone number according to the stronger validation criteria.
@@ -90,11 +90,11 @@ public class Phone {
     }
 
     /**
-     * Returns true if the phone number falls under WARNING_VALIDATION_REGEX or has spaces without any commas.
+     * Returns true if the phone number is likely to contain multiple numbers that should be separated by commas.
      * To detect potential multiple numbers that should be separated by commas.
      *
      * @param test the string to test.
-     * @return true if phone does not match warning regex OR contains spaces, and no commas.
+     * @return true if phone does not match warning regex OR contains spaces, AND has no commas.
      */
     public static boolean hasMultipleNumbersWithoutComma(String test) {
         requireNonNull(test);
