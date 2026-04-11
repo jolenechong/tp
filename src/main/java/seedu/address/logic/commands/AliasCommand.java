@@ -80,7 +80,9 @@ public class AliasCommand extends Command {
         try {
             model.addAlias(alias);
         } catch (DuplicateAliasException e) {
-            throw new CommandException(MESSAGE_DUPLICATE_ALIAS);
+            String currentAlias = model.findAlias(alias.getAlias()).toString();
+            String errorMessage = String.format(MESSAGE_DUPLICATE_ALIAS, currentAlias);
+            throw new CommandException(errorMessage);
         }
         return new CommandResult(String.format(MESSAGE_ADD_ALIAS_SUCCESS, alias.getAlias()));
     }

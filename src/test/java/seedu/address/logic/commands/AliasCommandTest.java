@@ -49,7 +49,10 @@ public class AliasCommandTest {
         Alias duplicateAlias = new Alias("ls", ListCommand.COMMAND_WORD);
         ModelStub modelStub = new ModelStubThrowingDuplicateAliasException();
 
-        assertThrows(CommandException.class, MESSAGE_DUPLICATE_ALIAS, () ->
+        String expectedMessage = String.format(MESSAGE_DUPLICATE_ALIAS,
+                new Alias("ls", ListCommand.COMMAND_WORD).toString());
+
+        assertThrows(CommandException.class, expectedMessage, () ->
                 new AliasCommand(duplicateAlias).execute(modelStub)
         );
     }
@@ -144,6 +147,11 @@ public class AliasCommandTest {
         @Override
         public void addAlias(Alias alias) throws DuplicateAliasException {
             throw new DuplicateAliasException();
+        }
+
+        @Override
+        public Alias findAlias(String aliasString) {
+            return new Alias("ls", ListCommand.COMMAND_WORD);
         }
     }
 

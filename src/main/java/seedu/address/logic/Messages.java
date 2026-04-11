@@ -30,7 +30,7 @@ public class Messages {
     public static final String MESSAGE_DUPLICATE_PRODUCT = "This product already exists "
             + "with the same identifier (identifier: %s, name: %s).";
     public static final String MESSAGE_DUPLICATE_ALIAS = "This alias already exists "
-            + "with the same alias name. ";
+            + "(%s).";
 
     public static final String MESSAGE_ALIAS_IS_NOT_FOUND =
             "No alias found in AliasList.";
