@@ -1064,7 +1064,7 @@ Analogous to !!UC5 - Clearing All Vendor Contacts!!
 
 **Use case: UC14 - Find Product**
 
-Analogous to !!UC5 - Find Vendor Contact!!.
+Analogous to !!UC6 - Find Vendor Contact!!.
 
 **Use case: UC15 - Archive a Product**
 
