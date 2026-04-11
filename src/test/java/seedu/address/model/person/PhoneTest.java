@@ -104,6 +104,24 @@ public class PhoneTest {
     }
 
     @Test
+    public void hasMultipleNumbersWithoutComma() {
+        // EP: spaces without comma -> returns true (warning case)
+        assertTrue(Phone.hasMultipleNumbersWithoutComma("9123 4567"));
+
+        // EP: with comma -> returns false (no warning)
+        assertFalse(Phone.hasMultipleNumbersWithoutComma("9123 4567, 8765 4321"));
+
+        // EP: no spaces, no comma -> returns false (no warning)
+        assertFalse(Phone.hasMultipleNumbersWithoutComma("91234567"));
+
+        // EP: symbols without comma -> returns true (warning case)
+        assertTrue(Phone.hasMultipleNumbersWithoutComma("+65 1234-5678"));
+
+        // EP: does not match warning regex and no comma - returns true (warning case)
+        assertTrue(Phone.hasMultipleNumbersWithoutComma("9123 abc"));
+    }
+
+    @Test
     public void equals() {
         Phone phone = new Phone("999");
 

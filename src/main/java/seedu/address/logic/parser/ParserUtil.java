@@ -233,12 +233,21 @@ public class ParserUtil {
     }
 
     private static Optional<String> validatePhone(String phone) throws ParseException {
-        return validate(
+        Optional<String> warnings = validate(
                 phone, () -> new ParseException(Phone.MESSAGE_BLANK),
                 0, null,
                 Phone::isValidPhone, () -> new ParseException(Phone.MESSAGE_CONSTRAINTS),
                 Phone::isValidPhoneWarn, Phone.MESSAGE_WARN
         );
+
+        if (Phone.hasMultipleNumbersWithoutComma(phone)) {
+            if (warnings.isPresent()) {
+                return Optional.of(warnings.get() + SEPARATOR_NEW_LINE + Phone.MESSAGE_MULTIPLE_NUMBERS_WARN);
+            }
+            return Optional.of(Phone.MESSAGE_MULTIPLE_NUMBERS_WARN);
+        }
+
+        return warnings;
     }
 
     private static Optional<String> validateEmail(String email) throws ParseException {

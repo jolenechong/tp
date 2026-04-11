@@ -187,6 +187,13 @@ public class ParserUtilTest {
     }
 
     @Test
+    public void parsePhone_phoneWithSpacesNoComma_returnsMultipleNumbersWarning() throws Exception {
+        ParseResult<Phone> result = ParserUtil.parsePhone("+65 1234-5678");
+        assertEquals(new Phone("+65 1234-5678"), result.getValue());
+        assertEquals(Phone.MESSAGE_MULTIPLE_NUMBERS_WARN, result.getWarning().orElseThrow());
+    }
+
+    @Test
     public void parsePhone_oneTooShort_throwsParseException() {
         // EP: multiple phones where one is below minimum length
         assertThrows(ParseException.class, () -> ParserUtil.parsePhone(INVALID_PHONE_MULTIPLE_ONE_SHORT));
