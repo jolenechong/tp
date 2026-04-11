@@ -63,7 +63,7 @@ public class EditProductCommand extends Command {
     public static final String MESSAGE_WARN_BELOW_THRESHOLD =
             "⚠ Warning: Product stock is below threshold.";
 
-    public static final String MESSAGE_ACTION_SUMMARY = "edit of contact: %1$s";
+    public static final String MESSAGE_ACTION_SUMMARY = "edit of product: %1$s";
 
     private final String targetIdentifier;
     private final EditProductDescriptor editProductDescriptor;
