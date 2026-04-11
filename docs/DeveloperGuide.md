@@ -1209,6 +1209,16 @@ Use case ends.
 
       Use case ends.
 
+**Use case: UC22 - Check Full Product Identifier**
+
+**Preconditions: Application is running, user is on the main screen.**
+
+**MSS**
+
+1. User finds the product using its name.
+2. VV displays product with its full identifier.
+
+Use case ends.
 
 ### Non-Functional Requirements
 
