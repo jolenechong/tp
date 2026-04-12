@@ -168,6 +168,10 @@ When in doubt, **archive, don't delete.**
 **Notes about confirmation prompt:**
 
 * To skip the confirmation prompt, include the `-y` flag after the command.
+* The following commands will prompt for confirmation before executing:
+  * `clear` / `clearproduct`
+  * `delete` / `deleteproduct`
+  * `edit` (when clearing all tags)
 
 </box>
 
@@ -180,8 +184,6 @@ When in doubt, **archive, don't delete.**
 * Parameters can be supplied in any order.
 * For commands that take no parameters (e.g. `clear`, `listall`, `listproduct`),
   any extra text after the command word is allowed but will be ignored.
-
-</box>
 
 </box>
 
