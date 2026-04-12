@@ -13,7 +13,7 @@ public class Email {
     public static final String MESSAGE_BLANK = "Email should not be blank.";
     public static final String MESSAGE_WARN = "⚠ Warning: Email address is unusually long, is this intentional?";
     public static final String MESSAGE_DOMAIN_FORMAT_WARN =
-            "⚠ Warning: Email may be missing parts of a typical domain (e.g. \".\"), is this intentional?";
+            "⚠ Warning: Email uses a non-standard domain (e.g. user@localhost, without \".\"). Is this intentional?";
     public static final int MAX_LENGTH = 320;
     public static final String MESSAGE_LENGTH_CONSTRAINTS = "Email should be at most "
             + MAX_LENGTH + " characters.";
