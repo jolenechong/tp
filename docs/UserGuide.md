@@ -1330,7 +1330,7 @@ Product name is recommended to meet the following guidelines, otherwise you will
 
 **Contact Addresses** warnings appear when one address **fully contains** the other. For example, "123 Main Street" and "123 Main St".
 
-Each duplicate warning includes details of the contact/product that is most similar (based on the longest sequence of matching characters), to help you verify whether it is a duplicate.
+Each duplicate warning includes details of the contact/product that is most similar (based on the longest sequence of matching case-insensitive characters), to help you verify whether it is a duplicate.
 
 </panel>
 
