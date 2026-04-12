@@ -144,11 +144,11 @@ Some example commands you can try:
 
 VendorVault keeps your data in one of three states:
 
-| State        | What it means            | <div style="width:250px">Related commands</div>       |
-|--------------|--------------------------|-------------------------------------------------------|
-| **Active**   | Visible on the home page | `listall`                                             |
-| **Archived** | Hidden but recoverable   | `archive` / `archiveproduct`                          |
-| **Deleted**  | Permanently gone         | `delete` / `deleteproduct` / `clear` / `clearproduct` |
+| State        | What it means            | <div style="width:250px">Related commands</div>                                                                                                                                                 |
+|--------------|--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Active**   | Visible on the home page | [`listall`](#listing-all-contacts-and-products-listall)                                                                                                                                         |
+| **Archived** | Hidden but recoverable   | [`archive`](#archiving-a-contact-archive) / [`archiveproduct`](#archiving-a-product-archiveproduct)                                                                                             |
+| **Deleted**  | Permanently gone         | [`delete`](#deleting-a-contact-delete) / [`deleteproduct`](#deleting-a-product-deleteproduct) / [`clear`](#clearing-all-contacts-clear) / [`clearproduct`](#clearing-all-products-clearproduct) |
 
 When in doubt, **archive, don't delete.**
 
@@ -169,9 +169,9 @@ When in doubt, **archive, don't delete.**
 
 * To skip the confirmation prompt, include the `-y` flag after the command.
 * The following commands will prompt for confirmation before executing:
-  * `clear` / `clearproduct`
-  * `delete` / `deleteproduct`
-  * `edit` (when clearing all tags)
+  * [`clear`](#clearing-all-contacts-clear) / [`clearproduct`](#clearing-all-products-clearproduct)
+  * [`delete`](#deleting-a-contact-delete) / [`deleteproduct`](#deleting-a-product-deleteproduct)
+  * [`edit`](#editing-a-contact-edit) (when clearing all tags)
 
 </box>
 
@@ -182,7 +182,7 @@ When in doubt, **archive, don't delete.**
 * Words in `UPPER_CASE` are the parameters to be supplied.
 * Items in square brackets such as `[t/TAG]` are optional.
 * Parameters can be supplied in any order.
-* For commands that take no parameters (e.g. `clear`, `listall`, `listproduct`),
+* For commands that take no parameters (e.g. [`clear`](#clearing-all-contacts-clear), [`listall`](#listing-all-contacts-and-products-listall), [`listproduct`](#listing-all-products-listproduct)),
   any extra text after the command word is allowed but will be ignored.
 
 </box>
@@ -191,9 +191,12 @@ When in doubt, **archive, don't delete.**
 
 **Notes about the display panels:**
 
-* Commands on contacts only update the contact panel and commands on products only update the product panel. Use [`listall`](#listing-all-contacts-and-products-listall) to view both panels refreshed.
-* Long names/identifiers are truncated in the list view. Use [`find`](#locating-contacts-find)/[`findproduct`]
-(#locating-products-findproduct) to view full details.
+* Most commands update only one panel – contact commands update the contact panel, while product commands update the 
+product panel.
+    * [`find`](#locating-contacts-find)/[`findproduct`](#locating-products-findproduct) are exceptions: they will 
+  update both panels.
+    * Use [`listall`](#listing-all-contacts-and-products--listall) to set both panels to the default display.
+* Long names/identifiers are truncated in the list view. Use [`find`](#locating-contacts-find)/[`findproduct`](#locating-products-findproduct) to view full details.
 
 </box>
 
