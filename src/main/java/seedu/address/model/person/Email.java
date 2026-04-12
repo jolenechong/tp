@@ -71,15 +71,20 @@ public class Email {
 
     /**
      * Returns true if a valid email's domain part (after '@') does not contain a dot.
+     * This may indicate a missing or incomplete domain format.
      *
      * @param test the string to test.
-     * @return true if the email's domain part does not contain ".", may indicate missing parts of a typical domain.
+     * @return true if the domain part does not contain a dot.
      */
     public static boolean isMissingDomainFormatWarn(String test) {
         requireNonNull(test);
 
         int atIndex = test.lastIndexOf(DOMAIN_SEPARATOR);
-        if (atIndex < 0 || atIndex == test.length() - 1) {
+        boolean hasNoDomainSeparator = atIndex < 0;
+        boolean hasNoDomainPart = atIndex == test.length() - 1;
+
+        // Not a valid email structure so no domain format warning
+        if (hasNoDomainSeparator || hasNoDomainPart) {
             return false;
         }
 
