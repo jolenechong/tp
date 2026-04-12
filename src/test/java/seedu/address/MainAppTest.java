@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 import static seedu.address.testutil.TypicalProducts.RICE;
-import static seedu.address.ui.Messages.DUPLICATE_IDENTIFIER_PREFIX;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -67,11 +66,9 @@ public class MainAppTest {
     private static final String METHOD_GET_ILLEGAL_VALUE_DETAILS = "getIllegalValueDetails";
     private static final String METHOD_INIT_MODEL_MANAGER = "initModelManager";
     private static final String METHOD_LOG_INVENTORY_LOADING_ISSUE = "logInventoryLoadingIssue";
-    private static final String METHOD_LOG_UNKNOWN_VENDOR_ISSUES = "logUnknownVendorIssuesIfDuplicateIdentifier";
     private static final String METHOD_LOG_ILLEGAL_VALUE_ISSUE = "logIllegalValueIssue";
     private static final String METHOD_INIT_LOGGING = "initLogging";
     private static final String NON_DUPLICATE_DETAILS = "Some non-duplicate error";
-    private static final String DUPLICATE_DETAILS = DUPLICATE_IDENTIFIER_PREFIX + " 'SKU-1001' at line 7.";
     private static final String DETAILS_WITH_NEWLINE = "line one\nline two";
     private static final Path UNKNOWN_VENDOR_MIXED_FILE = Path.of("src", "test", "data",
             "VendorVaultConsistencyUtilTest", "unknownVendorMixedInventory.json");
@@ -362,28 +359,6 @@ public class MainAppTest {
     }
 
     @Test
-    public void logUnknownVendorIssuesIfDuplicateIdentifier_nonDuplicatePrefix_returnsEarly() {
-        TestableMainApp app = new TestableMainApp();
-
-        assertDoesNotThrow(() -> invokeLogUnknownVendorIssuesIfDuplicateIdentifier(
-                app,
-                UNKNOWN_VENDOR_MIXED_FILE,
-                getTypicalAddressBook(),
-                NON_DUPLICATE_DETAILS));
-    }
-
-    @Test
-    public void logUnknownVendorIssuesIfDuplicateIdentifier_duplicatePrefix_logsUnknownVendorIssues() {
-        TestableMainApp app = new TestableMainApp();
-
-        assertDoesNotThrow(() -> invokeLogUnknownVendorIssuesIfDuplicateIdentifier(
-                app,
-                UNKNOWN_VENDOR_MIXED_FILE,
-                getTypicalAddressBook(),
-                DUPLICATE_DETAILS));
-    }
-
-    @Test
     public void logIllegalValueIssue_withNewLineInDetails_noException() {
         TestableMainApp app = new TestableMainApp();
 
@@ -416,18 +391,6 @@ public class MainAppTest {
                 inventoryFilePath,
                 exception,
                 initialData);
-    }
-
-    private void invokeLogUnknownVendorIssuesIfDuplicateIdentifier(MainApp app, Path inventoryFilePath,
-                                                                   ReadOnlyAddressBook initialData,
-                                                                   String details) throws Exception {
-        invokePrivateMethod(
-                app,
-                METHOD_LOG_UNKNOWN_VENDOR_ISSUES,
-                new Class<?>[]{Path.class, ReadOnlyAddressBook.class, String.class},
-                inventoryFilePath,
-                initialData,
-                details);
     }
 
     private void invokeLogIllegalValueIssue(MainApp app, Path filePath, String details) throws Exception {

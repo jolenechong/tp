@@ -3,7 +3,6 @@ package seedu.address.storage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static seedu.address.storage.JsonSerializableAddressBook.MESSAGE_DUPLICATE_PERSON;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.HOON;
@@ -13,7 +12,6 @@ import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -26,11 +24,13 @@ public class JsonAddressBookStorageTest {
     private static final Path TEST_DATA_FOLDER = Paths.get("src", "test", "data", "JsonAddressBookStorageTest");
     private static final String MISSING_FILE = "NonExistentFile.json";
     private static final String DUPLICATE_EMAIL_FILE = "duplicateEmailAddressBook.json";
+    private static final String MULTIPLE_DUPLICATE_EMAIL_FILE = "multipleDuplicateEmailAddressBook.json";
     private static final String NOT_JSON_FORMAT_FILE = "notJsonFormatAddressBook.json";
     private static final String INVALID_PERSON_FILE = "invalidPersonAddressBook.json";
     private static final String INVALID_AND_VALID_PERSON_FILE = "invalidAndValidPersonAddressBook.json";
     private static final String SAMPLE_FILE_NAME = "SomeFile.json";
     private static final String DUPLICATE_EMAIL = "alice@example.com";
+    private static final String SECOND_DUPLICATE_EMAIL = "second@example.com";
     private static final String DUPLICATE_CONTACT_EMAIL_PREFIX = "Duplicate contact email '";
     private static final String QUOTE_SUFFIX = "'";
     private static final String DUPLICATE_CONTACT_EMAIL_MESSAGE_SUFFIX = "'.";
@@ -96,24 +96,21 @@ public class JsonAddressBookStorageTest {
         String message = invokeBuildDuplicateEmailErrorMessage(
             storage,
             resolvedMissingFilePath,
-            List.of(DUPLICATE_EMAIL));
+            DUPLICATE_EMAIL);
 
         assertEquals(DUPLICATE_CONTACT_EMAIL_PREFIX + DUPLICATE_EMAIL + DUPLICATE_CONTACT_EMAIL_MESSAGE_SUFFIX,
             message);
     }
 
     @Test
-    public void buildDuplicateEmailErrorMessage_noDuplicateEmails_returnsDefaultDuplicatePersonMessage()
-            throws Exception {
-        Path resolvedDupeEmailFilePath = TEST_DATA_FOLDER.resolve(DUPLICATE_EMAIL_FILE);
-        JsonAddressBookStorage storage = new JsonAddressBookStorage(resolvedDupeEmailFilePath);
+    public void readAddressBook_multipleDuplicateEmailAddressBook_reportsFirstDuplicateOnly() {
+        DataLoadingException exception = org.junit.jupiter.api.Assertions.assertThrows(
+                DataLoadingException.class, () -> readAddressBook(MULTIPLE_DUPLICATE_EMAIL_FILE));
 
-        String message = invokeBuildDuplicateEmailErrorMessage(
-                storage,
-                resolvedDupeEmailFilePath,
-                List.of());
-
-        assertEquals(MESSAGE_DUPLICATE_PERSON, message);
+        String message = exception.getCause().getMessage();
+        assertTrue(message.contains(DUPLICATE_CONTACT_EMAIL_PREFIX + DUPLICATE_EMAIL + QUOTE_SUFFIX));
+        assertFalse(message.contains(SECOND_DUPLICATE_EMAIL));
+        assertFalse(message.contains(";"));
     }
 
     @Test
@@ -166,10 +163,10 @@ public class JsonAddressBookStorageTest {
 
     private String invokeBuildDuplicateEmailErrorMessage(JsonAddressBookStorage storage,
                                                          Path filePath,
-                                                         List<String> duplicateEmails) throws Exception {
+                                                         String duplicateEmail) throws Exception {
         java.lang.reflect.Method method = JsonAddressBookStorage.class
-                .getDeclaredMethod(REFLECTION_BUILD_DUPLICATE_EMAIL_MESSAGE_METHOD, Path.class, List.class);
+                .getDeclaredMethod(REFLECTION_BUILD_DUPLICATE_EMAIL_MESSAGE_METHOD, Path.class, String.class);
         method.setAccessible(true);
-        return (String) method.invoke(storage, filePath, duplicateEmails);
+        return (String) method.invoke(storage, filePath, duplicateEmail);
     }
 }

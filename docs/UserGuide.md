@@ -898,7 +898,7 @@ exit
 
 <box type="warning" seamless>
 
-Please follow this format carefully. Files that do not adhere to the required format will be considered invalid.
+Please follow this format carefully. Files that do not adhere to the required format will not be loaded.
 
 </box>
 
@@ -948,14 +948,32 @@ Please follow this format carefully. Files that do not adhere to the required fo
 
 </panel>
 
+<box type="tip" seamless>
+
+You should always back up the files before editing.
+
+</box>
+
 </panel>
 
-<panel header="I edited the data file directly and now VendorVault is not working. What should I do?" type="seamless">
+<panel header="I edited the data files and VendorVault does not load my data. What can I do?" type="seamless">
 
-You can try the following steps:
+If VendorVault cannot load your data, it means the edited file has invalid data.
 
-1. Restore from backup: If you made a backup of the data file before editing, you can restore the original data file by replacing the edited data files in the data folder with the backup.
-2. Start with a new data file: If you do not have a backup, you can delete the existing data file (or move it to a different location for safekeeping) and start VendorVault again. After entering a valid command, this will create a new, sample data file.
+| Your situation                                                                               | What to do                                                                        | What happens next                                               |
+|----------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|-----------------------------------------------------------------|
+| You backed up the file before editing                                                        | Replace the edited file in `data/` with your backup                               | Restart the app and your original data is loaded                |
+| You did not back up the file before editing, and you have not run any command after startup	 | Back up the edited file                                                           | Fix the edited file                                             |
+| You did not back up the file before editing, and you already ran command(s) after startup    | The edited files have been wiped. Delete the empty files and restart VendorVault. | VendorVault will recreate sample data after you run any command |
+
+<box type="info" seamless>
+
+To fix your edited file,
+1. Check your terminal for `WARNING...` messages.
+2. Correct the fields as shown.
+3. Restart the app. Repeat steps 1-2 until no more `WARNING...` messages are shown.
+
+</box>
 
 </panel>
 
