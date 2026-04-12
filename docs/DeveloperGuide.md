@@ -1623,5 +1623,6 @@ At the end, run `listall` and verify both added contact and product are present 
 
 Team size: 4
 
-1. Enhance delete/archive contact commands: Prompt user if they would like to cascade delete and archive operations
+1. **Enhance delete/archive contact commands:** Prompt user if they would like to cascade delete and archive operations
    to products associated with the contact.
+2. **Enhance duplicate warnings to show top 3 matches instead of only best match:** The current warning message only shows the single most similar contact/product (based on the longest contiguous character match). We plan to enhance this by displaying the top 3 most similar contacts/products. If fewer than 3 matches exist, only the available matches will be shown. This improves usability by showing multiple likely duplicates while keeping warning concise and preventing information overload.
