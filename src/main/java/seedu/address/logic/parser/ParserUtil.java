@@ -251,12 +251,21 @@ public class ParserUtil {
     }
 
     private static Optional<String> validateEmail(String email) throws ParseException {
-        return validate(
+        Optional<String> warnings = validate(
                 email, () -> new ParseException(Email.MESSAGE_BLANK),
                 Email.MAX_LENGTH, () -> new ParseException(Email.MESSAGE_LENGTH_CONSTRAINTS),
                 Email::isValidEmail, () -> new ParseException(Email.MESSAGE_CONSTRAINTS),
                 Email::isValidEmailWarn, Email.MESSAGE_WARN
         );
+
+        if (Email.isMissingDomainFormatWarn(email)) {
+            if (warnings.isPresent()) {
+                return Optional.of(warnings.get() + SEPARATOR_NEW_LINE + Email.MESSAGE_DOMAIN_FORMAT_WARN);
+            }
+            return Optional.of(Email.MESSAGE_DOMAIN_FORMAT_WARN);
+        }
+
+        return warnings;
     }
 
     private static Optional<String> validateIdentifier(String identifier) throws ParseException {

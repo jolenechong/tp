@@ -7,7 +7,6 @@ import static seedu.address.storage.JsonSerializableAddressBook.MESSAGE_DUPLICAT
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +25,7 @@ public class JsonAddressBookStorage implements AddressBookStorage {
     private static final String MESSAGE_DUPLICATE_CONTACT_EMAIL = "Duplicate contact email '";
     private static final String MESSAGE_QUOTE_SUFFIX = "'";
     private static final String MESSAGE_QUOTE_AT = "' at ";
+    private static final String PERIOD = ".";
 
     private final Path filePath;
 
@@ -61,8 +61,9 @@ public class JsonAddressBookStorage implements AddressBookStorage {
             return Optional.of(jsonAddressBook.get().toModelType());
         } catch (IllegalValueException ive) {
             if (MESSAGE_DUPLICATE_PERSON.equals(ive.getMessage())) {
-                List<String> duplicateEmails = jsonAddressBook.get().findDuplicateEmails();
-                String detailedMessage = buildDuplicateEmailErrorMessage(filePath, duplicateEmails);
+                String detailedMessage = jsonAddressBook.get().findFirstDuplicateEmail()
+                        .map(email -> buildDuplicateEmailErrorMessage(filePath, email))
+                        .orElse(MESSAGE_DUPLICATE_PERSON);
 
                 throw new DataLoadingException(new IllegalValueException(detailedMessage, ive));
             }
@@ -71,24 +72,15 @@ public class JsonAddressBookStorage implements AddressBookStorage {
         }
     }
 
-    private String buildDuplicateEmailErrorMessage(Path filePath, List<String> duplicateEmails) {
-        if (duplicateEmails.isEmpty()) {
-            return MESSAGE_DUPLICATE_PERSON;
+    private String buildDuplicateEmailErrorMessage(Path filePath, String duplicateEmail) {
+        List<Integer> lineNumbers = findFieldLineNumbers(filePath, EMAIL_FIELD, duplicateEmail);
+
+        if (lineNumbers.isEmpty()) {
+            return MESSAGE_DUPLICATE_CONTACT_EMAIL + duplicateEmail + MESSAGE_QUOTE_SUFFIX + PERIOD;
         }
 
-        List<String> details = new ArrayList<>();
-        for (String email : duplicateEmails) {
-            List<Integer> lineNumbers = findFieldLineNumbers(filePath, EMAIL_FIELD, email);
-
-            if (lineNumbers.isEmpty()) {
-                details.add(MESSAGE_DUPLICATE_CONTACT_EMAIL + email + MESSAGE_QUOTE_SUFFIX);
-            } else {
-                details.add(MESSAGE_DUPLICATE_CONTACT_EMAIL + email + MESSAGE_QUOTE_AT
-                        + formatLineReference(lineNumbers));
-            }
-        }
-
-        return String.join("; ", details) + ".";
+        return MESSAGE_DUPLICATE_CONTACT_EMAIL + duplicateEmail + MESSAGE_QUOTE_AT
+                + formatLineReference(lineNumbers) + PERIOD;
     }
 
     @Override

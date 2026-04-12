@@ -1,8 +1,6 @@
 package seedu.address;
 
-import static seedu.address.model.util.VendorVaultConsistencyUtil.findUnknownVendorLinksFromJson;
 import static seedu.address.model.util.VendorVaultConsistencyUtil.validateOrThrow;
-import static seedu.address.ui.Messages.DUPLICATE_IDENTIFIER_PREFIX;
 import static seedu.address.ui.Messages.MESSAGE_COULD_NOT_LOAD_STARTING_EMPTY_ADDRESS_BOOK;
 import static seedu.address.ui.Messages.MESSAGE_COULD_NOT_LOAD_STARTING_EMPTY_ALIAS;
 import static seedu.address.ui.Messages.MESSAGE_COULD_NOT_LOAD_STARTING_EMPTY_INVENTORY;
@@ -13,12 +11,10 @@ import static seedu.address.ui.Messages.MESSAGE_LOG_SEPARATOR;
 import static seedu.address.ui.Messages.MESSAGE_POPULATED_EMPTY_ALIAS_FILE;
 import static seedu.address.ui.Messages.MESSAGE_POPULATED_SAMPLE_ADDRESS_BOOK;
 import static seedu.address.ui.Messages.MESSAGE_POPULATED_SAMPLE_INVENTORY;
-import static seedu.address.ui.Messages.MESSAGE_UNKNOWN_VENDOR_EMAIL;
 import static seedu.address.ui.Messages.NEWLINE;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -175,7 +171,6 @@ public class MainApp extends Application {
         }
 
         String details = illegalValueDetails.get();
-        logUnknownVendorIssuesIfDuplicateIdentifier(inventoryFilePath, initialData, details);
     }
 
     private ReadOnlyAliases loadInitialAliases(Storage storage) {
@@ -220,19 +215,6 @@ public class MainApp extends Application {
 
         String details = cause.getMessage();
         return details == null ? Optional.empty() : Optional.of(details);
-    }
-
-    private void logUnknownVendorIssuesIfDuplicateIdentifier(Path inventoryFilePath, ReadOnlyAddressBook initialData,
-                                                             String details) {
-        if (!details.startsWith(DUPLICATE_IDENTIFIER_PREFIX)) {
-            return;
-        }
-
-        List<String> issues = findUnknownVendorLinksFromJson(initialData, inventoryFilePath);
-        for (String issue : issues) {
-            logger.warning(MESSAGE_ILLEGAL_VALUES_FOUND_IN + inventoryFilePath + MESSAGE_LOG_SEPARATOR
-                    + MESSAGE_UNKNOWN_VENDOR_EMAIL + issue + ".");
-        }
     }
 
     private void logIllegalValueIssue(Path filePath, String details) {

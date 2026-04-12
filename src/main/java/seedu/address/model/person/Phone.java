@@ -26,6 +26,7 @@ public class Phone {
     public static final String VALIDATION_EXCLUDE_DIGITS_REGEX = "[^0-9]";
     public static final int MIN_LENGTH = 3;
     private static final String PHONE_SEPARATOR = ",";
+    private static final String SPACE_REGEX = ".*\\s.*";
     private static final int SPLIT_ALL_ENTRIES = -1;
     public final String value;
 
@@ -104,7 +105,7 @@ public class Phone {
         }
 
         String trimmed = test.trim();
-        return !trimmed.matches(WARNING_VALIDATION_REGEX) || trimmed.matches(".*\\s.*");
+        return !trimmed.matches(WARNING_VALIDATION_REGEX) || trimmed.matches(SPACE_REGEX);
     }
 
     private static List<String> splitPhoneEntries(String test) {

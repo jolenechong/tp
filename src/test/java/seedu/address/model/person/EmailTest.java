@@ -32,6 +32,25 @@ public class EmailTest {
     }
 
     @Test
+    public void isMissingDomainFormatWarn() {
+        // EP: null email
+        assertThrows(NullPointerException.class, () -> Email.isMissingDomainFormatWarn(null));
+
+        // EP: missing dot in domain
+        assertTrue(Email.isMissingDomainFormatWarn("test@localhost"));
+
+        // EP: no '@' present
+        assertFalse(Email.isMissingDomainFormatWarn("peterjackexample.com"));
+
+        // EP: no domain part after '@'
+        assertFalse(Email.isMissingDomainFormatWarn("peterjack@"));
+
+        // EP: has dot in domain
+        assertFalse(Email.isMissingDomainFormatWarn("peterjack@example.com"));
+        assertFalse(Email.isMissingDomainFormatWarn("john@u.nus.edu"));
+    }
+
+    @Test
     public void isValidEmail() {
         // null email
         assertThrows(NullPointerException.class, () -> Email.isValidEmail(null));

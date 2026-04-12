@@ -144,11 +144,11 @@ Some example commands you can try:
 
 VendorVault keeps your data in one of three states:
 
-| State        | What it means            | <div style="width:250px">Related commands</div>       |
-|--------------|--------------------------|-------------------------------------------------------|
-| **Active**   | Visible on the home page | `listall`                                             |
-| **Archived** | Hidden but recoverable   | `archive` / `archiveproduct`                          |
-| **Deleted**  | Permanently gone         | `delete` / `deleteproduct` / `clear` / `clearproduct` |
+| State        | What it means            | <div style="width:250px">Related commands</div>                                                                                                                                                 |
+|--------------|--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Active**   | Visible on the home page | [`listall`](#listing-all-contacts-and-products-listall)                                                                                                                                         |
+| **Archived** | Hidden but recoverable   | [`archive`](#archiving-a-contact-archive) / [`archiveproduct`](#archiving-a-product-archiveproduct)                                                                                             |
+| **Deleted**  | Permanently gone         | [`delete`](#deleting-a-contact-delete) / [`deleteproduct`](#deleting-a-product-deleteproduct) / [`clear`](#clearing-all-contacts-clear) / [`clearproduct`](#clearing-all-products-clearproduct) |
 
 When in doubt, **archive, don't delete.**
 
@@ -168,6 +168,10 @@ When in doubt, **archive, don't delete.**
 **Notes about confirmation prompt:**
 
 * To skip the confirmation prompt, include the `-y` flag after the command.
+* The following commands will prompt for confirmation before executing:
+  * [`clear`](#clearing-all-contacts-clear) / [`clearproduct`](#clearing-all-products-clearproduct)
+  * [`delete`](#deleting-a-contact-delete) / [`deleteproduct`](#deleting-a-product-deleteproduct)
+  * [`edit`](#editing-a-contact-edit) (when clearing all tags)
 
 </box>
 
@@ -178,13 +182,21 @@ When in doubt, **archive, don't delete.**
 * Words in `UPPER_CASE` are the parameters to be supplied.
 * Items in square brackets such as `[t/TAG]` are optional.
 * Parameters can be supplied in any order.
+* For commands that take no parameters (e.g. [`clear`](#clearing-all-contacts-clear), [`listall`](#listing-all-contacts-and-products-listall), [`listproduct`](#listing-all-products-listproduct)),
+  any extra text after the command word is allowed but will be ignored.
 
 </box>
 
 <box type="info" seamless>
 
-Long names/identifiers are truncated in the list view. Use [`find`](#locating-contacts-find)/[`findproduct`]
-(#locating-products-findproduct) to view full details.
+**Notes about the display panels:**
+
+* Most commands update only one panel – contact commands update the contact panel, while product commands update the 
+product panel.
+    * [`find`](#locating-contacts-find)/[`findproduct`](#locating-products-findproduct) are exceptions: they will 
+  update both panels.
+    * Use [`listall`](#listing-all-contacts-and-products--listall) to set both panels to the default display.
+* Long names/identifiers are truncated in the list view. Use [`find`](#locating-contacts-find)/[`findproduct`](#locating-products-findproduct) to view full details.
 
 </box>
 
@@ -352,6 +364,12 @@ Examples:
 
 **Tip:** Archive a vendor you no longer work with, but may need to reference in future. To permanently delete a contact, use [`delete`](#deleting-a-contact-delete).
 
+</box>
+
+<box type="info" seamless>
+
+**Note:** Archiving a vendor does not archive their associated products.
+Products will remain active and visible, and will show linked vendor.
 </box>
 
 <panel header="How do I view or recover archived contacts?" type="seamless">
@@ -527,7 +545,7 @@ Examples:
 
 <panel header="How do I remove the vendor email from a product?" type="seamless">
 
-Simply type `editproduct EMAIL e/` without specifying any email.
+Simply type `editproduct IDENTIFIER e/` without specifying any email.
 
 </panel><br>
 
@@ -883,7 +901,7 @@ exit
 
 <box type="warning" seamless>
 
-Please follow this format carefully. Files that do not adhere to the required format will be considered invalid.
+Please follow this format carefully. Files that do not adhere to the required format will not be loaded.
 
 </box>
 
@@ -933,14 +951,32 @@ Please follow this format carefully. Files that do not adhere to the required fo
 
 </panel>
 
+<box type="tip" seamless>
+
+You should always back up the files before editing.
+
+</box>
+
 </panel>
 
-<panel header="I edited the data file directly and now VendorVault is not working. What should I do?" type="seamless">
+<panel header="I edited the data files and VendorVault does not load my data. What can I do?" type="seamless">
 
-You can try the following steps:
+If VendorVault cannot load your data, it means the edited file has invalid data.
 
-1. Restore from backup: If you made a backup of the data file before editing, you can restore the original data file by replacing the edited data files in the data folder with the backup.
-2. Start with a new data file: If you do not have a backup, you can delete the existing data file (or move it to a different location for safekeeping) and start VendorVault again. After entering a valid command, this will create a new, sample data file.
+| Your situation                                                                               | What to do                                                                        | What happens next                                               |
+|----------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|-----------------------------------------------------------------|
+| You backed up the file before editing                                                        | Replace the edited file in `data/` with your backup                               | Restart the app and your original data is loaded                |
+| You did not back up the file before editing, and you have not run any command after startup	 | Back up the edited file                                                           | Fix the edited file                                             |
+| You did not back up the file before editing, and you already ran command(s) after startup    | The edited files have been wiped. Delete the empty files and restart VendorVault. | VendorVault will recreate sample data after you run any command |
+
+<box type="info" seamless>
+
+To fix your edited file,
+1. Check your terminal for `WARNING...` messages.
+2. Correct the fields as shown.
+3. Restart the app. Repeat steps 1-2 until no more `WARNING...` messages are shown.
+
+</box>
 
 </panel>
 
@@ -998,7 +1034,7 @@ Use this section when `add` fails or returns a warning.
 | Tag is too long                                                | `Tag names should be at most 50 characters`                                          | Shorten the tags that are too long.                                          |
 | Contact duplicates an existing contact by same email           | `This vendor contact already exists with the same email (name: NAME, email: EMAIL).` | Change the email address, or edit the existing contact instead.              |
 
-<panel header="What's considered a valid Contact Email?" type="seamless" id="contact-email-format">
+<panel header="What's considered a valid contact email?" type="seamless" id="contact-email-format">
 
 Email should be of the format local-part@domain and adhere to the following constraints:
 * The local-part should only contain alphanumeric characters and these special characters, excluding the parentheses, (`+_.-`). The local-part may not start or end with any special characters.
@@ -1014,15 +1050,16 @@ Email should be of the format local-part@domain and adhere to the following cons
 
 Common `add` warnings:
 
-| Warning trigger                                                | Warning shown                                                                                                                         | What it means                                                                                                                                                  |
-|----------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Name has unusual symbols                                       | `⚠ Warning: Name contains unusual symbols, is this intentional?`                                                                      | Name is accepted, but [looks unusual](#contact-name-format). You can verify if you entered the correct name.                                                   |
-| Phone includes unusual symbols/format                          | `⚠ Warning: Phone number contains unusual symbols, is this intentional?`                                                              | Phone is accepted, but [format may be unintended](#contact-phone-format). You can safely ignore it if you're providing labels eg. `61234567 (Office)`          |
-| Phone includes unusual symbols/format/spaces without any comma | `⚠ Warning: Phone number may contain multiple numbers. Use "," to separate them if intended.`                                                              | Phone is accepted, but it may contain multiple numbers. If so, they should be [separated with a comma](#contact-phone-format).                                 |
-| Email is unusually long                                        | `⚠ Warning: Email address is unusually long, is this intentional?`                                                                    | Email is accepted, but more than 256 characters. You can verify if the email entered is correct.                                                               |
-| Similar name to an existing contact                            | `⚠ Warning: There's a contact with a similar name (name: <similar-name>), is this intentional?`                                       | Possible duplicate by similar name. You can check if the name in the warning message is the same vendor as what you were about to add.                         |
-| Similar phone number to an existing contact                    | `⚠ Warning: There's a contact with a similar phone number (name: <name>, phone number: <similar-phone-number>)`                       | Possible duplicate by similar phone number. You can check if the name in the warning message is the same vendor as what you were about to add.                 |
-| Similar address to an existing contact                         | `⚠ Warning: There's a contact with a similar address (name: <name>, address: <similar-address>), is this intentional?`                | Possible duplicate/related location by address similarity. You can check if the name and address in the warning message belongs as what you were about to add. |
+| Warning trigger                                                 | Warning shown                                                                                                          | What it means                                                                                                                                                  |
+|-----------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Name has unusual symbols                                        | `⚠ Warning: Name contains unusual symbols, is this intentional?`                                                       | Name is accepted, but [looks unusual](#contact-name-format). You can verify if you entered the correct name.                                                   |
+| Phone includes unusual symbols/format                           | `⚠ Warning: Phone number contains unusual symbols, is this intentional?`                                               | Phone is accepted, but [format may be unintended](#contact-phone-format). You can safely ignore it if you're providing labels eg. `61234567 (Office)`          |
+| Phone includes unusual symbols/format/spaces, without any comma | `⚠ Warning: Phone number may contain multiple numbers. Use "," to separate them if intended.`                          | Phone is accepted, but it may contain multiple numbers. If so, they should be [separated with a comma](#contact-phone-format).                                 |
+| Email may be using a non-standard domain format                 | `⚠ Warning: Email uses a non-standard domain (e.g. user@localhost, without “.”). Is this intentional?`                 | Email is accepted, but uses a valid non-standard domain format (e.g. `user@localhost`, without a “.”).  You can verify if the email entered is correct.        |
+| Email is unusually long                                         | `⚠ Warning: Email address is unusually long, is this intentional?`                                                     | Email is accepted, but more than 256 characters. You can verify if the email entered is correct.                                                               |
+| Similar name to an existing contact                             | `⚠ Warning: There's a contact with a similar name (name: <similar-name>), is this intentional?`                        | Possible duplicate by similar name. You can check if the name in the warning message is the same vendor as what you were about to add.                         |
+| Similar phone number to an existing contact                     | `⚠ Warning: There's a contact with a similar phone number (name: <name>, phone number: <similar-phone-number>)`        | Possible duplicate by similar phone number. You can check if the name in the warning message is the same vendor as what you were about to add.                 |
+| Similar address to an existing contact                          | `⚠ Warning: There's a contact with a similar address (name: <name>, address: <similar-address>), is this intentional?` | Possible duplicate/related location by address similarity. You can check if the name and address in the warning message belongs as what you were about to add. |
 
 <box type="tip" seamless>
 
@@ -1315,6 +1352,8 @@ Product name is recommended to meet the following guidelines, otherwise you will
 **Contact Phone Numbers** warnings appear when a new phone number **shares at least 3 consecutive digits** with an existing one. For example, "91245678" and "91234783".
 
 **Contact Addresses** warnings appear when one address **fully contains** the other. For example, "123 Main Street" and "123 Main St".
+
+Each duplicate warning includes details of the contact/product that is most similar (based on the longest sequence of matching case-insensitive characters), to help you verify whether it is a duplicate.
 
 </panel>
 

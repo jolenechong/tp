@@ -32,6 +32,8 @@ public class ParserUtilTest {
     private static final String INVALID_EMAIL_TOO_LONG = "a".repeat(Email.MAX_LENGTH - "@example.com".length() + 1)
             + "@example.com";
     private static final String INVALID_BLANK_EMAIL = " ";
+    private static final String VALID_EMAIL_NO_DOMAIN_DOT = "test@localhost";
+    private static final String VALID_EMAIL_LONG_NO_DOMAIN_DOT = "a".repeat(257) + "@localhost";
     private static final String INVALID_TAG = " ";
 
     private static final String INVALID_SHORT_PHONE = "12 ";
@@ -269,6 +271,23 @@ public class ParserUtilTest {
         String emailWithWhitespace = WHITESPACE + VALID_EMAIL + WHITESPACE;
         Email expectedEmail = new Email(VALID_EMAIL);
         assertEquals(expectedEmail, ParserUtil.parseEmail(emailWithWhitespace).getValue());
+    }
+
+    @Test
+    public void parseEmail_domainWithoutDot_returnsDomainFormatWarning() throws Exception {
+        // EP: potential invalid domain format -> domain without a dot
+        ParseResult<Email> result = ParserUtil.parseEmail(VALID_EMAIL_NO_DOMAIN_DOT);
+        assertEquals(new Email(VALID_EMAIL_NO_DOMAIN_DOT), result.getValue());
+        assertEquals(Email.MESSAGE_DOMAIN_FORMAT_WARN, result.getWarning().orElseThrow());
+    }
+
+    @Test
+    public void parseEmail_longAndDomainWithoutDot_returnsCombinedWarnings() throws Exception {
+        // EP: both long-email warning and missing-domain-format warning should be returned
+        ParseResult<Email> result = ParserUtil.parseEmail(VALID_EMAIL_LONG_NO_DOMAIN_DOT);
+        assertEquals(new Email(VALID_EMAIL_LONG_NO_DOMAIN_DOT), result.getValue());
+        assertEquals(Email.MESSAGE_WARN + ParserUtil.SEPARATOR_NEW_LINE + Email.MESSAGE_DOMAIN_FORMAT_WARN,
+                result.getWarning().orElseThrow());
     }
 
     @Test

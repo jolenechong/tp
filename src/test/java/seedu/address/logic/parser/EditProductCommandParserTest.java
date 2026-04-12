@@ -1,6 +1,5 @@
 package seedu.address.logic.parser;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_EMAIL_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_PRODUCT_NAME_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_QUANTITY_DESC;
@@ -27,7 +26,6 @@ import org.junit.jupiter.api.Test;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.EditProductCommand;
 import seedu.address.model.person.Email;
-import seedu.address.model.product.Identifier;
 import seedu.address.model.product.Name;
 import seedu.address.model.product.Quantity;
 import seedu.address.model.product.RestockThreshold;
@@ -81,8 +79,48 @@ public class EditProductCommandParserTest {
     }
 
     @Test
+    public void parse_identifierSpecified_success() {
+        String userInput = "SKU-1001 id/NEW-ID";
+
+        EditProductCommand.EditProductDescriptor descriptor = new EditProductDescriptorBuilder()
+                .withIdentifier("NEW-ID")
+                .build();
+        EditProductCommand expectedCommand = new EditProductCommand("SKU-1001", descriptor);
+
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_identifierAndNameSpecified_success() {
+        String userInput = "SKU-1001 id/NEW-ID n/iPad";
+
+        EditProductCommand.EditProductDescriptor descriptor = new EditProductDescriptorBuilder()
+                .withIdentifier("NEW-ID")
+                .withName("iPad")
+                .build();
+        EditProductCommand expectedCommand = new EditProductCommand("SKU-1001", descriptor);
+
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_nameBeforeIdentifier_success() {
+        // "n/" appears before "id/" in the string, exercising the idx < splitPos branch
+        // in findFirstPrefixPosition when a later-iterated prefix has an earlier position.
+        String userInput = "SKU-1001 n/iPad id/NEW-ID";
+
+        EditProductCommand.EditProductDescriptor descriptor = new EditProductDescriptorBuilder()
+                .withName("iPad")
+                .withIdentifier("NEW-ID")
+                .build();
+        EditProductCommand expectedCommand = new EditProductCommand("SKU-1001", descriptor);
+
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
     public void parse_missingIdentifier_failure() {
-        assertParseFailure(parser, PRODUCT_NAME_DESC_IPAD, MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, PRODUCT_NAME_DESC_IPAD, EditProductCommand.MESSAGE_NOT_EDITED);
     }
 
     @Test
@@ -110,38 +148,4 @@ public class EditProductCommandParserTest {
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_EMAIL));
     }
 
-    @Test
-    public void parse_identifierSpecified_success() throws Exception {
-        String userInput = "SKU-1001 id/NEW-ID";
-
-        EditProductCommandParser parser = new EditProductCommandParser();
-        EditProductCommand command = (EditProductCommand) parser.parse(userInput);
-
-        EditProductCommand.EditProductDescriptor expectedDescriptor =
-                new EditProductCommand.EditProductDescriptor();
-        expectedDescriptor.setIdentifier(new Identifier("NEW-ID"));
-
-        EditProductCommand expectedCommand =
-                new EditProductCommand("SKU-1001", expectedDescriptor);
-
-        assertEquals(expectedCommand, command);
-    }
-
-    @Test
-    public void parse_identifierAndNameSpecified_success() throws Exception {
-        String userInput = "SKU-1001 id/NEW-ID n/iPad";
-
-        EditProductCommandParser parser = new EditProductCommandParser();
-        EditProductCommand command = (EditProductCommand) parser.parse(userInput);
-
-        EditProductCommand.EditProductDescriptor expectedDescriptor =
-                new EditProductCommand.EditProductDescriptor();
-        expectedDescriptor.setIdentifier(new Identifier("NEW-ID"));
-        expectedDescriptor.setName(new Name("iPad"));
-
-        EditProductCommand expectedCommand =
-                new EditProductCommand("SKU-1001", expectedDescriptor);
-
-        assertEquals(expectedCommand, command);
-    }
 }
