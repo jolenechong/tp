@@ -178,12 +178,19 @@ When in doubt, **archive, don't delete.**
 * Words in `UPPER_CASE` are the parameters to be supplied.
 * Items in square brackets such as `[t/TAG]` are optional.
 * Parameters can be supplied in any order.
+* For commands that take no parameters (e.g. `clear`, `listall`, `listproduct`),
+  any extra text after the command word is allowed but will be ignored.
+
+</box>
 
 </box>
 
 <box type="info" seamless>
 
-Long names/identifiers are truncated in the list view. Use [`find`](#locating-contacts-find)/[`findproduct`]
+**Notes about the display panels:**
+
+* Commands on contacts only update the contact panel and commands on products only update the product panel. Use [`listall`](#listing-all-contacts-and-products-listall) to view both panels refreshed.
+* Long names/identifiers are truncated in the list view. Use [`find`](#locating-contacts-find)/[`findproduct`]
 (#locating-products-findproduct) to view full details.
 
 </box>
@@ -352,6 +359,12 @@ Examples:
 
 **Tip:** Archive a vendor you no longer work with, but may need to reference in future. To permanently delete a contact, use [`delete`](#deleting-a-contact-delete).
 
+</box>
+
+<box type="info" seamless>
+
+**Note:** Archiving a vendor does not archive their associated products.
+Products will remain active and visible, and will show linked vendor.
 </box>
 
 <panel header="How do I view or recover archived contacts?" type="seamless">
@@ -527,7 +540,7 @@ Examples:
 
 <panel header="How do I remove the vendor email from a product?" type="seamless">
 
-Simply type `editproduct EMAIL e/` without specifying any email.
+Simply type `editproduct IDENTIFIER e/` without specifying any email.
 
 </panel><br>
 
