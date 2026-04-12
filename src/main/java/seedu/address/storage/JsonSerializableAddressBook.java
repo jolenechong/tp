@@ -1,9 +1,12 @@
 package seedu.address.storage;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -74,6 +77,23 @@ class JsonSerializableAddressBook {
                 .filter(entry -> entry.getValue() > 1)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
+    }
+
+    Optional<String> findFirstDuplicateEmail() {
+        Set<String> seenEmails = new HashSet<>();
+
+        for (JsonAdaptedPerson person : persons) {
+            String email = person.getEmail();
+            if (email == null) {
+                continue;
+            }
+
+            if (!seenEmails.add(email)) {
+                return Optional.of(email);
+            }
+        }
+
+        return Optional.empty();
     }
 
 }
