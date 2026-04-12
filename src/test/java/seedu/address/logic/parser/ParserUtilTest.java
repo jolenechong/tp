@@ -282,6 +282,15 @@ public class ParserUtilTest {
     }
 
     @Test
+    public void parseEmail_longAndDomainWithoutDot_returnsCombinedWarnings() throws Exception {
+        // EP: both long-email warning and missing-domain-format warning should be returned
+        ParseResult<Email> result = ParserUtil.parseEmail(VALID_EMAIL_LONG_NO_DOMAIN_DOT);
+        assertEquals(new Email(VALID_EMAIL_LONG_NO_DOMAIN_DOT), result.getValue());
+        assertEquals(Email.MESSAGE_WARN + ParserUtil.SEPARATOR_NEW_LINE + Email.MESSAGE_DOMAIN_FORMAT_WARN,
+                result.getWarning().orElseThrow());
+    }
+
+    @Test
     public void parseTag_null_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> ParserUtil.parseTag(null));
     }
