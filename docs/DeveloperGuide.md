@@ -21,7 +21,7 @@ Our team used AI-assisted coding tools during development:
 * **Who used it:** all team members
 * **Extent of use:** used widely as an auto-complete and drafting aid across some coding, tests, and documentation tasks; all generated suggestions were reviewed and adapted by the team before merging.
 
-We also used these third-party libraries: [Jackson](https://github.com/fasterxml/jackson)
+We also used these third-party libraries: [Jackson](https://github.com/fasterxml/jackson), [JavaFX](https://openjfx.io/), [JUnit](https://junit.org/)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -1623,6 +1623,14 @@ At the end, run `listall` and verify both added contact and product are present 
 
 Team size: 4
 
-1. **Enhance delete/archive contact commands:** Prompt user if they would like to cascade delete and archive operations
-   to products associated with the contact.
-2. **Enhance duplicate warnings to show top 3 matches instead of only best match:** The current warning message only shows the single most similar contact/product (based on the longest contiguous case-insensitive character match). We plan to enhance this by displaying the top 3 most similar contacts/products. If fewer than 3 matches exist, only the available matches will be shown. This improves usability by showing multiple likely duplicates while keeping warning concise and preventing information overload.
+1. **Enhance `archive` with optional cascade to linked products**: When archiving a contact, ask the 
+   user if they want linked products to also be archived.
+
+2. **Enhance `delete` with optional cascade to linked products:** When deleting a contact, ask the
+   user if they want linked products to also be deleted.
+
+3. **Enhance duplicate warnings to show top 3 matches instead of only best match:** The current warning message only 
+shows the single most similar contact/product (based on the longest contiguous case-insensitive character match). We plan to enhance this by displaying the top 3 most similar contacts/products. If fewer than 3 matches exist, only the available matches will be shown. This improves usability by showing multiple likely duplicates while keeping warning concise and preventing information overload.
+
+4. **Enhance link between `addproduct` and archived vendor**: If `addproduct` references an archived vendor's email, 
+   ask the user if they want to auto-restore that vendor before continuing.
