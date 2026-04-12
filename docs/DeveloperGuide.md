@@ -147,7 +147,7 @@ The `Model` component
 * does not depend on any of the other three components.
 
 **Archived records** are kept in the same data structures rather than moved to a separate list:
-* A `Person` is considered archived when its tag set contains the reserved `"archived"` tag. `Person#archive()` / `Person#restore()` return new immutable copies with the tag added or removed.
+* A `Person` carries a dedicated `boolean isArchived` field. `Person#archive()` / `Person#restore()` return new immutable copies with the flag toggled. `Person#isArchived()` returns the field directly.
 * A `Product` carries a dedicated `boolean isArchived` field. `Product#archive()` / `Product#restore()` return new immutable copies with the flag toggled.
 
 <box type="info" seamless>
@@ -394,7 +394,7 @@ Preserving draft input improves user experience and is easy to implement with mi
 #### Implementation
 
 The archive feature allows both vendor contacts and products to be hidden from the main lists without permanently deleting them. Archived records remain stored in the system and can be restored at any time. Archived records are kept in the same data structures, with archived status tracked as follows:
-* `Person#archive()` / `Person#restore()` — Returns a new `Person` with the reserved `"archived"` tag added or removed. `Person#isArchived()` checks whether the tag set contains `"archived"`.
+* `Person#archive()` / `Person#restore()` — Returns a new `Person` with the dedicated `boolean isArchived` field set to `true` or `false` respectively. `Person#isArchived()` returns the field directly.
 * `Product#archive()` / `Product#restore()` — Returns a new `Product` with the dedicated `boolean isArchived` field toggled accordingly.
 
 These operations are exposed in the `Model` interface as `Model#archivePerson()`, `Model#restorePerson()`, `Model#archiveProduct()` and `Model#restoreProduct()`. The `ModelManager` implementations call `addressBook.setPerson()` and `inventory.setProduct()` respectively to swap the old record for the newly created immutable copy.
@@ -406,7 +406,7 @@ Given below is an example of the vendor archive/restore lifecycle.
 
 <puml src="diagrams/ArchiveState0.puml" />
 
-**Step 2.** The user executes `archive alice@example.com`. Alice's `Person` object is replaced with a copy that has the `"archived"` tag added. Because the active filtered list excludes archived persons, Alice disappears from the main view.
+**Step 2.** The user executes `archive alice@example.com`. Alice's `Person` object is replaced with a copy that has `isArchived` set to `true`. Because the active filtered list excludes archived persons, Alice disappears from the main view.
 
 <puml src="diagrams/ArchiveState1.puml" />
 
@@ -434,7 +434,7 @@ The `restore` operation through the `Model` is also the reverse of `archive` —
 
 </box>
 
-**Step 3.** The user executes `restore alice@example.com`. Alice's `Person` object is replaced with a copy that has the `"archived"` tag removed. She reappears in the main list.
+**Step 3.** The user executes `restore alice@example.com`. Alice's `Person` object is replaced with a copy that has `isArchived` set to `false`. She reappears in the main list.
 
 <puml src="diagrams/ArchiveState2.puml" />
 
@@ -450,23 +450,21 @@ The `restore` command follows a similar flow, operating on archived products in 
 
 **Aspect: Representation of archived vendors (`Person`)**
 
-* **Alternative 1 (current choice):** Use a special `"archived"` tag in the existing `Tag` set.
-    * Pros: No schema change; archived status is persisted through the existing JSON tag serialisation without any additional storage field.
-    * Cons: The archived flag is semantically different from user-defined tags; mixing them can be confusing and requires care when displaying or editing tags.
+* **Current choice:** Dedicated `boolean isArchived` field on `Person` (same approach used by `Product`).
+    * Pros: Clean semantics; no risk of the archived flag leaking into the user-visible tag set or being accidentally edited. Consistent with how `Product` handles archival. The field is explicit in the constructor and persisted via `JsonAdaptedPerson`.
+    * Cons: Required a storage migration — `JsonAdaptedPerson` now serialises `isArchived` as a separate JSON field, and any legacy data files with an `"archived"` tag are silently stripped on load.
 
-* **Alternative 2:** Add a dedicated `boolean isArchived` field to `Person` (same approach used by `Product`).
-    * Pros: Cleaner semantics; no risk of the user accidentally adding/removing the reserved tag.
-    * Cons: Requires a storage migration and changes to `JsonAdaptedPerson`.
-
-Alternative 1 was chosen for `Person` to minimise changes to the existing architecture. A future refactor may unify both approaches.
+* **Alternative considered:** Use a special `"archived"` tag in the existing `Tag` set.
+    * Pros: No storage change needed initially.
+    * Cons: The archived flag is semantically different from user-defined tags; it leaked into the tag display, required care in `EditCommand` to preserve it across edits, and made `equals`/`hashCode` behave unexpectedly.
 
 **Aspect: Representation of archived products (`Product`)**
 
-* **Alternative 1 (current choice):** Dedicated `boolean isArchived` field.
+* **Current choice:** Dedicated `boolean isArchived` field.
     * Pros: Clean separation; the field is explicit in the constructor and persisted via `JsonAdaptedProduct`.
     * Cons: Slightly more verbose constructors.
 
-* **Alternative 2:** Reuse a tag (same approach as `Person`).
+* **Alternative considered:** Reuse a tag (same approach that `Person` previously used).
     * Cons: Products do not otherwise use tags, so this would be inconsistent.
 
 Alternative 1 was chosen as `Product` has no pre-existing tag mechanism to reuse.
@@ -796,8 +794,8 @@ Use case ends.
 All extensions that apply to !!UC1: Add a Vendor Contact!! also apply here.
 
 * 1a. VV detects that no contact with the given email exists.
-  * 1a1. VV displays an error indicating no vendor was found with that email. 
-  
+  * 1a1. VV displays an error indicating no vendor was found with that email.
+
     Use case ends.
 
 * 1b. VV detects that the operation removes all tags.
@@ -1623,14 +1621,15 @@ At the end, run `listall` and verify both added contact and product are present 
 
 Team size: 4
 
-1. **Enhance `archive` with optional cascade to linked products**: When archiving a contact, ask the 
+1. **Enhance `archive` with optional cascade to linked products**: When archiving a contact, ask the
    user if they want linked products to also be archived.
 
 2. **Enhance `delete` with optional cascade to linked products:** When deleting a contact, ask the
    user if they want linked products to also be deleted.
 
-3. **Enhance duplicate warnings to show top 3 matches instead of only best match:** The current warning message only 
+3. **Enhance duplicate warnings to show top 3 matches instead of only best match:** The current warning message only
 shows the single most similar contact/product (based on the longest contiguous case-insensitive character match). We plan to enhance this by displaying the top 3 most similar contacts/products. If fewer than 3 matches exist, only the available matches will be shown. This improves usability by showing multiple likely duplicates while keeping warning concise and preventing information overload.
 
-4. **Enhance link between `addproduct` and archived vendor**: If `addproduct` references an archived vendor's email, 
+4. **Enhance link between `addproduct` and archived vendor**: If `addproduct` references an archived vendor's email,
    ask the user if they want to auto-restore that vendor before continuing.
+   

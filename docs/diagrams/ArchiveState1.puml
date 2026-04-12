@@ -12,7 +12,7 @@ object "<u>vendorList : UniquePersonList</u>" as list {
 object "<u>alice : Person</u>" as alice #FFCCCC {
   name = "Alice"
   email = alice@example.com
-  tags = [archived]
+  isArchived = true
 }
 
 object "<u>bob : Person</u>" as bob {

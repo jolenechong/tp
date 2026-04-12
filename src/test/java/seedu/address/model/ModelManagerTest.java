@@ -499,6 +499,49 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void archivePerson_setsIsArchivedFlag() {
+        // EP: archivePerson should store a copy with isArchived = true (not a tag)
+        ModelManager model = new ModelManager(new VendorVault(), new UserPrefs(), new Aliases());
+        Person person = new PersonBuilder().build();
+
+        model.addPerson(person);
+        model.archivePerson(person);
+
+        Person stored = model.getAddressBook().getPersonList().get(0);
+        assertTrue(stored.isArchived());
+        // Must not have leaked into the tag set
+        stored.getTags().forEach(t -> assertFalse(t.tagName.equalsIgnoreCase("archived")));
+    }
+
+    @Test
+    public void restorePerson_clearsIsArchivedFlag() {
+        // EP: restorePerson should store a copy with isArchived = false
+        ModelManager model = new ModelManager(new VendorVault(), new UserPrefs(), new Aliases());
+        Person person = new PersonBuilder().build();
+
+        model.addPerson(person);
+        model.archivePerson(person);
+
+        Person archived = model.getAddressBook().getPersonList().get(0);
+        model.restorePerson(archived);
+
+        Person stored = model.getAddressBook().getPersonList().get(0);
+        assertFalse(stored.isArchived());
+    }
+
+    @Test
+    public void archivePerson_removesFromFilteredList() {
+        // EP: after archiving, person should disappear from the active filtered list
+        ModelManager model = new ModelManager(new VendorVault(), new UserPrefs(), new Aliases());
+        Person person = new PersonBuilder().build();
+        model.addPerson(person);
+        assertEquals(1, model.getFilteredPersonList().size());
+
+        model.archivePerson(person);
+        assertEquals(0, model.getFilteredPersonList().size());
+    }
+
+    @Test
     public void constructor_productsFilteredCorrectly() {
         // EP: newly added active product should appear in filtered product list.
         ModelManager model = new ModelManager(new VendorVault(), new UserPrefs(), new Aliases());

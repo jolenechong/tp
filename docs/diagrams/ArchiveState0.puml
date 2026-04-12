@@ -12,13 +12,13 @@ object "<u>vendorList : UniquePersonList</u>" as list {
 object "<u>alice : Person</u>" as alice {
   name = "Alice"
   email = alice@example.com
-  tags = []
+  isArchived = false
 }
 
 object "<u>bob : Person</u>" as bob {
   name = "Bob"
   email = bob@example.com
-  tags = []
+  isArchived = false
 }
 
 list --> alice
