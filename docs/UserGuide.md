@@ -365,7 +365,6 @@ Examples:
 
 **Note:** Archiving a vendor does not archive their associated products.
 Products will remain active and visible, and will show linked vendor.
-Use [`delete`](#deleting-a-contact-delete) if you wish to unlink them.
 </box>
 
 <panel header="How do I view or recover archived contacts?" type="seamless">
