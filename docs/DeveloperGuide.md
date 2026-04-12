@@ -1632,4 +1632,3 @@ shows the single most similar contact/product (based on the longest contiguous c
 
 4. **Enhance link between `addproduct` and archived vendor**: If `addproduct` references an archived vendor's email,
    ask the user if they want to auto-restore that vendor before continuing.
-   
