@@ -89,6 +89,7 @@ public class MainAppTest {
     private static final String CONFIG_FILE_PREFIX = "Config file at ";
     private static final String PREFS_FILE_PREFIX = "Preference file at ";
     private static final String READ_DATA_PREFIX = "Could not read data in ";
+    private static final String FAILED_SAVE_CONFIG_PREFIX = "Failed to save config file :";
     private static final Path LOG_TEST_FILE = Path.of("src", "test", "data",
             "VendorVaultConsistencyUtilTest", "unknownVendorMixedInventory.json");
 
@@ -142,6 +143,19 @@ public class MainAppTest {
         withMainAppLogger(handler -> {
             app.callInitConfig(configPath);
             assertTrue(handler.contains(CONFIG_FILE_PREFIX + configPath + ": " + INVALID_JSON_GENERIC_PREFIX));
+        });
+    }
+
+    @Test
+    public void initConfig_saveConfigThrowsIoException_logsWarningAndReturnsConfig() throws Exception {
+        TestableMainApp app = new TestableMainApp();
+        Path directoryPath = Files.createDirectories(testFolder.resolve("config-directory"));
+
+        withMainAppLogger(handler -> {
+            Config config = app.callInitConfig(directoryPath);
+
+            assertEquals(new Config(), config);
+            assertTrue(handler.contains(FAILED_SAVE_CONFIG_PREFIX));
         });
     }
 
