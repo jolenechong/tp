@@ -231,9 +231,9 @@ public class MainWindow extends UiPart<Stage> {
             String commandString = logic.getOriginalCommand(trimmed.split(" ")[0]);
 
             boolean isFindProduct = commandString.startsWith(FindProductCommand.COMMAND_WORD);
-            inventoryListPanel.setFiltered(isFindProduct);
-            boolean isFind = isFindProduct || commandString.startsWith(FindCommand.COMMAND_WORD);
-            personListPanel.setFiltered(isFind);
+            boolean isFind = commandString.startsWith(FindCommand.COMMAND_WORD) && !isFindProduct;
+            inventoryListPanel.setFiltered(isFindProduct || isFind);
+            personListPanel.setFiltered(isFind || isFindProduct);
 
             handleCommandResultEffects(commandResult);
 

@@ -40,7 +40,7 @@ public class InventoryListPanel extends UiPart<Region> {
     private static final double COL_SPACING = 16;
     private static final double ROW_PAD_H = 16;
     private static final double ROW_PAD_V = 10;
-    private static final double ID_WIDTH = 45;
+    private static final double ID_WIDTH = 65;
     private static final double QTY_WIDTH = 95;
     private static final double FLEX_COL_PREF = 120;
     private static final double SCROLLBAR_RESERVE = 18;
