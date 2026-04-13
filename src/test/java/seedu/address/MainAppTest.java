@@ -68,6 +68,7 @@ public class MainAppTest {
     private static final String METHOD_LOAD_INITIAL_ALIASES = "loadInitialAliases";
     private static final String METHOD_EXTRACT_VALIDATION_OR_PARSING_DETAILS =
             "extractValidationOrParsingDetails";
+    private static final String METHOD_EXTRACT_ROOT_CAUSE_SUMMARY = "extractRootCauseSummary";
     private static final String METHOD_FORMAT_JSON_PARSING_DETAILS = "formatJsonParsingDetails";
     private static final String METHOD_NORMALIZE_JSON_PARSING_MESSAGE = "normalizeJsonParsingMessage";
     private static final String METHOD_EXTRACT_FIRST_LINE = "extractFirstLine";
@@ -82,6 +83,8 @@ public class MainAppTest {
     private static final String INVALID_JSON_LINE_PREFIX = "Invalid JSON format at line 1: ";
     private static final String JSON_PARSE_FALLBACK_MESSAGE = "Malformed JSON.";
     private static final String GENERIC_JSON_PARSE_MESSAGE = "Unexpected close marker";
+    private static final String INVALID_JSON_GENERIC_DETAILS =
+            INVALID_JSON_GENERIC_PREFIX + ": " + GENERIC_JSON_PARSE_MESSAGE;
     private static final JsonLocation UNKNOWN_LOCATION = new JsonLocation("source", -1L, -1L, 0, 1);
     private static final String CONFIG_FILE_PREFIX = "Config file at ";
     private static final String PREFS_FILE_PREFIX = "Preference file at ";
@@ -394,13 +397,64 @@ public class MainAppTest {
     }
 
     @Test
+    public void extractRootCauseSummary_nullCause_returnsEmpty() throws Exception {
+        TestableMainApp app = new TestableMainApp();
+
+        Optional<String> details = invokeExtractRootCauseSummary(app, null);
+
+        assertEquals(Optional.empty(), details);
+    }
+
+    @Test
+    public void extractRootCauseSummary_nestedCauseWithNullMessage_returnsRootClassName() throws Exception {
+        TestableMainApp app = new TestableMainApp();
+        Throwable root = new IllegalArgumentException((String) null);
+        Throwable mid = new RuntimeException("mid", root);
+        Throwable top = new IOException("top", mid);
+
+        Optional<String> details = invokeExtractRootCauseSummary(app, top);
+
+        assertEquals(Optional.of("IllegalArgumentException"), details);
+    }
+
+    @Test
+    public void extractRootCauseSummary_blankRootMessage_returnsRootClassName() throws Exception {
+        TestableMainApp app = new TestableMainApp();
+
+        Optional<String> details = invokeExtractRootCauseSummary(app, new IllegalStateException("   "));
+
+        assertEquals(Optional.of("IllegalStateException"), details);
+    }
+
+    @Test
+    public void extractRootCauseSummary_nestedCauseWithMultilineMessage_returnsClassAndFirstLine() throws Exception {
+        TestableMainApp app = new TestableMainApp();
+        Throwable root = new IOException("root message\nextra details");
+        Throwable top = new RuntimeException("wrapper", root);
+
+        Optional<String> details = invokeExtractRootCauseSummary(app, top);
+
+        assertEquals(Optional.of("IOException: root message"), details);
+    }
+
+    @Test
+    public void formatJsonParsingDetails_nullLocation_returnsGenericFormatMessage() throws Exception {
+        TestableMainApp app = new TestableMainApp();
+        JsonProcessingException exception = createJsonProcessingException(GENERIC_JSON_PARSE_MESSAGE, null);
+
+        String details = invokeFormatJsonParsingDetails(app, exception);
+
+        assertEquals(INVALID_JSON_GENERIC_DETAILS, details);
+    }
+
+    @Test
     public void formatJsonParsingDetails_locationLineNotPositive_returnsGenericFormatMessage() throws Exception {
         TestableMainApp app = new TestableMainApp();
         JsonProcessingException exception = createJsonProcessingException(GENERIC_JSON_PARSE_MESSAGE, UNKNOWN_LOCATION);
 
         String details = invokeFormatJsonParsingDetails(app, exception);
 
-        assertEquals(INVALID_JSON_GENERIC_PREFIX + ": " + GENERIC_JSON_PARSE_MESSAGE, details);
+        assertEquals(INVALID_JSON_GENERIC_DETAILS, details);
     }
 
     @Test
@@ -512,6 +566,15 @@ public class MainAppTest {
                 METHOD_EXTRACT_VALIDATION_OR_PARSING_DETAILS,
                 new Class<?>[]{DataLoadingException.class},
                 exception);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Optional<String> invokeExtractRootCauseSummary(MainApp app, Throwable cause) throws Exception {
+        return (Optional<String>) invokePrivateMethod(
+                app,
+                METHOD_EXTRACT_ROOT_CAUSE_SUMMARY,
+                new Class<?>[]{Throwable.class},
+                cause);
     }
 
     private String invokeFormatJsonParsingDetails(MainApp app, JsonProcessingException exception) throws Exception {
@@ -631,9 +694,15 @@ public class MainAppTest {
     }
 
     private static class StorageStub implements Storage {
+        private static final String METHOD_SHOULD_NOT_BE_CALLED_MESSAGE = "This method should not be called.";
+
         private int saveUserPrefsCallCount;
         private ReadOnlyUserPrefs savedUserPrefs;
         private IOException saveException;
+
+        private AssertionError methodShouldNotBeCalledError() {
+            return new AssertionError(METHOD_SHOULD_NOT_BE_CALLED_MESSAGE);
+        }
 
         @Override
         public void saveUserPrefs(ReadOnlyUserPrefs userPrefs) throws IOException {
@@ -646,87 +715,87 @@ public class MainAppTest {
 
         @Override
         public Optional<UserPrefs> readUserPrefs() throws DataLoadingException {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public Path getUserPrefsFilePath() {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public Path getAddressBookFilePath() {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public Optional<ReadOnlyAddressBook> readAddressBook() throws DataLoadingException {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public Optional<ReadOnlyAddressBook> readAddressBook(Path filePath) throws DataLoadingException {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public void saveAddressBook(ReadOnlyAddressBook addressBook) {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public void saveAddressBook(ReadOnlyAddressBook addressBook, Path filePath) {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public Path getInventoryFilePath() {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public Optional<ReadOnlyInventory> readInventory() throws DataLoadingException {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public Optional<ReadOnlyInventory> readInventory(Path filePath) throws DataLoadingException {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public void saveInventory(ReadOnlyInventory inventory) {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public void saveInventory(ReadOnlyInventory inventory, Path filePath) {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public Path getAliasFilePath() {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public Optional<ReadOnlyAliases> readAliases() throws DataLoadingException {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public Optional<ReadOnlyAliases> readAliases(Path filePath) throws DataLoadingException {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public void saveAliases(ReadOnlyAliases aliases) {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
 
         @Override
         public void saveAliases(ReadOnlyAliases aliases, Path filePath) {
-            throw new AssertionError("This method should not be called.");
+            throw methodShouldNotBeCalledError();
         }
     }
 
