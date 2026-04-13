@@ -110,6 +110,66 @@ public class AliasCommandTest {
         assertTrue(new AliasCommand(validAlias).hasAlias());
     }
 
+    @Test
+    public void execute_noArgCommandAndUnsortedAliasList_returnsSortedByOriginalCommand() throws Exception {
+        ModelStub modelStub = new ModelStubWithUnsortedAliasList();
+        CommandResult result = new AliasCommand().execute(modelStub);
+
+        // "add -> a" comes before "list -> l" and "list -> ls" alphabetically
+        String expected = AliasCommand.MESSAGE_DISPLAY_ALIAS_LIST
+                + "1) " + AddCommand.COMMAND_WORD + " -> " + "a" + "\n"
+                + "2) " + ListCommand.COMMAND_WORD + " -> " + "l" + "\n"
+                + "3) " + ListCommand.COMMAND_WORD + " -> " + "ls" + "\n";
+
+        assertEquals(expected, result.getFeedbackToUser());
+    }
+
+    @Test
+    public void execute_noArgCommandAndAliasList_returnsSortedByAliasTiebreak() throws Exception {
+        // Only aliases with the same original command -> tiebreak by alias
+        ModelStub modelStub = new ModelStubWithAliasTieBreak();
+
+        CommandResult result = new AliasCommand().execute(modelStub);
+
+        // "l" comes before "ls" alphabetically
+        String expected = AliasCommand.MESSAGE_DISPLAY_ALIAS_LIST
+                + "1) " + ListCommand.COMMAND_WORD + " -> " + "l" + "\n"
+                + "2) " + ListCommand.COMMAND_WORD + " -> " + "ls" + "\n";
+
+        assertEquals(expected, result.getFeedbackToUser());
+    }
+
+    private class ModelStubWithAliasTieBreak extends ModelStub {
+        @Override
+        public ReadOnlyAliases getAliases() {
+            return new ReadOnlyAliases() {
+                @Override
+                public List<Alias> getAliasList() {
+                    return List.of(
+                            new Alias("ls", ListCommand.COMMAND_WORD),
+                            new Alias("l", ListCommand.COMMAND_WORD)
+                    );
+                }
+            };
+        }
+    }
+
+    private class ModelStubWithUnsortedAliasList extends ModelStub {
+        @Override
+        public ReadOnlyAliases getAliases() {
+            return new ReadOnlyAliases() {
+                @Override
+                public List<Alias> getAliasList() {
+                    return List.of(
+                            new Alias("ls", ListCommand.COMMAND_WORD),
+                            new Alias("l", ListCommand.COMMAND_WORD),
+                            new Alias("a", AddCommand.COMMAND_WORD)
+                    );
+                }
+            };
+        }
+    }
+
     private class ModelStubWithEmptyAliasList extends ModelStub {
         @Override
         public ReadOnlyAliases getAliases() {
