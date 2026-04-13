@@ -70,11 +70,11 @@ public class JsonSerializableAddressBookTest {
     @Test
     public void findDuplicateEmails_nullEmail_ignoresNullEmail() {
         List<JsonAdaptedPerson> personList = List.of(
-                new JsonAdaptedPerson(PERSON_ONE_NAME, PERSON_ONE_PHONE, null, PERSON_ONE_ADDRESS, List.of()),
+                new JsonAdaptedPerson(PERSON_ONE_NAME, PERSON_ONE_PHONE, null, PERSON_ONE_ADDRESS, List.of(), false),
                 new JsonAdaptedPerson(PERSON_TWO_NAME, PERSON_TWO_PHONE, DUPLICATE_EMAIL_IN_NULL_EMAIL_TEST,
-                        PERSON_TWO_ADDRESS, List.of()),
+                        PERSON_TWO_ADDRESS, List.of(), false),
                 new JsonAdaptedPerson(PERSON_THREE_NAME, PERSON_THREE_PHONE, DUPLICATE_EMAIL_IN_NULL_EMAIL_TEST,
-                        PERSON_THREE_ADDRESS, List.of()));
+                        PERSON_THREE_ADDRESS, List.of(), false));
 
         JsonSerializableAddressBook data = new JsonSerializableAddressBook(personList);
 
@@ -85,11 +85,11 @@ public class JsonSerializableAddressBookTest {
     public void findDuplicateEmails_uniqueEmails_returnsEmptyList() {
         List<JsonAdaptedPerson> personList = List.of(
                 new JsonAdaptedPerson(PERSON_ONE_NAME, PERSON_ONE_PHONE, UNIQUE_EMAIL_IN_UNIQUE_EMAILS_TEST,
-                        PERSON_ONE_ADDRESS, List.of()),
+                        PERSON_ONE_ADDRESS, List.of(), false),
                 new JsonAdaptedPerson(PERSON_TWO_NAME, PERSON_TWO_PHONE, DUPLICATE_EMAIL_IN_NULL_EMAIL_TEST,
-                        PERSON_TWO_ADDRESS, List.of()),
+                        PERSON_TWO_ADDRESS, List.of(), false),
                 new JsonAdaptedPerson(PERSON_THREE_NAME, PERSON_THREE_PHONE, null, PERSON_THREE_ADDRESS,
-                        List.of()));
+                        List.of(), false));
 
         JsonSerializableAddressBook data = new JsonSerializableAddressBook(personList);
 
@@ -100,13 +100,13 @@ public class JsonSerializableAddressBookTest {
     public void findFirstDuplicateEmail_multipleDuplicateEmails_returnsFirstDuplicateEncountered() {
         List<JsonAdaptedPerson> personList = List.of(
                 new JsonAdaptedPerson(PERSON_ONE_NAME, PERSON_ONE_PHONE,
-                        UNIQUE_EMAIL_IN_UNIQUE_EMAILS_TEST, PERSON_ONE_ADDRESS, List.of()),
+                        UNIQUE_EMAIL_IN_UNIQUE_EMAILS_TEST, PERSON_ONE_ADDRESS, List.of(), false),
                 new JsonAdaptedPerson(PERSON_TWO_NAME, PERSON_TWO_PHONE,
-                        DUPLICATE_EMAIL_IN_NULL_EMAIL_TEST, PERSON_TWO_ADDRESS, List.of()),
+                        DUPLICATE_EMAIL_IN_NULL_EMAIL_TEST, PERSON_TWO_ADDRESS, List.of(), false),
                 new JsonAdaptedPerson(PERSON_THREE_NAME, PERSON_THREE_PHONE,
-                        UNIQUE_EMAIL_IN_UNIQUE_EMAILS_TEST, PERSON_THREE_ADDRESS, List.of()),
+                        UNIQUE_EMAIL_IN_UNIQUE_EMAILS_TEST, PERSON_THREE_ADDRESS, List.of(), false),
                 new JsonAdaptedPerson("Four", "91234570", DUPLICATE_EMAIL_IN_NULL_EMAIL_TEST,
-                        "Address Four", List.of())
+                        "Address Four", List.of(), false)
         );
 
         JsonSerializableAddressBook data = new JsonSerializableAddressBook(personList);
@@ -118,11 +118,11 @@ public class JsonSerializableAddressBookTest {
     public void findFirstDuplicateEmail_noDuplicateEmails_returnsEmptyOptional() {
         List<JsonAdaptedPerson> personList = List.of(
                 new JsonAdaptedPerson(PERSON_ONE_NAME, PERSON_ONE_PHONE,
-                        UNIQUE_EMAIL_IN_UNIQUE_EMAILS_TEST, PERSON_ONE_ADDRESS, List.of()),
+                        UNIQUE_EMAIL_IN_UNIQUE_EMAILS_TEST, PERSON_ONE_ADDRESS, List.of(), false),
                 new JsonAdaptedPerson(PERSON_TWO_NAME, PERSON_TWO_PHONE,
-                        DUPLICATE_EMAIL_IN_NULL_EMAIL_TEST, PERSON_TWO_ADDRESS, List.of()),
+                        DUPLICATE_EMAIL_IN_NULL_EMAIL_TEST, PERSON_TWO_ADDRESS, List.of(), false),
                 new JsonAdaptedPerson(PERSON_THREE_NAME, PERSON_THREE_PHONE,
-                        null, PERSON_THREE_ADDRESS, List.of())
+                        null, PERSON_THREE_ADDRESS, List.of(), false)
         );
 
         JsonSerializableAddressBook data = new JsonSerializableAddressBook(personList);

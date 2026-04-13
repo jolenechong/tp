@@ -191,9 +191,9 @@ When in doubt, **archive, don't delete.**
 
 **Notes about the display panels:**
 
-* Most commands update only one panel – contact commands update the contact panel, while product commands update the 
+* Most commands update only one panel – contact commands update the contact panel, while product commands update the
 product panel.
-    * [`find`](#locating-contacts-find)/[`findproduct`](#locating-products-findproduct) are exceptions: they will 
+    * [`find`](#locating-contacts-find)/[`findproduct`](#locating-products-findproduct) are exceptions: they will
   update both panels.
     * Use [`listall`](#listing-all-contacts-and-products--listall) to set both panels to the default display.
 * Long names/identifiers are truncated in the list view. Use [`find`](#locating-contacts-find)/[`findproduct`](#locating-products-findproduct) to view full details.
@@ -914,7 +914,8 @@ Please follow this format carefully. Files that do not adhere to the required fo
     "phone" : PHONE_NUMBER,
     "email" : EMAIL,
     "address" : ADDRESS,
-    "tags" : [ TAGS ]
+    "tags" : [ TAGS ],
+    "isArchived" : BOOLEAN(true/false)
   } ]
 }
 ```
