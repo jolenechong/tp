@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_DUPLICATE_ALIAS;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,10 +97,15 @@ public class AliasCommand extends Command {
             return new CommandResult(MESSAGE_EMPTY_ALIAS_LIST);
         }
 
+        List<Alias> sortedList = aliasList.stream()
+                .sorted(Comparator.comparing(Alias::getOriginalCommand)
+                        .thenComparing(Alias::getAlias))
+                .toList();
+
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(MESSAGE_DISPLAY_ALIAS_LIST);
-        for (int i = 1; i <= aliasList.size(); i++) {
-            Alias currAlias = aliasList.get(i - 1);
+        for (int i = 1; i <= sortedList.size(); i++) {
+            Alias currAlias = sortedList.get(i - 1);
             stringBuilder.append(i)
                     .append(") ")
                     .append(currAlias.toString())
