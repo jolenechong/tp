@@ -167,7 +167,7 @@ When in doubt, **archive, don't delete.**
 
 **Notes about confirmation prompt:**
 
-* To skip the confirmation prompt, include the `-y` flag after the command.
+* To skip the confirmation prompt, place `-y` directly after the command word, before any arguments (e.g., `delete -y EMAIL`).
 * The following commands will prompt for confirmation before executing:
   * [`clear`](#clearing-all-contacts-clear) / [`clearproduct`](#clearing-all-products-clearproduct)
   * [`delete`](#deleting-a-contact-delete) / [`deleteproduct`](#deleting-a-product-deleteproduct)
