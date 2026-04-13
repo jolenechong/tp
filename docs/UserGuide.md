@@ -112,9 +112,9 @@ Some example commands you can try:
 
 * `add n/TechSource Electronics p/61234567 e/sales@techsource.com a/15 Kallang Way, Singapore` : Adds a vendor contact named `TechSource Electronics`.
 
-* `delete sales@techsource.com` : Deletes `TechSource Electronics`.
-
 * `addproduct id/SKU-1003 n/Arduino Uno R4 q/50 th/10 e/sales@techsource.com`: Adds a product `Arduino Uno R4`.
+
+* `delete sales@techsource.com` : Deletes `TechSource Electronics`.
 
 * `deleteproduct SKU-1003`: Deletes `Arduino Uno R4`.
 
