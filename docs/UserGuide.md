@@ -329,12 +329,18 @@ find [n/NAME_KEYWORD]... [t/TAG_KEYWORD]...
 (at least one prefix required)
 
 Examples:
-* `find n/Cytron t/wholesale` matches name containing `Cytron` and tag `wholesale`
+* `find n/Syn t/wholesale` matches name containing `Syn` and tag `wholesale`
 
 <box type="info" seamless>
 
 **Expected output:**<br>
 ![find](images/v1.5/find.png =500x)
+
+</box>
+
+<box type="tip" seamless>
+
+The product panel is also updated to display associated products. Use [`listall`](#listing-all-contacts-and-products--listall) to set both panels to the default display.
 
 </box>
 
@@ -574,6 +580,12 @@ Examples:
 
 </box>
 
+<box type="tip" seamless>
+
+The contacts panel is also updated to display associated vendors. Use [`listall`](#listing-all-contacts-and-products--listall) to set both panels to the default display.
+
+</box>
+
 <div style="height: 30px;"></div>
 
 #### Archiving a product : `archiveproduct`
@@ -708,8 +720,8 @@ alias [ORIGINAL_COMMAND] [ALIAS]
 ```
 
 Example:
-* `alias` list all current aliases.
 * `alias list ls` maps `ls` as an alias for the `list` command.
+* `alias` list all current aliases.
 
 <box type="info" seamless>
 
