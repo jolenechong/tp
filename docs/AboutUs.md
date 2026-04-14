@@ -27,7 +27,6 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 <img src="images/icyyolo.png" width="200px">
 
 [[github](https://github.com/icyyolo)]
-[[portfolio](team/icyyolo.md)]
 
 * Role: Deliverables and deadlines
 * Responsibilities: Model
