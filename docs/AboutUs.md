@@ -36,7 +36,7 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 <img src="images/l3hu4l1.png" width="200px">
 
-[[github](http://github.com/l3hu4l1)] [[portfolio](team/l3hu4l1.md)]
+[[github](http://github.com/l3hu4l1)]
 
 * Role: Developer, Testing
 * Responsibilities: Storage
