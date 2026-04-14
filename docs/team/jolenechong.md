@@ -51,6 +51,6 @@ Given below are my contributions to the project.
 
 <box type="info" seamless>
 
-**Note:** This portfolio is up to date as of 14 April 2026. For a complete list of my contributions, including documentation updates and other pull requests not explicitly mentioned here, refer to: [PRs authored by me](https://github.com/AY2526S2-CS2103T-W08-2/tp/pulls?q=is%3Apr+author%3A%40me+sort%3Acreated-desc).
+**Note:** This portfolio is up to date as of 14 April 2026. For a complete list of my contributions, including specific documentation updates and other minor pull requests not explicitly mentioned here, refer to: [PRs authored by me](https://github.com/AY2526S2-CS2103T-W08-2/tp/pulls?q=is%3Apr+author%3A%40me+sort%3Acreated-desc).
 
 </box>
