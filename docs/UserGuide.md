@@ -227,7 +227,7 @@ t/electronics t/wholesale`
 <box type="info" seamless>
 
 **Expected output:**<br>
-![add](images/v1.5/add.png =500x)
+![add](images/v1.6/add.png)
 
 </box>
 
@@ -334,7 +334,7 @@ Examples:
 <box type="info" seamless>
 
 **Expected output:**<br>
-![find](images/v1.5/find.png =500x)
+![find](images/v1.6/find.png)
 
 </box>
 
@@ -408,7 +408,7 @@ Examples:
 <box type="info" seamless>
 
 **Expected output (`restore`):**<br>
-![restore](images/v1.5/restore.png =500x)
+![restore](images/v1.6/restore.png)
 
 </box>
 
@@ -455,7 +455,7 @@ clear
 <box type="info" seamless>
 
 **Expected output:**<br>
-![clear](images/v1.5/clear.png =500x)
+![clear](images/v1.6/clear.png)
 
 </box>
 
@@ -482,7 +482,7 @@ Examples:
 <box type="info" seamless>
 
 **Expected output:**<br>
-![addprod](images/v1.5/addprod.png =1000x)
+![addprod](images/v1.6/addprod.png)
 
 </box>
 
@@ -576,7 +576,7 @@ Examples:
 <box type="info" seamless>
 
 **Expected output:**<br>
-![findprod](images/v1.5/findprod.png =500x)
+![findprod](images/v1.6/findprod.png)
 
 </box>
 
@@ -726,7 +726,7 @@ Example:
 <box type="info" seamless>
 
 **Expected output (`alias`):**<br>
-![alias](images/v1.5/alias.png =500x)
+![alias](images/v1.6/alias.png)
 
 </box>
 
@@ -745,8 +745,6 @@ Example:
 * `deletealias ls` removes `ls` as an alias
 
 <div style="height: 30px;"></div>
-
-<div style="page-break-after: always;"></div>
 
 #### Changing default threshold : `threshold`
 
@@ -785,6 +783,13 @@ You can undo or redo actions like `add`, `edit`, `delete`, `clear`, `archive`, `
 
 </box>
 
+<box type="info" seamless>
+
+**Expected output:**<br>
+![undo](images/v1.6/undo.png)
+
+</box>
+
 <div style="height: 30px;"></div>
 
 #### Redoing the previous undone change : `redo`
@@ -800,11 +805,7 @@ redo
 <box type="info" seamless>
 
 **Expected output:**<br>
-![undo](images/v1.5/undo.png =700x)
-
-<br>
-
-![redo](images/v1.5/redo.png =700x)
+![redo](images/v1.6/redo.png)
 
 </box>
 
@@ -822,7 +823,7 @@ listall
 <box type="info" seamless>
 
 **Expected output:**<br>
-![listall](images/v1.5/listall.png =1000x)
+![listall](images/v1.6/listall.png)
 
 </box>
 
